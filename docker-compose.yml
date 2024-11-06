@@ -1,0 +1,9 @@
+services:
+  app:
+    image: admin_system_frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:80"
+    restart: unless-stopped
