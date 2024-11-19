@@ -105,5 +105,8 @@ module.exports = {
         'internal-pattern': ['src/**'],
       },
     ],
+
+    //other
+    'array-callback-return': 'off',
   },
 };

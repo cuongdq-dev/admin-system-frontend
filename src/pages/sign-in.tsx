@@ -1,19 +1,27 @@
-import { Helmet } from 'react-helmet-async';
-
-import { CONFIG } from 'src/config-global';
-
-import { SignInView } from 'src/sections/auth';
+// @mui
+import { Box, Link, Typography } from '@mui/material';
+// hooks
+import { Link as RouterLink } from 'react-router-dom';
+import AuthSocial from '../sections/auth/AuthSocial';
+import { SignInForm } from '../sections/auth/sign-in';
 
 // ----------------------------------------------------------------------
 
-export default function Page() {
+export default function Login() {
+
   return (
     <>
-      <Helmet>
-        <title> {`Sign in - ${CONFIG.appName}`}</title>
-      </Helmet>
-
-      <SignInView />
+      <Box gap={1.5} display="flex" flexDirection="column" alignItems="center" sx={{ mb: 5 }}>
+        <Typography variant="h5">Sign in</Typography>
+        <Typography variant="body2" color="text.secondary">
+          Don’t have an account?
+          <Link variant="subtitle2" sx={{ ml: 0.5 }} component={RouterLink} to="/register">
+            Get started
+          </Link>
+        </Typography>
+      </Box>
+      <AuthSocial />
+      <SignInForm />
     </>
   );
 }

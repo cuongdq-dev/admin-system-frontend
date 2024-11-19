@@ -1,12 +1,13 @@
 import { lazy, Suspense } from 'react';
-import { Outlet, Navigate, useRoutes } from 'react-router-dom';
+import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
-import { varAlpha } from 'src/theme/styles';
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
+import { varAlpha } from 'src/theme/styles';
+import { PrivateRoute, PublicRoute } from './components';
 
 // ----------------------------------------------------------------------
 
@@ -14,6 +15,7 @@ export const HomePage = lazy(() => import('src/pages/home'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
+export const RegisterPage = lazy(() => import('src/pages/register'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
@@ -36,34 +38,78 @@ export function Router() {
   return useRoutes([
     {
       element: (
-        <DashboardLayout>
-          <Suspense fallback={renderFallback}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
+        <PrivateRoute>
+          <DashboardLayout>
+            <Suspense fallback={renderFallback}>
+              <Outlet />
+            </Suspense>
+          </DashboardLayout>
+        </PrivateRoute>
       ),
       children: [
-        { element: <HomePage />, index: true },
-        { path: 'user', element: <UserPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        {
+          element:
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          , index: true
+        },
+        {
+          path: 'user',
+          element:
+            <PrivateRoute>
+              <UserPage />
+            </PrivateRoute>
+        },
+        {
+          path: 'products', element:
+            <PrivateRoute>
+              <ProductsPage />
+            </PrivateRoute>
+        },
+        {
+          path: 'blog', element:
+            <PrivateRoute>
+              <BlogPage />
+            </PrivateRoute>
+        },
       ],
     },
     {
       path: 'sign-in',
       element: (
-        <AuthLayout>
-          <SignInPage />
-        </AuthLayout>
+        <PublicRoute>
+          <AuthLayout>
+            <SignInPage />
+          </AuthLayout>
+        </PublicRoute>
+      ),
+    },
+
+    {
+      path: 'register',
+      element: (
+        <PublicRoute>
+          <AuthLayout>
+            <RegisterPage />
+          </AuthLayout>
+        </PublicRoute>
+
       ),
     },
     {
       path: '404',
-      element: <Page404 />,
+      element:
+        <PrivateRoute>
+          <Page404 />
+        </PrivateRoute>
     },
     {
       path: '*',
-      element: <Navigate to="/404" replace />,
+      element:
+        <PrivateRoute>
+          <Navigate to="/404" replace />
+        </PrivateRoute>
     },
   ]);
 }
