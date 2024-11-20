@@ -10,7 +10,6 @@ WORKDIR /app
 
 # Copy package.json and install app dependencies
 COPY package.json .
-COPY package.json package-lock.json ./
 COPY .env /app/.env
 RUN yarn
 
