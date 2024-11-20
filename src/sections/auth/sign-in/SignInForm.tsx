@@ -48,6 +48,8 @@ export const SignInForm = () => {
     formState: { isSubmitting },
   } = methods;
 
+  console.log(import.meta.env);
+
   const onSubmit = async (values: { email?: string; password?: string; remember?: boolean }) => {
     await postApi(import.meta.env.VITE_API_URL + PATH_SIGN_IN, JSON.stringify(values))
       .then((res) => {
