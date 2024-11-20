@@ -1,7 +1,6 @@
 /dist
 /node_modules
 /.vscode
-.env*
 .eslintrc.js
 .gitignore
 .prettier
