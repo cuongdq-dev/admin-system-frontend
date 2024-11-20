@@ -1,7 +1,9 @@
 // @mui
-import { Box, Link, Typography } from '@mui/material';
 // hooks
 import { Link as RouterLink } from 'react-router-dom';
+
+import { Box, Link, Typography } from '@mui/material';
+
 import AuthSocial from '../sections/auth/AuthSocial';
 import { SignInForm } from '../sections/auth/sign-in';
 

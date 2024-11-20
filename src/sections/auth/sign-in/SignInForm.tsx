@@ -1,21 +1,19 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-// form
-import { yupResolver } from '@hookform/resolvers/yup';
+import Cookies from 'js-cookie';
+import { useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import { useForm } from 'react-hook-form';
-// @mui
+import { useNavigate } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import { LoadingButton } from '@mui/lab';
-import { IconButton, InputAdornment, Link, Stack } from '@mui/material';
-// components
-import Cookies from "js-cookie";
-import { jwtDecode, } from 'jwt-decode';
+import { Link, Stack, IconButton, InputAdornment } from '@mui/material';
+
 import { postApi } from 'src/api-core';
 import { PATH_SIGN_IN } from 'src/api-core/path';
-import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
-import { Iconify } from '../../../components/iconify';
 
-// ----------------------------------------------------------------------
+import { Iconify } from '../../../components/iconify';
+import { RHFCheckbox, FormProvider, RHFTextField } from '../../../components/hook-form';
 
 export type JwtPayload = {
   id: string;
@@ -24,7 +22,7 @@ export type JwtPayload = {
   exp: number;
 };
 
-export function SignInForm() {
+export const SignInForm = () => {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -50,26 +48,24 @@ export function SignInForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (values: { email?: string, password?: string, remember?: boolean }) => {
+  const onSubmit = async (values: { email?: string; password?: string; remember?: boolean }) => {
     await postApi(import.meta.env.VITE_API_URL + PATH_SIGN_IN, JSON.stringify(values))
       .then((res) => {
         const { accessToken, refreshToken, email, name, isActive, avatar } = res;
-        const { exp, iat, type } = jwtDecode(accessToken) as JwtPayload
+        const { exp, iat, type } = jwtDecode(accessToken) as JwtPayload;
 
-        const expires = values.remember ? {
-          expires: new Date(exp * 1000)
-        } : undefined
+        const expires = values.remember
+          ? {
+              expires: new Date(exp * 1000),
+            }
+          : undefined;
         const loginInfo = { name, email, avatar, exp, type, iat, isActive };
-        Cookies.set("user-info", JSON.stringify(loginInfo), expires);
-        Cookies.set("token", JSON.stringify(accessToken), expires);
-        Cookies.set("refresh-token", JSON.stringify(refreshToken), expires);
+        Cookies.set('user-info', JSON.stringify(loginInfo), expires);
+        Cookies.set('token', accessToken, expires);
+        Cookies.set('refresh-token', refreshToken, expires);
         navigate('/', { replace: true });
-
       })
-      .catch((e) => {
-      });
-
-
+      .catch((e) => {});
   };
 
   return (
@@ -100,9 +96,15 @@ export function SignInForm() {
         </Link>
       </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+      <LoadingButton
+        fullWidth
+        size="large"
+        type="submit"
+        variant="contained"
+        loading={isSubmitting}
+      >
         SignIn
       </LoadingButton>
     </FormProvider>
   );
-}
+};

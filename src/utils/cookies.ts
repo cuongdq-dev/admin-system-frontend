@@ -1,5 +1,5 @@
 export const getCookie = (cname: string) => {
-  const name = cname + '=';
+  const name = `${cname}=`;
   const decodedCookie = decodeURIComponent(document.cookie);
   const ca = decodedCookie.split(';');
   for (let i = 0; i < ca.length; i++) {
@@ -15,10 +15,10 @@ export const getCookie = (cname: string) => {
 };
 
 export const setCookie = (cname: string, cValue: string, expIns: string) => {
-  const expires = 'expires=' + expIns;
-  document.cookie = cname + '=' + cValue + ';' + expires + ';path=/';
+  const expires = `expires=${expIns}`;
+  document.cookie = `${cname}=${cValue};${expires};path=/`;
 };
 
 export const removeCookie = (cname: string) => {
-  document.cookie = cname + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  document.cookie = `${cname} =; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 };

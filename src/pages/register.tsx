@@ -1,5 +1,7 @@
 import { Box, Typography } from '@mui/material';
+
 import { RegisterForm } from 'src/sections/auth/register';
+
 import AuthSocial from '../sections/auth/AuthSocial';
 
 export default function Register() {

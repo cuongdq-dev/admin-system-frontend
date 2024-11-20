@@ -1,22 +1,25 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
 
-import { useCallback, useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
-import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
+import MenuList from '@mui/material/MenuList';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 
-import { usePathname, useRouter } from 'src/routes/hooks';
+import { useRouter, usePathname } from 'src/routes/hooks';
+
+import { removeCookie } from 'src/utils/cookies';
 
 import { _myAccount } from 'src/_mock';
-import { useNavigate } from 'react-router-dom';
-import { removeCookie } from 'src/utils/cookies';
+import { postApi } from 'src/api-core';
+import { PATH_SIGN_OUT } from 'src/api-core/path';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +33,6 @@ export type AccountPopoverProps = IconButtonProps & {
 };
 
 export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps) {
-
   const navigate = useNavigate();
 
   const router = useRouter();
@@ -134,13 +136,25 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button onClick={() => {
-            removeCookie('token')
-            removeCookie('refresh-token')
-            removeCookie('user-info')
-            navigate('/sign-in', { replace: true });
-
-          }} fullWidth color="error" size="medium" variant="text">
+          <Button
+            onClick={async () => {
+              await postApi(import.meta.env.VITE_API_URL + PATH_SIGN_OUT)
+                .then((res) => {
+                  console.log('res: ', res);
+                  removeCookie('token');
+                  removeCookie('refresh-token');
+                  removeCookie('user-info');
+                  navigate('/sign-in', { replace: true });
+                })
+                .catch((e) => {
+                  console.log('e', e);
+                });
+            }}
+            fullWidth
+            color="error"
+            size="medium"
+            variant="text"
+          >
             Logout
           </Button>
         </Box>

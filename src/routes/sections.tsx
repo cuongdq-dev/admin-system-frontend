@@ -1,13 +1,14 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Outlet, useRoutes } from 'react-router-dom';
+import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
+import { varAlpha } from 'src/theme/styles';
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
-import { varAlpha } from 'src/theme/styles';
-import { PrivateRoute, PublicRoute } from './components';
+
+import { PublicRoute, PrivateRoute } from './components';
 
 // ----------------------------------------------------------------------
 

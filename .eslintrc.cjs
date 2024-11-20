@@ -108,5 +108,8 @@ module.exports = {
 
     //other
     'array-callback-return': 'off',
+    'arrow-body-style': 'off',
+    'no-plusplus': 'off',
+    'react/jsx-no-useless-fragment': 'off',
   },
 };

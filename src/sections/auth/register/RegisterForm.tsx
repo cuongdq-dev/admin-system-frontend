@@ -1,16 +1,18 @@
-import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { IconButton, InputAdornment, Link, Stack, Typography } from '@mui/material';
+import { Link, Stack, IconButton, Typography, InputAdornment } from '@mui/material';
+
 // components
-import { useResponsive } from 'src/hooks/useResponsive';
-import { FormProvider, RHFTextField } from '../../../components/hook-form';
+
 import { Iconify } from '../../../components/iconify';
+import { FormProvider, RHFTextField } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -47,11 +49,6 @@ export function RegisterForm() {
     navigate('/dashboard', { replace: true });
   };
 
-
-  const smUp = useResponsive({ query: 'up', key: 'sm' });
-
-  const mdUp = useResponsive({ query: 'up', key: 'md' });
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
@@ -74,15 +71,21 @@ export function RegisterForm() {
           }}
         />
 
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+        >
           Register
         </LoadingButton>
         <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
           By registering, I agree to Minimal&nbsp;
           <Link underline="always" color="text.primary" href="#">
             Terms of Service
-          </Link>
-          {' '}and{' '}
+          </Link>{' '}
+          and{' '}
           <Link underline="always" color="text.primary" href="#">
             Privacy Policy
           </Link>
@@ -95,7 +98,6 @@ export function RegisterForm() {
             Login
           </Link>
         </Typography>
-
       </Stack>
     </FormProvider>
   );
