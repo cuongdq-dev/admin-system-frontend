@@ -10,7 +10,6 @@ WORKDIR /app
 
 # Copy package.json and install app dependencies
 COPY package.json .
-COPY .env .
 RUN yarn
 
 # Copy other project files and build
