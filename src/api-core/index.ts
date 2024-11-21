@@ -1,4 +1,6 @@
-import { getCookie } from 'src/utils/cookies';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { default as queryString } from 'query-string';
+import { getCookie } from '../utils/cookies';
 
 export enum HttpMethod {
   GET = 'GET',
@@ -7,38 +9,71 @@ export enum HttpMethod {
   DELETE = 'DELETE',
 }
 
-export const createHeaders = () => {
-  const headers = new Headers();
-  headers.append('Content-Type', 'application/json');
-  headers.append('Accept', 'application/json');
+axios.defaults.headers.common['Authorization'] = `Bearer ${getCookie('token')}`;
+
+axios.interceptors.request.use(function (config) {
   const token = getCookie('token');
-  if (token) headers.append('Authorization', `Bearer ${token}`);
-  return headers;
+  config.baseURL = import.meta.env.VITE_API_URL || '';
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export const ApiCore = {
+  get: axios.get,
+  post: axios.post,
+  put: axios.put,
+  patch: axios.patch,
+  delete: axios.delete,
 };
 
-export const getApi = async (url: string) => {
-  const res = await fetch(url, { method: HttpMethod.GET, headers: createHeaders() });
-  if (res.ok) return res.json();
-  if (res.status === 401) window.location.href = '/sign-in';
-  return res.json();
+export const handleError = (err: AxiosError) => {
+  const statusErr = err.response?.status;
+  if (statusErr === 401) {
+    location.replace('/sign-in');
+  } else if (statusErr === 403 || statusErr === 404) {
+    location.replace('/404');
+  } else {
+  }
 };
 
-export const postApi = async (url: string, body?: BodyInit | null) => {
-  const res = await fetch(url, { method: HttpMethod.POST, headers: createHeaders(), body });
-
-  console.log(res);
-  if (res.ok) return res.json();
-  return res.json();
+export type RequestProps = {
+  baseURL: string;
+  onSuccess: (data: any) => void;
+  onHandleError?: (error?: { status?: number | string; errors?: Record<string, string> }) => void;
+  method?: HttpMethod;
+  params?: unknown;
+  config?: AxiosRequestConfig;
 };
 
-export const patchApi = async (url: string, body?: BodyInit | null) => {
-  const res = await fetch(url, { method: HttpMethod.PATCH, headers: createHeaders(), body });
-  if (res.ok) return res.json();
-  return res.json();
+export const onUpdateQuery = (url = '', query = {}) => {
+  const currentQuery = queryString.parse(location.search);
+  return url + '?' + queryString.stringify(Object.assign(currentQuery, query));
 };
 
-export const deleteApi = async (url: string) => {
-  const res = await fetch(url, { method: HttpMethod.DELETE, headers: createHeaders() });
-  if (res.ok) return res.json();
-  return res.json();
+export const invokeRequest = async (options: RequestProps) => {
+  const {
+    baseURL,
+    params: body,
+    method = HttpMethod.GET,
+    onSuccess,
+    onHandleError,
+    config,
+  } = options;
+  const endpointRequest = baseURL;
+  try {
+    let response: AxiosResponse;
+    if (method === HttpMethod.DELETE)
+      response = await ApiCore.delete(endpointRequest, { data: body, timeout: 120000 });
+    else if (method === HttpMethod.PATCH)
+      response = await ApiCore.patch(endpointRequest, body, { timeout: 120000 });
+    else if (method === HttpMethod.POST)
+      response = await ApiCore.post(endpointRequest, body, { ...config, timeout: 120000 });
+    else response = await ApiCore.get(endpointRequest, { params: body });
+    onSuccess(response.data);
+  } catch (error) {
+    // handleError(error as AxiosError);
+    onHandleError && onHandleError(error?.response?.data);
+  }
 };

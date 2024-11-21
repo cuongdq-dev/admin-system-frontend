@@ -1,14 +1,14 @@
 import { lazy, Suspense } from 'react';
-import { Outlet, Navigate, useRoutes } from 'react-router-dom';
+import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
-import { varAlpha } from 'src/theme/styles';
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
+import { varAlpha } from 'src/theme/styles';
 
-import { PublicRoute, PrivateRoute } from './components';
+import { PrivateRoute, PublicRoute } from './components';
 
 // ----------------------------------------------------------------------
 
@@ -49,30 +49,36 @@ export function Router() {
       ),
       children: [
         {
-          element:
+          element: (
             <PrivateRoute>
               <HomePage />
             </PrivateRoute>
-          , index: true
+          ),
+          index: true,
         },
         {
           path: 'user',
-          element:
+          element: (
             <PrivateRoute>
               <UserPage />
             </PrivateRoute>
+          ),
         },
         {
-          path: 'products', element:
+          path: 'products',
+          element: (
             <PrivateRoute>
               <ProductsPage />
             </PrivateRoute>
+          ),
         },
         {
-          path: 'blog', element:
+          path: 'blog',
+          element: (
             <PrivateRoute>
               <BlogPage />
             </PrivateRoute>
+          ),
         },
       ],
     },
@@ -95,22 +101,23 @@ export function Router() {
             <RegisterPage />
           </AuthLayout>
         </PublicRoute>
-
       ),
     },
     {
       path: '404',
-      element:
+      element: (
         <PrivateRoute>
           <Page404 />
         </PrivateRoute>
+      ),
     },
     {
       path: '*',
-      element:
+      element: (
         <PrivateRoute>
           <Navigate to="/404" replace />
         </PrivateRoute>
+      ),
     },
   ]);
 }

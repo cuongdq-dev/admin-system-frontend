@@ -18,8 +18,13 @@ import { useRouter, usePathname } from 'src/routes/hooks';
 import { removeCookie } from 'src/utils/cookies';
 
 import { _myAccount } from 'src/_mock';
-import { postApi } from 'src/api-core';
+// import { postApi } from 'src/api-core';
 import { PATH_SIGN_OUT } from 'src/api-core/path';
+import Cookies from 'js-cookie';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { invokeRequest, HttpMethod } from 'src/api-core';
+import { enqueueSnackbar } from 'notistack';
+import { ButtonDismissNotify } from 'src/components/button';
 
 // ----------------------------------------------------------------------
 
@@ -138,17 +143,24 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         <Box sx={{ p: 1 }}>
           <Button
             onClick={async () => {
-              await postApi(import.meta.env.VITE_API_URL + PATH_SIGN_OUT)
-                .then((res) => {
-                  console.log('res: ', res);
+              invokeRequest({
+                method: HttpMethod.POST,
+                baseURL: PATH_SIGN_OUT,
+                onHandleError: (response) => {
+                  enqueueSnackbar('I use snackbars responsibly', {
+                    variant: 'error',
+                    action: (key) => (
+                      <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />
+                    ),
+                  });
+                },
+                onSuccess(res) {
                   removeCookie('token');
                   removeCookie('refresh-token');
                   removeCookie('user-info');
                   navigate('/sign-in', { replace: true });
-                })
-                .catch((e) => {
-                  console.log('e', e);
-                });
+                },
+              });
             }}
             fullWidth
             color="error"

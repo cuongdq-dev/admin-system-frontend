@@ -1,19 +1,20 @@
-import * as Yup from 'yup';
-import Cookies from 'js-cookie';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { LoadingButton } from '@mui/lab';
+import { IconButton, InputAdornment, Link, Stack } from '@mui/material';
 import { useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
 
-import { LoadingButton } from '@mui/lab';
-import { Link, Stack, IconButton, InputAdornment } from '@mui/material';
+// import { postApi } from 'src/api-core';
+// import { PATH_SIGN_IN } from 'src/api-core/path';
 
-import { postApi } from 'src/api-core';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SIGN_IN } from 'src/api-core/path';
-
+import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
 import { Iconify } from '../../../components/iconify';
-import { RHFCheckbox, FormProvider, RHFTextField } from '../../../components/hook-form';
 
 export type JwtPayload = {
   id: string;
@@ -48,14 +49,26 @@ export const SignInForm = () => {
     formState: { isSubmitting },
   } = methods;
 
-  console.log(import.meta.env);
-
   const onSubmit = async (values: { email?: string; password?: string; remember?: boolean }) => {
-    await postApi(import.meta.env.VITE_API_URL + PATH_SIGN_IN, JSON.stringify(values))
-      .then((res) => {
+    invokeRequest({
+      method: HttpMethod.POST,
+      baseURL: PATH_SIGN_IN,
+      params: values,
+      onHandleError: (response) => {
+        if (response?.errors && typeof response.errors === 'object') {
+          Object.keys(response.errors).forEach((key) => {
+            methods.setError(key as any, {
+              type: 'server',
+              message: response?.errors![key],
+            });
+          });
+        } else {
+          console.error('Unexpected error format:', response);
+        }
+      },
+      onSuccess(res) {
         const { accessToken, refreshToken, email, name, isActive, avatar } = res;
         const { exp, iat, type } = jwtDecode(accessToken) as JwtPayload;
-
         const expires = values.remember
           ? {
               expires: new Date(exp * 1000),
@@ -66,8 +79,8 @@ export const SignInForm = () => {
         Cookies.set('token', accessToken, expires);
         Cookies.set('refresh-token', refreshToken, expires);
         navigate('/', { replace: true });
-      })
-      .catch((e) => {});
+      },
+    });
   };
 
   return (
