@@ -1,41 +1,18 @@
-# ------------------------
-# Step 1: Build react app
-# ------------------------
+FROM node:20-bullseye-slim AS builder
 
-# Use node:latest as the builder image
-FROM node:20 AS builder
-
-# Set the working directory
 WORKDIR /app
 
-# Copy package.json and install app dependencies
-COPY package.json .
-COPY .env ./
-
-RUN yarn
-
-# Copy other project files and build
 COPY . ./
-RUN yarn build
+RUN yarn && yarn build
 
-# --------------------------------------
-# Step 2: Set up nginx to serve the app
-# --------------------------------------
-# Use nginx:latest as the base image
-FROM nginx:latest
 
-# # Overwriting nginx config with our own config file
-# RUN rm -rf /etc/nginx/conf.d/default.conf
-# COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+FROM nginx:1.27.2-alpine-slim
 
-# # Copy over the build created in the Step 1
+COPY ./default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# # Set the working directory
 WORKDIR /usr/share/nginx/html
 
-# Expose port 3000
 EXPOSE 4000
 
-# # Start nginx server
-CMD ["/bin/bash", "-c", "nginx -g \"daemon off;\""]
+CMD ["/bin/sh", "-c", "nginx -g \"daemon off;\""]
