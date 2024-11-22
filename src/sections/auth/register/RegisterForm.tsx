@@ -1,22 +1,20 @@
-import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Link, Stack, IconButton, Typography, InputAdornment } from '@mui/material';
+import { IconButton, InputAdornment, Link, Stack, Typography } from '@mui/material';
 
 // components
 
-import { Iconify } from '../../../components/iconify';
+import { HttpMethod, invokeRequest } from 'src/api-core';
+import { PATH_REGISTER } from 'src/api-core/path';
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
-import Cookies from 'js-cookie';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { invokeRequest, HttpMethod } from 'src/api-core';
-import { PATH_SIGN_IN } from 'src/api-core/path';
+import { Iconify } from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +48,7 @@ export function RegisterForm() {
   const onSubmit = async (values: { email?: string; password?: string; remember?: boolean }) => {
     invokeRequest({
       method: HttpMethod.POST,
-      baseURL: PATH_SIGN_IN,
+      baseURL: PATH_REGISTER,
       params: values,
       onHandleError: (response) => {
         if (response?.errors && typeof response.errors === 'object') {
