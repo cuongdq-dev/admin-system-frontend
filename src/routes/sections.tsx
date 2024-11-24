@@ -57,7 +57,15 @@ export function Router() {
           index: true,
         },
         {
-          path: 'user',
+          path: 'server',
+          element: (
+            <PrivateRoute>
+              <UserPage />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: 'sites',
           element: (
             <PrivateRoute>
               <UserPage />
