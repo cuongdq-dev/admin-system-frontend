@@ -33,16 +33,8 @@ export const SignInForm = () => {
     password: Yup.string().required('Password is required'),
   });
 
-  const defaultValues = {
-    email: '',
-    password: '',
-    remember: false,
-  };
-
-  const methods = useForm({
-    resolver: yupResolver(SignInSchema),
-    defaultValues,
-  });
+  const defaultValues = { email: '', password: '', remember: false };
+  const methods = useForm({ resolver: yupResolver(SignInSchema), defaultValues });
 
   const {
     handleSubmit,
@@ -69,11 +61,7 @@ export const SignInForm = () => {
       onSuccess(res) {
         const { accessToken, refreshToken, email, name, isActive, avatar } = res;
         const { exp, iat, type } = jwtDecode(accessToken) as JwtPayload;
-        const expires = values.remember
-          ? {
-              expires: new Date(exp * 1000),
-            }
-          : undefined;
+        const expires = values.remember ? { expires: new Date(exp * 1000) } : undefined;
         const loginInfo = { name, email, avatar, exp, type, iat, isActive };
         Cookies.set('user-info', JSON.stringify(loginInfo), expires);
         Cookies.set('token', accessToken, expires);

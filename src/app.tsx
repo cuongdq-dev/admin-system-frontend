@@ -6,7 +6,7 @@ import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
 
 import { ThemeProvider } from 'src/theme/theme-provider';
 
-import { enqueueSnackbar, SnackbarProvider } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 
 // ----------------------------------------------------------------------
 

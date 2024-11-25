@@ -14,7 +14,8 @@ import { PrivateRoute, PublicRoute } from './components';
 
 export const HomePage = lazy(() => import('src/pages/home'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
-export const UserPage = lazy(() => import('src/pages/user'));
+export const ServersPage = lazy(() => import('src/pages/servers'));
+export const SitesPage = lazy(() => import('src/pages/sites'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const RegisterPage = lazy(() => import('src/pages/register'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
@@ -57,10 +58,10 @@ export function Router() {
           index: true,
         },
         {
-          path: 'server',
+          path: 'servers',
           element: (
             <PrivateRoute>
-              <UserPage />
+              <ServersPage />
             </PrivateRoute>
           ),
         },
@@ -68,7 +69,7 @@ export function Router() {
           path: 'sites',
           element: (
             <PrivateRoute>
-              <UserPage />
+              <SitesPage />
             </PrivateRoute>
           ),
         },

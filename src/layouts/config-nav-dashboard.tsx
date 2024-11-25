@@ -14,7 +14,7 @@ export const navData = [
   },
   {
     title: 'Server',
-    path: '/server',
+    path: '/servers',
     icon: icon('ic-server'),
   },
   {
