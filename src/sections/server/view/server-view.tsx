@@ -14,12 +14,11 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { ServerTableHead } from '../server-table-head';
 import { ServerTableRow } from '../server-table-row';
 import { ServerTableToolbar } from '../server-table-toolbar';
-import { TableEmptyRows } from '../table-empty-rows';
-import { TableNoData } from '../table-no-data';
 import { applyFilter, emptyRows, getComparator } from '../utils';
 
 import type { ServerProps } from '../server-table-row';
-
+import { TableEmptyRows } from 'src/components/table/table-empty-rows';
+import { TableNoData } from 'src/components/table/table-no-data';
 // ----------------------------------------------------------------------
 
 export function ServerView() {

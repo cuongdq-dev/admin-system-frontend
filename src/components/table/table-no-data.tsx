@@ -1,15 +1,8 @@
-import type { TableRowProps } from '@mui/material/TableRow';
-
 import Box from '@mui/material/Box';
-import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-
-// ----------------------------------------------------------------------
-
-type TableNoDataProps = TableRowProps & {
-  searchQuery: string;
-};
+import { TableNoDataProps } from './type';
 
 export function TableNoData({ searchQuery, ...other }: TableNoDataProps) {
   return (

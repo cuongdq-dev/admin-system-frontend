@@ -15,13 +15,12 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { TableNoData } from '../table-no-data';
 import { UserTableRow } from '../user-table-row';
 import { UserTableHead } from '../user-table-head';
-import { TableEmptyRows } from '../table-empty-rows';
 import { UserTableToolbar } from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-
+import { TableEmptyRows } from 'src/components/table/table-empty-rows';
+import { TableNoData } from 'src/components/table/table-no-data';
 import type { UserProps } from '../user-table-row';
 
 // ----------------------------------------------------------------------

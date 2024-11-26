@@ -15,8 +15,8 @@ import { SiteTableHead } from '../site-table-head';
 import type { SiteProps } from '../site-table-row';
 import { SiteTableRow } from '../site-table-row';
 import { SiteTableToolbar } from '../site-table-toolbar';
-import { TableEmptyRows } from '../table-empty-rows';
-import { TableNoData } from '../table-no-data';
+import { TableEmptyRows } from 'src/components/table/table-empty-rows';
+import { TableNoData } from 'src/components/table/table-no-data';
 import { applyFilter, emptyRows, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
