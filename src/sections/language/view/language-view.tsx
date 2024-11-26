@@ -11,10 +11,12 @@ import {
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
+import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_LANGUAGE_CODE, PATH_LANGUAGE_CONTENT, PATH_LANGUAGE_UPDATE } from 'src/api-core/path';
+import { ButtonDismissNotify } from 'src/components/button';
 import { TableComponent } from 'src/components/table';
 import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -86,7 +88,7 @@ export function LanguageView() {
             indexCol={true}
             selectCol={true}
             handleClickOpenForm={handleClickOpenForm}
-            actions={{ editBtn: true, deleteBtn: false, popupEdit: true }}
+            actions={{ editBtn: false, deleteBtn: false, popupEdit: true }}
             headLabel={[
               { id: 'code', label: 'Code', sort: true, type: 'text' },
               { id: 'content', label: 'Content', sort: false },
@@ -110,6 +112,12 @@ export function LanguageView() {
               baseURL: PATH_LANGUAGE_UPDATE.replace(':id', formConfig.defaultValues?.id),
               params: formJson,
               onSuccess: () => {
+                enqueueSnackbar('Updated!', {
+                  variant: 'success',
+                  action: (key) => (
+                    <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />
+                  ),
+                });
                 refreshData();
               },
               onHandleError: (error) => {},
