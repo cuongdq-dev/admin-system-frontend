@@ -1,13 +1,28 @@
-import { IconButton, MenuItem, menuItemClasses, MenuList, Popover, TableCell } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  MenuItem,
+  menuItemClasses,
+  MenuList,
+  Popover,
+  TableCell,
+} from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { HttpMethod, invokeRequest } from 'src/api-core';
 import { Iconify } from 'src/components/iconify';
-import { ActionProps } from './type';
-import { HttpMethod } from 'src/api-core';
+import { ButtonDismissNotify } from '../button';
+import { TableActionComponentProps } from './type';
 
-export const TableActionComponent = (props: ActionProps) => {
+export const TableActionComponent = (props: TableActionComponentProps) => {
   const navigate = useNavigate();
-  const { deleteBtn, editBtn, popupEdit, row, handleClickOpenForm } = props;
+  const { deleteBtn, editBtn, popupEdit, row, baseUrl, refreshData, handleClickOpenForm } = props;
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -71,13 +86,60 @@ export const TableActionComponent = (props: ActionProps) => {
             </MenuItem>
           )}
           {deleteBtn && (
-            <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
-              <Iconify icon="solar:trash-bin-trash-bold" />
-              Delete
-            </MenuItem>
+            <ButtonDelete refreshData={refreshData} rowId={row?.id} baseUrl={baseUrl} />
           )}
         </MenuList>
       </Popover>
+    </>
+  );
+};
+
+type ButtonDeleteProps = { baseUrl: string; rowId: string; refreshData?: () => void };
+export const ButtonDelete = (props: ButtonDeleteProps) => {
+  const { baseUrl, rowId, refreshData } = props;
+  const [open, setOpen] = useState(false);
+
+  const handleDeleteRow = () => {
+    invokeRequest({
+      method: HttpMethod.DELETE,
+      baseURL: baseUrl + '/delete/' + rowId,
+      onSuccess: () => {
+        enqueueSnackbar('Deleted!', {
+          variant: 'success',
+          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
+        });
+        refreshData && refreshData();
+      },
+      onHandleError: (error) => {},
+    });
+  };
+  return (
+    <>
+      <MenuItem onClick={() => setOpen(true)} sx={{ color: 'error.main' }}>
+        <Iconify icon="solar:trash-bin-trash-bold" />
+        Delete
+      </MenuItem>
+      <Dialog
+        PaperProps={{ sx: { borderRadius: 3 } }}
+        maxWidth={'sm'}
+        open={open}
+        fullWidth
+        onClose={() => setOpen(false)}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Are you sure want to delete?</DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ padding: 20 }}>
+          <Button color="error" variant="contained" onClick={handleDeleteRow}>
+            Delete
+          </Button>
+          <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

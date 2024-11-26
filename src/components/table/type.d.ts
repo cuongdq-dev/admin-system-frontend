@@ -17,6 +17,15 @@ export type ActionProps = {
   editBtn?: boolean;
   deleteBtn?: boolean;
   popupEdit?: boolean;
+};
+
+export type TableActionComponentProps = {
+  baseUrl: string;
+  row?: Record<string, any>;
+  editBtn?: boolean;
+  deleteBtn?: boolean;
+  popupEdit?: boolean;
+  refreshData?: () => void;
   handleClickOpenForm?: (row: Record<string, any>, action: HttpMethod) => void;
 };
 export type TableComponentProps = {
@@ -25,6 +34,7 @@ export type TableComponentProps = {
   headLabel: HeadLabelProps[];
   indexCol?: boolean;
   refreshNumber?: number;
+  refreshData?: () => void;
   selectCol?: boolean;
   actions?: ActionProps;
   handleClickOpenForm?: (row: Record<string, any>, action: HttpMethod) => void;

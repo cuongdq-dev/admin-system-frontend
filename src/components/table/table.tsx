@@ -21,6 +21,7 @@ export const TableComponent = (props: TableComponentProps) => {
     indexCol,
     selectCol,
     refreshNumber,
+    refreshData,
     tableKey,
     handleClickOpenForm,
     actions = { deleteBtn: false, editBtn: false, popupEdit: false },
@@ -41,7 +42,7 @@ export const TableComponent = (props: TableComponentProps) => {
   useAPI({
     refreshNumber: refreshNumber,
     key: tableKey,
-    baseURL: url + window.location.search,
+    baseURL: url + '/list' + window.location.search,
     onSuccess: (res) => setState(res),
   });
 
@@ -127,7 +128,9 @@ export const TableComponent = (props: TableComponentProps) => {
                     })}
                     <TableActionComponent
                       {...actions}
+                      baseUrl={url}
                       row={row}
+                      refreshData={refreshData}
                       handleClickOpenForm={handleClickOpenForm}
                     />
                   </TableRow>

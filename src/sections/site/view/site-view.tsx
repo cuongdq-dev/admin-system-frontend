@@ -1,38 +1,42 @@
-import { useCallback, useState } from 'react';
-
+import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
-import { Iconify } from 'src/components/iconify';
-import { Scrollbar } from 'src/components/scrollbar';
+import { useState } from 'react';
+import { HttpMethod } from 'src/api-core';
+import { PATH_SITE_LIST } from 'src/api-core/path';
+import { PopupFormTable } from 'src/components/form/form-table';
+import { TableComponent } from 'src/components/table';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { SiteTableHead } from '../site-table-head';
-import type { SiteProps } from '../site-table-row';
-import { SiteTableRow } from '../site-table-row';
-import { SiteTableToolbar } from '../site-table-toolbar';
-import { TableEmptyRows } from 'src/components/table/table-empty-rows';
-import { TableNoData } from 'src/components/table/table-no-data';
-import { applyFilter, emptyRows, getComparator } from '../utils';
 
-// ----------------------------------------------------------------------
-
+type FormConfigState = {
+  open: boolean;
+  title?: string;
+  defaultValues?: Record<string, any>;
+  action?: HttpMethod;
+};
 export function SiteView() {
-  const table = useTable();
+  const tableKey = 'site_table';
+  const [refreshNumber, setRefresh] = useState<number>(0);
 
-  const [filterName, setFilterName] = useState('');
-  const _sites = [] as SiteProps[];
-  const dataFiltered: SiteProps[] = applyFilter({
-    inputData: _sites,
-    comparator: getComparator(table.order, table.orderBy),
-    filterName,
+  const [formConfig, setFormConfig] = useState<FormConfigState>({
+    open: false,
+    title: '',
+    defaultValues: {},
+    action: HttpMethod.PATCH,
   });
 
-  const notFound = !dataFiltered.length && !!filterName;
+  const refreshData = () => {
+    setRefresh(refreshNumber + 1);
+    handleCloseForm();
+  };
+  const handleClickOpenForm = (row: Record<string, any>, action: HttpMethod) => {
+    setFormConfig((s) => ({ ...s, open: true, title: 'Quick Update', defaultValues: row, action }));
+  };
+
+  const handleCloseForm = () => {
+    setFormConfig({ open: false, title: '' });
+  };
 
   return (
     <DashboardContent>
@@ -40,153 +44,85 @@ export function SiteView() {
         <Typography variant="h4" flexGrow={1}>
           Sites
         </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New site
-        </Button>
       </Box>
 
       <Card>
-        <SiteTableToolbar
-          numSelected={table.selected.length}
-          filterName={filterName}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
-          }}
-        />
-
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <SiteTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={_sites.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    _sites.map((site) => site.id)
-                  )
-                }
-                headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row) => (
-                    <SiteTableRow
-                      key={row.id}
-                      row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
-                    />
-                  ))}
-
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, _sites.length)}
-                />
-
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
-
-        <TablePagination
-          component="div"
-          page={table.page}
-          count={_sites.length}
-          rowsPerPage={table.rowsPerPage}
-          onPageChange={table.onChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
+        <TableComponent
+          tableKey={tableKey}
+          refreshNumber={refreshNumber}
+          url={PATH_SITE_LIST}
+          indexCol={true}
+          selectCol={true}
+          handleClickOpenForm={handleClickOpenForm}
+          actions={{ editBtn: false, deleteBtn: false, popupEdit: true }}
+          headLabel={[
+            { id: 'code', label: 'Code', sort: true, type: 'text' },
+            { id: 'content', label: 'Content', sort: false },
+          ]}
         />
       </Card>
+
+      <PopupFormTable
+        baseUrl={`${PATH_SITE_LIST}/update/${formConfig?.defaultValues?.id}`}
+        open={formConfig.open}
+        handleCloseForm={handleCloseForm}
+        refreshData={refreshData}
+        render={() => {
+          return (
+            <>
+              <DialogTitle>{formConfig?.title}</DialogTitle>
+              <DialogContent>
+                <Box gap={2} component={'div'} display={'flex'} flexDirection={'column'}>
+                  <TextField
+                    disabled
+                    value={formConfig?.defaultValues?.lang?.name}
+                    margin="dense"
+                    id="lang"
+                    name="lang"
+                    label="Language"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                  />
+
+                  <TextField
+                    disabled
+                    value={formConfig?.defaultValues?.code}
+                    margin="dense"
+                    id="code"
+                    name="code"
+                    label="Code"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                  />
+
+                  <TextField
+                    defaultValue={formConfig?.defaultValues?.content}
+                    margin="dense"
+                    id="content"
+                    name="content"
+                    label="Content"
+                    multiline
+                    maxRows={5}
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                  />
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
+                  Cancel
+                </Button>
+                <Button variant="contained" type="submit">
+                  {formConfig?.action === HttpMethod.PATCH ? 'Update' : 'Create'}
+                </Button>
+              </DialogActions>
+            </>
+          );
+        }}
+      />
     </DashboardContent>
   );
-}
-
-// ----------------------------------------------------------------------
-
-export function useTable() {
-  const [page, setPage] = useState(0);
-  const [orderBy, setOrderBy] = useState('name');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-
-  const onSort = useCallback(
-    (id: string) => {
-      const isAsc = orderBy === id && order === 'asc';
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(id);
-    },
-    [order, orderBy]
-  );
-
-  const onSelectAllRows = useCallback((checked: boolean, newSelecteds: string[]) => {
-    if (checked) {
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  }, []);
-
-  const onSelectRow = useCallback(
-    (inputValue: string) => {
-      const newSelected = selected.includes(inputValue)
-        ? selected.filter((value) => value !== inputValue)
-        : [...selected, inputValue];
-
-      setSelected(newSelected);
-    },
-    [selected]
-  );
-
-  const onResetPage = useCallback(() => {
-    setPage(0);
-  }, []);
-
-  const onChangePage = useCallback((event: unknown, newPage: number) => {
-    setPage(newPage);
-  }, []);
-
-  const onChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      onResetPage();
-    },
-    [onResetPage]
-  );
-
-  return {
-    page,
-    order,
-    onSort,
-    orderBy,
-    selected,
-    rowsPerPage,
-    onSelectRow,
-    onResetPage,
-    onChangePage,
-    onSelectAllRows,
-    onChangeRowsPerPage,
-  };
 }
