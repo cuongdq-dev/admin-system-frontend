@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { HttpMethod } from 'src/api-core';
 import { PATH_SITE_LIST } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
+import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -44,6 +45,21 @@ export function SiteView() {
         <Typography variant="h4" flexGrow={1}>
           Sites
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setFormConfig((s) => ({
+              ...s,
+              open: true,
+              title: 'Create a new Site',
+              action: HttpMethod.POST,
+            }));
+          }}
+          startIcon={<Iconify icon="mingcute:add-line" />}
+        >
+          New Site
+        </Button>
       </Box>
 
       <Card>

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { HttpMethod } from 'src/api-core';
 import { PATH_SERVER_LIST } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
+import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -44,6 +45,21 @@ export function ServerView() {
         <Typography variant="h4" flexGrow={1}>
           Servers
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setFormConfig((s) => ({
+              ...s,
+              open: true,
+              title: 'Create a new Server',
+              action: HttpMethod.POST,
+            }));
+          }}
+          startIcon={<Iconify icon="mingcute:add-line" />}
+        >
+          New Server
+        </Button>
       </Box>
 
       <Card>
@@ -111,7 +127,7 @@ export function ServerView() {
                   />
                 </Box>
               </DialogContent>
-              <DialogActions>
+              <DialogActions style={{ padding: 20 }}>
                 <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
                   Cancel
                 </Button>
