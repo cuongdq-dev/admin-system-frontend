@@ -9,7 +9,6 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { varAlpha } from 'src/theme/styles';
 
 import { PrivateRoute, PublicRoute } from './components';
-import { LanguageDetail } from 'src/sections/language/view';
 
 // ----------------------------------------------------------------------
 
@@ -105,14 +104,6 @@ export function Router() {
           element: (
             <PrivateRoute>
               <LanguagePage />
-            </PrivateRoute>
-          ),
-        },
-        {
-          path: 'languages/:id',
-          element: (
-            <PrivateRoute>
-              <LanguageDetail />
             </PrivateRoute>
           ),
         },
