@@ -24,6 +24,7 @@ export type TableComponentProps = {
   url: string;
   headLabel: HeadLabelProps[];
   indexCol?: boolean;
+  refreshNumber?: number;
   selectCol?: boolean;
   actions?: ActionProps;
   handleClickOpenForm?: (row: Record<string, any>, action: HttpMethod) => void;

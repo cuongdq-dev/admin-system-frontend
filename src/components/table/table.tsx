@@ -20,6 +20,7 @@ export const TableComponent = (props: TableComponentProps) => {
     url,
     indexCol,
     selectCol,
+    refreshNumber,
     tableKey,
     handleClickOpenForm,
     actions = { deleteBtn: false, editBtn: false, popupEdit: false },
@@ -37,8 +38,8 @@ export const TableComponent = (props: TableComponentProps) => {
       sortBy: [['created_ad', 'DESC']],
     },
   });
-
   useAPI({
+    refreshNumber: refreshNumber,
     key: tableKey,
     baseURL: url + window.location.search,
     onSuccess: (res) => setState(res),

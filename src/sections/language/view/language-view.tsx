@@ -31,6 +31,8 @@ export function LanguageView() {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const [state, setState] = useState<State>();
+  const [refreshNumber, setRefresh] = useState<number>(0);
+
   const [formConfig, setFormConfig] = useState<FormConfigState>({
     open: false,
     title: '',
@@ -45,10 +47,7 @@ export function LanguageView() {
   });
 
   const refreshData = () => {
-    navigate(window.location.search, {
-      replace: true,
-      state: { reloadTable: Date.now(), key: tableKey },
-    });
+    setRefresh(refreshNumber + 1);
     handleCloseForm();
   };
   const handleClickOpenForm = (row: Record<string, any>, action: HttpMethod) => {
@@ -82,6 +81,7 @@ export function LanguageView() {
           </Box>
           <TableComponent
             tableKey={tableKey}
+            refreshNumber={refreshNumber}
             url={PATH_LANGUAGE_CONTENT}
             indexCol={true}
             selectCol={true}
