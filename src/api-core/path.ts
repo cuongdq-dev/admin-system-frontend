@@ -5,7 +5,7 @@ export const PATH_REGISTER = '/auth/email/register';
 // I18n
 export const PATH_LANGUAGE = '/i18n';
 // SITE
-export const PATH_SITE_LIST = '/site';
+export const PATH_SITE = '/site';
 
 // SITE
-export const PATH_SERVER_LIST = '/server';
+export const PATH_SERVER = '/server';

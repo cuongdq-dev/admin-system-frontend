@@ -4,7 +4,9 @@ import type { TextFieldProps } from '@mui/material';
 
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { TextField } from '@mui/material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { useState } from 'react';
+import { Iconify } from '../iconify';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +31,26 @@ export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldPr
           {...other}
         />
       )}
+    />
+  );
+};
+
+export const PasswordText = ({ ...other }: TextFieldProps) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <TextField
+      type={showPassword ? 'text' : 'password'}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+              <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+      {...other}
     />
   );
 };

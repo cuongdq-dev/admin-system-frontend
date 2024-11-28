@@ -9,6 +9,7 @@ import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
 import { TableToolbarComponent } from './table-toolbar';
 import { TableComponentProps, TableMetaData } from './type';
+import { t } from 'i18next';
 
 type TableState = {
   data?: Record<string, any>;
@@ -145,6 +146,7 @@ export const TableComponent = (props: TableComponentProps) => {
 
       <TablePagination
         component="div"
+        labelRowsPerPage={t('pagination_per_page') + ':'}
         page={metaData?.currentPage - 1}
         count={metaData?.totalItems}
         rowsPerPage={metaData?.itemsPerPage}
