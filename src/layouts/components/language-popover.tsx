@@ -1,28 +1,26 @@
-import type { IconButtonProps } from '@mui/material/IconButton';
-
-import { useState, useCallback } from 'react';
-
-import Box from '@mui/material/Box';
-import Popover from '@mui/material/Popover';
-import MenuList from '@mui/material/MenuList';
-import IconButton from '@mui/material/IconButton';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
+import Popover from '@mui/material/Popover';
+import { getEmoji, getLanguage } from 'language-flag-colors';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
 export type LanguagePopoverProps = IconButtonProps & {
-  data?: {
-    value: string;
-    label: string;
-    icon: string;
-  }[];
+  data?: { code: string; name: string }[];
 };
 
 export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProps) {
-  const [locale, setLocale] = useState<string>(data[0].value);
-
+  const { i18n, t } = useTranslation(); // Sử dụng react-i18next để lấy ngôn ngữ hiện tại
+  const [locale, setLocale] = useState<string>(i18n.language); // Lấy ngôn ngữ từ i18n
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
+  const defaultLanguage = getLanguage(navigator.language);
 
+  useEffect(() => {
+    setLocale(i18n.language);
+  }, [i18n.language]);
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
   }, []);
@@ -33,21 +31,10 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
 
   const handleChangeLang = useCallback(
     (newLang: string) => {
-      setLocale(newLang);
+      i18n.changeLanguage(newLang); // Thay đổi ngôn ngữ
       handleClosePopover();
     },
-    [handleClosePopover]
-  );
-
-  const currentLang = data.find((lang) => lang.value === locale);
-
-  const renderFlag = (label?: string, icon?: string) => (
-    <Box
-      component="img"
-      alt={label}
-      src={icon}
-      sx={{ width: 26, height: 20, borderRadius: 0.5, objectFit: 'cover' }}
-    />
+    [i18n, handleClosePopover]
   );
 
   return (
@@ -62,9 +49,8 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
         }}
         {...other}
       >
-        {renderFlag(currentLang?.label, currentLang?.icon)}
+        {getEmoji(defaultLanguage?.country!)}
       </IconButton>
-
       <Popover
         open={!!openPopover}
         anchorEl={openPopover}
@@ -91,16 +77,19 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
             },
           }}
         >
-          {data?.map((option) => (
-            <MenuItem
-              key={option.value}
-              selected={option.value === currentLang?.value}
-              onClick={() => handleChangeLang(option.value)}
-            >
-              {renderFlag(option.label, option.icon)}
-              {option.label}
-            </MenuItem>
-          ))}
+          {data?.map((option) => {
+            const optionLanguage = getLanguage(option.code);
+            return (
+              <MenuItem
+                key={option.code}
+                selected={option.code === i18n?.language}
+                onClick={() => handleChangeLang(option.code)}
+              >
+                {getEmoji(optionLanguage?.country!)}
+                <span>{optionLanguage?.country}</span>
+              </MenuItem>
+            );
+          })}
         </MenuList>
       </Popover>
     </>

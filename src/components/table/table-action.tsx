@@ -19,6 +19,7 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { Iconify } from 'src/components/iconify';
 import { ButtonDismissNotify } from '../button';
 import { TableActionComponentProps } from './type';
+import { Transition } from '../dialog';
 
 export const TableActionComponent = (props: TableActionComponentProps) => {
   const navigate = useNavigate();
@@ -121,6 +122,7 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
       </MenuItem>
       <Dialog
         PaperProps={{ sx: { borderRadius: 3 } }}
+        TransitionComponent={Transition}
         maxWidth={'sm'}
         open={open}
         fullWidth

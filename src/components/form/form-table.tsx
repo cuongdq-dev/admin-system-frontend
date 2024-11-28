@@ -2,6 +2,7 @@ import { Dialog } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { ButtonDismissNotify } from 'src/components/button';
+import { Transition } from '../dialog';
 
 type FormProps = {
   open: boolean;
@@ -20,6 +21,7 @@ export const PopupFormTable = (props: FormProps) => {
       open={open}
       onClose={handleCloseForm}
       fullWidth
+      TransitionComponent={Transition}
       PaperProps={{
         sx: { borderRadius: 3 },
         component: 'form',

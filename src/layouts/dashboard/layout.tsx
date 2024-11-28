@@ -1,27 +1,28 @@
-import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
+import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 
 import { useState } from 'react';
 
-import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 
 import { _langs, _notifications } from 'src/_mock';
 
 import { Iconify } from 'src/components/iconify';
 
-import { Main } from './main';
+import { SvgColor } from 'src/components/svg-color';
 import { layoutClasses } from '../classes';
-import { NavMobile, NavDesktop } from './nav';
-import { navData } from '../config-nav-dashboard';
-import { Searchbar } from '../components/searchbar';
-import { _workspaces } from '../config-nav-workspace';
-import { MenuButton } from '../components/menu-button';
-import { LayoutSection } from '../core/layout-section';
-import { HeaderSection } from '../core/header-section';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
+import { MenuButton } from '../components/menu-button';
 import { NotificationsPopover } from '../components/notifications-popover';
+import { Searchbar } from '../components/searchbar';
+import { _workspaces } from '../config-nav-workspace';
+import { HeaderSection } from '../core/header-section';
+import { LayoutSection } from '../core/layout-section';
+import { Main } from './main';
+import { NavDesktop, NavMobile } from './nav';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
@@ -33,12 +34,58 @@ export type DashboardLayoutProps = {
   };
 };
 
+const icon = (name: string) => (
+  <SvgColor width="100%" height="100%" src={`/assets/icons/navbar/${name}.svg`} />
+);
+
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
+  const { i18n, t } = useTranslation();
 
   const [navOpen, setNavOpen] = useState(false);
-
   const layoutQuery: Breakpoint = 'lg';
+
+  const navData = [
+    {
+      title: t('nav_dashboard'),
+      path: '/',
+      icon: icon('ic-analytics'),
+    },
+
+    {
+      title: 'user',
+      path: '/user',
+      icon: icon('ic-user'),
+    },
+
+    {
+      title: 'Server',
+      path: '/servers',
+      icon: icon('ic-server'),
+    },
+
+    {
+      title: 'Sites',
+      path: '/sites',
+      icon: icon('ic-site'),
+    },
+    {
+      title: 'Product',
+      path: '/products',
+      icon: icon('ic-cart'),
+    },
+    {
+      title: 'Blog',
+      path: '/blog',
+      icon: icon('ic-blog'),
+    },
+
+    {
+      title: 'Languages',
+      path: '/languages',
+      icon: icon('ic-language'),
+    },
+  ];
 
   return (
     <LayoutSection
