@@ -10,6 +10,7 @@ import { Logo } from 'src/components/logo';
 import { Main, CompactContent } from './main';
 import { LayoutSection } from '../core/layout-section';
 import { HeaderSection } from '../core/header-section';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,7 @@ export type SimpleLayoutProps = {
 
 export function SimpleLayout({ sx, children, header, content }: SimpleLayoutProps) {
   const layoutQuery: Breakpoint = 'md';
+  const { t } = useTranslation();
 
   return (
     <LayoutSection
@@ -51,7 +53,7 @@ export function SimpleLayout({ sx, children, header, content }: SimpleLayoutProp
                 color="inherit"
                 sx={{ typography: 'subtitle2' }}
               >
-                Need help?
+                {t('need_help_button')}?
               </Link>
             ),
           }}

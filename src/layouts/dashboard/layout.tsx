@@ -1,6 +1,6 @@
 import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -10,20 +10,21 @@ import { _langs, _notifications } from 'src/_mock';
 
 import { Iconify } from 'src/components/iconify';
 
-import { SvgColor } from 'src/components/svg-color';
 import { layoutClasses } from '../classes';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
 import { MenuButton } from '../components/menu-button';
 import { NotificationsPopover } from '../components/notifications-popover';
 import { Searchbar } from '../components/searchbar';
+import { navData } from '../config-nav-dashboard';
 import { _workspaces } from '../config-nav-workspace';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { Main } from './main';
 import { NavDesktop, NavMobile } from './nav';
+import { useAPI } from 'src/hooks/use-api';
+import { PATH_LANGUAGE } from 'src/api-core/path';
 import { useTranslation } from 'react-i18next';
-
 // ----------------------------------------------------------------------
 
 export type DashboardLayoutProps = {
@@ -34,58 +35,19 @@ export type DashboardLayoutProps = {
   };
 };
 
-const icon = (name: string) => (
-  <SvgColor width="100%" height="100%" src={`/assets/icons/navbar/${name}.svg`} />
-);
-
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
+  const [languages, setLanguages] = useState([]);
+
+  useAPI({
+    key: 'languages_list',
+    baseURL: PATH_LANGUAGE,
+    onSuccess: (res) => setLanguages(res),
+  });
 
   const [navOpen, setNavOpen] = useState(false);
   const layoutQuery: Breakpoint = 'lg';
-
-  const navData = [
-    {
-      title: t('nav_dashboard'),
-      path: '/',
-      icon: icon('ic-analytics'),
-    },
-
-    {
-      title: 'user',
-      path: '/user',
-      icon: icon('ic-user'),
-    },
-
-    {
-      title: 'Server',
-      path: '/servers',
-      icon: icon('ic-server'),
-    },
-
-    {
-      title: 'Sites',
-      path: '/sites',
-      icon: icon('ic-site'),
-    },
-    {
-      title: 'Product',
-      path: '/products',
-      icon: icon('ic-cart'),
-    },
-    {
-      title: 'Blog',
-      path: '/blog',
-      icon: icon('ic-blog'),
-    },
-
-    {
-      title: 'Languages',
-      path: '/languages',
-      icon: icon('ic-language'),
-    },
-  ];
 
   return (
     <LayoutSection
@@ -128,22 +90,22 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
             rightArea: (
               <Box gap={1} display="flex" alignItems="center">
                 <Searchbar />
-                <LanguagePopover data={_langs} />
+                <LanguagePopover data={languages} />
                 <NotificationsPopover data={_notifications} />
                 <AccountPopover
                   data={[
                     {
-                      label: 'Home',
+                      label: t('home_menu'),
                       href: '/',
                       icon: <Iconify width={22} icon="solar:home-angle-bold-duotone" />,
                     },
                     {
-                      label: 'Profile',
+                      label: t('profile_menu'),
                       href: '#',
                       icon: <Iconify width={22} icon="solar:shield-keyhole-bold-duotone" />,
                     },
                     {
-                      label: 'Settings',
+                      label: t('settings_menu'),
                       href: '#',
                       icon: <Iconify width={22} icon="solar:settings-bold-duotone" />,
                     },

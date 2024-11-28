@@ -3,7 +3,7 @@ import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
 import { getEmoji, getLanguage } from 'language-flag-colors';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
@@ -13,14 +13,10 @@ export type LanguagePopoverProps = IconButtonProps & {
 };
 
 export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProps) {
-  const { i18n, t } = useTranslation(); // Sử dụng react-i18next để lấy ngôn ngữ hiện tại
-  const [locale, setLocale] = useState<string>(i18n.language); // Lấy ngôn ngữ từ i18n
+  const { i18n } = useTranslation();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
-  const defaultLanguage = getLanguage(navigator.language);
+  const defaultLanguage = getLanguage(i18n.language);
 
-  useEffect(() => {
-    setLocale(i18n.language);
-  }, [i18n.language]);
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
   }, []);
@@ -29,13 +25,10 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
     setOpenPopover(null);
   }, []);
 
-  const handleChangeLang = useCallback(
-    (newLang: string) => {
-      i18n.changeLanguage(newLang); // Thay đổi ngôn ngữ
-      handleClosePopover();
-    },
-    [i18n, handleClosePopover]
-  );
+  const handleChangeLang = async (newLang: string) => {
+    i18n.changeLanguage(newLang);
+    window.location.reload();
+  };
 
   return (
     <>

@@ -104,8 +104,8 @@ export const _langs = [
     name: 'English',
   },
   {
-    code: 'de',
-    name: 'German',
+    code: 'vn',
+    name: 'Việt Nam',
   },
   {
     code: 'fr',

@@ -8,41 +8,41 @@ const icon = (name: string) => (
 
 export const navData = [
   {
-    title: 'Dashboard',
+    title: 'dashboard_nav',
     path: '/',
     icon: icon('ic-analytics'),
   },
 
   {
-    title: 'user',
+    title: 'user_nav',
     path: '/user',
     icon: icon('ic-user'),
   },
 
   {
-    title: 'Server',
+    title: 'server_nav',
     path: '/servers',
     icon: icon('ic-server'),
   },
 
   {
-    title: 'Sites',
+    title: 'site_nav',
     path: '/sites',
     icon: icon('ic-site'),
   },
   {
-    title: 'Product',
+    title: 'product_nav',
     path: '/products',
     icon: icon('ic-cart'),
   },
   {
-    title: 'Blog',
+    title: 'blog_nav',
     path: '/blog',
     icon: icon('ic-blog'),
   },
 
   {
-    title: 'Languages',
+    title: 'language_nav',
     path: '/languages',
     icon: icon('ic-language'),
   },

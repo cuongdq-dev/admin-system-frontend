@@ -7,6 +7,7 @@ import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import { Iconify } from 'src/components/iconify';
 
 import type { PostItemProps } from './post-item';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
@@ -16,6 +17,7 @@ type PostSearchProps = {
 };
 
 export function PostSearch({ posts, sx }: PostSearchProps) {
+  const { t } = useTranslation();
   return (
     <Autocomplete
       sx={{ width: 280 }}
@@ -38,7 +40,7 @@ export function PostSearch({ posts, sx }: PostSearchProps) {
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="Search post..."
+          placeholder={t('search_item') + '...'}
           InputProps={{
             ...params.InputProps,
             startAdornment: (

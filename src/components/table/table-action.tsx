@@ -20,6 +20,7 @@ import { Iconify } from 'src/components/iconify';
 import { ButtonDismissNotify } from '../button';
 import { TableActionComponentProps } from './type';
 import { Transition } from '../dialog';
+import { useTranslation } from 'react-i18next';
 
 export const TableActionComponent = (props: TableActionComponentProps) => {
   const navigate = useNavigate();
@@ -97,6 +98,7 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
 
 type ButtonDeleteProps = { baseUrl: string; rowId: string; refreshData?: () => void };
 export const ButtonDelete = (props: ButtonDeleteProps) => {
+  const { t } = useTranslation();
   const { baseUrl, rowId, refreshData } = props;
   const [open, setOpen] = useState(false);
 
@@ -118,7 +120,7 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
     <>
       <MenuItem onClick={() => setOpen(true)} sx={{ color: 'error.main' }}>
         <Iconify icon="solar:trash-bin-trash-bold" />
-        Delete
+        {t('delete_button')}
       </MenuItem>
       <Dialog
         PaperProps={{ sx: { borderRadius: 3 } }}
@@ -129,16 +131,16 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
         onClose={() => setOpen(false)}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">Delete</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">{t('delete_form_label')}</DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure want to delete?</DialogContentText>
+          <DialogContentText>{t('delete_form_title')}</DialogContentText>
         </DialogContent>
         <DialogActions style={{ padding: 20 }}>
           <Button color="error" variant="contained" onClick={handleDeleteRow}>
-            Delete
+            {t('delete_button')}
           </Button>
           <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
-            Cancel
+            {t('cancel_button')}
           </Button>
         </DialogActions>
       </Dialog>

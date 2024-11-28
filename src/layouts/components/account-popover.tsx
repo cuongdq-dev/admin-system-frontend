@@ -25,6 +25,7 @@ import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { invokeRequest, HttpMethod } from 'src/api-core';
 import { enqueueSnackbar } from 'notistack';
 import { ButtonDismissNotify } from 'src/components/button';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ export type AccountPopoverProps = IconButtonProps & {
 
 export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const router = useRouter();
 
@@ -167,7 +169,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
             size="medium"
             variant="text"
           >
-            Logout
+            {t('logout_button')}
           </Button>
         </Box>
       </Popover>

@@ -15,6 +15,7 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SIGN_IN } from 'src/api-core/path';
 import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
 import { Iconify } from '../../../components/iconify';
+import { useTranslation } from 'react-i18next';
 
 export type JwtPayload = {
   id: string;
@@ -25,6 +26,7 @@ export type JwtPayload = {
 
 export const SignInForm = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -74,11 +76,11 @@ export const SignInForm = () => {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label={t('signin_item_email')} />
 
         <RHFTextField
           name="password"
-          label="Password"
+          label={t('signin_item_password')}
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -93,9 +95,9 @@ export const SignInForm = () => {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <RHFCheckbox name="remember" label="Remember me" control={<></>} />
+        <RHFCheckbox name="remember" label={t('remember_me')} control={<></>} />
         <Link variant="subtitle2" underline="hover">
-          Forgot password?
+          {t('forgot_password')}
         </Link>
       </Stack>
 
@@ -106,7 +108,7 @@ export const SignInForm = () => {
         variant="contained"
         loading={isSubmitting}
       >
-        SignIn
+        {t('login_button')}
       </LoadingButton>
     </FormProvider>
   );

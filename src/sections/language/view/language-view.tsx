@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { HttpMethod } from 'src/api-core';
 import { PATH_LANGUAGE } from 'src/api-core/path';
@@ -20,6 +21,8 @@ type FormConfigState = {
   action?: HttpMethod;
 };
 export function LanguageView() {
+  const { t } = useTranslation();
+
   const tableKey = 'language_table';
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
@@ -44,7 +47,13 @@ export function LanguageView() {
     handleCloseForm();
   };
   const handleClickOpenForm = (row: Record<string, any>, action: HttpMethod) => {
-    setFormConfig((s) => ({ ...s, open: true, title: 'Quick Update', defaultValues: row, action }));
+    setFormConfig((s) => ({
+      ...s,
+      open: true,
+      title: t('update_form_label'),
+      defaultValues: row,
+      action,
+    }));
   };
 
   const handleCloseForm = () => {
@@ -55,7 +64,7 @@ export function LanguageView() {
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-          Languages
+          {t('language_table_title')}
         </Typography>
       </Box>
 
@@ -66,7 +75,7 @@ export function LanguageView() {
               onChange={(_, value) => navigate(value ? '?lang=' + value : '')}
               aria-label="lab API tabs example"
             >
-              <Tab label={'All'} value={''} />
+              <Tab label={t('language_tab_all_label')} value={''} />
               {state?.map((s) => {
                 return <Tab key={s.name + '_' + s.code} label={s.name} value={s.code} />;
               })}
@@ -82,8 +91,8 @@ export function LanguageView() {
             handleClickOpenForm={handleClickOpenForm}
             actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
             headLabel={[
-              { id: 'code', label: 'Code', sort: true, type: 'text' },
-              { id: 'content', label: 'Content', sort: false },
+              { id: 'code', label: t('language_item_code'), sort: true, type: 'text' },
+              { id: 'content', label: t('language_item_content'), sort: false },
             ]}
           />
         </TabContext>
@@ -107,7 +116,7 @@ export function LanguageView() {
                     margin="dense"
                     id="lang"
                     name="lang"
-                    label="Language"
+                    label={t('language_item_language')}
                     type="text"
                     fullWidth
                     variant="outlined"
@@ -119,7 +128,7 @@ export function LanguageView() {
                     margin="dense"
                     id="code"
                     name="code"
-                    label="Code"
+                    label={t('language_item_code')}
                     type="text"
                     fullWidth
                     variant="outlined"
@@ -130,7 +139,7 @@ export function LanguageView() {
                     margin="dense"
                     id="content"
                     name="content"
-                    label="Content"
+                    label={t('language_item_content')}
                     multiline
                     maxRows={5}
                     type="text"
@@ -141,10 +150,10 @@ export function LanguageView() {
               </DialogContent>
               <DialogActions style={{ padding: 20 }}>
                 <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
-                  Cancel
+                  {t('cancel_button')}
                 </Button>
                 <Button variant="contained" type="submit">
-                  {formConfig.action === HttpMethod.PATCH ? 'Update' : 'Create'}
+                  {formConfig.action === HttpMethod.PATCH ? t('update_button') : t('create_button')}
                 </Button>
               </DialogActions>
             </>

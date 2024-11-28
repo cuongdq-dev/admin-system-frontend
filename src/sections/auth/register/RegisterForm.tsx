@@ -15,11 +15,13 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_REGISTER } from 'src/api-core/path';
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import { Iconify } from '../../../components/iconify';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
 export function RegisterForm() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -71,12 +73,12 @@ export function RegisterForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="name" label="User Name" />
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="name" label={t('signup_item_user_name')} />
+        <RHFTextField name="email" label={t('signup_item_email')} />
 
         <RHFTextField
           name="password"
-          label="Password"
+          label={t('signup_item_password')}
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -96,24 +98,24 @@ export function RegisterForm() {
           variant="contained"
           loading={isSubmitting}
         >
-          Register
+          {t('register_button')}
         </LoadingButton>
         <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-          By registering, I agree to Minimal&nbsp;
+          {t('agree_to')}&nbsp;
           <Link underline="always" color="text.primary" href="#">
-            Terms of Service
+            {t('terms_of_service')}
           </Link>{' '}
-          and{' '}
+          {t('and')}{' '}
           <Link underline="always" color="text.primary" href="#">
-            Privacy Policy
+            {t('privacy_policy')}
           </Link>
           .
         </Typography>
 
         <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-          Already have an account?{' '}
+          {t('allready_account')}{' '}
           <Link variant="subtitle2" to="/sign-in" component={RouterLink}>
-            Login
+            {t('login_button')}
           </Link>
         </Typography>
       </Stack>

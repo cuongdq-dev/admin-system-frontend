@@ -12,6 +12,7 @@ import { Logo } from 'src/components/logo';
 import { Main } from './main';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +25,7 @@ export type AuthLayoutProps = {
 };
 
 export function AuthLayout({ sx, children, header }: AuthLayoutProps) {
+  const { t } = useTranslation();
   const layoutQuery: Breakpoint = 'md';
 
   return (
@@ -57,7 +59,7 @@ export function AuthLayout({ sx, children, header }: AuthLayoutProps) {
                 color="inherit"
                 sx={{ typography: 'subtitle2' }}
               >
-                Need help?
+                {t('need_help_button')}?
               </Link>
             ),
           }}

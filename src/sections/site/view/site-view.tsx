@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { HttpMethod } from 'src/api-core';
 import { PATH_SITE_LIST } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
@@ -17,6 +18,7 @@ type FormConfigState = {
   action?: HttpMethod;
 };
 export function SiteView() {
+  const { t } = useTranslation();
   const tableKey = 'site_table';
   const [refreshNumber, setRefresh] = useState<number>(0);
 
@@ -58,7 +60,7 @@ export function SiteView() {
           }}
           startIcon={<Iconify icon="mingcute:add-line" />}
         >
-          New Site
+          {t('new_site_button')}
         </Button>
       </Box>
 

@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
+import { useTranslation } from 'react-i18next';
 import { Iconify } from 'src/components/iconify';
 import { TableToolbarProps } from './type';
 
@@ -12,6 +13,8 @@ import { TableToolbarProps } from './type';
 
 export function TableToolbarComponent(props: TableToolbarProps) {
   const { numSelected, filterName, onFilterName } = props;
+  const { t } = useTranslation();
+
   return (
     <Toolbar
       sx={{
@@ -31,7 +34,7 @@ export function TableToolbarComponent(props: TableToolbarProps) {
           fullWidth
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search..."
+          placeholder={t('search_item') + '...'}
           startAdornment={
             <InputAdornment position="start">
               <Iconify width={20} icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
@@ -42,13 +45,13 @@ export function TableToolbarComponent(props: TableToolbarProps) {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <Tooltip title={t('delete_button')}>
           <IconButton>
             <Iconify icon="solar:trash-bin-trash-bold" />
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
+        <Tooltip title={t('filter_list_title')}>
           <IconButton>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>

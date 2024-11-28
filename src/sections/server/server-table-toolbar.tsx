@@ -6,6 +6,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { Iconify } from 'src/components/iconify';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +21,8 @@ export function ServerTableToolbar({
   filterName,
   onFilterName,
 }: ServerTableToolbarProps) {
+  const { t } = useTranslation();
+
   return (
     <Toolbar
       sx={{
@@ -42,7 +45,7 @@ export function ServerTableToolbar({
           fullWidth
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search server..."
+          placeholder={t('search_item') + '...'}
           startAdornment={
             <InputAdornment position="start">
               <Iconify width={20} icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
