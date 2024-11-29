@@ -1,19 +1,18 @@
-import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Button, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { HttpMethod } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
-import { PasswordText } from 'src/components/hook-form/RHFTextField';
+import { PasswordText, RHFTextField } from 'src/components/hook-form/RHFTextField';
 import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { DashboardContent } from 'src/layouts/dashboard';
-
-type State = { id: string; code: string; name: string; description: string }[];
+import * as Yup from 'yup';
 type FormConfigState = {
   open: boolean;
   title?: string;
@@ -31,8 +30,6 @@ export function ServerView() {
   const { t } = useTranslation();
 
   const tableKey = 'server_table';
-  const navigate = useNavigate();
-  const queryParams = new URLSearchParams(location.search);
   const [refreshNumber, setRefresh] = useState<number>(0);
 
   const [formConfig, setFormConfig] = useState<FormConfigState>({
@@ -101,19 +98,22 @@ export function ServerView() {
         handleCloseForm={handleCloseForm}
         refreshData={refreshData}
         action={formConfig.action}
-        baseUrl={
-          PATH_SERVER +
-          (formConfig.action === HttpMethod.PATCH
-            ? '/update/' + formConfig.defaultValues?.id
-            : '/create')
-        }
-        render={() => {
+        defaultValues={formConfig.defaultValues}
+        baseUrl={PATH_SERVER}
+        schema={{
+          name: Yup.string().required('Email is required'),
+          host: Yup.string().required('Password is required'),
+          port: Yup.string().required('Password is required'),
+          password: Yup.string().required('Password is required'),
+          user: Yup.string().required('Password is required'),
+        }}
+        render={({ isSubmitting }: { isSubmitting: boolean }) => {
           return (
             <>
               <DialogTitle>{formConfig.title}</DialogTitle>
               <DialogContent>
                 <Box gap={2} component={'div'} display={'flex'} flexDirection={'column'}>
-                  <TextField
+                  <RHFTextField
                     defaultValue={formConfig.defaultValues?.name}
                     id="name"
                     name="name"
@@ -123,7 +123,7 @@ export function ServerView() {
                     variant="outlined"
                   />
 
-                  <TextField
+                  <RHFTextField
                     defaultValue={formConfig.defaultValues?.host}
                     id="host"
                     name="host"
@@ -133,7 +133,7 @@ export function ServerView() {
                     variant="outlined"
                   />
 
-                  <TextField
+                  <RHFTextField
                     defaultValue={formConfig.defaultValues?.port}
                     id="port"
                     name="port"
@@ -143,7 +143,7 @@ export function ServerView() {
                     variant="outlined"
                   />
 
-                  <TextField
+                  <RHFTextField
                     defaultValue={formConfig.defaultValues?.user}
                     id="user"
                     name="user"
@@ -167,9 +167,10 @@ export function ServerView() {
                 <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
                   {t('cancel_button')}
                 </Button>
-                <Button variant="contained" type="submit">
+
+                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                   {formConfig.action === HttpMethod.PATCH ? t('update_button') : t('create_button')}
-                </Button>
+                </LoadingButton>
               </DialogActions>
             </>
           );

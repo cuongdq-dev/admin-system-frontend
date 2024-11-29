@@ -1,31 +1,28 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
-import MenuList from '@mui/material/MenuList';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
 
-import { useRouter, usePathname } from 'src/routes/hooks';
+import { usePathname, useRouter } from 'src/routes/hooks';
 
 import { removeCookie } from 'src/utils/cookies';
 
 import { _myAccount } from 'src/_mock';
-// import { postApi } from 'src/api-core';
-import { PATH_SIGN_OUT } from 'src/api-core/path';
-import Cookies from 'js-cookie';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { invokeRequest, HttpMethod } from 'src/api-core';
 import { enqueueSnackbar } from 'notistack';
-import { ButtonDismissNotify } from 'src/components/button';
 import { useTranslation } from 'react-i18next';
+import { HttpMethod, invokeRequest } from 'src/api-core';
+import { PATH_SIGN_OUT } from 'src/api-core/path';
+import { ButtonDismissNotify } from 'src/components/button';
 
 // ----------------------------------------------------------------------
 
@@ -149,7 +146,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
                 method: HttpMethod.POST,
                 baseURL: PATH_SIGN_OUT,
                 onHandleError: (response) => {
-                  enqueueSnackbar('I use snackbars responsibly', {
+                  enqueueSnackbar(t('notify_success_api_call'), {
                     variant: 'error',
                     action: (key) => (
                       <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />

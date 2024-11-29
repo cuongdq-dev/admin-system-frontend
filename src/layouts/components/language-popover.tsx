@@ -2,9 +2,12 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
+import { t } from 'i18next';
 import { getEmoji, getLanguage } from 'language-flag-colors';
+import { enqueueSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ButtonDismissNotify } from 'src/components/button';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +30,15 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
 
   const handleChangeLang = async (newLang: string) => {
     i18n.changeLanguage(newLang);
-    window.location.reload();
+
+    enqueueSnackbar(t('notify_changed_language'), {
+      variant: 'success',
+      key: 'change_language' + newLang,
+    });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   return (

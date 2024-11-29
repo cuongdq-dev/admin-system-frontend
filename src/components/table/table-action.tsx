@@ -14,13 +14,13 @@ import {
 } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { Iconify } from 'src/components/iconify';
 import { ButtonDismissNotify } from '../button';
-import { TableActionComponentProps } from './type';
 import { Transition } from '../dialog';
-import { useTranslation } from 'react-i18next';
+import { TableActionComponentProps } from './type';
 
 export const TableActionComponent = (props: TableActionComponentProps) => {
   const navigate = useNavigate();
@@ -107,7 +107,7 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
       method: HttpMethod.DELETE,
       baseURL: baseUrl + '/delete/' + rowId,
       onSuccess: () => {
-        enqueueSnackbar('Deleted!', {
+        enqueueSnackbar(t('notify_success_delete'), {
           variant: 'success',
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
         });
