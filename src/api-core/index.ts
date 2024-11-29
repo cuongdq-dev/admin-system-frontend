@@ -76,7 +76,7 @@ export const invokeRequest = async (options: RequestProps) => {
     else response = await ApiCore.get(endpointRequest, { params: body });
     onSuccess(response.data);
   } catch (error) {
-    // handleError(error as AxiosError);
+    handleError(error as AxiosError);
     onHandleError && onHandleError(error?.response?.data);
   }
 };
