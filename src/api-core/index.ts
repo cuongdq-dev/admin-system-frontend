@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { default as queryString } from 'query-string';
-import { getCookie } from '../utils/cookies';
+import { getCookie, removeCookie } from '../utils/cookies';
 
 export enum HttpMethod {
   GET = 'GET',
@@ -32,6 +32,9 @@ export const handleError = (err: AxiosError) => {
   const statusErr = err.response?.status;
   if (statusErr === 401) {
     location.replace('/sign-in');
+    removeCookie('token');
+    removeCookie('refresh-token');
+    removeCookie('user-info');
   } else if (statusErr === 403 || statusErr === 404) {
     location.replace('/404');
   } else {
