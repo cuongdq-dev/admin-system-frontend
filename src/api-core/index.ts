@@ -36,7 +36,7 @@ export const handleError = (err: AxiosError) => {
     removeCookie('refresh-token');
     removeCookie('user-info');
   } else if (statusErr === 403 || statusErr === 404) {
-    location.replace('/404');
+    // location.replace('/404');
   } else {
   }
 };

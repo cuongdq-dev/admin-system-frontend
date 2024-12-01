@@ -65,7 +65,6 @@ export function hexToRgbChannel(hex: string) {
  */
 export function createPaletteChannel(hexPalette: Record<string, string>) {
   const channelPalette: Record<string, string> = {};
-
   Object.entries(hexPalette).forEach(([key, value]) => {
     channelPalette[`${key}Channel`] = hexToRgbChannel(value);
   });
@@ -76,7 +75,8 @@ export function createPaletteChannel(hexPalette: Record<string, string>) {
 /**
  * Color with alpha channel
  */
-export function varAlpha(color: string, opacity = 1) {
+export function varAlpha(colorString: string, opacity = 1) {
+  const color = colorString || '';
   const unsupported =
     color.startsWith('#') ||
     color.startsWith('rgb') ||

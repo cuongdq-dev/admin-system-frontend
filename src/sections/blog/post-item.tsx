@@ -175,7 +175,7 @@ export function PostItem({
               width: '100%',
               height: '100%',
               position: 'absolute',
-              bgcolor: varAlpha(theme.palette.grey['900Channel'], 0.72),
+              // bgcolor: varAlpha(theme.palette.grey['900Channel'], 0.72),
             },
           }),
           ...(latestPostLarge && {

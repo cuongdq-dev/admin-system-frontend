@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material/styles';
 import { varAlpha } from '../styles';
 import { grey, info, error, common, primary, success, warning, secondary } from './palette';
 
@@ -43,7 +44,9 @@ export function createShadowColor(colorChannel: string) {
 }
 
 export function customShadows() {
-  const colorChannel = grey['500Channel'];
+  const theme = useTheme();
+
+  const colorChannel = grey[theme.palette.mode]['500Channel'];
 
   return {
     z1: `0 1px 2px 0 ${varAlpha(colorChannel, 0.16)}`,

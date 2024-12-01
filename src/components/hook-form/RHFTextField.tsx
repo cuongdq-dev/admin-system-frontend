@@ -15,39 +15,48 @@ interface RHFTextFieldProps {
 }
 
 export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldProps) => {
-  const { control } = useFormContext();
-
+  const { control, setValue } = useFormContext();
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState: { error } }) => (
-        <TextField
-          {...field}
-          fullWidth
-          value={typeof field.value === 'number' && field.value === 0 ? '' : field.value}
-          error={!!error}
-          helperText={error?.message}
-          {...other}
-        />
-      )}
+      defaultValue={other.defaultValue}
+      render={({ field, fieldState: { error } }) => {
+        return (
+          <TextField
+            {...field}
+            fullWidth
+            onBlur={(event) => {
+              setValue(name, event.target.value.trim());
+            }}
+            value={typeof field.value === 'number' && field.value === 0 ? '' : field.value}
+            error={!!error}
+            helperText={error?.message}
+            {...other}
+          />
+        );
+      }}
     />
   );
 };
 
 export const PasswordText = ({ name, ...other }: RHFTextFieldProps & TextFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
 
   return (
     <Controller
       name={name}
+      defaultValue={other.defaultValue}
       control={control}
       render={({ field, fieldState: { error } }) => (
         <TextField
           {...field}
           type={showPassword ? 'text' : 'password'}
           error={!!error}
+          onBlur={(event) => {
+            setValue(name, event.target.value.trim());
+          }}
           value={typeof field.value === 'number' && field.value === 0 ? '' : field.value}
           helperText={error?.message}
           InputProps={{

@@ -2,7 +2,7 @@ import type { Theme } from '@mui/material/styles';
 
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
-import { shadows, typography, components, colorSchemes, customShadows } from './core';
+import { colorSchemes, components, customShadows, shadows, typography } from './core';
 
 // ----------------------------------------------------------------------
 

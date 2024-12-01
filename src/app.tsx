@@ -8,13 +8,7 @@ export default function App() {
   useScrollToTop();
 
   return (
-    <SnackbarProvider
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      maxSnack={5}
-    >
+    <SnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }} maxSnack={5}>
       <ThemeProvider>
         <Router />
       </ThemeProvider>

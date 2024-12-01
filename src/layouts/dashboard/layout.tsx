@@ -1,15 +1,20 @@
 import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 
-import { _langs, _notifications } from 'src/_mock';
+import { _notifications } from 'src/_mock';
 
 import { Iconify } from 'src/components/iconify';
 
+import { useTranslation } from 'react-i18next';
+// import { Link } from 'react-router-dom';
+
+import { PATH_LANGUAGE } from 'src/api-core/path';
+import CommonBreadcrumbs from 'src/components/breadcrumbs';
+import { useAPI } from 'src/hooks/use-api';
 import { layoutClasses } from '../classes';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
@@ -22,9 +27,7 @@ import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { Main } from './main';
 import { NavDesktop, NavMobile } from './nav';
-import { useAPI } from 'src/hooks/use-api';
-import { PATH_LANGUAGE } from 'src/api-core/path';
-import { useTranslation } from 'react-i18next';
+import { SettingPopover } from '../components/setting-popover';
 // ----------------------------------------------------------------------
 
 export type DashboardLayoutProps = {
@@ -65,11 +68,6 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
           }}
           sx={header?.sx}
           slots={{
-            topArea: (
-              <Alert severity="info" sx={{ display: 'none', borderRadius: 0 }}>
-                This is an info Alert.
-              </Alert>
-            ),
             leftArea: (
               <>
                 <MenuButton
@@ -79,6 +77,7 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
                     [theme.breakpoints.up(layoutQuery)]: { display: 'none' },
                   }}
                 />
+                <CommonBreadcrumbs />
                 <NavMobile
                   data={navData}
                   open={navOpen}
@@ -89,9 +88,10 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
             ),
             rightArea: (
               <Box gap={1} display="flex" alignItems="center">
-                <Searchbar />
+                {/* <Searchbar /> */}
                 <LanguagePopover data={languages} />
                 <NotificationsPopover data={_notifications} />
+                <SettingPopover />
                 <AccountPopover
                   data={[
                     {

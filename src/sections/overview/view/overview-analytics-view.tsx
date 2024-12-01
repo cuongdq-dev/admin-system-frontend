@@ -18,7 +18,7 @@ import { AnalyticsConversionRates } from '../analytics-conversion-rates';
 
 export function OverviewAnalyticsView() {
   return (
-    <DashboardContent maxWidth="xl">
+    <DashboardContent>
       <Typography variant="h4" sx={{ mb: { xs: 3, md: 5 } }}>
         Hi, Welcome back 👋
       </Typography>

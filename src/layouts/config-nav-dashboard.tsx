@@ -21,18 +21,18 @@ export const navData = [
 
   {
     title: 'server_nav',
-    path: '/servers',
+    path: '/server',
     icon: icon('ic-server'),
   },
 
   {
     title: 'site_nav',
-    path: '/sites',
+    path: '/site',
     icon: icon('ic-site'),
   },
   {
     title: 'product_nav',
-    path: '/products',
+    path: '/product',
     icon: icon('ic-cart'),
   },
   {
@@ -43,7 +43,7 @@ export const navData = [
 
   {
     title: 'language_nav',
-    path: '/languages',
+    path: '/language',
     icon: icon('ic-language'),
   },
 ];

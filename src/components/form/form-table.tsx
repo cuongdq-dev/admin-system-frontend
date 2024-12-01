@@ -26,7 +26,10 @@ export const PopupFormTable = (props: FormProps) => {
   const { action, baseUrl, defaultValues, schema = {}, rowId, open } = props;
   const { render, handleCloseForm, refreshData } = props;
   const url = baseUrl + (action === HttpMethod.PATCH ? '/update/' + rowId : '/create');
-  const methods = useForm({ resolver: yupResolver(Yup.object().shape(schema)), defaultValues });
+  const methods = useForm({
+    resolver: yupResolver(Yup.object().shape(schema)),
+    defaultValues,
+  });
 
   const {
     handleSubmit,
@@ -35,10 +38,10 @@ export const PopupFormTable = (props: FormProps) => {
   } = methods;
 
   useEffect(() => {
-    if (!open) reset();
+    reset();
   }, [open]);
 
-  const onSubmit = async (values: { email?: string; password?: string; remember?: boolean }) => {
+  const onSubmit = async (values: Record<string, any>) => {
     invokeRequest({
       method: action,
       baseURL: url,
@@ -60,6 +63,7 @@ export const PopupFormTable = (props: FormProps) => {
           variant: 'success',
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
         });
+        reset();
         refreshData && refreshData();
       },
     });

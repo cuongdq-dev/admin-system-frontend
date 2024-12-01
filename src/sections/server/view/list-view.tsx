@@ -13,20 +13,14 @@ import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { DashboardContent } from 'src/layouts/dashboard';
 import * as Yup from 'yup';
+
 type FormConfigState = {
   open: boolean;
   title?: string;
-  defaultValues?: {
-    id?: string;
-    host?: string;
-    name?: string;
-    port?: string;
-    password?: string;
-    user?: string;
-  };
+  defaultValues?: IServer;
   action?: HttpMethod;
 };
-export function ServerView() {
+export function ListView() {
   const { t } = useTranslation();
 
   const tableKey = 'server_table';
@@ -67,6 +61,8 @@ export function ServerView() {
           onClick={() =>
             setFormConfig({ open: true, title: t('create_form_label'), action: HttpMethod.POST })
           }
+          color="inherit"
+          size="medium"
           variant="contained"
           startIcon={<Iconify icon="mingcute:add-line" />}
         >
@@ -94,6 +90,7 @@ export function ServerView() {
       </Card>
 
       <PopupFormTable
+        rowId={formConfig.defaultValues?.id}
         open={formConfig.open}
         handleCloseForm={handleCloseForm}
         refreshData={refreshData}
@@ -112,7 +109,13 @@ export function ServerView() {
             <>
               <DialogTitle>{formConfig.title}</DialogTitle>
               <DialogContent>
-                <Box gap={2} component={'div'} display={'flex'} flexDirection={'column'}>
+                <Box
+                  gap={2}
+                  marginTop={1}
+                  component={'div'}
+                  display={'flex'}
+                  flexDirection={'column'}
+                >
                   <RHFTextField
                     defaultValue={formConfig.defaultValues?.name}
                     id="name"

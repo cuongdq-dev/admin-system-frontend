@@ -18,34 +18,21 @@ import { Scrollbar } from 'src/components/scrollbar';
 
 import { WorkspacesPopover } from '../components/workspaces-popover';
 
-import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 import { useTranslation } from 'react-i18next';
+import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 
 // ----------------------------------------------------------------------
 
 export type NavContentProps = {
-  data: {
-    path: string;
-    title: string;
-    icon: React.ReactNode;
-    info?: React.ReactNode;
-  }[];
-  slots?: {
-    topArea?: React.ReactNode;
-    bottomArea?: React.ReactNode;
-  };
+  data: { path: string; title: string; icon: React.ReactNode; info?: React.ReactNode }[];
+  slots?: { topArea?: React.ReactNode; bottomArea?: React.ReactNode };
   workspaces: WorkspacesPopoverProps['data'];
   sx?: SxProps<Theme>;
 };
 
-export function NavDesktop({
-  sx,
-  data,
-  slots,
-  workspaces,
-  layoutQuery,
-}: NavContentProps & { layoutQuery: Breakpoint }) {
+export function NavDesktop(props: NavContentProps & { layoutQuery: Breakpoint }) {
   const theme = useTheme();
+  const { sx, data, slots, workspaces, layoutQuery } = props;
 
   return (
     <Box

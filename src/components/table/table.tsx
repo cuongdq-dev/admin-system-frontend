@@ -1,4 +1,5 @@
 import { Table, TableBody, TableContainer, TablePagination, TableRow } from '@mui/material';
+import { t } from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAPI } from 'src/hooks/use-api';
@@ -9,7 +10,6 @@ import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
 import { TableToolbarComponent } from './table-toolbar';
 import { TableComponentProps, TableMetaData } from './type';
-import { t } from 'i18next';
 
 type TableState = {
   data?: Record<string, any>;

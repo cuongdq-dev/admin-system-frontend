@@ -1,12 +1,12 @@
-import type { Shadows } from '@mui/material/styles';
-
-import { grey } from './palette';
+import { useTheme, type Shadows } from '@mui/material/styles';
 import { varAlpha } from '../styles';
+import { grey } from './palette';
 
 // ----------------------------------------------------------------------
 
 export function shadows(): Shadows {
-  const colorChannel = grey['500Channel'];
+  const theme = useTheme();
+  const colorChannel = grey[theme.palette.mode]['500Channel'];
 
   const color1 = varAlpha(colorChannel, 0.2);
   const color2 = varAlpha(colorChannel, 0.14);

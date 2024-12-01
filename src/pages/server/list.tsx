@@ -1,8 +1,7 @@
+import { t } from 'i18next';
 import { Helmet } from 'react-helmet-async';
-
 import { CONFIG } from 'src/config-global';
-
-import { LanguageView } from 'src/sections/language/view';
+import { ListView } from 'src/sections/server';
 
 // ----------------------------------------------------------------------
 
@@ -10,9 +9,10 @@ export default function Page() {
   return (
     <>
       <Helmet>
-        <title> {`Languages - ${CONFIG.appName}`}</title>
+        <title> {`${t('server_list_page')} - ${CONFIG.appName}`}</title>
       </Helmet>
-      <LanguageView />
+
+      <ListView />
     </>
   );
 }

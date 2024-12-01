@@ -1,6 +1,6 @@
 import type { TypographyOptions } from '@mui/material/styles/createTypography';
 
-import { setFont, pxToRem, responsiveFontSizes } from '../styles/utils';
+import { pxToRem, responsiveFontSizes, setFont } from '../styles/utils';
 
 // ----------------------------------------------------------------------
 

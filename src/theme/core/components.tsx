@@ -41,7 +41,7 @@ const MuiCard: Components<Theme>['MuiCard'] = {
     root: ({ theme }) => ({
       zIndex: 0,
       position: 'relative',
-      boxShadow: theme.customShadows.card,
+      // boxShadow: theme.customShadows.card,
       borderRadius: theme.shape.borderRadius * 2,
     }),
   },
@@ -72,7 +72,7 @@ const MuiPaper: Components<Theme>['MuiPaper'] = {
     elevation: 0,
   },
   styleOverrides: {
-    root: { backgroundImage: 'none' },
+    root: ({ theme }) => ({ backgroundImage: 'none', boxShadow: 'none' }),
     outlined: ({ theme }) => ({
       borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
     }),
@@ -96,6 +96,10 @@ const MuiMenuItem: Components<Theme>['MuiMenuItem'] = {
       ...theme.typography.body2,
     }),
   },
+};
+
+const MuiDrawer: Components<Theme>['MuiDrawer'] = {
+  styleOverrides: {},
 };
 
 const MuiLink: Components<Theme>['MuiLink'] = {
@@ -165,6 +169,7 @@ export const components = {
   MuiButton,
   MuiBackdrop,
   MuiMenuItem,
+  MuiDrawer,
   MuiCheckbox,
   MuiTableCell,
   MuiCardHeader,

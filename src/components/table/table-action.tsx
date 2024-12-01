@@ -12,6 +12,7 @@ import {
   Popover,
   TableCell,
 } from '@mui/material';
+import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +25,8 @@ import { TableActionComponentProps } from './type';
 
 export const TableActionComponent = (props: TableActionComponentProps) => {
   const navigate = useNavigate();
-  const { deleteBtn, editBtn, popupEdit, row, baseUrl, refreshData, handleClickOpenForm } = props;
+  const { deleteBtn, editBtn, popupEdit, row, baseUrl } = props;
+  const { refreshData, handleClickOpenForm } = props;
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -84,7 +86,7 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
               }}
             >
               <Iconify icon="solar:pen-bold" />
-              Edit
+              {t('detail_button')}
             </MenuItem>
           )}
           {deleteBtn && (

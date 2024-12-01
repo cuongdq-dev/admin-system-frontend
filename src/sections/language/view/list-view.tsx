@@ -1,4 +1,4 @@
-import { TabContext, TabList } from '@mui/lab';
+import { LoadingButton, TabContext, TabList } from '@mui/lab';
 import { Button, DialogActions, DialogContent, DialogTitle, Tab, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -9,18 +9,20 @@ import { useNavigate } from 'react-router-dom';
 import { HttpMethod } from 'src/api-core';
 import { PATH_LANGUAGE } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
+import { RHFTextField } from 'src/components/hook-form';
 import { TableComponent } from 'src/components/table';
 import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
+import * as Yup from 'yup';
 
 type State = { id: string; code: string; name: string; description: string }[];
 type FormConfigState = {
   open: boolean;
   title?: string;
-  defaultValues?: Record<string, any>;
+  defaultValues?: ITransition;
   action?: HttpMethod;
 };
-export function LanguageView() {
+export function ListView() {
   const { t } = useTranslation();
 
   const tableKey = 'language_table';
@@ -46,7 +48,7 @@ export function LanguageView() {
     setRefresh(refreshNumber + 1);
     handleCloseForm();
   };
-  const handleClickOpenForm = (row: Record<string, any>, action: HttpMethod) => {
+  const handleClickOpenForm = (row: ITransition, action: HttpMethod) => {
     setFormConfig((s) => ({
       ...s,
       open: true,
@@ -99,18 +101,29 @@ export function LanguageView() {
       </Card>
 
       <PopupFormTable
+        rowId={formConfig.defaultValues?.id}
         open={formConfig.open}
         handleCloseForm={handleCloseForm}
         refreshData={refreshData}
+        defaultValues={formConfig.defaultValues}
         action={formConfig.action}
-        baseUrl={PATH_LANGUAGE + '/update/' + formConfig.defaultValues?.id}
-        render={() => {
+        baseUrl={PATH_LANGUAGE}
+        schema={{
+          content: Yup.string().required('content is required'),
+        }}
+        render={({ isSubmitting }: { isSubmitting: boolean }) => {
           return (
             <>
               <DialogTitle>{formConfig.title}</DialogTitle>
               <DialogContent>
-                <Box gap={2} component={'div'} display={'flex'} flexDirection={'column'}>
-                  <TextField
+                <Box
+                  marginTop={1}
+                  gap={2}
+                  component={'div'}
+                  display={'flex'}
+                  flexDirection={'column'}
+                >
+                  <RHFTextField
                     disabled
                     value={formConfig.defaultValues?.lang?.name}
                     margin="dense"
@@ -122,7 +135,7 @@ export function LanguageView() {
                     variant="outlined"
                   />
 
-                  <TextField
+                  <RHFTextField
                     disabled
                     value={formConfig.defaultValues?.code}
                     margin="dense"
@@ -134,7 +147,7 @@ export function LanguageView() {
                     variant="outlined"
                   />
 
-                  <TextField
+                  <RHFTextField
                     defaultValue={formConfig.defaultValues?.content}
                     margin="dense"
                     id="content"
@@ -152,9 +165,9 @@ export function LanguageView() {
                 <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
                   {t('cancel_button')}
                 </Button>
-                <Button variant="contained" type="submit">
+                <LoadingButton variant="contained" type="submit" loading={isSubmitting}>
                   {formConfig.action === HttpMethod.PATCH ? t('update_button') : t('create_button')}
-                </Button>
+                </LoadingButton>
               </DialogActions>
             </>
           );
