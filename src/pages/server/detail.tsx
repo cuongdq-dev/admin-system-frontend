@@ -1,16 +1,19 @@
+import { Box, Button, Typography } from '@mui/material';
 import { t } from 'i18next';
+import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-
-import { Box, Button, Typography } from '@mui/material';
+import { FieldValues, UseFormSetError } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
+import { ButtonDismissNotify } from 'src/components/button';
 import { Iconify } from 'src/components/iconify';
 import { CONFIG } from 'src/config-global';
 import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { DetailView } from 'src/sections/server';
-
+import * as Yup from 'yup';
 // ----------------------------------------------------------------------
 
 export default function Page() {
@@ -19,10 +22,11 @@ export default function Page() {
   });
   const location = useLocation();
   const navigate = useNavigate();
+  const id = location.pathname.split('/')[2];
 
   useAPI({
     key: 'server_detail',
-    baseURL: PATH_SERVER + '/detail/' + location.pathname.split('/')[2],
+    baseURL: PATH_SERVER + '/detail/' + id,
     onSuccess: (res) => {
       setTimeout(() => {
         setState({ loading: false, data: res });
@@ -35,6 +39,32 @@ export default function Page() {
       }, 700);
     },
   });
+
+  const handleUpdate = (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => {
+    invokeRequest({
+      method: HttpMethod.PATCH,
+      baseURL: PATH_SERVER + '/update/' + id,
+      params: values,
+      onHandleError: (response) => {
+        if (response?.errors && typeof response.errors === 'object') {
+          Object.keys(response.errors).forEach((key) => {
+            setError(key as any, {
+              type: 'server',
+              message: response?.errors![key],
+            });
+          });
+        } else {
+          console.error('Unexpected error format:', response);
+        }
+      },
+      onSuccess(res) {
+        enqueueSnackbar(t('notify_success_update'), {
+          variant: 'success',
+          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
+        });
+      },
+    });
+  };
 
   return (
     <>
@@ -56,7 +86,18 @@ export default function Page() {
             {t('connect_server_button')}
           </Button>
         </Box>
-        <DetailView loading={state.loading} data={state?.data} />
+        <DetailView
+          schema={{
+            name: Yup.string().required('Email is required'),
+            host: Yup.string().required('Password is required'),
+            port: Yup.string().required('Password is required'),
+            password: Yup.string().required('Password is required'),
+            user: Yup.string().required('Password is required'),
+          }}
+          handleUpdate={handleUpdate}
+          loading={state.loading}
+          data={state?.data}
+        />
       </DashboardContent>
     </>
   );

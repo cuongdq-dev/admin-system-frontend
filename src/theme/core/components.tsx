@@ -1,4 +1,4 @@
-import type { Theme, Components } from '@mui/material/styles';
+import type { Components, Theme } from '@mui/material/styles';
 
 import SvgIcon from '@mui/material/SvgIcon';
 
@@ -22,14 +22,33 @@ const MuiButton: Components<Theme>['MuiButton'] = {
     disableElevation: true,
   },
   styleOverrides: {
-    containedInherit: ({ theme }) => ({
-      color: theme.vars.palette.common.white,
-      backgroundColor: theme.vars.palette.grey[800],
-      '&:hover': {
-        color: theme.vars.palette.common.white,
-        backgroundColor: theme.vars.palette.grey[800],
-      },
-    }),
+    contained: {},
+    outlinedInherit: ({ theme }) =>
+      theme.palette.mode === 'dark'
+        ? {
+            borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
+          }
+        : {
+            borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
+          },
+    containedInherit: ({ theme }) =>
+      theme.palette.mode === 'dark'
+        ? {
+            backgroundColor: theme.vars.palette.common.white,
+            color: theme.vars.palette.grey[800],
+            '&:hover': {
+              backgroundColor: theme.vars.palette.grey[400],
+            },
+          }
+        : {
+            color: theme.vars.palette.common.white,
+            backgroundColor: theme.vars.palette.grey[800],
+            '&:hover': {
+              color: theme.vars.palette.common.white,
+              backgroundColor: theme.vars.palette.grey[700],
+            },
+          },
+
     sizeLarge: {
       minHeight: 48,
     },
@@ -61,9 +80,25 @@ const MuiCardHeader: Components<Theme>['MuiCardHeader'] = {
 
 const MuiOutlinedInput: Components<Theme>['MuiOutlinedInput'] = {
   styleOverrides: {
+    root: ({ theme }) => {
+      return {
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.vars.palette.action.hover,
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.vars.palette.action.focus,
+        },
+      };
+    },
     notchedOutline: ({ theme }) => ({
       borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.2),
     }),
+
+    focused: ({ theme }) => {
+      return {
+        border: '1px solid red',
+      };
+    },
   },
 };
 
@@ -72,10 +107,32 @@ const MuiPaper: Components<Theme>['MuiPaper'] = {
     elevation: 0,
   },
   styleOverrides: {
-    root: ({ theme }) => ({ backgroundImage: 'none', boxShadow: 'none' }),
+    root: ({}) => ({ backgroundImage: 'none', boxShadow: 'none', borderRadius: 16 }),
     outlined: ({ theme }) => ({
       borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
     }),
+  },
+};
+const MuiDialog: Components<Theme>['MuiDialog'] = {
+  styleOverrides: {
+    paper: { borderRadius: 16, padding: 10 },
+  },
+};
+
+const MuiDialogActions: Components<Theme>['MuiDialogActions'] = {
+  styleOverrides: {
+    root: {
+      paddingLeft: '24px',
+      paddingRight: '24px',
+      paddingTop: '10px',
+      paddingBottom: '20px',
+    },
+  },
+};
+
+const MuiDialogContent: Components<Theme>['MuiDialogContent'] = {
+  styleOverrides: {
+    root: {},
   },
 };
 
@@ -175,4 +232,7 @@ export const components = {
   MuiCardHeader,
   MuiOutlinedInput,
   MuiFormControlLabel,
+  MuiDialog,
+  MuiDialogActions,
+  MuiDialogContent,
 };

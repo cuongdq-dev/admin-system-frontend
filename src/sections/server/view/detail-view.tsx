@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton, TabContext, TabList, TabPanel } from '@mui/lab';
 import { Grid, Paper, styled, Tab } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -9,6 +10,7 @@ import { PasswordText } from 'src/components/hook-form/RHFTextField';
 import { Iconify } from 'src/components/iconify';
 import { FetchingComponent } from 'src/components/progress';
 import { StatusServer } from '../components/status';
+import * as Yup from 'yup';
 
 const StyledTab = styled(Tab)(({ theme }) => ({
   marginRight: theme.spacing(1),
@@ -24,51 +26,31 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 }));
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: '#fff',
+  backgroundColor: theme.vars.palette.background.paper,
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
   color: theme.palette.text.secondary,
-  ...theme.applyStyles('dark', {
-    backgroundColor: '#1A2027',
-  }),
 }));
 
-export function DetailView({ data, loading }: { data?: IServer; loading?: boolean }) {
+export function DetailView(props: IDetail) {
+  const { data, loading, schema = {}, handleUpdate } = props;
   const { t } = useTranslation();
+
   const [tabState, setTabState] = useState<{ value: string }>({ value: 'general' });
-  const methods = useForm({ defaultValues: data });
+  const methods = useForm({
+    resolver: yupResolver(Yup.object().shape(schema)),
+    defaultValues: data,
+  });
 
   const {
     handleSubmit,
+    setError,
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (values: { email?: string; password?: string; remember?: boolean }) => {
-    // invokeRequest({
-    //   method: action,
-    //   baseURL: url,
-    //   params: values,
-    //   onHandleError: (response) => {
-    //     if (response?.errors && typeof response.errors === 'object') {
-    //       Object.keys(response.errors).forEach((key) => {
-    //         methods.setError(key as any, {
-    //           type: 'server',
-    //           message: response?.errors![key],
-    //         });
-    //       });
-    //     } else {
-    //       console.error('Unexpected error format:', response);
-    //     }
-    //   },
-    //   onSuccess(res) {
-    //     enqueueSnackbar(t('notify_success_update'), {
-    //       variant: 'success',
-    //       action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-    //     });
-    //     refreshData && refreshData();
-    //   },
-    // });
+  const onSubmit = async (values: typeof data) => {
+    handleUpdate && handleUpdate(setError, values);
   };
 
   if (loading) return <FetchingComponent />;
@@ -103,15 +85,15 @@ export function DetailView({ data, loading }: { data?: IServer; loading?: boolea
           <TabPanel value="general" style={{ padding: 0, margin: 0 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
-                <Item sx={{ padding: 0 }}>
-                  <Box display="flex" justifyContent={'flex-end'} paddingX={3} paddingY={3}>
+                <Item>
+                  <Box display="flex" justifyContent={'flex-end'} paddingX={2} paddingY={2}>
                     <StatusServer status={data?.is_active} />
                   </Box>
                 </Item>
               </Grid>
               <Grid item xs={12} sm={8}>
                 <Item>
-                  <FormProvider methods={methods}>
+                  <FormProvider onSubmit={handleSubmit(onSubmit)} methods={methods}>
                     <Grid padding={2} container spacing={2}>
                       <Grid item sm={12} md={6} xs={12}>
                         <RHFTextField
@@ -175,7 +157,7 @@ export function DetailView({ data, loading }: { data?: IServer; loading?: boolea
                         variant="contained"
                         loading={isSubmitting}
                       >
-                        Save changes
+                        {t('save_changes_button')}
                       </LoadingButton>
                     </Box>
                   </FormProvider>

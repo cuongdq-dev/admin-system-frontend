@@ -110,8 +110,8 @@ export function ListView() {
               <DialogTitle>{formConfig.title}</DialogTitle>
               <DialogContent>
                 <Box
-                  gap={2}
-                  marginTop={1}
+                  gap={4}
+                  paddingTop={1}
                   component={'div'}
                   display={'flex'}
                   flexDirection={'column'}
@@ -166,12 +166,17 @@ export function ListView() {
                   />
                 </Box>
               </DialogContent>
-              <DialogActions style={{ padding: 20 }}>
+              <DialogActions>
                 <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
                   {t('cancel_button')}
                 </Button>
 
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                <LoadingButton
+                  type="submit"
+                  color="inherit"
+                  variant="contained"
+                  loading={isSubmitting}
+                >
                   {formConfig.action === HttpMethod.PATCH ? t('update_button') : t('create_button')}
                 </LoadingButton>
               </DialogActions>

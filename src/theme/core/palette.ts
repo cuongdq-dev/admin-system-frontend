@@ -87,6 +87,7 @@ export const error = createPaletteChannel(COLORS.error);
 export const common = createPaletteChannel(COLORS.common);
 
 // Text
+
 export const text = {
   light: createPaletteChannel({
     primary: '#1C252E',
@@ -105,19 +106,13 @@ export const text = {
 export const background = {
   light: createPaletteChannel({
     paper: '#FFFFFF',
-    default: '#F4F6F8',
+    default: '#FFFFFF',
     neutral: '#F4F6F8',
-    paperChannel: '#ffffff',
-    defaultChannel: '#f4f6f8',
-    neutralChannel: '#f4f6f8',
   }),
   dark: createPaletteChannel({
     paper: '#1C252E',
     default: '#141A21',
     neutral: '#28323D',
-    paperChannel: '#1c252e',
-    defaultChannel: '#141a21',
-    neutralChannel: '#28323d',
   }),
 };
 

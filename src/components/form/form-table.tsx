@@ -70,14 +70,7 @@ export const PopupFormTable = (props: FormProps) => {
   };
 
   return (
-    <Dialog
-      maxWidth={'sm'}
-      open={open}
-      onClose={handleCloseForm}
-      fullWidth
-      TransitionComponent={Transition}
-      PaperProps={{ sx: { borderRadius: 3 } }}
-    >
+    <Dialog open={open} onClose={handleCloseForm} fullWidth TransitionComponent={Transition}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         {render && render({ isSubmitting })}
       </FormProvider>
