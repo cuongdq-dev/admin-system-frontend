@@ -1,4 +1,4 @@
-import { Box, Chip, styled, Theme } from '@mui/material';
+import { Box, styled, Theme } from '@mui/material';
 import { t } from 'i18next';
 import { varAlpha } from 'src/theme/styles';
 

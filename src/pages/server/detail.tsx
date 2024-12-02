@@ -41,14 +41,18 @@ export default function Page() {
   });
 
   const handleUpdate = (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => {
+    setState((state) => ({ ...state, loading: true }));
+
     invokeRequest({
       method: HttpMethod.PATCH,
       baseURL: PATH_SERVER + '/update/' + id,
       params: values,
       onHandleError: (response) => {
+        setState((state) => ({ ...state, loading: false }));
+
         if (response?.errors && typeof response.errors === 'object') {
           Object.keys(response.errors).forEach((key) => {
-            setError(key as any, {
+            setError(key, {
               type: 'server',
               message: response?.errors![key],
             });
@@ -58,6 +62,7 @@ export default function Page() {
         }
       },
       onSuccess(res) {
+        setState({ loading: false, data: res });
         enqueueSnackbar(t('notify_success_update'), {
           variant: 'success',
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
@@ -65,7 +70,6 @@ export default function Page() {
       },
     });
   };
-
   return (
     <>
       <Helmet>
@@ -96,7 +100,7 @@ export default function Page() {
           }}
           handleUpdate={handleUpdate}
           loading={state.loading}
-          data={state?.data}
+          defaultData={state?.data}
         />
       </DashboardContent>
     </>

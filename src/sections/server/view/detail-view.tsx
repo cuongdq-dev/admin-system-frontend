@@ -2,15 +2,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton, TabContext, TabList, TabPanel } from '@mui/lab';
 import { Grid, Paper, styled, Tab } from '@mui/material';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import { PasswordText } from 'src/components/hook-form/RHFTextField';
 import { Iconify } from 'src/components/iconify';
 import { FetchingComponent } from 'src/components/progress';
-import { StatusServer } from '../components/status';
 import * as Yup from 'yup';
+import { AnalyticsSystem } from '../components/analytics-system';
+import { StatusServer } from '../components/status';
 
 const StyledTab = styled(Tab)(({ theme }) => ({
   marginRight: theme.spacing(1),
@@ -34,13 +35,13 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export function DetailView(props: IDetail) {
-  const { data, loading, schema = {}, handleUpdate } = props;
   const { t } = useTranslation();
 
+  const { defaultData, loading, schema = {}, handleUpdate } = props;
   const [tabState, setTabState] = useState<{ value: string }>({ value: 'general' });
   const methods = useForm({
     resolver: yupResolver(Yup.object().shape(schema)),
-    defaultValues: data,
+    defaultValues: defaultData,
   });
 
   const {
@@ -49,7 +50,7 @@ export function DetailView(props: IDetail) {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (values: typeof data) => {
+  const onSubmit = async (values: typeof defaultData) => {
     handleUpdate && handleUpdate(setError, values);
   };
 
@@ -87,8 +88,17 @@ export function DetailView(props: IDetail) {
               <Grid item xs={12} sm={4}>
                 <Item>
                   <Box display="flex" justifyContent={'flex-end'} paddingX={2} paddingY={2}>
-                    <StatusServer status={data?.is_active} />
+                    <StatusServer status={defaultData?.is_active} />
                   </Box>
+                  <AnalyticsSystem
+                    title="Monitoring Server"
+                    chart={{
+                      categories: ['RAM', 'ROOM', 'NETWORK', 'DISK'],
+                      used: [10, 20, 30, 40],
+                      available: [22, 100, 100, 720],
+                      units: ['Gb', 'Gb', 'Mb/s', 'Gb'],
+                    }}
+                  />
                 </Item>
               </Grid>
               <Grid item xs={12} sm={8}>
@@ -99,7 +109,7 @@ export function DetailView(props: IDetail) {
                         <RHFTextField
                           id="name"
                           name="name"
-                          defaultValue={data?.name}
+                          defaultValue={defaultData?.name}
                           label={t('server_item_name')}
                           type="text"
                           fullWidth
@@ -110,7 +120,7 @@ export function DetailView(props: IDetail) {
                         <RHFTextField
                           id="host"
                           name="host"
-                          defaultValue={data?.host}
+                          defaultValue={defaultData?.host}
                           label={t('server_item_host')}
                           type="text"
                           fullWidth
@@ -121,7 +131,7 @@ export function DetailView(props: IDetail) {
                         <RHFTextField
                           id="port"
                           name="port"
-                          defaultValue={data?.port}
+                          defaultValue={defaultData?.port}
                           label={t('server_item_port')}
                           type="text"
                           fullWidth
@@ -132,7 +142,7 @@ export function DetailView(props: IDetail) {
                         <RHFTextField
                           id="user"
                           name="user"
-                          defaultValue={data?.user}
+                          defaultValue={defaultData?.user}
                           label={t('server_item_user')}
                           type="text"
                           fullWidth
@@ -143,7 +153,7 @@ export function DetailView(props: IDetail) {
                         <PasswordText
                           id="password"
                           name="password"
-                          defaultValue={data?.password}
+                          defaultValue={defaultData?.password}
                           label={t('server_item_password')}
                           fullWidth
                           variant="outlined"

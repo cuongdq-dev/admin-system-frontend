@@ -30,7 +30,7 @@ interface IRoute {
 }
 
 interface IDetail {
-  data?: Record<string, any>;
+  defaultData?: Record<string, any>;
   loading?: boolean;
   schema?: Record<string, Yup.StringSchema<string, Yup.AnyObject, undefined, ''>>;
   handleUpdate?: (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => void;

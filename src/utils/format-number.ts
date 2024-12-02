@@ -16,7 +16,7 @@ function processInput(inputValue: InputNumberValue): number | null {
 
 // ----------------------------------------------------------------------
 
-export function fNumber(inputValue: InputNumberValue, options?: Options) {
+export function fNumber(inputValue: InputNumberValue, options?: Options, unit?: string) {
   const locale = DEFAULT_LOCALE;
 
   const number = processInput(inputValue);
@@ -28,7 +28,7 @@ export function fNumber(inputValue: InputNumberValue, options?: Options) {
     ...options,
   }).format(number);
 
-  return fm;
+  return fm + (unit || '');
 }
 
 // ----------------------------------------------------------------------
