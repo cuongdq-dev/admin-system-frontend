@@ -9,6 +9,7 @@ import { ButtonDismissNotify } from 'src/components/button';
 import * as Yup from 'yup';
 import { Transition } from '../dialog';
 import { FormProvider } from '../hook-form';
+import { LanguageKey } from 'src/constants';
 
 type FormProps = {
   open: boolean;
@@ -59,7 +60,7 @@ export const PopupFormTable = (props: FormProps) => {
         }
       },
       onSuccess(res) {
-        enqueueSnackbar(t('notify_success_update'), {
+        enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
           variant: 'success',
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
         });

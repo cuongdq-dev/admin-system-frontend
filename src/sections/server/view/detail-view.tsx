@@ -2,13 +2,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton, TabContext, TabList, TabPanel } from '@mui/lab';
 import { Grid, Paper, styled, Tab } from '@mui/material';
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
+import { t } from 'i18next';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import { PasswordText } from 'src/components/hook-form/RHFTextField';
 import { Iconify } from 'src/components/iconify';
 import { FetchingComponent } from 'src/components/progress';
+import { LanguageKey } from 'src/constants';
 import * as Yup from 'yup';
 import { AnalyticsSystem } from '../components/analytics-system';
 import { StatusServer } from '../components/status';
@@ -35,8 +36,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export function DetailView(props: IDetail) {
-  const { t } = useTranslation();
-
   const { defaultData, loading, schema = {}, handleUpdate } = props;
   const [tabState, setTabState] = useState<{ value: string }>({ value: 'general' });
   const methods = useForm({
@@ -63,19 +62,19 @@ export function DetailView(props: IDetail) {
           aria-label="tab_server"
         >
           <StyledTab
-            label={t('general_server_tab')}
+            label={t(LanguageKey.server.generalTab)}
             value={'general'}
             iconPosition="start"
             icon={<Iconify icon="fluent-mdl2:server-enviroment" />}
           />
           <StyledTab
-            label={t('status_server_tab')}
+            label={t(LanguageKey.server.statusTab)}
             value={'status'}
             iconPosition="start"
             icon={<Iconify icon="heroicons-solid:status-online" />}
           />
           <StyledTab
-            label={t('setup_server_tab')}
+            label={t(LanguageKey.server.setupTab)}
             value={'config'}
             iconPosition="start"
             icon={<Iconify icon="icon-park-outline:config" />}
@@ -93,7 +92,12 @@ export function DetailView(props: IDetail) {
                   <AnalyticsSystem
                     title="Monitoring Server"
                     chart={{
-                      categories: ['RAM', 'ROOM', 'NETWORK', 'DISK'],
+                      categories: [
+                        t(LanguageKey.server.ram),
+                        t(LanguageKey.server.room),
+                        t(LanguageKey.server.network),
+                        t(LanguageKey.server.disk),
+                      ],
                       used: [10, 20, 30, 40],
                       available: [22, 100, 100, 720],
                       units: ['Gb', 'Gb', 'Mb/s', 'Gb'],
@@ -110,7 +114,7 @@ export function DetailView(props: IDetail) {
                           id="name"
                           name="name"
                           defaultValue={defaultData?.name}
-                          label={t('server_item_name')}
+                          label={t(LanguageKey.server.nameItem)}
                           type="text"
                           fullWidth
                           variant="outlined"
@@ -121,7 +125,7 @@ export function DetailView(props: IDetail) {
                           id="host"
                           name="host"
                           defaultValue={defaultData?.host}
-                          label={t('server_item_host')}
+                          label={t(LanguageKey.server.hostItem)}
                           type="text"
                           fullWidth
                           variant="outlined"
@@ -132,7 +136,7 @@ export function DetailView(props: IDetail) {
                           id="port"
                           name="port"
                           defaultValue={defaultData?.port}
-                          label={t('server_item_port')}
+                          label={t(LanguageKey.server.portItem)}
                           type="text"
                           fullWidth
                           variant="outlined"
@@ -143,7 +147,7 @@ export function DetailView(props: IDetail) {
                           id="user"
                           name="user"
                           defaultValue={defaultData?.user}
-                          label={t('server_item_user')}
+                          label={t(LanguageKey.server.userItem)}
                           type="text"
                           fullWidth
                           variant="outlined"
@@ -154,7 +158,7 @@ export function DetailView(props: IDetail) {
                           id="password"
                           name="password"
                           defaultValue={defaultData?.password}
-                          label={t('server_item_password')}
+                          label={t(LanguageKey.server.passwordItem)}
                           fullWidth
                           variant="outlined"
                         />
@@ -167,7 +171,7 @@ export function DetailView(props: IDetail) {
                         variant="contained"
                         loading={isSubmitting}
                       >
-                        {t('save_changes_button')}
+                        {t(LanguageKey.button.saveChanges)}
                       </LoadingButton>
                     </Box>
                   </FormProvider>

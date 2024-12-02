@@ -1,17 +1,17 @@
-import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
+import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 
-import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
+import Link from '@mui/material/Link';
 
 import { RouterLink } from 'src/routes/components';
 
 import { Logo } from 'src/components/logo';
 
-import { Main, CompactContent } from './main';
-import { LayoutSection } from '../core/layout-section';
+import { t } from 'i18next';
+import { LanguageKey } from 'src/constants';
 import { HeaderSection } from '../core/header-section';
-import { useTranslation } from 'react-i18next';
-
+import { LayoutSection } from '../core/layout-section';
+import { CompactContent, Main } from './main';
 // ----------------------------------------------------------------------
 
 export type SimpleLayoutProps = {
@@ -27,7 +27,6 @@ export type SimpleLayoutProps = {
 
 export function SimpleLayout({ sx, children, header, content }: SimpleLayoutProps) {
   const layoutQuery: Breakpoint = 'md';
-  const { t } = useTranslation();
 
   return (
     <LayoutSection
@@ -53,7 +52,7 @@ export function SimpleLayout({ sx, children, header, content }: SimpleLayoutProp
                 color="inherit"
                 sx={{ typography: 'subtitle2' }}
               >
-                {t('need_help_button')}?
+                {t(LanguageKey.button.needHelp)}?
               </Link>
             ),
           }}

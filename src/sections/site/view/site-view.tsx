@@ -3,13 +3,14 @@ import { Button, DialogActions, DialogContent, DialogTitle, Tab, TextField } fro
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
+import { t } from 'i18next';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { HttpMethod } from 'src/api-core';
 import { PATH_LANGUAGE } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { TableComponent } from 'src/components/table';
+import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -21,9 +22,7 @@ type FormConfigState = {
   action?: HttpMethod;
 };
 export function SiteView() {
-  const { t } = useTranslation();
-
-  const tableKey = 'language_table';
+  const tableKey = 'site_table';
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const [state, setState] = useState<State>();
@@ -50,7 +49,7 @@ export function SiteView() {
     setFormConfig((s) => ({
       ...s,
       open: true,
-      title: t('update_form_label'),
+      title: t(LanguageKey.form.updateLabel),
       defaultValues: row,
       action,
     }));
@@ -64,7 +63,7 @@ export function SiteView() {
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-          {t('language_table_title')}
+          {t(LanguageKey.language.tableTitle)}
         </Typography>
       </Box>
 
@@ -75,7 +74,7 @@ export function SiteView() {
               onChange={(_, value) => navigate(value ? '?lang=' + value : '')}
               aria-label="lab API tabs example"
             >
-              <Tab label={t('language_tab_all_label')} value={''} />
+              <Tab label={t(LanguageKey.language.tab_all)} value={''} />
               {state?.map((s) => {
                 return <Tab key={s.name + '_' + s.code} label={s.name} value={s.code} />;
               })}
@@ -91,8 +90,8 @@ export function SiteView() {
             handleClickOpenForm={handleClickOpenForm}
             actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
             headLabel={[
-              { id: 'code', label: t('language_item_code'), sort: true, type: 'text' },
-              { id: 'content', label: t('language_item_content'), sort: false },
+              { id: 'code', label: t(LanguageKey.language.codeItem), sort: true, type: 'text' },
+              { id: 'content', label: t(LanguageKey.language.contentItem), sort: false },
             ]}
           />
         </TabContext>
@@ -116,7 +115,7 @@ export function SiteView() {
                     margin="dense"
                     id="lang"
                     name="lang"
-                    label={t('language_item_language')}
+                    label={t(LanguageKey.language.languageItem)}
                     type="text"
                     fullWidth
                     variant="outlined"
@@ -128,7 +127,7 @@ export function SiteView() {
                     margin="dense"
                     id="code"
                     name="code"
-                    label={t('language_item_code')}
+                    label={t(LanguageKey.language.codeItem)}
                     type="text"
                     fullWidth
                     variant="outlined"
@@ -139,7 +138,7 @@ export function SiteView() {
                     margin="dense"
                     id="content"
                     name="content"
-                    label={t('language_item_content')}
+                    label={t(LanguageKey.language.contentItem)}
                     multiline
                     maxRows={5}
                     type="text"
@@ -150,10 +149,12 @@ export function SiteView() {
               </DialogContent>
               <DialogActions style={{ padding: 20 }}>
                 <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
-                  {t('cancel_button')}
+                  {t(LanguageKey.button.cancel)}
                 </Button>
                 <Button variant="contained" type="submit">
-                  {formConfig.action === HttpMethod.PATCH ? t('update_button') : t('create_button')}
+                  {formConfig.action === HttpMethod.PATCH
+                    ? t(LanguageKey.button.update)
+                    : t(LanguageKey.button.create)}
                 </Button>
               </DialogActions>
             </>

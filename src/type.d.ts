@@ -35,3 +35,10 @@ interface IDetail {
   schema?: Record<string, Yup.StringSchema<string, Yup.AnyObject, undefined, ''>>;
   handleUpdate?: (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => void;
 }
+
+interface Ilanguage {
+  code: string;
+  name: string;
+  description: string;
+  content: Record<string, string>;
+}

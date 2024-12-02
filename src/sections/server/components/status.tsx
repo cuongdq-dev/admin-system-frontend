@@ -1,5 +1,6 @@
 import { Box, styled, Theme } from '@mui/material';
 import { t } from 'i18next';
+import { LanguageKey } from 'src/constants';
 import { varAlpha } from 'src/theme/styles';
 
 const getDefaultStyles = (theme: Theme) => ({
@@ -31,6 +32,6 @@ const StyleChipInactive = styled(Box)(({ theme }) => {
 });
 
 export const StatusServer = ({ status }: { status?: boolean }) => {
-  if (!status) return <StyleChipInactive>{t('server_inactive_status')}</StyleChipInactive>;
-  return <StyleChipActive>{t('server_active_status')}</StyleChipActive>;
+  if (!status) return <StyleChipInactive>{t(LanguageKey.server.inactiveStatus)}</StyleChipInactive>;
+  return <StyleChipActive>{t(LanguageKey.server.activeStatus)}</StyleChipActive>;
 };

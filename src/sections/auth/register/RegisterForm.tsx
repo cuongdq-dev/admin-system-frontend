@@ -11,17 +11,17 @@ import { IconButton, InputAdornment, Link, Stack, Typography } from '@mui/materi
 
 // components
 
+import { t } from 'i18next';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_REGISTER } from 'src/api-core/path';
+import { LanguageKey } from 'src/constants';
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import { Iconify } from '../../../components/iconify';
-import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
 export function RegisterForm() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -73,12 +73,12 @@ export function RegisterForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="name" label={t('signup_item_user_name')} />
-        <RHFTextField name="email" label={t('signup_item_email')} />
+        <RHFTextField name="name" label={t(LanguageKey.signup.usernameItem)} />
+        <RHFTextField name="email" label={t(LanguageKey.signup.emailItem)} />
 
         <RHFTextField
           name="password"
-          label={t('signup_item_password')}
+          label={t(LanguageKey.signup.passwordItem)}
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -98,24 +98,24 @@ export function RegisterForm() {
           variant="contained"
           loading={isSubmitting}
         >
-          {t('register_button')}
+          {t(LanguageKey.button.register)}
         </LoadingButton>
         <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-          {t('agree_to')}&nbsp;
+          {t(LanguageKey.signup.agreeTo)}&nbsp;
           <Link underline="always" color="text.primary" href="#">
-            {t('terms_of_service')}
+            {t(LanguageKey.signup.termsOfService)}
           </Link>{' '}
-          {t('and')}{' '}
+          {t(LanguageKey.common.and)}{' '}
           <Link underline="always" color="text.primary" href="#">
-            {t('privacy_policy')}
+            {t(LanguageKey.signup.privacyPolicy)}
           </Link>
           .
         </Typography>
 
         <Typography variant="body2" sx={{ mt: 3, textAlign: 'center' }}>
-          {t('allready_account')}{' '}
+          {t(LanguageKey.signin.allreadyAccount)}{' '}
           <Link variant="subtitle2" to="/sign-in" component={RouterLink}>
-            {t('login_button')}
+            {t(LanguageKey.button.login)}
           </Link>
         </Typography>
       </Stack>

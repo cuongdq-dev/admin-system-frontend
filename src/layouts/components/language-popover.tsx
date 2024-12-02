@@ -8,6 +8,7 @@ import { enqueueSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ButtonDismissNotify } from 'src/components/button';
+import { LanguageKey } from 'src/constants';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +32,7 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
   const handleChangeLang = async (newLang: string) => {
     i18n.changeLanguage(newLang);
 
-    enqueueSnackbar(t('notify_changed_language'), {
+    enqueueSnackbar(t(LanguageKey.notify.changedLanguage), {
       variant: 'success',
       key: 'change_language' + newLang,
     });

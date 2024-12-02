@@ -1,13 +1,14 @@
-import type { Theme, SxProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
 
 import { Iconify } from 'src/components/iconify';
 
+import { t } from 'i18next';
+import { LanguageKey } from 'src/constants';
 import type { PostItemProps } from './post-item';
-import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
@@ -17,7 +18,6 @@ type PostSearchProps = {
 };
 
 export function PostSearch({ posts, sx }: PostSearchProps) {
-  const { t } = useTranslation();
   return (
     <Autocomplete
       sx={{ width: 280 }}
@@ -40,7 +40,7 @@ export function PostSearch({ posts, sx }: PostSearchProps) {
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder={t('search_item') + '...'}
+          placeholder={t(LanguageKey.form.searchItem) + '...'}
           InputProps={{
             ...params.InputProps,
             startAdornment: (

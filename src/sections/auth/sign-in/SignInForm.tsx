@@ -1,14 +1,15 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { IconButton, InputAdornment, Link, Stack } from '@mui/material';
+import { t } from 'i18next';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SIGN_IN } from 'src/api-core/path';
+import { LanguageKey } from 'src/constants';
 import * as Yup from 'yup';
 import { FormProvider, RHFCheckbox, RHFTextField } from '../../../components/hook-form';
 import { Iconify } from '../../../components/iconify';
@@ -22,7 +23,6 @@ export type JwtPayload = {
 
 export const SignInForm = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -72,11 +72,11 @@ export const SignInForm = () => {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label={t('signin_item_email')} />
+        <RHFTextField name="email" label={t(LanguageKey.signin.emailItem)} />
 
         <RHFTextField
           name="password"
-          label={t('signin_item_password')}
+          label={t(LanguageKey.signin.passwordItem)}
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -91,9 +91,9 @@ export const SignInForm = () => {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <RHFCheckbox name="remember" label={t('remember_me')} control={<></>} />
+        <RHFCheckbox name="remember" label={t(LanguageKey.signin.rememberMe)} control={<></>} />
         <Link variant="subtitle2" underline="hover">
-          {t('forgot_password')}
+          {t(LanguageKey.signin.forgotPassword)}
         </Link>
       </Stack>
 
@@ -104,7 +104,7 @@ export const SignInForm = () => {
         variant="contained"
         loading={isSubmitting}
       >
-        {t('login_button')}
+        {t(LanguageKey.button.login)}
       </LoadingButton>
     </FormProvider>
   );

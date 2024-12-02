@@ -1,13 +1,13 @@
-import Tooltip from '@mui/material/Tooltip';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import { t } from 'i18next';
 
 import { Iconify } from 'src/components/iconify';
-import { useTranslation } from 'react-i18next';
-
+import { LanguageKey } from 'src/constants';
 // ----------------------------------------------------------------------
 
 type UserTableToolbarProps = {
@@ -17,8 +17,6 @@ type UserTableToolbarProps = {
 };
 
 export function UserTableToolbar({ numSelected, filterName, onFilterName }: UserTableToolbarProps) {
-  const { t } = useTranslation();
-
   return (
     <Toolbar
       sx={{
@@ -41,7 +39,7 @@ export function UserTableToolbar({ numSelected, filterName, onFilterName }: User
           fullWidth
           value={filterName}
           onChange={onFilterName}
-          placeholder={t('search_item') + '...'}
+          placeholder={t(LanguageKey.form.searchItem) + '...'}
           startAdornment={
             <InputAdornment position="start">
               <Iconify width={20} icon="eva:search-fill" sx={{ color: 'text.disabled' }} />

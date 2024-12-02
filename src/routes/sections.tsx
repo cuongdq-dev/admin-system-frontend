@@ -7,7 +7,7 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
 import { varAlpha } from 'src/theme/styles';
-
+import { LanguageKey } from 'src/constants';
 import { PrivateRoute, PublicRoute } from './components';
 
 // ----------------------------------------------------------------------
@@ -68,11 +68,11 @@ export const RouterConfig = [
           </PrivateRoute>
         ),
         index: true,
-        name: 'dashboard_page',
+        name: LanguageKey.dashboard.pageTitle,
       },
       {
         path: '/user',
-        name: 'user_list_page',
+        name: LanguageKey.user.listPageTitle,
         element: (
           <PrivateRoute>
             <UserPage />
@@ -84,7 +84,7 @@ export const RouterConfig = [
         children: [
           {
             path: '',
-            name: 'server_list_page',
+            name: LanguageKey.server.listPageTitle,
             element: (
               <PrivateRoute>
                 <ServersPage />
@@ -93,7 +93,7 @@ export const RouterConfig = [
           },
           {
             path: ':id',
-            name: 'server_detail_page',
+            name: LanguageKey.server.detailPageTitle,
             element: (
               <PrivateRoute>
                 <ServerDetailPage />
@@ -105,7 +105,7 @@ export const RouterConfig = [
 
       {
         path: '/site',
-        name: 'site_list_page',
+        name: LanguageKey.site.listPageTitle,
         element: (
           <PrivateRoute>
             <SitesPage />
@@ -114,7 +114,7 @@ export const RouterConfig = [
       },
       {
         path: '/product',
-        name: 'product_list_page',
+        name: LanguageKey.product.listPageTitle,
         element: (
           <PrivateRoute>
             <ProductsPage />
@@ -123,7 +123,7 @@ export const RouterConfig = [
       },
       {
         path: '/blog',
-        name: 'blog_list_page',
+        name: LanguageKey.blog.listPageTitle,
         element: (
           <PrivateRoute>
             <BlogPage />
@@ -132,7 +132,7 @@ export const RouterConfig = [
       },
       {
         path: '/language',
-        name: 'language_list_page',
+        name: LanguageKey.language.listPageTitle,
         element: (
           <PrivateRoute>
             <LanguagePage />

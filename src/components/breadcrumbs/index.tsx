@@ -2,6 +2,7 @@ import { Chip, emphasize, Breadcrumbs as MUIBreadcrumbs, styled, useTheme } from
 import type { Breakpoint } from '@mui/material/styles';
 import { t } from 'i18next';
 import { useLocation } from 'react-router-dom';
+import { LanguageKey } from 'src/constants';
 import { RouterConfig } from 'src/routes/sections';
 
 const StyledBreadcrumbItem = styled(Chip)(({ theme }) => {
@@ -52,7 +53,7 @@ const Breadcrumbs = () => {
         aria-label="breadcrumb"
         sx={{ ml: -1, [theme.breakpoints.down(layoutQuery)]: { display: 'none' } }}
       >
-        <StyledBreadcrumbItem component="a" href="/" label={t('dashboard_page')} />
+        <StyledBreadcrumbItem component="a" href="/" label={t(LanguageKey.dashboard.pageTitle)} />
         {pathnames.map((value, index) => {
           const key = value + '_' + index;
           const last = index === pathnames.length - 1;

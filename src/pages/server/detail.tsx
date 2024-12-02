@@ -10,6 +10,7 @@ import { PATH_SERVER } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
 import { Iconify } from 'src/components/iconify';
 import { CONFIG } from 'src/config-global';
+import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { DetailView } from 'src/sections/server';
@@ -63,7 +64,7 @@ export default function Page() {
       },
       onSuccess(res) {
         setState({ loading: false, data: res });
-        enqueueSnackbar(t('notify_success_update'), {
+        enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
           variant: 'success',
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
         });
@@ -73,13 +74,13 @@ export default function Page() {
   return (
     <>
       <Helmet>
-        <title> {`${t('server_detail_page')} - ${CONFIG.appName}`}</title>
+        <title> {`${t(LanguageKey.server.detailPageTitle)} - ${CONFIG.appName}`}</title>
       </Helmet>
 
       <DashboardContent>
         <Box display="flex" alignItems="center">
           <Typography variant="h4" flexGrow={1}>
-            {state.data?.name || t('server_detail_page')}
+            {state.data?.name || t(LanguageKey.server.detailPageTitle)}
           </Typography>
           <Button
             size="medium"
@@ -87,16 +88,16 @@ export default function Page() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            {t('connect_server_button')}
+            {t(LanguageKey.server.connectServerButton)}
           </Button>
         </Box>
         <DetailView
           schema={{
             name: Yup.string().required('Email is required'),
-            host: Yup.string().required('Password is required'),
-            port: Yup.string().required('Password is required'),
-            password: Yup.string().required('Password is required'),
-            user: Yup.string().required('Password is required'),
+            host: Yup.string().required('host is required'),
+            port: Yup.string().required('port is required'),
+            password: Yup.string().required('password is required'),
+            user: Yup.string().required('user is required'),
           }}
           handleUpdate={handleUpdate}
           loading={state.loading}

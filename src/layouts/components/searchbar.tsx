@@ -13,14 +13,13 @@ import { useTheme } from '@mui/material/styles';
 
 import { bgBlur } from 'src/theme/styles';
 
-import { useTranslation } from 'react-i18next';
+import { t } from 'i18next';
 import { Iconify } from 'src/components/iconify';
-
+import { LanguageKey } from 'src/constants';
 // ----------------------------------------------------------------------
 
 export function Searchbar({ sx, ...other }: BoxProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
 
@@ -77,7 +76,7 @@ export function Searchbar({ sx, ...other }: BoxProps) {
               sx={{ fontWeight: 'fontWeightBold' }}
             />
             <Button variant="contained" onClick={handleClose}>
-              {t('search_item') + '...'}
+              {t(LanguageKey.form.searchItem) + '...'}
             </Button>
           </Box>
         </Slide>

@@ -17,12 +17,13 @@ import { usePathname, useRouter } from 'src/routes/hooks';
 
 import { removeCookie } from 'src/utils/cookies';
 
-import { _myAccount } from 'src/_mock';
+import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
-import { useTranslation } from 'react-i18next';
+import { _myAccount } from 'src/_mock';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SIGN_OUT } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
+import { LanguageKey } from 'src/constants';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +38,6 @@ export type AccountPopoverProps = IconButtonProps & {
 
 export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps) {
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   const router = useRouter();
 
@@ -146,7 +146,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
                 method: HttpMethod.POST,
                 baseURL: PATH_SIGN_OUT,
                 onHandleError: (response) => {
-                  enqueueSnackbar(t('notify_success_api_call'), {
+                  enqueueSnackbar(t(LanguageKey.notify.successApiCall), {
                     variant: 'error',
                     action: (key) => (
                       <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />
@@ -166,7 +166,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
             size="medium"
             variant="text"
           >
-            {t('logout_button')}
+            {t(LanguageKey.button.logout)}
           </Button>
         </Box>
       </Popover>

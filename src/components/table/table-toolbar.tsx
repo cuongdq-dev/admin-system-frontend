@@ -5,15 +5,15 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-import { useTranslation } from 'react-i18next';
+import { t } from 'i18next';
 import { Iconify } from 'src/components/iconify';
 import { TableToolbarProps } from './type';
+import { LanguageKey } from 'src/constants';
 
 // ----------------------------------------------------------------------
 
 export function TableToolbarComponent(props: TableToolbarProps) {
   const { numSelected, filterName, onFilterName } = props;
-  const { t } = useTranslation();
 
   return (
     <Toolbar
@@ -34,7 +34,7 @@ export function TableToolbarComponent(props: TableToolbarProps) {
           fullWidth
           value={filterName}
           onChange={onFilterName}
-          placeholder={t('search_item') + '...'}
+          placeholder={t(LanguageKey.form.searchItem) + '...'}
           startAdornment={
             <InputAdornment position="start">
               <Iconify width={20} icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
@@ -45,13 +45,13 @@ export function TableToolbarComponent(props: TableToolbarProps) {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title={t('delete_button')}>
+        <Tooltip title={t(LanguageKey.button.delete)}>
           <IconButton>
             <Iconify icon="solar:trash-bin-trash-bold" />
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title={t('filter_list_title')}>
+        <Tooltip title={t(LanguageKey.table.filterTitle)}>
           <IconButton>
             <Iconify icon="ic:round-filter-list" />
           </IconButton>

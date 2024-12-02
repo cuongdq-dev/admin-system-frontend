@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { t } from 'i18next';
 import type { ChartOptions } from 'src/components/chart';
 import { Chart, useChart } from 'src/components/chart';
+import { LanguageKey } from 'src/constants';
 import { varAlpha } from 'src/theme/styles';
 import { fNumber } from 'src/utils/format-number';
 
@@ -91,8 +92,8 @@ export function AnalyticsSystem({ title, subheader, chart, ...other }: Props) {
       <Chart
         type="bar"
         series={[
-          { name: t('server_used'), data: percentageUsed },
-          { name: t('server_available'), data: totalValues },
+          { name: t(LanguageKey.server.used), data: percentageUsed },
+          { name: t(LanguageKey.server.available), data: totalValues },
         ]}
         options={chartOptions}
         height={360}

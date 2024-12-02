@@ -1,7 +1,7 @@
-import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
+import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 
-import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
+import Link from '@mui/material/Link';
 
 import { RouterLink } from 'src/routes/components';
 
@@ -9,10 +9,11 @@ import { stylesMode } from 'src/theme/styles';
 
 import { Logo } from 'src/components/logo';
 
-import { Main } from './main';
+import { t } from 'i18next';
+import { LanguageKey } from 'src/constants';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
-import { useTranslation } from 'react-i18next';
+import { Main } from './main';
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +26,6 @@ export type AuthLayoutProps = {
 };
 
 export function AuthLayout({ sx, children, header }: AuthLayoutProps) {
-  const { t } = useTranslation();
   const layoutQuery: Breakpoint = 'md';
 
   return (
@@ -59,7 +59,7 @@ export function AuthLayout({ sx, children, header }: AuthLayoutProps) {
                 color="inherit"
                 sx={{ typography: 'subtitle2' }}
               >
-                {t('need_help_button')}?
+                {t(LanguageKey.button.needHelp)}?
               </Link>
             ),
           }}

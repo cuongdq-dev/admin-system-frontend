@@ -3,17 +3,17 @@ import { Button, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
+import { t } from 'i18next';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { HttpMethod } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { PasswordText, RHFTextField } from 'src/components/hook-form/RHFTextField';
 import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
+import { LanguageKey } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import * as Yup from 'yup';
-
 type FormConfigState = {
   open: boolean;
   title?: string;
@@ -21,8 +21,6 @@ type FormConfigState = {
   action?: HttpMethod;
 };
 export function ListView() {
-  const { t } = useTranslation();
-
   const tableKey = 'server_table';
   const [refreshNumber, setRefresh] = useState<number>(0);
 
@@ -41,7 +39,7 @@ export function ListView() {
     setFormConfig((s) => ({
       ...s,
       open: true,
-      title: t('update_form_label'),
+      title: t(LanguageKey.form.updateLabel),
       defaultValues: row,
       action,
     }));
@@ -55,18 +53,22 @@ export function ListView() {
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
-          {t('server_table_title')}
+          {t(LanguageKey.server.tableTitle)}
         </Typography>
         <Button
           onClick={() =>
-            setFormConfig({ open: true, title: t('create_form_label'), action: HttpMethod.POST })
+            setFormConfig({
+              open: true,
+              title: t(LanguageKey.form.createLabel),
+              action: HttpMethod.POST,
+            })
           }
           color="inherit"
           size="medium"
           variant="contained"
           startIcon={<Iconify icon="mingcute:add-line" />}
         >
-          {t('new_server_button')}
+          {t(LanguageKey.server.addNewButton)}
         </Button>
       </Box>
 
@@ -81,10 +83,10 @@ export function ListView() {
           handleClickOpenForm={handleClickOpenForm}
           actions={{ editBtn: true, deleteBtn: true, popupEdit: true }}
           headLabel={[
-            { id: 'name', label: t('server_item_name'), sort: true, type: 'text' },
-            { id: 'host', label: t('server_item_host'), sort: true, type: 'text' },
-            { id: 'port', label: t('server_item_port'), sort: false, type: 'text' },
-            { id: 'user', label: t('server_item_user'), sort: true, type: 'text' },
+            { id: 'name', label: t(LanguageKey.server.nameItem), sort: true, type: 'text' },
+            { id: 'host', label: t(LanguageKey.server.hostItem), sort: true, type: 'text' },
+            { id: 'port', label: t(LanguageKey.server.portItem), sort: false, type: 'text' },
+            { id: 'user', label: t(LanguageKey.server.userItem), sort: true, type: 'text' },
           ]}
         />
       </Card>
@@ -99,10 +101,10 @@ export function ListView() {
         baseUrl={PATH_SERVER}
         schema={{
           name: Yup.string().required('Email is required'),
-          host: Yup.string().required('Password is required'),
-          port: Yup.string().required('Password is required'),
-          password: Yup.string().required('Password is required'),
-          user: Yup.string().required('Password is required'),
+          host: Yup.string().required('host is required'),
+          port: Yup.string().required('port is required'),
+          password: Yup.string().required('password is required'),
+          user: Yup.string().required('user is required'),
         }}
         render={({ isSubmitting }: { isSubmitting: boolean }) => {
           return (
@@ -120,7 +122,7 @@ export function ListView() {
                     defaultValue={formConfig.defaultValues?.name}
                     id="name"
                     name="name"
-                    label={t('server_item_name')}
+                    label={t(LanguageKey.server.nameItem)}
                     type="text"
                     fullWidth
                     variant="outlined"
@@ -130,7 +132,7 @@ export function ListView() {
                     defaultValue={formConfig.defaultValues?.host}
                     id="host"
                     name="host"
-                    label={t('server_item_host')}
+                    label={t(LanguageKey.server.hostItem)}
                     type="text"
                     fullWidth
                     variant="outlined"
@@ -140,7 +142,7 @@ export function ListView() {
                     defaultValue={formConfig.defaultValues?.port}
                     id="port"
                     name="port"
-                    label={t('server_item_port')}
+                    label={t(LanguageKey.server.portItem)}
                     type="text"
                     fullWidth
                     variant="outlined"
@@ -150,7 +152,7 @@ export function ListView() {
                     defaultValue={formConfig.defaultValues?.user}
                     id="user"
                     name="user"
-                    label={t('server_item_user')}
+                    label={t(LanguageKey.server.userItem)}
                     type="text"
                     fullWidth
                     variant="outlined"
@@ -160,7 +162,7 @@ export function ListView() {
                     defaultValue={formConfig.defaultValues?.password}
                     id="password"
                     name="password"
-                    label={t('server_item_password')}
+                    label={t(LanguageKey.server.passwordItem)}
                     fullWidth
                     variant="outlined"
                   />
@@ -168,7 +170,7 @@ export function ListView() {
               </DialogContent>
               <DialogActions>
                 <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
-                  {t('cancel_button')}
+                  {t(LanguageKey.button.cancel)}
                 </Button>
 
                 <LoadingButton
@@ -177,7 +179,9 @@ export function ListView() {
                   variant="contained"
                   loading={isSubmitting}
                 >
-                  {formConfig.action === HttpMethod.PATCH ? t('update_button') : t('create_button')}
+                  {formConfig.action === HttpMethod.PATCH
+                    ? t(LanguageKey.button.update)
+                    : t(LanguageKey.button.create)}
                 </LoadingButton>
               </DialogActions>
             </>

@@ -15,13 +15,13 @@ import {
 import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { Iconify } from 'src/components/iconify';
 import { ButtonDismissNotify } from '../button';
 import { Transition } from '../dialog';
 import { TableActionComponentProps } from './type';
+import { LanguageKey } from 'src/constants';
 
 export const TableActionComponent = (props: TableActionComponentProps) => {
   const navigate = useNavigate();
@@ -86,7 +86,7 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
               }}
             >
               <Iconify icon="solar:pen-bold" />
-              {t('detail_button')}
+              {t(LanguageKey.button.detail)}
             </MenuItem>
           )}
           {deleteBtn && (
@@ -100,7 +100,6 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
 
 type ButtonDeleteProps = { baseUrl: string; rowId: string; refreshData?: () => void };
 export const ButtonDelete = (props: ButtonDeleteProps) => {
-  const { t } = useTranslation();
   const { baseUrl, rowId, refreshData } = props;
   const [open, setOpen] = useState(false);
 
@@ -109,7 +108,7 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
       method: HttpMethod.DELETE,
       baseURL: baseUrl + '/delete/' + rowId,
       onSuccess: () => {
-        enqueueSnackbar(t('notify_success_delete'), {
+        enqueueSnackbar(t(LanguageKey.notify.successDelete), {
           variant: 'success',
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
         });
@@ -122,7 +121,7 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
     <>
       <MenuItem onClick={() => setOpen(true)} sx={{ color: 'error.main' }}>
         <Iconify icon="solar:trash-bin-trash-bold" />
-        {t('delete_button')}
+        {t(LanguageKey.button.delete)}
       </MenuItem>
       <Dialog
         PaperProps={{ sx: { borderRadius: 3 } }}
@@ -133,16 +132,16 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
         onClose={() => setOpen(false)}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{t('delete_form_label')}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">{t(LanguageKey.form.deleteLabel)}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{t('delete_form_title')}</DialogContentText>
+          <DialogContentText>{t(LanguageKey.form.deleteTitle)}</DialogContentText>
         </DialogContent>
         <DialogActions style={{ padding: 20 }}>
           <Button color="error" variant="contained" onClick={handleDeleteRow}>
-            {t('delete_button')}
+            {t(LanguageKey.button.delete)}
           </Button>
           <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
-            {t('cancel_button')}
+            {t(LanguageKey.button.cancel)}
           </Button>
         </DialogActions>
       </Dialog>

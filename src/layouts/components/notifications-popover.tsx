@@ -1,28 +1,28 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import Badge from '@mui/material/Badge';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Tooltip from '@mui/material/Tooltip';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
+import List from '@mui/material/List';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
+import Popover from '@mui/material/Popover';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
 import { fToNow } from 'src/utils/format-time';
 
+import { t } from 'i18next';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
-import { useTranslation } from 'react-i18next';
-
+import { LanguageKey } from 'src/constants';
 // ----------------------------------------------------------------------
 
 type NotificationItemProps = {
@@ -40,7 +40,6 @@ export type NotificationsPopoverProps = IconButtonProps & {
 };
 
 export function NotificationsPopover({ data = [], sx, ...other }: NotificationsPopoverProps) {
-  const { t } = useTranslation();
   const [notifications, setNotifications] = useState(data);
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
@@ -96,14 +95,14 @@ export function NotificationsPopover({ data = [], sx, ...other }: NotificationsP
       >
         <Box display="flex" alignItems="center" sx={{ py: 2, pl: 2.5, pr: 1.5 }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle1">{t('notification_title')}</Typography>
+            <Typography variant="subtitle1">{t(LanguageKey.notification.title)}</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {t('notification_count').replace('{count}', totalUnRead.toString())}
+              {t(LanguageKey.notification.count).replace('{count}', totalUnRead.toString())}
             </Typography>
           </Box>
 
           {totalUnRead > 0 && (
-            <Tooltip title={t('notification_read_all')}>
+            <Tooltip title={t(LanguageKey.notification.readAll)}>
               <IconButton color="primary" onClick={handleMarkAllAsRead}>
                 <Iconify icon="solar:check-read-outline" />
               </IconButton>
@@ -118,7 +117,7 @@ export function NotificationsPopover({ data = [], sx, ...other }: NotificationsP
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                {t('notification_new')}
+                {t(LanguageKey.notification.new)}
               </ListSubheader>
             }
           >
@@ -131,7 +130,7 @@ export function NotificationsPopover({ data = [], sx, ...other }: NotificationsP
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                {t('notification_before_that')}
+                {t(LanguageKey.notification.beforeThat)}
               </ListSubheader>
             }
           >
@@ -145,7 +144,7 @@ export function NotificationsPopover({ data = [], sx, ...other }: NotificationsP
 
         <Box sx={{ p: 1 }}>
           <Button fullWidth disableRipple color="inherit">
-            {t('notification_view_all')}
+            {t(LanguageKey.notification.viewAll)}
           </Button>
         </Box>
       </Popover>

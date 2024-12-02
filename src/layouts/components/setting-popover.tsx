@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { Label } from 'src/components/label';
+import { LanguageKey } from 'src/constants';
 
 // ----------------------------------------------------------------------
 
@@ -106,7 +107,7 @@ export function SettingPopover() {
       >
         <Box display="flex" alignItems="center" sx={{ pl: 2.5, pr: 1.5, py: 2 }}>
           <Typography variant="h6" flexGrow={1}>
-            {t('setting_title')}
+            {t(LanguageKey.common.settingTitle)}
           </Typography>
 
           <IconButton
@@ -144,7 +145,7 @@ export function SettingPopover() {
                   <Iconify icon="mdi:theme-light-dark"></Iconify>
                   <SwitchBustom checked={mode == 'dark'} />
                 </Box>
-                <Box>{t('dark_mode_title')}</Box>
+                <Box>{t(LanguageKey.common.darkModeTitle)}</Box>
               </ButtonCustom>
               <ButtonCustom
                 onClick={() => {
@@ -161,7 +162,7 @@ export function SettingPopover() {
                   <Iconify icon="icon-park:system"></Iconify>
                   <SwitchBustom checked={mode == 'dark'} />
                 </Box>
-                <Box>{t('system_mode_title')}</Box>
+                <Box>{t(LanguageKey.common.systemModeTitle)}</Box>
               </ButtonCustom>
             </Box>
           </Stack>

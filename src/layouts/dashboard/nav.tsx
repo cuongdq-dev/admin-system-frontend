@@ -18,10 +18,8 @@ import { Scrollbar } from 'src/components/scrollbar';
 
 import { WorkspacesPopover } from '../components/workspaces-popover';
 
-import { useTranslation } from 'react-i18next';
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
-
-// ----------------------------------------------------------------------
+import { t } from 'i18next';
 
 export type NavContentProps = {
   data: { path: string; title: string; icon: React.ReactNode; info?: React.ReactNode }[];
@@ -100,7 +98,6 @@ export function NavMobile({
 
 export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
   const pathname = usePathname();
-  const { t } = useTranslation();
 
   return (
     <>

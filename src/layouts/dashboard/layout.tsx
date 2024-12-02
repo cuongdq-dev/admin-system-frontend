@@ -9,27 +9,23 @@ import { _notifications } from 'src/_mock';
 
 import { Iconify } from 'src/components/iconify';
 
-import { useTranslation } from 'react-i18next';
-// import { Link } from 'react-router-dom';
-
+import { t } from 'i18next';
 import { PATH_LANGUAGE } from 'src/api-core/path';
 import CommonBreadcrumbs from 'src/components/breadcrumbs';
+import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { layoutClasses } from '../classes';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
 import { MenuButton } from '../components/menu-button';
 import { NotificationsPopover } from '../components/notifications-popover';
-import { Searchbar } from '../components/searchbar';
+import { SettingPopover } from '../components/setting-popover';
 import { navData } from '../config-nav-dashboard';
 import { _workspaces } from '../config-nav-workspace';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { Main } from './main';
 import { NavDesktop, NavMobile } from './nav';
-import { SettingPopover } from '../components/setting-popover';
-// ----------------------------------------------------------------------
-
 export type DashboardLayoutProps = {
   sx?: SxProps<Theme>;
   children: React.ReactNode;
@@ -40,7 +36,6 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
-  const { t } = useTranslation();
   const [languages, setLanguages] = useState([]);
 
   useAPI({
@@ -95,17 +90,17 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
                 <AccountPopover
                   data={[
                     {
-                      label: t('home_menu'),
+                      label: t(LanguageKey.menu.home),
                       href: '/',
                       icon: <Iconify width={22} icon="solar:home-angle-bold-duotone" />,
                     },
                     {
-                      label: t('profile_menu'),
+                      label: t(LanguageKey.menu.profile),
                       href: '#',
                       icon: <Iconify width={22} icon="solar:shield-keyhole-bold-duotone" />,
                     },
                     {
-                      label: t('settings_menu'),
+                      label: t(LanguageKey.menu.settings),
                       href: '#',
                       icon: <Iconify width={22} icon="solar:settings-bold-duotone" />,
                     },

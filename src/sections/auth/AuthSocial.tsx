@@ -1,14 +1,14 @@
 // material
-import { Stack, Button, Divider, Typography } from '@mui/material';
+import { Button, Divider, Stack, Typography } from '@mui/material';
 
 // component
+import { t } from 'i18next';
 import { Iconify } from '../../components/iconify';
-import { useTranslation } from 'react-i18next';
+import { LanguageKey } from 'src/constants';
 
 // ----------------------------------------------------------------------
 
 export default function AuthSocial() {
-  const { t } = useTranslation();
   return (
     <>
       <Stack direction="row" justifyContent="center" spacing={2}>
@@ -27,7 +27,7 @@ export default function AuthSocial() {
 
       <Divider sx={{ my: 3 }}>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {t('or')}
+          {t(LanguageKey.common.or)}
         </Typography>
       </Divider>
     </>

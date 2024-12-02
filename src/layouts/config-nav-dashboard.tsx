@@ -1,4 +1,6 @@
+import { t } from 'i18next';
 import { SvgColor } from 'src/components/svg-color';
+import { LanguageKey } from 'src/constants';
 
 // ----------------------------------------------------------------------
 
@@ -8,41 +10,41 @@ const icon = (name: string) => (
 
 export const navData = [
   {
-    title: 'dashboard_nav',
+    title: LanguageKey.dashboard.nav,
     path: '/',
     icon: icon('ic-analytics'),
   },
 
   {
-    title: 'user_nav',
+    title: LanguageKey.user.nav,
     path: '/user',
     icon: icon('ic-user'),
   },
 
   {
-    title: 'server_nav',
+    title: LanguageKey.server.nav,
     path: '/server',
     icon: icon('ic-server'),
   },
 
   {
-    title: 'site_nav',
+    title: LanguageKey.site.nav,
     path: '/site',
     icon: icon('ic-site'),
   },
   {
-    title: 'product_nav',
+    title: LanguageKey.product.nav,
     path: '/product',
     icon: icon('ic-cart'),
   },
   {
-    title: 'blog_nav',
+    title: LanguageKey.blog.nav,
     path: '/blog',
     icon: icon('ic-blog'),
   },
 
   {
-    title: 'language_nav',
+    title: LanguageKey.language.nav,
     path: '/language',
     icon: icon('ic-language'),
   },
