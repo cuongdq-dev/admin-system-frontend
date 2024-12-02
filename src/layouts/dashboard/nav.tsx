@@ -139,11 +139,22 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
                       }),
                     }}
                   >
-                    <Box component="span" sx={{ width: 24, height: 24 }}>
+                    <Box
+                      component="span"
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        color: isActived ? 'primary.light' : '',
+                      }}
+                    >
                       {item.icon}
                     </Box>
 
-                    <Box component="span" flexGrow={1}>
+                    <Box
+                      sx={{ color: isActived ? 'primary.light' : '' }}
+                      component="span"
+                      flexGrow={1}
+                    >
                       {t(item.title)}
                     </Box>
 

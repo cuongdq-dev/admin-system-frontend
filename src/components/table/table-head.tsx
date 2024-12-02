@@ -30,7 +30,12 @@ export function TableHeadComponent(props: TableHeadProps) {
     <TableHead sx={{ height: 80 }}>
       <TableRow>
         {selectCol && (
-          <TableCell padding="checkbox">
+          <TableCell
+            sx={{
+              ...(numSelected > 0 && { color: 'primary.main', bgcolor: 'primary.lighter' }),
+            }}
+            padding="checkbox"
+          >
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
@@ -43,6 +48,9 @@ export function TableHeadComponent(props: TableHeadProps) {
 
         {numSelected > 0 ? (
           <TableCell
+            sx={{
+              ...(numSelected > 0 && { color: 'primary.main', bgcolor: 'primary.lighter' }),
+            }}
             colSpan={
               headLabel.length + (selectCol ? 1 : 0) + (indexCol ? 1 : 0) + (actionCol ? 1 : 0)
             }

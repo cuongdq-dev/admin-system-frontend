@@ -1,45 +1,27 @@
 {
   "primary": {
-    "lighter": "#CCF4FE",
-    "light": "#68CDF9",
-    "main": "#078DEE",
-    "dark": "#0351AB",
-    "darker": "#012972",
-    "contrastText": "#FFFFFF",
-    "lighterChannel": "#CCF4FE",
-    "lightChannel": "#68CDF9",
-    "mainChannel": "#078DEE",
-    "darkChannel": "#0351AB",
-    "darkerChannel": "#012972",
-    "contrastTextChannel": "#FFFFFF"
+    "lighter": "#CDE9FD",
+    "light": "#6BB1F8",
+    "main": "#0C68E9",
+    "dark": "#063BA7",
+    "darker": "#021D6F",
+    "contrastText": "#FFFFFF"
   },
+
   "secondary": {
     "lighter": "#EFD6FF",
     "light": "#C684FF",
     "main": "#8E33FF",
     "dark": "#5119B7",
     "darker": "#27097A",
-    "contrastText": "#FFFFFF",
-    "lighterChannel": "#EFD6FF",
-    "lightChannel": "#C684FF",
-    "mainChannel": "#8E33FF",
-    "darkChannel": "#5119B7",
-    "darkerChannel": "#27097A",
-    "contrastTextChannel": "#FFFFFF"
+    "contrastText": "#FFFFFF"
   },
   "info": {
     "lighter": "#CAFDF5",
     "light": "#61F3F3",
     "main": "#00B8D9",
     "dark": "#006C9C",
-    "darker": "#003768",
-    "contrastText": "#FFFFFF",
-    "lighterChannel": "#CAFDF5",
-    "lightChannel": "#61F3F3",
-    "mainChannel": "#00B8D9",
-    "darkChannel": "#006C9C",
-    "darkerChannel": "#003768",
-    "contrastTextChannel": "#FFFFFF"
+    "darker": "#003768"
   },
   "success": {
     "lighter": "#D3FCD2",
@@ -47,13 +29,7 @@
     "main": "#22C55E",
     "dark": "#118D57",
     "darker": "#065E49",
-    "contrastText": "#ffffff",
-    "lighterChannel": "#D3FCD2",
-    "lightChannel": "#77ED8B",
-    "mainChannel": "#22C55E",
-    "darkChannel": "#118D57",
-    "darkerChannel": "#065E49",
-    "contrastTextChannel": "#FFFFFF"
+    "contrastText": "#ffffff"
   },
   "warning": {
     "lighter": "#FFF5CC",
@@ -61,13 +37,7 @@
     "main": "#FFAB00",
     "dark": "#B76E00",
     "darker": "#7A4100",
-    "contrastText": "#1C252E",
-    "lighterChannel": "#FFF5CC",
-    "lightChannel": "#FFD666",
-    "mainChannel": "#FFAB00",
-    "darkChannel": "#B76E00",
-    "darkerChannel": "#7A4100",
-    "contrastTextChannel": "#1C252E"
+    "contrastText": "#1C252E"
   },
   "error": {
     "lighter": "#FFE9D5",
@@ -75,13 +45,7 @@
     "main": "#FF5630",
     "dark": "#B71D18",
     "darker": "#7A0916",
-    "contrastText": "#FFFFFF",
-    "lighterChannel": "#FFE9D5",
-    "lightChannel": "#FFAC82",
-    "mainChannel": "#FF5630",
-    "darkChannel": "#B71D18",
-    "darkerChannel": "#7A0916",
-    "contrastTextChannel": "#FFFFFF"
+    "contrastText": "#FFFFFF"
   },
   "grey": {
     "50": "#FCFDFD",

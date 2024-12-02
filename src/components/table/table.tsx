@@ -95,7 +95,7 @@ export const TableComponent = (props: TableComponentProps) => {
                     hover
                     tabIndex={-1}
                     role="checkbox"
-                    selected={table.selected.includes(row.id)}
+                    // selected={table.selected.includes(row.id)}
                     key={row.id}
                   >
                     {selectCol && (
