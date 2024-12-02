@@ -40,17 +40,21 @@ export function CommonTableCell({
   switch (type) {
     case 'checkbox':
       return (
-        <TableCell padding="checkbox">
+        <TableCell width={width} sx={{ minWidth: minWidth }} padding="checkbox">
           <Checkbox disableRipple checked={checked} onChange={onChange} />
         </TableCell>
       );
 
     case 'text':
-      return <TableCell align={align}>{value}</TableCell>;
+      return (
+        <TableCell width={width} sx={{ minWidth: minWidth }} align={align}>
+          {value}
+        </TableCell>
+      );
 
     case 'avatar':
       return (
-        <TableCell>
+        <TableCell width={width} sx={{ minWidth: minWidth }}>
           <Box gap={2} display="flex" alignItems="center">
             <Avatar alt={name} src={avatarUrl} />
             {name}
@@ -60,14 +64,14 @@ export function CommonTableCell({
 
     case 'status':
       return (
-        <TableCell>
+        <TableCell width={width} sx={{ minWidth: minWidth }}>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell>
       );
 
     case 'icon':
       return (
-        <TableCell align="center">
+        <TableCell width={width} sx={{ minWidth: minWidth }} align="center">
           {value ? <Iconify width={22} icon={icon!} sx={{ color: 'success.main' }} /> : '-'}
         </TableCell>
       );
@@ -83,6 +87,10 @@ export function CommonTableCell({
       );
 
     default:
-      return <TableCell>{value}</TableCell>;
+      return (
+        <TableCell width={width} sx={{ minWidth: minWidth }}>
+          {value}
+        </TableCell>
+      );
   }
 }

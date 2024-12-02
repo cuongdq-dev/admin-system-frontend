@@ -1,4 +1,4 @@
-import { Table, TableBody, TableContainer, TablePagination, TableRow } from '@mui/material';
+import { Card, Table, TableBody, TableContainer, TablePagination, TableRow } from '@mui/material';
 import { t } from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -103,11 +103,15 @@ export const TableComponent = (props: TableComponentProps) => {
                         type="checkbox"
                         checked={table.selected.includes(row.id)}
                         onChange={() => table.onSelectRow(row.id)}
+                        width={20}
+                        minWidth={20}
                       />
                     )}
                     {indexCol && (
                       <CommonTableCell
                         align="center"
+                        width={60}
+                        minWidth={60}
                         value={index + 1}
                         type={'text'}
                         key={'_index' + '_' + index}

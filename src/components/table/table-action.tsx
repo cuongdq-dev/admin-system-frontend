@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -40,20 +41,22 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
   return (
     <>
       <TableCell align="right">
-        {popupEdit && (
-          <IconButton
-            onClick={() => {
-              handleClickOpenForm && handleClickOpenForm(row!, HttpMethod.PATCH);
-            }}
-          >
-            <Iconify icon="solar:pen-bold" />
-          </IconButton>
-        )}
-        {(deleteBtn || editBtn) && (
-          <IconButton onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        )}
+        <Box display="flex">
+          {popupEdit && (
+            <IconButton
+              onClick={() => {
+                handleClickOpenForm && handleClickOpenForm(row!, HttpMethod.PATCH);
+              }}
+            >
+              <Iconify icon="solar:pen-bold" />
+            </IconButton>
+          )}
+          {(deleteBtn || editBtn) && (
+            <IconButton onClick={handleOpenPopover}>
+              <Iconify icon="eva:more-vertical-fill" />
+            </IconButton>
+          )}
+        </Box>
       </TableCell>
       <Popover
         open={!!openPopover}

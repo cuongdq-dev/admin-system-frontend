@@ -60,7 +60,6 @@ const MuiCard: Components<Theme>['MuiCard'] = {
     root: ({ theme }) => ({
       zIndex: 0,
       position: 'relative',
-      // boxShadow: theme.customShadows.card,
       borderRadius: theme.shape.borderRadius * 2,
     }),
   },
@@ -86,19 +85,13 @@ const MuiOutlinedInput: Components<Theme>['MuiOutlinedInput'] = {
           borderColor: theme.vars.palette.action.hover,
         },
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-          borderColor: theme.vars.palette.action.focus,
+          borderColor: theme.vars.palette.action.active,
         },
       };
     },
     notchedOutline: ({ theme }) => ({
       borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.2),
     }),
-
-    focused: ({ theme }) => {
-      return {
-        border: '1px solid red',
-      };
-    },
   },
 };
 
@@ -107,26 +100,27 @@ const MuiPaper: Components<Theme>['MuiPaper'] = {
     elevation: 0,
   },
   styleOverrides: {
-    root: ({}) => ({ backgroundImage: 'none', boxShadow: 'none', borderRadius: 16 }),
+    root: ({ theme }) => ({
+      backgroundImage: 'none',
+      boxShadow: theme.customShadows.z1,
+    }),
     outlined: ({ theme }) => ({
-      borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
+      borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.9),
     }),
   },
 };
 const MuiDialog: Components<Theme>['MuiDialog'] = {
   styleOverrides: {
-    paper: { borderRadius: 16, padding: 10 },
+    paper: ({ theme }) => ({
+      borderRadius: 16,
+      padding: 10,
+    }),
   },
 };
 
 const MuiDialogActions: Components<Theme>['MuiDialogActions'] = {
   styleOverrides: {
-    root: {
-      paddingLeft: '24px',
-      paddingRight: '24px',
-      paddingTop: '10px',
-      paddingBottom: '20px',
-    },
+    root: { paddingLeft: '24px', paddingRight: '24px', paddingTop: '10px', paddingBottom: '20px' },
   },
 };
 
@@ -144,6 +138,11 @@ const MuiTableCell: Components<Theme>['MuiTableCell'] = {
       fontWeight: theme.typography.fontWeightSemiBold,
       backgroundColor: theme.vars.palette.background.neutral,
     }),
+    body: ({ theme }) => ({
+      borderBottomStyle: 'dashed',
+      borderBottomWidth: 1,
+      borderBottomColor: theme.vars.palette.divider,
+    }),
   },
 };
 
@@ -156,7 +155,11 @@ const MuiMenuItem: Components<Theme>['MuiMenuItem'] = {
 };
 
 const MuiDrawer: Components<Theme>['MuiDrawer'] = {
-  styleOverrides: {},
+  styleOverrides: {
+    paper: ({ theme }) => ({
+      boxShadow: theme.customShadows.z4,
+    }),
+  },
 };
 
 const MuiLink: Components<Theme>['MuiLink'] = {

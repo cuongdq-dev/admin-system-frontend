@@ -6,6 +6,10 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { TableHeadProps } from './type';
 import { visuallyHidden } from './utils';
+import { Button, IconButton, Tooltip, Typography } from '@mui/material';
+import { t } from 'i18next';
+import { LanguageKey } from 'src/constants';
+import { Iconify } from '../iconify';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +27,7 @@ export function TableHeadComponent(props: TableHeadProps) {
     onSelectAllRows,
   } = props;
   return (
-    <TableHead>
+    <TableHead sx={{ height: 80 }}>
       <TableRow>
         {selectCol && (
           <TableCell padding="checkbox">
@@ -37,32 +41,50 @@ export function TableHeadComponent(props: TableHeadProps) {
           </TableCell>
         )}
 
-        {indexCol && <TableCell align="center">STT</TableCell>}
-
-        {headLabel.map((headCell) => (
+        {numSelected > 0 ? (
           <TableCell
-            key={headCell.id}
-            align={headCell.align || 'left'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+            colSpan={
+              headLabel.length + (selectCol ? 1 : 0) + (indexCol ? 1 : 0) + (actionCol ? 1 : 0)
+            }
           >
-            <TableSortLabel
-              disabled={!headCell.sort}
-              hideSortIcon
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={() => onSort(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box sx={{ ...visuallyHidden }}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
+            <Box display="flex" justifyContent={'space-between'} alignItems="center">
+              {t(LanguageKey.table.numberSelected).replace('{count}', numSelected.toString())}
+              <Tooltip arrow title={t(LanguageKey.button.delete)}>
+                <IconButton size="large">
+                  <Iconify icon="solar:trash-bin-trash-bold" />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </TableCell>
-        ))}
-        {actionCol && <TableCell></TableCell>}
+        ) : (
+          <>
+            {indexCol && <TableCell align="center">STT</TableCell>}
+            {headLabel.map((headCell) => (
+              <TableCell
+                key={headCell.id}
+                align={headCell.align || 'left'}
+                sortDirection={orderBy === headCell.id ? order : false}
+                sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+              >
+                <TableSortLabel
+                  disabled={!headCell.sort}
+                  hideSortIcon
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : 'asc'}
+                  onClick={() => onSort(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ? (
+                    <Box sx={{ ...visuallyHidden }}>
+                      {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </Box>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
+            ))}
+            {actionCol && <TableCell></TableCell>}
+          </>
+        )}
       </TableRow>
     </TableHead>
   );

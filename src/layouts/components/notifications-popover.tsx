@@ -20,6 +20,7 @@ import Typography from '@mui/material/Typography';
 import { fToNow } from 'src/utils/format-time';
 
 import { t } from 'i18next';
+import { BellIconShakeAnimation } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey } from 'src/constants';
@@ -72,7 +73,7 @@ export function NotificationsPopover({ data = [], sx, ...other }: NotificationsP
         {...other}
       >
         <Badge badgeContent={totalUnRead} color="error">
-          <Iconify width={24} icon="solar:bell-bing-bold-duotone" />
+          <BellIconShakeAnimation icon="solar:bell-bing-bold-duotone" width={24} />
         </Badge>
       </IconButton>
 

@@ -35,6 +35,7 @@ export const LanguageKey = {
     room: 'server_room',
     network: 'server_network',
     disk: 'server_disk',
+    informationTitle: 'information_title',
   },
 
   site: {
@@ -123,6 +124,7 @@ export const LanguageKey = {
   table: {
     filterTitle: 'filter_list_title',
     paginationPerPage: 'pagination_per_page',
+    numberSelected: 'table_number_selected',
   },
 
   notification: {

@@ -42,8 +42,6 @@ export default function Page() {
   });
 
   const handleUpdate = (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => {
-    setState((state) => ({ ...state, loading: true }));
-
     invokeRequest({
       method: HttpMethod.PATCH,
       baseURL: PATH_SERVER + '/update/' + id,
@@ -82,27 +80,8 @@ export default function Page() {
           <Typography variant="h4" flexGrow={1}>
             {state.data?.name || t(LanguageKey.server.detailPageTitle)}
           </Typography>
-          <Button
-            size="medium"
-            color="inherit"
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            {t(LanguageKey.server.connectServerButton)}
-          </Button>
         </Box>
-        <DetailView
-          schema={{
-            name: Yup.string().required('Email is required'),
-            host: Yup.string().required('host is required'),
-            port: Yup.string().required('port is required'),
-            password: Yup.string().required('password is required'),
-            user: Yup.string().required('user is required'),
-          }}
-          handleUpdate={handleUpdate}
-          loading={state.loading}
-          defaultData={state?.data}
-        />
+        <DetailView handleUpdate={handleUpdate} loading={state.loading} defaultData={state?.data} />
       </DashboardContent>
     </>
   );

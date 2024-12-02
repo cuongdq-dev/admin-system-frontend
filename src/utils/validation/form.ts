@@ -28,3 +28,20 @@ export const formSchema = z.object({
 });
 
 export type FormSchema = z.infer<typeof formSchema>;
+
+export const GetValuesFormChange = (
+  initialData: Record<string, any>,
+  currentValues: Record<string, any>
+) => {
+  const changedFields = Object.keys(currentValues).reduce(
+    (acc, key) => {
+      if (currentValues[key] !== initialData[key]) {
+        acc[key] = currentValues[key];
+      }
+      return acc;
+    },
+    {} as Record<string, any>
+  );
+
+  return changedFields;
+};

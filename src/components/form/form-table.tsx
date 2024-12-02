@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 import { Transition } from '../dialog';
 import { FormProvider } from '../hook-form';
 import { LanguageKey } from 'src/constants';
+import { GetValuesFormChange } from 'src/utils/validation/form';
 
 type FormProps = {
   open: boolean;
@@ -21,7 +22,7 @@ type FormProps = {
   rowId?: string;
   defaultValues?: Record<string, any>;
   formItems?: Record<string, any>;
-  schema?: Record<string, Yup.StringSchema<string, Yup.AnyObject, undefined, ''>>;
+  schema?: Record<string, any>;
 };
 export const PopupFormTable = (props: FormProps) => {
   const { action, baseUrl, defaultValues, schema = {}, rowId, open } = props;
@@ -29,7 +30,6 @@ export const PopupFormTable = (props: FormProps) => {
   const url = baseUrl + (action === HttpMethod.PATCH ? '/update/' + rowId : '/create');
   const methods = useForm({
     resolver: yupResolver(Yup.object().shape(schema)),
-    defaultValues,
   });
 
   const {
@@ -43,7 +43,8 @@ export const PopupFormTable = (props: FormProps) => {
   }, [open]);
 
   const onSubmit = async (values: Record<string, any>) => {
-    if (!isDirty) {
+    const valuesChange = GetValuesFormChange(defaultValues as typeof values, values);
+    if (Object.keys(valuesChange).length == 0) {
       reset();
       handleCloseForm();
       return;

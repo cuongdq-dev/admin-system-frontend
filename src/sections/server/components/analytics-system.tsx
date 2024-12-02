@@ -77,17 +77,12 @@ export function AnalyticsSystem({ title, subheader, chart, ...other }: Props) {
         dataLabels: { position: 'top' },
       },
     },
-    chart: {
-      type: 'bar',
-      stacked: true,
-      stackType: '100%',
-      height: 350,
-    },
+    chart: { type: 'bar', stacked: true, stackType: '100%' },
     ...chart.options,
   });
 
   return (
-    <Card {...other}>
+    <Card sx={{ boxShadow: 'none' }} {...other}>
       <CardHeader title={title} subheader={subheader} />
       <Chart
         type="bar"
@@ -95,8 +90,8 @@ export function AnalyticsSystem({ title, subheader, chart, ...other }: Props) {
           { name: t(LanguageKey.server.used), data: percentageUsed },
           { name: t(LanguageKey.server.available), data: totalValues },
         ]}
+        minHeight={300}
         options={chartOptions}
-        height={360}
       />
     </Card>
   );

@@ -83,10 +83,34 @@ export function ListView() {
           handleClickOpenForm={handleClickOpenForm}
           actions={{ editBtn: true, deleteBtn: true, popupEdit: true }}
           headLabel={[
-            { id: 'name', label: t(LanguageKey.server.nameItem), sort: true, type: 'text' },
-            { id: 'host', label: t(LanguageKey.server.hostItem), sort: true, type: 'text' },
-            { id: 'port', label: t(LanguageKey.server.portItem), sort: false, type: 'text' },
-            { id: 'user', label: t(LanguageKey.server.userItem), sort: true, type: 'text' },
+            {
+              id: 'name',
+              label: t(LanguageKey.server.nameItem),
+              sort: true,
+              type: 'text',
+              width: '30%',
+            },
+            {
+              id: 'host',
+              label: t(LanguageKey.server.hostItem),
+              sort: true,
+              type: 'text',
+              width: '30%',
+            },
+            {
+              id: 'port',
+              label: t(LanguageKey.server.portItem),
+              sort: false,
+              type: 'text',
+              width: '20%',
+            },
+            {
+              id: 'user',
+              label: t(LanguageKey.server.userItem),
+              sort: true,
+              type: 'text',
+              width: '20%',
+            },
           ]}
         />
       </Card>

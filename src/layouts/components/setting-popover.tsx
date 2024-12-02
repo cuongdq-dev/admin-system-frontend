@@ -1,6 +1,4 @@
-import { Button, ButtonBase, styled, Switch, useColorScheme } from '@mui/material';
-import { Mode } from '@mui/system/cssVars/useCurrentColorScheme';
-// import { useColorScheme } from '@mui/';
+import { Button, styled, Switch, useColorScheme } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -8,12 +6,13 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { Mode } from '@mui/system/cssVars/useCurrentColorScheme';
 import { t } from 'i18next';
 import { useState } from 'react';
 
+import { SpinIconAnimation } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
-import { Label } from 'src/components/label';
 import { LanguageKey } from 'src/constants';
 
 // ----------------------------------------------------------------------
@@ -86,7 +85,7 @@ const SwitchBustom = styled(Switch)(({ theme }) => ({
 export function SettingPopover() {
   const { mode, setMode } = useColorScheme();
   const [openSetting, setOpenSetting] = useState(false);
-  const [settings, setSetting] = useState<SettingProps>({ ...defaultSetting, mode });
+  const settings = { ...defaultSetting, mode };
   const canReset = Object.keys(settings).some(
     (key) => settings[key as keyof SettingProps] !== defaultSetting[key as keyof SettingProps]
   );
@@ -95,7 +94,7 @@ export function SettingPopover() {
     <>
       <IconButton color={openSetting ? 'primary' : 'default'} onClick={() => setOpenSetting(true)}>
         <Badge color="error">
-          <Iconify width={24} icon="ic:outline-settings" />
+          <SpinIconAnimation width={24} icon="ic:outline-settings" />
         </Badge>
       </IconButton>
       <Drawer
