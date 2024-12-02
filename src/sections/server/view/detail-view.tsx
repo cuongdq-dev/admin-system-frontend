@@ -46,11 +46,16 @@ export function DetailView(props: IDetail) {
   const {
     handleSubmit,
     setError,
-    formState: { isSubmitting },
+    reset,
+    formState: { isSubmitting, isDirty },
   } = methods;
 
   const onSubmit = async (values: typeof defaultData) => {
+    if (!isDirty) {
+      return;
+    }
     handleUpdate && handleUpdate(setError, values);
+    reset();
   };
 
   if (loading) return <FetchingComponent />;
@@ -166,6 +171,7 @@ export function DetailView(props: IDetail) {
                     </Grid>
                     <Box padding={2} display="flex" justifyContent="flex-end">
                       <LoadingButton
+                        disabled={!isDirty}
                         color="inherit"
                         type="submit"
                         variant="contained"

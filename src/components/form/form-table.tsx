@@ -35,7 +35,7 @@ export const PopupFormTable = (props: FormProps) => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = methods;
 
   useEffect(() => {
@@ -43,6 +43,11 @@ export const PopupFormTable = (props: FormProps) => {
   }, [open]);
 
   const onSubmit = async (values: Record<string, any>) => {
+    if (!isDirty) {
+      reset();
+      handleCloseForm();
+      return;
+    }
     invokeRequest({
       method: action,
       baseURL: url,
