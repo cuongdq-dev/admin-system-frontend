@@ -99,7 +99,14 @@ export function ListView() {
         actions={{ editBtn: true, deleteBtn: true, popupEdit: true }}
         headLabel={HeadLabel}
         customCard={({ values }: { values: IServer }) => {
-          return <ServerItem item={values} refreshData={refreshData} baseUrl={PATH_SERVER} />;
+          return (
+            <ServerItem
+              item={values}
+              handleClickOpenForm={handleClickOpenForm}
+              refreshData={refreshData}
+              baseUrl={PATH_SERVER}
+            />
+          );
         }}
       />
 
@@ -128,7 +135,4 @@ export function ListView() {
       />
     </DashboardContent>
   );
-}
-function useWidth() {
-  throw new Error('Function not implemented.');
 }

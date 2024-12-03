@@ -9,20 +9,27 @@ import {
   MenuItem,
   menuItemClasses,
   MenuList,
+  Link,
   Popover,
 } from '@mui/material';
 import { t } from 'i18next';
 import React, { useCallback, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { HttpMethod } from 'src/api-core';
 import { Iconify } from 'src/components/iconify';
 import { ButtonDelete } from 'src/components/table';
 import { LanguageKey } from 'src/constants';
 import { remToPx } from 'src/theme/styles';
 import { fDateTime, formatStr } from 'src/utils/format-time';
 
-type Props = { item: IServer; refreshData?: () => void; baseUrl: string };
+type Props = {
+  item: IServer;
+  refreshData?: () => void;
+  baseUrl: string;
+  handleClickOpenForm: (row: Record<string, any>, action: HttpMethod) => void;
+};
 export const ServerItem = (props: Props) => {
-  const { item, refreshData, baseUrl } = props;
+  const { item, refreshData, handleClickOpenForm, baseUrl } = props;
   const navigate = useNavigate();
 
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
@@ -67,11 +74,11 @@ export const ServerItem = (props: Props) => {
         >
           <MenuItem
             onClick={() => {
-              handleClosePopover();
+              handleClickOpenForm(item!, HttpMethod.PATCH);
             }}
           >
             <Iconify icon="solar:pen-bold" />
-            {t(LanguageKey.button.detail)}
+            {t(LanguageKey.button.update)}
           </MenuItem>
           <ButtonDelete refreshData={refreshData} rowId={item?.id!} baseUrl={baseUrl} />
         </MenuList>
@@ -83,18 +90,20 @@ export const ServerItem = (props: Props) => {
             sx={(theme) => {
               return {
                 borderBottomStyle: 'dashed',
-                borderBottomColor: theme.vars.palette.divider,
+                borderBottomWidth: 0.5,
+                borderBottomColor: theme.vars.palette.text.secondary,
                 paddingX: 3,
                 paddingY: 2,
                 marginBottom: 2,
               };
             }}
-            primaryTypographyProps={{
-              color: 'info.dark',
-              fontWeight: 'fontWeightBold',
-            }}
+            primaryTypographyProps={{ color: 'info.dark', fontWeight: 'fontWeightBold' }}
             primary={
-              <Link style={{ textDecoration: 'none' }} to={item.id!}>
+              <Link
+                onClick={() => navigate(item?.id!)}
+                fontSize={'1.2rem'}
+                sx={{ color: 'text.secondary' }}
+              >
                 {item.name}
               </Link>
             }

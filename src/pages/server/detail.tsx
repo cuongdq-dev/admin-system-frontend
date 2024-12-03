@@ -30,7 +30,10 @@ export default function Page() {
       setTimeout(() => {
         setState({ loading: false, data: res });
       }, 700);
-      navigate('.', { state: { sitename: res.name } });
+      navigate(location.pathname, {
+        replace: true,
+        state: { ...location.state, sitename: res.name },
+      });
     },
     onHandleError: (error) => {
       setTimeout(() => {

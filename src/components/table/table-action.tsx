@@ -85,7 +85,7 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
             <MenuItem
               onClick={() => {
                 handleClosePopover();
-                navigate(row?.id);
+                navigate(row?.id, { replace: false });
               }}
             >
               <Iconify icon="solar:pen-bold" />
