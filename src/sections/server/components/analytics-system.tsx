@@ -83,7 +83,11 @@ export function AnalyticsSystem({ title, subheader, chart, ...other }: Props) {
 
   return (
     <Card sx={{ boxShadow: 'none' }} {...other}>
-      <CardHeader title={title} subheader={subheader} />
+      <CardHeader
+        titleTypographyProps={{ fontWeight: 'typography.fontWeightBold' }}
+        title={title}
+        subheader={subheader}
+      />
       <Chart
         type="bar"
         series={[

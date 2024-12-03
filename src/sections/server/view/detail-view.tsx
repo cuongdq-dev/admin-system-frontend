@@ -27,7 +27,7 @@ export function DetailView(props: IDetail) {
 
   if (loading) return <FetchingComponent />;
   return (
-    <Box height={10}>
+    <Box>
       <TabContext value={tabState.value}>
         <TabList
           onChange={(_, value) => setTabState((s) => ({ ...s, value: value }))}

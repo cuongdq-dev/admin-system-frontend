@@ -37,6 +37,7 @@ export const LanguageKey = {
     network: 'server_network',
     disk: 'server_disk',
     informationTitle: 'information_title',
+    allService: 'all_service',
   },
 
   site: {

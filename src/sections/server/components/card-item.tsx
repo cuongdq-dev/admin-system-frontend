@@ -91,25 +91,19 @@ export const ServerItem = (props: Props) => {
               return {
                 borderBottomStyle: 'dashed',
                 borderBottomWidth: 0.5,
-                borderBottomColor: theme.vars.palette.text.secondary,
+                borderBottomColor: theme.vars.palette.divider,
                 paddingX: 3,
                 paddingY: 2,
                 marginBottom: 2,
               };
             }}
-            primaryTypographyProps={{ color: 'info.dark', fontWeight: 'fontWeightBold' }}
+            primaryTypographyProps={{ fontWeight: 'fontWeightBold' }}
             primary={
-              <Link
-                onClick={() => navigate(item?.id!)}
-                fontSize={'1.2rem'}
-                sx={{ color: 'text.secondary' }}
-              >
+              <Link onClick={() => navigate(item?.id!)} sx={{ color: 'text.primary' }}>
                 {item.name}
               </Link>
             }
-            secondaryTypographyProps={{
-              color: 'grey',
-            }}
+            secondaryTypographyProps={{ color: 'text.secondary', fontSize: 'typography.caption' }}
             secondary={fDateTime(item.created_at?.toString(), formatStr.paramCase.dateTime)}
           />
         </ListItem>
@@ -117,8 +111,9 @@ export const ServerItem = (props: Props) => {
         <Grid
           sx={(theme) => {
             return {
-              color: theme.vars.palette.info.dark,
-              fontWeight: theme.typography.fontWeightMedium,
+              color: theme.vars.palette.text.secondary,
+              fontWeight: theme.typography.fontWeightRegular,
+              fontSize: theme.typography.caption,
             };
           }}
           paddingX={3}

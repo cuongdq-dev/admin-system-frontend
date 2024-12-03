@@ -77,7 +77,6 @@ export default function Page() {
       </Helmet>
 
       <DashboardContent>
-        <HeadComponent title={state.data?.name || t(LanguageKey.server.detailPageTitle)} />
         <DetailView handleUpdate={handleUpdate} loading={state.loading} defaultData={state?.data} />
       </DashboardContent>
     </>
