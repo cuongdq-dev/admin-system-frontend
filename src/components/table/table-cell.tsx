@@ -6,6 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import { ReactNode } from 'react';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
+import { fDateTime, formatStr } from 'src/utils/format-time';
 import { Align, CellType } from './type';
 
 interface CommonTableCellProps {
@@ -83,6 +84,13 @@ export function CommonTableCell({
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
           {/* <Iconify icon="eva:more-vertical-fill" onClick={onActionClick} /> */}
+        </TableCell>
+      );
+
+    case 'datetime':
+      return (
+        <TableCell width={width} sx={{ minWidth: minWidth }} align="center">
+          {fDateTime(value?.toString(), formatStr.paramCase.date)}
         </TableCell>
       );
 

@@ -1,4 +1,3 @@
-import { Box, Button, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -8,13 +7,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
-import { Iconify } from 'src/components/iconify';
+import { HeadComponent } from 'src/components/page-head';
 import { CONFIG } from 'src/config-global';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { DetailView } from 'src/sections/server';
-import * as Yup from 'yup';
 // ----------------------------------------------------------------------
 
 export default function Page() {
@@ -76,11 +74,7 @@ export default function Page() {
       </Helmet>
 
       <DashboardContent>
-        <Box display="flex" alignItems="center">
-          <Typography variant="h4" flexGrow={1}>
-            {state.data?.name || t(LanguageKey.server.detailPageTitle)}
-          </Typography>
-        </Box>
+        <HeadComponent title={state.data?.name || t(LanguageKey.server.detailPageTitle)} />
         <DetailView handleUpdate={handleUpdate} loading={state.loading} defaultData={state?.data} />
       </DashboardContent>
     </>

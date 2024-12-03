@@ -26,6 +26,7 @@ export const LanguageKey = {
     hostItem: 'server_item_host',
     portItem: 'server_item_port',
     userItem: 'server_item_user',
+    createdAtItem: 'server_item_created_at',
     passwordItem: 'server_item_password',
     inactiveStatus: 'server_inactive_status',
     activeStatus: 'server_active_status',

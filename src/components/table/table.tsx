@@ -1,16 +1,24 @@
-import { Card, Table, TableBody, TableContainer, TablePagination, TableRow } from '@mui/material';
+import {
+  Card,
+  Grid,
+  Table,
+  TableBody,
+  TableContainer,
+  TablePagination,
+  TableRow,
+} from '@mui/material';
 import { t } from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { Scrollbar } from '../scrollbar';
 import { TableActionComponent } from './table-action';
 import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
-import { TableToolbarComponent } from './table-toolbar';
+import { CardToolbarComponent, TableToolbarComponent } from './table-toolbar';
 import { TableComponentProps, TableMetaData } from './type';
-import { LanguageKey } from 'src/constants';
 
 type TableState = {
   data?: Record<string, any>;
@@ -24,6 +32,8 @@ export const TableComponent = (props: TableComponentProps) => {
     selectCol,
     refreshNumber,
     refreshData,
+    component,
+    customCard,
     tableKey,
     handleClickOpenForm,
     actions = { deleteBtn: false, editBtn: false, popupEdit: false },
@@ -56,10 +66,44 @@ export const TableComponent = (props: TableComponentProps) => {
         order: metaData?.sortBy![0][1].toLocaleLowerCase(),
       };
   };
+
+  if (component == 'CARD') {
+    return (
+      <>
+        <CardToolbarComponent
+          filterName={filterName}
+          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setFilterName(event.target.value);
+            table.onResetPage();
+          }}
+        />
+
+        <Grid spacing={3}>
+          {notFound && <TableNoData searchQuery={filterName} />}
+
+          {datasource?.map((data: Record<string, any>, index: number) => (
+            <Grid marginBottom={5} key={`card_item_${data.id}_${index}`} xs={12} sm={6} md={3}>
+              {customCard && customCard({ values: data })}
+            </Grid>
+          ))}
+        </Grid>
+
+        <TablePagination
+          component="div"
+          labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
+          page={metaData?.currentPage - 1}
+          count={metaData?.totalItems}
+          rowsPerPage={metaData?.itemsPerPage}
+          onPageChange={table.onChangePage}
+          rowsPerPageOptions={[10, 20, 30, 50, 100]}
+          onRowsPerPageChange={table.onChangeRowsPerPage}
+        />
+      </>
+    );
+  }
   return (
-    <>
+    <Card>
       <TableToolbarComponent
-        numSelected={table.selected.length}
         filterName={filterName}
         onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
           setFilterName(event.target.value);
@@ -91,13 +135,7 @@ export const TableComponent = (props: TableComponentProps) => {
               {datasource?.map((row: Record<string, any>, index: number) => {
                 const keys = Object.keys(row);
                 return (
-                  <TableRow
-                    hover
-                    tabIndex={-1}
-                    role="checkbox"
-                    // selected={table.selected.includes(row.id)}
-                    key={row.id}
-                  >
+                  <TableRow hover tabIndex={-1} role="checkbox" key={row.id}>
                     {selectCol && (
                       <CommonTableCell
                         type="checkbox"
@@ -119,10 +157,11 @@ export const TableComponent = (props: TableComponentProps) => {
                     )}
                     {headLabel.map((column) => {
                       if (keys.includes(column.id)) {
+                        console.log(column);
                         return (
                           <CommonTableCell
                             value={row[column.id]}
-                            type={row[column.type!]}
+                            type={column.type!}
                             key={column.id}
                             align={column.align}
                             minWidth={column.minWidth}
@@ -159,7 +198,7 @@ export const TableComponent = (props: TableComponentProps) => {
         rowsPerPageOptions={[10, 20, 30, 50, 100]}
         onRowsPerPageChange={table.onChangeRowsPerPage}
       />
-    </>
+    </Card>
   );
 };
 

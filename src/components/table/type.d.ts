@@ -1,6 +1,6 @@
 import type { TableRowProps as TableRowPropMUI } from '@mui/material/TableRow';
 
-export type CellType = 'checkbox' | 'text' | 'avatar' | 'status' | 'icon' | 'action';
+export type CellType = 'checkbox' | 'text' | 'avatar' | 'status' | 'icon' | 'action' | 'datetime';
 export type Align = 'left' | 'right' | 'center' | 'inherit' | 'justify';
 export type HeadLabelProps = {
   id: string;
@@ -29,6 +29,8 @@ export type TableActionComponentProps = {
   handleClickOpenForm?: (row: Record<string, any>, action: HttpMethod) => void;
 };
 export type TableComponentProps = {
+  component?: 'CARD' | 'TABLE';
+  customCard?: ({ values }: { values: Record<string, any> }) => JSX.Element;
   tableKey: string;
   url: string;
   headLabel: HeadLabelProps[];
@@ -54,7 +56,6 @@ export type TableHeadProps = {
 };
 
 export type TableToolbarProps = {
-  numSelected: number;
   filterName: string;
   onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };

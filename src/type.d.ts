@@ -8,6 +8,7 @@ type IServer = {
   user?: string;
   is_active?: boolean;
   is_connected?: boolean;
+  created_at?: Datetime;
 };
 
 type ITransition = {

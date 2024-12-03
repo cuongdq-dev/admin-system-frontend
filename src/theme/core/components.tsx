@@ -16,6 +16,11 @@ const MuiBackdrop: Components<Theme>['MuiBackdrop'] = {
     },
   },
 };
+const MuiTooltip: Components<Theme>['MuiTooltip'] = {
+  defaultProps: {
+    arrow: true,
+  },
+};
 
 const MuiButton: Components<Theme>['MuiButton'] = {
   defaultProps: {
@@ -238,4 +243,5 @@ export const components = {
   MuiDialog,
   MuiDialogActions,
   MuiDialogContent,
+  MuiTooltip,
 };
