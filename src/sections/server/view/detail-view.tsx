@@ -24,7 +24,6 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 export function DetailView(props: IDetail) {
   const { defaultData, loading, handleUpdate } = props;
   const [tabState, setTabState] = useState<{ value: string }>({ value: 'general' });
-
   if (loading) return <FetchingComponent />;
   return (
     <Box>

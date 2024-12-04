@@ -14,7 +14,8 @@ import { fNumber } from 'src/utils/format-number';
 type Props = CardProps & {
   title?: string;
   subheader?: string;
-  chart: {
+  connectionId?: string;
+  chart?: {
     units?: string[];
     categories?: string[];
     values?: string[];
@@ -24,7 +25,12 @@ type Props = CardProps & {
   };
 };
 
-export function AnalyticsSystem({ title, subheader, chart, ...other }: Props) {
+export function AnalyticsSystem({
+  title,
+  subheader,
+  chart = { used: [], available: [] },
+  ...other
+}: Props) {
   const theme = useTheme();
 
   const totalValues = chart.used.map((used, index) => used + chart.available[index]);

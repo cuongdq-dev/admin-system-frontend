@@ -1,4 +1,18 @@
 // TABLE DATA TYPE:
+
+type ServiceInstalledEnum = 'installed' | 'installing' | 'uninstalled' | 'failed';
+
+type IService = {
+  id?: string;
+  name?: string;
+  description?: string;
+  installed?: ServiceInstalledEnum;
+  icon?: string;
+  is_installed?: boolean;
+  is_active?: boolean;
+  port?: string;
+  memory_usage?: string;
+};
 type IServer = {
   id?: string;
   host?: string;
@@ -9,6 +23,8 @@ type IServer = {
   is_active?: boolean;
   is_connected?: boolean;
   created_at?: Datetime;
+  connectionId?: string;
+  server_services?: IService[];
 };
 
 type ITransition = {

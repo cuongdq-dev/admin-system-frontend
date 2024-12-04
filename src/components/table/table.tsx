@@ -157,7 +157,6 @@ export const TableComponent = (props: TableComponentProps) => {
                     )}
                     {headLabel.map((column) => {
                       if (keys.includes(column.id)) {
-                        console.log(column);
                         return (
                           <CommonTableCell
                             value={row[column.id]}

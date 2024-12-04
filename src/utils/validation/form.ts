@@ -33,6 +33,7 @@ export const GetValuesFormChange = (
   initialData: Record<string, any>,
   currentValues: Record<string, any>
 ) => {
+  if (!initialData) return currentValues;
   const changedFields = Object.keys(currentValues).reduce(
     (acc, key) => {
       if (currentValues[key] !== initialData[key]) {
