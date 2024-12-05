@@ -24,20 +24,10 @@ interface CommonTableCellProps {
   onActionClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export function CommonTableCell({
-  type,
-  value,
-  checked,
-  onChange,
-  avatarUrl,
-  name,
-  status,
-  icon,
-  align,
-  minWidth,
-  width,
-  onActionClick,
-}: CommonTableCellProps) {
+export function CommonTableCell(props: CommonTableCellProps) {
+  const { type, value, checked, avatarUrl, name, status, icon, align, minWidth, width } = props;
+  const { onChange, onActionClick } = props;
+
   switch (type) {
     case 'checkbox':
       return (
@@ -83,7 +73,6 @@ export function CommonTableCell({
           <IconButton onClick={(event) => onActionClick?.(event)}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-          {/* <Iconify icon="eva:more-vertical-fill" onClick={onActionClick} /> */}
         </TableCell>
       );
 

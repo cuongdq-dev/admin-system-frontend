@@ -1,6 +1,14 @@
 import type { TableRowProps as TableRowPropMUI } from '@mui/material/TableRow';
 
-export type CellType = 'checkbox' | 'text' | 'avatar' | 'status' | 'icon' | 'action' | 'datetime';
+export type CellType =
+  | 'checkbox'
+  | 'text'
+  | 'avatar'
+  | 'status'
+  | 'icon'
+  | 'action'
+  | 'datetime'
+  | 'custom';
 export type Align = 'left' | 'right' | 'center' | 'inherit' | 'justify';
 export type HeadLabelProps = {
   id: string;
@@ -10,6 +18,13 @@ export type HeadLabelProps = {
   align?: Align;
   width?: string | number;
   minWidth?: string | number;
+  render?: ({
+    row,
+    refreshData,
+  }: {
+    row: Record<string, any>;
+    refreshData?: () => void;
+  }) => JSX.Element;
 };
 
 export type ActionProps = {
@@ -38,6 +53,7 @@ export type TableComponentProps = {
   refreshNumber?: number;
   refreshData?: () => void;
   selectCol?: boolean;
+  withSearch?: boolean;
   actions?: ActionProps;
   handleClickOpenForm?: (row: Record<string, any>, action: HttpMethod) => void;
 };

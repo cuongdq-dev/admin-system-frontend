@@ -66,7 +66,11 @@ export function TableHeadComponent(props: TableHeadProps) {
           </TableCell>
         ) : (
           <>
-            {indexCol && <TableCell align="center">STT</TableCell>}
+            {indexCol && (
+              <TableCell width={50} align="center">
+                STT
+              </TableCell>
+            )}
             {headLabel.map((headCell) => (
               <TableCell
                 key={headCell.id}

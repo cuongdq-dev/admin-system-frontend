@@ -3,6 +3,7 @@ import {
   Grid,
   Table,
   TableBody,
+  TableCell,
   TableContainer,
   TablePagination,
   TableRow,
@@ -31,6 +32,7 @@ export const TableComponent = (props: TableComponentProps) => {
     indexCol,
     selectCol,
     refreshNumber,
+    withSearch = true,
     refreshData,
     component,
     customCard,
@@ -70,14 +72,15 @@ export const TableComponent = (props: TableComponentProps) => {
   if (component == 'CARD') {
     return (
       <>
-        <CardToolbarComponent
-          filterName={filterName}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
-          }}
-        />
-
+        {withSearch && (
+          <CardToolbarComponent
+            filterName={filterName}
+            onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setFilterName(event.target.value);
+              table.onResetPage();
+            }}
+          />
+        )}
         <Grid spacing={3}>
           {notFound && <TableNoData searchQuery={filterName} />}
 
@@ -87,29 +90,32 @@ export const TableComponent = (props: TableComponentProps) => {
             </Grid>
           ))}
         </Grid>
-
-        <TablePagination
-          component="div"
-          labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
-          page={metaData?.currentPage - 1}
-          count={metaData?.totalItems}
-          rowsPerPage={metaData?.itemsPerPage}
-          onPageChange={table.onChangePage}
-          rowsPerPageOptions={[10, 20, 30, 50, 100]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
-        />
+        {metaData && Object.keys(metaData).length > 0 && (
+          <TablePagination
+            component="div"
+            labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
+            page={metaData?.currentPage - 1}
+            count={metaData?.totalItems}
+            rowsPerPage={metaData?.itemsPerPage}
+            onPageChange={table.onChangePage}
+            rowsPerPageOptions={[10, 20, 30, 50, 100]}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
+        )}
       </>
     );
   }
   return (
     <Card>
-      <TableToolbarComponent
-        filterName={filterName}
-        onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setFilterName(event.target.value);
-          table.onResetPage();
-        }}
-      />
+      {withSearch && (
+        <TableToolbarComponent
+          filterName={filterName}
+          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setFilterName(event.target.value);
+            table.onResetPage();
+          }}
+        />
+      )}
 
       <Scrollbar>
         <TableContainer sx={{ overflow: 'unset' }}>
@@ -156,6 +162,14 @@ export const TableComponent = (props: TableComponentProps) => {
                       />
                     )}
                     {headLabel.map((column) => {
+                      if (column.type == 'custom' && !!column?.render) {
+                        return (
+                          <TableCell width={column.width} sx={{ minWidth: column.width }}>
+                            {column?.render &&
+                              column?.render({ row: row, refreshData: refreshData })}
+                          </TableCell>
+                        );
+                      }
                       if (keys.includes(column.id)) {
                         return (
                           <CommonTableCell
@@ -186,17 +200,18 @@ export const TableComponent = (props: TableComponentProps) => {
           </Table>
         </TableContainer>
       </Scrollbar>
-
-      <TablePagination
-        component="div"
-        labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
-        page={metaData?.currentPage - 1}
-        count={metaData?.totalItems}
-        rowsPerPage={metaData?.itemsPerPage}
-        onPageChange={table.onChangePage}
-        rowsPerPageOptions={[10, 20, 30, 50, 100]}
-        onRowsPerPageChange={table.onChangeRowsPerPage}
-      />
+      {metaData && Object.keys(metaData).length > 0 && (
+        <TablePagination
+          component="div"
+          labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
+          page={metaData?.currentPage - 1}
+          count={metaData?.totalItems}
+          rowsPerPage={metaData?.itemsPerPage}
+          onPageChange={table.onChangePage}
+          rowsPerPageOptions={[10, 20, 30, 50, 100]}
+          onRowsPerPageChange={table.onChangeRowsPerPage}
+        />
+      )}
     </Card>
   );
 };

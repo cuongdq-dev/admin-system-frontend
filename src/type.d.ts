@@ -2,6 +2,13 @@
 
 type ServiceInstalledEnum = 'installed' | 'installing' | 'uninstalled' | 'failed';
 
+type IContainerDocker = {
+  id: string;
+  name: string;
+  image: string;
+  status: string;
+};
+
 type IService = {
   id?: string;
   name?: string;
@@ -13,6 +20,7 @@ type IService = {
   port?: string;
   memory_usage?: string;
 };
+
 type IServer = {
   id?: string;
   host?: string;

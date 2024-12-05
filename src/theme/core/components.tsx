@@ -107,6 +107,7 @@ const MuiPaper: Components<Theme>['MuiPaper'] = {
   styleOverrides: {
     root: ({ theme }) => ({
       backgroundImage: 'none',
+      borderRadius: theme.shape.borderRadius * 3,
       boxShadow: theme.customShadows.z1,
     }),
     outlined: ({ theme }) => ({

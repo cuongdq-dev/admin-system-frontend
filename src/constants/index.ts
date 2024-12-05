@@ -38,6 +38,8 @@ export const LanguageKey = {
     disk: 'server_disk',
     informationTitle: 'information_title',
     allService: 'all_service',
+    dockerContainer: 'docker_containers',
+    dockerImages: 'docker_images',
   },
 
   site: {
@@ -161,5 +163,21 @@ export const LanguageKey = {
     darkModeTitle: 'dark_mode_title',
     lightModeTitle: 'light_mode_title',
     systemModeTitle: 'system_mode_title',
+  },
+
+  docker: {
+    containerIdItem: 'docker_container_id_item',
+    containerNameItem: 'docker_container_name_item',
+    containerStatusItem: 'docker_container_status_item',
+    containerImagesItem: 'docker_container_images_item',
+
+    imageIdItem: 'docker_image_id_item',
+    imageNameItem: 'docker_image_name_item',
+    imageStatusItem: 'docker_image_status_item',
+    imageTagItem: 'docker_image_tag_item',
+    imageCreatedItem: 'docker_image_created_item',
+    imageSizeItem: 'docker_image_size_item',
+    imageRun: 'docker_image_run',
+    imageStop: 'docker_image_stop',
   },
 };
