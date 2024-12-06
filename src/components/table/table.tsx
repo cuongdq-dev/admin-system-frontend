@@ -1,6 +1,9 @@
 import {
+  Box,
   Card,
+  CircularProgress,
   Grid,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -33,15 +36,16 @@ export const TableComponent = (props: TableComponentProps) => {
     selectCol,
     refreshNumber,
     withSearch = true,
-    refreshData,
     component,
-    customCard,
     tableKey,
-    handleClickOpenForm,
-    actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true },
   } = props;
+  const { refreshData, customCard, handleClickOpenForm } = props;
+  const { actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true } } =
+    props;
+
   const table = useTable();
   const [filterName, setFilterName] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const [{ meta: metaData, data: datasource }, setState] = useState<TableState>({
     data: [],
@@ -53,11 +57,19 @@ export const TableComponent = (props: TableComponentProps) => {
       sortBy: [['created_ad', 'DESC']],
     },
   });
+
+  useEffect(() => {
+    setLoading(true);
+  }, [refreshNumber]);
+
   useAPI({
     refreshNumber: refreshNumber,
     key: tableKey,
     baseURL: url + '/list' + window.location.search,
-    onSuccess: (res) => setState(res),
+    onSuccess: (res) => {
+      setState(res);
+      setLoading(false);
+    },
   });
 
   const notFound = !datasource?.length && !!filterName;
@@ -106,113 +118,135 @@ export const TableComponent = (props: TableComponentProps) => {
     );
   }
   return (
-    <Card>
-      {withSearch && (
-        <TableToolbarComponent
-          filterName={filterName}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
+    <Box sx={{ position: 'relative' }}>
+      {loading && (
+        <Box
+          sx={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            zIndex: 1,
           }}
-        />
+        >
+          <CircularProgress
+            size={50}
+            sx={{
+              left: '50%',
+              top: '50%',
+              position: 'absolute',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+        </Box>
       )}
+      <Card sx={{ opacity: loading ? 0.1 : 1, pointerEvents: loading ? 'none' : 'auto' }}>
+        {withSearch && (
+          <TableToolbarComponent
+            filterName={filterName}
+            onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setFilterName(event.target.value);
+              table.onResetPage();
+            }}
+          />
+        )}
 
-      <Scrollbar>
-        <TableContainer sx={{ overflow: 'unset' }}>
-          <Table sx={{ minWidth: 800 }}>
-            <TableHeadComponent
-              order={getSortBy()?.order as 'asc' | 'desc'}
-              orderBy={getSortBy()?.orderBy}
-              rowCount={datasource?.length}
-              numSelected={table.selected.length}
-              indexCol={indexCol}
-              selectCol={selectCol}
-              actionCol={actions?.deleteBtn || actions?.editBtn || actions.popupEdit}
-              onSort={table.onSort}
-              onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
-                  checked,
-                  datasource?.map((row: Record<string, any>) => row?.id)
-                )
-              }
-              headLabel={headLabel}
-            />
-            <TableBody>
-              {datasource?.map((row: Record<string, any>, index: number) => {
-                const keys = Object.keys(row);
-                return (
-                  <TableRow hover tabIndex={-1} role="checkbox" key={row.id}>
-                    {selectCol && (
-                      <CommonTableCell
-                        type="checkbox"
-                        checked={table.selected.includes(row.id)}
-                        onChange={() => table.onSelectRow(row.id)}
-                        width={20}
-                        minWidth={20}
+        <Scrollbar>
+          <TableContainer sx={{ overflow: 'unset' }}>
+            <Table sx={{ minWidth: 800 }}>
+              <TableHeadComponent
+                order={getSortBy()?.order as 'asc' | 'desc'}
+                orderBy={getSortBy()?.orderBy}
+                rowCount={datasource?.length}
+                numSelected={table.selected.length}
+                indexCol={indexCol}
+                selectCol={selectCol}
+                actionCol={actions?.deleteBtn || actions?.editBtn || actions.popupEdit}
+                onSort={table.onSort}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    datasource?.map((row: Record<string, any>) => row?.id)
+                  )
+                }
+                headLabel={headLabel}
+              />
+              <TableBody>
+                {datasource?.map((row: Record<string, any>, index: number) => {
+                  const keys = Object.keys(row);
+                  return (
+                    <TableRow hover tabIndex={-1} role="checkbox" key={row.id}>
+                      {selectCol && (
+                        <CommonTableCell
+                          type="checkbox"
+                          checked={table.selected.includes(row.id)}
+                          onChange={() => table.onSelectRow(row.id)}
+                          width={20}
+                          minWidth={20}
+                        />
+                      )}
+                      {indexCol && (
+                        <CommonTableCell
+                          align="center"
+                          width={60}
+                          minWidth={60}
+                          value={index + 1}
+                          type={'text'}
+                          key={'_index' + '_' + index}
+                        />
+                      )}
+                      {headLabel.map((column) => {
+                        if (column.type == 'custom' && !!column?.render) {
+                          return (
+                            <TableCell width={column.width} sx={{ minWidth: column.width }}>
+                              {column?.render &&
+                                column?.render({ row: row, refreshData: refreshData })}
+                            </TableCell>
+                          );
+                        }
+                        if (keys.includes(column.id)) {
+                          return (
+                            <CommonTableCell
+                              value={row[column.id]}
+                              type={column.type!}
+                              key={column.id}
+                              align={column.align}
+                              minWidth={column.minWidth}
+                              width={column.width}
+                            />
+                          );
+                        }
+                        return null;
+                      })}
+                      <TableActionComponent
+                        {...actions}
+                        baseUrl={url}
+                        row={row}
+                        refreshData={refreshData}
+                        handleClickOpenForm={handleClickOpenForm}
                       />
-                    )}
-                    {indexCol && (
-                      <CommonTableCell
-                        align="center"
-                        width={60}
-                        minWidth={60}
-                        value={index + 1}
-                        type={'text'}
-                        key={'_index' + '_' + index}
-                      />
-                    )}
-                    {headLabel.map((column) => {
-                      if (column.type == 'custom' && !!column?.render) {
-                        return (
-                          <TableCell width={column.width} sx={{ minWidth: column.width }}>
-                            {column?.render &&
-                              column?.render({ row: row, refreshData: refreshData })}
-                          </TableCell>
-                        );
-                      }
-                      if (keys.includes(column.id)) {
-                        return (
-                          <CommonTableCell
-                            value={row[column.id]}
-                            type={column.type!}
-                            key={column.id}
-                            align={column.align}
-                            minWidth={column.minWidth}
-                            width={column.width}
-                          />
-                        );
-                      }
-                      return null;
-                    })}
-                    <TableActionComponent
-                      {...actions}
-                      baseUrl={url}
-                      row={row}
-                      refreshData={refreshData}
-                      handleClickOpenForm={handleClickOpenForm}
-                    />
-                  </TableRow>
-                );
-              })}
+                    </TableRow>
+                  );
+                })}
 
-              {notFound && <TableNoData searchQuery={filterName} />}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Scrollbar>
-      {metaData && Object.keys(metaData).length > 0 && (
-        <TablePagination
-          component="div"
-          labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
-          page={metaData?.currentPage - 1}
-          count={metaData?.totalItems}
-          rowsPerPage={metaData?.itemsPerPage}
-          onPageChange={table.onChangePage}
-          rowsPerPageOptions={[10, 20, 30, 50, 100]}
-          onRowsPerPageChange={table.onChangeRowsPerPage}
-        />
-      )}
-    </Card>
+                {notFound && <TableNoData searchQuery={filterName} />}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Scrollbar>
+        {metaData && Object.keys(metaData).length > 0 && (
+          <TablePagination
+            component="div"
+            labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
+            page={metaData?.currentPage - 1}
+            count={metaData?.totalItems}
+            rowsPerPage={metaData?.itemsPerPage}
+            onPageChange={table.onChangePage}
+            rowsPerPageOptions={[10, 20, 30, 50, 100]}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
+        )}
+      </Card>
+    </Box>
   );
 };
 

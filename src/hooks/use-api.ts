@@ -7,7 +7,6 @@ export const useAPI = (
 
   useEffect(() => {
     if (clearRequest) return;
-
     if (rest.baseURL) {
       invokeRequest({ ...rest, onHandleError: (error) => {} });
     }

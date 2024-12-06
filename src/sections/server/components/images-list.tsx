@@ -20,80 +20,98 @@ import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey } from 'src/constants';
 
 type ImagesDockerProps = { connectionId?: string };
+const HeadLabel: HeadLabelProps[] = [
+  {
+    id: 'id',
+    label: t(LanguageKey.docker.imageIdItem),
+    type: 'text',
+    width: '20%',
+  },
+  {
+    id: 'name',
+    label: t(LanguageKey.docker.imageNameItem),
+    type: 'text',
+    width: '30%',
+  },
+  {
+    id: 'tag',
+    label: t(LanguageKey.docker.imageTagItem),
+    align: 'center',
+    width: '10%',
+    type: 'text',
+  },
+  {
+    id: 'size',
+    label: t(LanguageKey.docker.imageSizeItem),
+    type: 'text',
+    align: 'center',
+    width: '10%',
+  },
+
+  {
+    id: 'status',
+    label: t(LanguageKey.docker.imageStatusItem),
+    type: 'text',
+    align: 'center',
+    width: '10%',
+  },
+
+  {
+    id: 'created',
+    label: t(LanguageKey.docker.imageCreatedItem),
+    type: 'text',
+    align: 'center',
+    width: '30%',
+  },
+];
 export const ImagesDockerComponent = (props: ImagesDockerProps) => {
   const { connectionId } = props;
   const tableKey = 'images_docker_key';
+  const [refreshNumber, setRefresh] = useState<number>(0);
 
-  const HeadLabel: HeadLabelProps[] = [
-    {
-      id: 'id',
-      label: t(LanguageKey.docker.imageIdItem),
-      type: 'text',
-      width: '20%',
-    },
-    {
-      id: 'name',
-      label: t(LanguageKey.docker.imageNameItem),
-      type: 'text',
-      width: '30%',
-    },
-    {
-      id: 'tag',
-      label: t(LanguageKey.docker.imageTagItem),
-      align: 'center',
-      width: '10%',
-      type: 'text',
-    },
-    {
-      id: 'size',
-      label: t(LanguageKey.docker.imageSizeItem),
-      type: 'text',
-      align: 'center',
-      width: '10%',
-    },
+  const refreshData = () => {
+    setRefresh(refreshNumber + 1);
+  };
 
-    {
-      id: 'status',
-      label: t(LanguageKey.docker.imageStatusItem),
-      type: 'text',
-      align: 'center',
-      width: '10%',
-    },
+  const headerColums = connectionId
+    ? HeadLabel.concat({
+        id: 'action',
+        label: '',
+        width: '5%',
+        type: 'custom',
+        render: ({ row, refreshData }) => {
+          return <ImageAction connectionId={connectionId!} row={row} refreshData={refreshData} />;
+        },
+      })
+    : HeadLabel;
 
-    {
-      id: 'created',
-      label: t(LanguageKey.docker.imageCreatedItem),
-      type: 'text',
-      align: 'center',
-      width: '30%',
-    },
-
-    {
-      id: 'action',
-      label: '',
-      type: 'custom',
-      align: 'center',
-      width: '30%',
-      render: ({ row, refreshData }) => {
-        return <ImageAction connectionId={connectionId!} row={row} refreshData={refreshData} />;
-      },
-    },
-  ];
   return (
     <Grid container spacing={2} marginTop={1}>
       <Grid item mt={2} xs={12} sm={12} md={12}>
         <Card sx={{ boxShadow: 'none' }}>
-          <CardHeader sx={{ textAlign: 'left' }} title={t(LanguageKey.server.dockerImages)} />
+          <CardHeader
+            sx={{ textAlign: 'left' }}
+            title={
+              <Box display="flex" justifyContent="space-between">
+                <Box>{t(LanguageKey.server.dockerImages)}</Box>
+                <IconButton size="medium" sx={{ marginLeft: 1 }} onClick={refreshData}>
+                  <Iconify icon="prime:refresh" />
+                </IconButton>
+              </Box>
+            }
+          />
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
               component={'TABLE'}
               tableKey={tableKey}
+              refreshNumber={refreshNumber}
+              refreshData={refreshData}
               withSearch={false}
               url={PATH_SERVER + `/docker/${connectionId}/images`}
               indexCol={true}
               selectCol={false}
               actions={{ editBtn: false, deleteBtn: false, popupEdit: false }}
-              headLabel={HeadLabel}
+              headLabel={headerColums}
             />
           </CardContent>
         </Card>
@@ -188,13 +206,7 @@ const IconAction = (props: IconActionProps) => {
       {loading && (
         <CircularProgress
           size={20}
-          sx={{
-            color: 'primary.main',
-            position: 'absolute',
-            top: 8,
-            left: 8,
-            zIndex: 1,
-          }}
+          sx={{ color: 'primary.main', position: 'absolute', top: 8, left: 8, zIndex: 1 }}
         />
       )}
     </Box>

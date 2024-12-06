@@ -152,6 +152,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
               refreshNumber={refreshNumber}
+              refreshData={refreshData}
               component={'TABLE'}
               tableKey={tableKey}
               withSearch={false}
@@ -318,20 +319,14 @@ const GitCloneComponent = ({
 
   return (
     <Tooltip title={t(LanguageKey.repository.repositoryBuildImageButton)}>
-      <Box>
+      <Box sx={{ position: 'relative' }}>
         <IconButton onClick={handleButtonClick}>
           <Iconify color="" icon="codicon:git-pull-request-go-to-changes" />
         </IconButton>
         {loading && (
           <CircularProgress
-            size={20}
-            sx={{
-              color: 'primary.main',
-              position: 'absolute',
-              top: 8,
-              left: 8,
-              zIndex: 1,
-            }}
+            size={32}
+            sx={{ color: 'primary.main', position: 'absolute', top: 2, left: 2, zIndex: 1 }}
           />
         )}
       </Box>
