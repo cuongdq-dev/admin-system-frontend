@@ -1,6 +1,10 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { default as queryString } from 'query-string';
 import { getCookie, removeCookie } from '../utils/cookies';
+import { error } from 'console';
+import { t } from 'i18next';
+import { enqueueSnackbar } from 'notistack';
+import { LanguageKey } from 'src/constants';
 
 export enum HttpMethod {
   GET = 'GET',
@@ -76,6 +80,9 @@ export const invokeRequest = async (options: RequestProps) => {
     else response = await ApiCore.get(endpointRequest, { params: body });
     onSuccess(response.data);
   } catch (error) {
+    console.log(error);
+    error?.response?.data?.message &&
+      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
     handleError(error as AxiosError);
     onHandleError && onHandleError(error?.response?.data);
   }

@@ -21,6 +21,16 @@ type IService = {
   memory_usage?: string;
 };
 
+type IRepository = {
+  id?: string;
+  name?: string;
+  github_url?: string;
+  fine_grained_token?: string;
+  username?: string;
+  email?: string;
+  server_id?: string;
+};
+
 type IServer = {
   id?: string;
   host?: string;
@@ -33,6 +43,7 @@ type IServer = {
   created_at?: Datetime;
   connectionId?: string;
   server_services?: IService[];
+  repositories?: IRepository[];
 };
 
 type ITransition = {

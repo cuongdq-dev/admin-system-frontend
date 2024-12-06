@@ -51,13 +51,29 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
               <Iconify icon="solar:pen-bold" />
             </IconButton>
           )}
-          {(deleteBtn || editBtn) && (
+          {!deleteBtn && editBtn && (
+            <IconButton
+              onClick={() => {
+                handleClosePopover();
+                navigate(row?.id, { replace: false });
+              }}
+            >
+              <Iconify icon="icon-park-twotone:doc-search" />
+            </IconButton>
+          )}
+          {deleteBtn && !editBtn && (
+            <ButtonDelete refreshData={refreshData} rowId={row?.id} baseUrl={baseUrl} />
+          )}
+
+          {deleteBtn && editBtn && (
             <IconButton onClick={handleOpenPopover}>
               <Iconify icon="eva:more-vertical-fill" />
             </IconButton>
           )}
         </Box>
       </TableCell>
+
+      {}
       <Popover
         open={!!openPopover}
         anchorEl={openPopover}
@@ -93,7 +109,12 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
             </MenuItem>
           )}
           {deleteBtn && (
-            <ButtonDelete refreshData={refreshData} rowId={row?.id} baseUrl={baseUrl} />
+            <ButtonDelete
+              title={t(LanguageKey.button.delete)}
+              refreshData={refreshData}
+              rowId={row?.id}
+              baseUrl={baseUrl}
+            />
           )}
         </MenuList>
       </Popover>
@@ -101,9 +122,14 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
   );
 };
 
-type ButtonDeleteProps = { baseUrl: string; rowId: string; refreshData?: () => void };
+type ButtonDeleteProps = {
+  title?: string;
+  baseUrl: string;
+  rowId: string;
+  refreshData?: () => void;
+};
 export const ButtonDelete = (props: ButtonDeleteProps) => {
-  const { baseUrl, rowId, refreshData } = props;
+  const { title = '', baseUrl, rowId, refreshData } = props;
   const [open, setOpen] = useState(false);
 
   const handleDeleteRow = () => {
@@ -124,7 +150,7 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
     <>
       <MenuItem onClick={() => setOpen(true)} sx={{ color: 'error.main' }}>
         <Iconify icon="solar:trash-bin-trash-bold" />
-        {t(LanguageKey.button.delete)}
+        {title}
       </MenuItem>
       <Dialog
         PaperProps={{ sx: { borderRadius: 3 } }}

@@ -31,6 +31,9 @@ export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldPr
             {...field}
             fullWidth
             onChange={(event) => {
+              setValue(name, event.target.value);
+            }}
+            onBlur={(event) => {
               setValue(name, event.target.value.trim());
             }}
             value={typeof field.value === 'number' && field.value === 0 ? '' : field.value}
@@ -61,6 +64,9 @@ export const PasswordText = ({ name, ...other }: RHFTextFieldProps & TextFieldPr
           {...field}
           type={showPassword ? 'text' : 'password'}
           error={!!error}
+          onChange={(event) => {
+            setValue(name, event.target.value);
+          }}
           onBlur={(event) => {
             setValue(name, event.target.value.trim());
           }}

@@ -165,6 +165,18 @@ export const LanguageKey = {
     systemModeTitle: 'system_mode_title',
   },
 
+  repository: {
+    idItem: 'repository_id_item',
+    nameItem: 'repository_name_item',
+    githubUrlItem: 'repository_github_item',
+    usernameItem: 'repository_username_item',
+    emailItem: 'repository_email_item',
+    fineGrainedTokenItem: 'repository_fine_grained_token_item',
+    repositoryPullButton: 'repository_pull_button',
+    repositoryAddButton: 'repository_new_button',
+    repositoryBuildImageButton: 'repository_build_button',
+    repositoryListTitle: 'repository_list_title',
+  },
   docker: {
     containerIdItem: 'docker_container_id_item',
     containerNameItem: 'docker_container_name_item',

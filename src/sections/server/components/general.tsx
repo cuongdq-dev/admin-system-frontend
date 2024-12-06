@@ -2,10 +2,11 @@ import { Box, Grid, Paper, styled } from '@mui/material';
 import { FieldValues, UseFormSetError } from 'react-hook-form';
 import { AnalyticsSystem } from './analytics-system';
 import { ContainerDockerComponent } from './container-list';
+import { ImagesDockerComponent } from './images-list';
 import { BasicInformation } from './information';
+import { RepositoryComponent } from './repository-list';
 import { ServiceList } from './service-list';
 import { StatusServer } from './status';
-import { ImagesDockerComponent } from './images-list';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.vars.palette.background.paper,
@@ -40,12 +41,14 @@ export const GeneralComponent = (props: Props) => {
           </Item>
         </Grid>
       </Grid>
+
       {defaultData?.connectionId && defaultData.server_services && (
         <ServiceList
           connectionId={defaultData?.connectionId!}
           services={defaultData?.server_services}
         />
       )}
+      <RepositoryComponent serverId={defaultData?.id!} connectionId={defaultData?.connectionId!} />
       {defaultData?.connectionId && (
         <ContainerDockerComponent connectionId={defaultData?.connectionId} />
       )}

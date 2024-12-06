@@ -38,7 +38,7 @@ export const TableComponent = (props: TableComponentProps) => {
     customCard,
     tableKey,
     handleClickOpenForm,
-    actions = { deleteBtn: false, editBtn: false, popupEdit: false },
+    actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true },
   } = props;
   const table = useTable();
   const [filterName, setFilterName] = useState('');

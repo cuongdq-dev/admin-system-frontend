@@ -32,6 +32,7 @@ export type ActionProps = {
   editBtn?: boolean;
   deleteBtn?: boolean;
   popupEdit?: boolean;
+  refreshBtn?: boolean;
 };
 
 export type TableActionComponentProps = {
