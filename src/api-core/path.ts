@@ -9,3 +9,5 @@ export const PATH_SITE = '/site';
 
 // SITE
 export const PATH_SERVER = '/server';
+export const PATH_DOCKER = '/docker';
+export const PATH_REPOSITORY = '/repository';

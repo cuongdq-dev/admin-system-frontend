@@ -1,12 +1,17 @@
 // TABLE DATA TYPE:
 
 type ServiceInstalledEnum = 'installed' | 'installing' | 'uninstalled' | 'failed';
+type ContainerState = 'created' | 'running' | 'paused' | 'restarting' | 'exited' | 'dead' | '';
 
 type IContainerDocker = {
   id: string;
   name: string;
   image: string;
+  ports: string;
+  state: ContainerState;
   status: string;
+  running_for: string;
+  created_at: string;
 };
 
 type IService = {

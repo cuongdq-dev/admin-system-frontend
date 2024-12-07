@@ -12,7 +12,7 @@ import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
-import { PATH_SERVER } from 'src/api-core/path';
+import { PATH_DOCKER } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
 import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
@@ -54,6 +54,17 @@ const HeadLabel: HeadLabelProps[] = [
     type: 'text',
     align: 'center',
     width: '10%',
+  },
+
+  {
+    id: 'container',
+    label: t(LanguageKey.docker.containerNameItem),
+    type: 'custom',
+    align: 'center',
+    width: '10%',
+    render: ({ row }) => {
+      return <>{row?.container_name || row?.container_id || '-'}</>;
+    },
   },
 
   {
@@ -107,7 +118,7 @@ export const ImagesDockerComponent = (props: ImagesDockerProps) => {
               refreshNumber={refreshNumber}
               refreshData={refreshData}
               withSearch={false}
-              url={PATH_SERVER + `/docker/${connectionId}/images`}
+              url={PATH_DOCKER + `/images/${connectionId}`}
               indexCol={true}
               selectCol={false}
               actions={{ editBtn: false, deleteBtn: false, popupEdit: false }}
@@ -136,7 +147,7 @@ const ImageAction = ({ row, refreshData, connectionId }: ImageActionProps) => {
     <Box display="flex">
       <Tooltip title={t(LanguageKey.docker.imageRun)}>
         <IconAction
-          baseUrl={PATH_SERVER + `/docker/image/${connectionId}/run`}
+          baseUrl={`${PATH_DOCKER}/image/${connectionId}/run`}
           params={{ imageName: data.name }}
           action="POST"
           refreshData={refreshData}
@@ -144,7 +155,7 @@ const ImageAction = ({ row, refreshData, connectionId }: ImageActionProps) => {
         />
       </Tooltip>
       <IconAction
-        baseUrl={PATH_SERVER + `/docker/image/${connectionId}/${data?.id}`}
+        baseUrl={`${PATH_DOCKER}/image/${connectionId}/${data?.id}`}
         action="DELETE"
         refreshData={refreshData}
         icon="solar:trash-bin-trash-bold"

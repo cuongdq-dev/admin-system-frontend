@@ -182,6 +182,8 @@ export const LanguageKey = {
     containerNameItem: 'docker_container_name_item',
     containerStatusItem: 'docker_container_status_item',
     containerImagesItem: 'docker_container_images_item',
+    containerStateItem: 'docker_container_state_item',
+    containerPortsItem: 'docker_container_ports_item',
 
     imageIdItem: 'docker_image_id_item',
     imageNameItem: 'docker_image_name_item',

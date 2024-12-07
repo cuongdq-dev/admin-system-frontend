@@ -81,6 +81,17 @@ export const TableComponent = (props: TableComponentProps) => {
       };
   };
 
+  const updateRowData = (id: string, updatedData: Record<string, any>) => {
+    const updatedDatasource = datasource?.map((row: Record<string, any>) =>
+      row.id === id ? { ...row, ...updatedData } : row
+    );
+
+    setState((prevState) => ({
+      ...prevState,
+      data: updatedDatasource,
+    }));
+  };
+
   if (component == 'CARD') {
     return (
       <>
@@ -197,9 +208,13 @@ export const TableComponent = (props: TableComponentProps) => {
                       {headLabel.map((column) => {
                         if (column.type == 'custom' && !!column?.render) {
                           return (
-                            <TableCell width={column.width} sx={{ minWidth: column.width }}>
+                            <TableCell
+                              align={column.align}
+                              width={column.width}
+                              sx={{ minWidth: column.width }}
+                            >
                               {column?.render &&
-                                column?.render({ row: row, refreshData: refreshData })}
+                                column?.render({ row, refreshData, updateRowData })}
                             </TableCell>
                           );
                         }

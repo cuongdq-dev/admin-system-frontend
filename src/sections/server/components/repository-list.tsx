@@ -17,7 +17,7 @@ import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
-import { PATH_SERVER } from 'src/api-core/path';
+import { PATH_DOCKER, PATH_REPOSITORY } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { RHFTextField } from 'src/components/hook-form';
@@ -25,7 +25,6 @@ import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey } from 'src/constants';
-import { action } from 'src/theme/core';
 import * as Yup from 'yup';
 
 type FormConfigState = {
@@ -157,7 +156,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
               tableKey={tableKey}
               withSearch={false}
               handleClickOpenForm={handleClickOpenForm}
-              url={PATH_SERVER + `/repository/${serverId}`}
+              url={PATH_REPOSITORY + `/${serverId}`}
               indexCol={true}
               selectCol={false}
               actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
@@ -174,7 +173,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
         refreshData={refreshData}
         action={formConfig.action}
         defaultValues={formConfig.defaultValues}
-        baseUrl={PATH_SERVER + `/repository/${serverId}`}
+        baseUrl={PATH_REPOSITORY + `/${serverId}`}
         schema={FormTableSchema}
         render={({ isSubmitting }: { isSubmitting: boolean }) => {
           return (
@@ -297,7 +296,7 @@ const GitCloneComponent = ({
 
       invokeRequest({
         method: HttpMethod.POST,
-        baseURL: PATH_SERVER + `/docker/image/${connectionId}/build`,
+        baseURL: PATH_DOCKER + `/docker/image/${connectionId}/build`,
         params: {},
         onHandleError: (response) => {
           setLoading(false);

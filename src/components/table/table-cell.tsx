@@ -55,21 +55,21 @@ export function CommonTableCell(props: CommonTableCellProps) {
 
     case 'status':
       return (
-        <TableCell width={width} sx={{ minWidth: minWidth }}>
+        <TableCell width={width} align={align} sx={{ minWidth: minWidth }}>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell>
       );
 
     case 'icon':
       return (
-        <TableCell width={width} sx={{ minWidth: minWidth }} align="center">
+        <TableCell width={width} sx={{ minWidth: minWidth }} align={align}>
           {value ? <Iconify width={22} icon={icon!} sx={{ color: 'success.main' }} /> : '-'}
         </TableCell>
       );
 
     case 'action':
       return (
-        <TableCell align="right">
+        <TableCell width={width} align={align} sx={{ minWidth: minWidth }}>
           <IconButton onClick={(event) => onActionClick?.(event)}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
@@ -78,14 +78,14 @@ export function CommonTableCell(props: CommonTableCellProps) {
 
     case 'datetime':
       return (
-        <TableCell width={width} sx={{ minWidth: minWidth }} align="center">
+        <TableCell width={width} sx={{ minWidth: minWidth }} align={align}>
           {fDateTime(value?.toString(), formatStr.paramCase.date)}
         </TableCell>
       );
 
     default:
       return (
-        <TableCell width={width} sx={{ minWidth: minWidth }}>
+        <TableCell align={align} width={width} sx={{ minWidth: minWidth }}>
           {value}
         </TableCell>
       );
