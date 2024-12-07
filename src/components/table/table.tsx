@@ -80,16 +80,40 @@ export const TableComponent = (props: TableComponentProps) => {
         order: metaData?.sortBy![0][1].toLocaleLowerCase(),
       };
   };
+  const updateRowData = (
+    id: string,
+    updatedData: Record<string, any>,
+    action: 'ADD' | 'UPDATE' | 'REMOVE'
+  ) => {
+    setState((prevState) => {
+      let updatedDatasource;
 
-  const updateRowData = (id: string, updatedData: Record<string, any>) => {
-    const updatedDatasource = datasource?.map((row: Record<string, any>) =>
-      row.id === id ? { ...row, ...updatedData } : row
-    );
+      switch (action) {
+        case 'ADD':
+          updatedDatasource = prevState.data?.push(updatedData);
+          break;
 
-    setState((prevState) => ({
-      ...prevState,
-      data: updatedDatasource,
-    }));
+        case 'UPDATE':
+          updatedDatasource = (prevState.data || []).map((row: Record<string, any>) =>
+            row.id === id ? { ...row, ...updatedData } : row
+          );
+          break;
+
+        case 'REMOVE':
+          updatedDatasource = (prevState.data || []).filter(
+            (row: Record<string, any>) => row.id !== id
+          );
+          break;
+
+        default:
+          updatedDatasource = prevState.data || [];
+      }
+
+      return {
+        ...prevState,
+        data: updatedDatasource,
+      };
+    });
   };
 
   if (component == 'CARD') {

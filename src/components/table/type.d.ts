@@ -25,7 +25,11 @@ export type HeadLabelProps = {
   }: {
     row: Record<string, any>;
     refreshData?: () => void;
-    updateRowData?: (rowId: string, values: Record<string, any>) => void;
+    updateRowData?: (
+      rowId: string,
+      values: Record<string, any>,
+      action: 'ADD' | 'REMOVE' | 'UPDATE'
+    ) => void;
   }) => JSX.Element;
 };
 

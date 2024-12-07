@@ -59,11 +59,10 @@ export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps)
           label: '',
           width: '5%',
           type: 'custom',
-          render: ({ row, refreshData, updateRowData }) => (
+          render: ({ row, updateRowData }) => (
             <ContainerAction
               connectionId={connectionId}
               row={row as IContainerDocker}
-              refreshData={refreshData}
               updateRowData={updateRowData}
             />
           ),
@@ -108,17 +107,15 @@ export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps)
 
 type ContainerActionProps = {
   row: IContainerDocker;
-  refreshData?: () => void;
-  updateRowData?: (rowId: string, values: Record<string, any>) => void;
+  updateRowData?: (
+    rowId: string,
+    values: Record<string, any>,
+    action: 'ADD' | 'REMOVE' | 'UPDATE'
+  ) => void;
   connectionId: string;
 };
 
-const ContainerAction = ({
-  row,
-  refreshData,
-  updateRowData,
-  connectionId,
-}: ContainerActionProps) => {
+const ContainerAction = ({ row, updateRowData, connectionId }: ContainerActionProps) => {
   const renderActions = (state: string) => {
     const actions: { [key: string]: ActionType[] } = {
       running: ['pause', 'stop', 'restart'],
@@ -149,7 +146,11 @@ type IconActionProps = {
   action: 'play' | 'pause' | 'stop' | 'restart' | 'resume' | 'remove';
   row: IContainerDocker;
   connectionId: string;
-  updateRowData?: (rowId: string, values: Record<string, any>) => void;
+  updateRowData?: (
+    rowId: string,
+    values: Record<string, any>,
+    action: 'ADD' | 'REMOVE' | 'UPDATE'
+  ) => void;
 };
 
 const containerActionIcons = {
@@ -179,7 +180,8 @@ const IconAction = ({ action, row, connectionId, updateRowData }: IconActionProp
         onHandleError: () => setLoading(false),
         onSuccess(res) {
           setLoading(false);
-          updateRowData && updateRowData(row?.id!, res.result);
+          updateRowData &&
+            updateRowData(row?.id!, res?.result, action === 'remove' ? 'REMOVE' : 'UPDATE');
           enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
             variant: 'success',
             action: (key) => (
