@@ -1,10 +1,7 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
+import { enqueueSnackbar } from 'notistack';
 import { default as queryString } from 'query-string';
 import { getCookie, removeCookie } from '../utils/cookies';
-import { error } from 'console';
-import { t } from 'i18next';
-import { enqueueSnackbar } from 'notistack';
-import { LanguageKey } from 'src/constants';
 
 export enum HttpMethod {
   GET = 'GET',
@@ -59,6 +56,16 @@ export const onUpdateQuery = (url = '', query = {}) => {
   return url + '?' + queryString.stringify(Object.assign(currentQuery, query));
 };
 
+const abortControllers: Record<string, AbortController> = {};
+
+const createAbortController = (endpoint: string) => {
+  if (abortControllers[endpoint]) {
+    abortControllers[endpoint].abort();
+  }
+  abortControllers[endpoint] = new AbortController();
+  return abortControllers[endpoint].signal;
+};
+
 export const invokeRequest = async (options: RequestProps) => {
   const {
     baseURL,
@@ -69,18 +76,26 @@ export const invokeRequest = async (options: RequestProps) => {
     config,
   } = options;
   const endpointRequest = baseURL;
+
   try {
     let response: AxiosResponse;
+    const signal = method === HttpMethod.GET ? createAbortController(endpointRequest) : undefined;
+
     if (method === HttpMethod.DELETE)
       response = await ApiCore.delete(endpointRequest, { data: body, timeout: 120000 });
     else if (method === HttpMethod.PATCH)
       response = await ApiCore.patch(endpointRequest, body, { timeout: 120000 });
     else if (method === HttpMethod.POST)
       response = await ApiCore.post(endpointRequest, body, { ...config, timeout: 120000 });
-    else response = await ApiCore.get(endpointRequest, { params: body });
+    else response = await ApiCore.get(endpointRequest, { params: body, signal });
+
     onSuccess(response.data);
   } catch (error) {
-    console.log(error);
+    if (axios.isCancel(error)) {
+      console.log('Request cancelled:', endpointRequest);
+      return; // Không gọi onHandleError nếu là lỗi hủy yêu cầu
+    }
+
     error?.response?.data?.message &&
       enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
     handleError(error as AxiosError);

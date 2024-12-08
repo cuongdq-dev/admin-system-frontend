@@ -30,6 +30,8 @@ export const LanguageKey = {
     passwordItem: 'server_item_password',
     inactiveStatus: 'server_inactive_status',
     activeStatus: 'server_active_status',
+    connected: 'server_connected',
+    disconnected: 'server_disconnected',
     used: 'server_used',
     available: 'server_available',
     ram: 'server_ram',

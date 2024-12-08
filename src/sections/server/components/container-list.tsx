@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_DOCKER } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
+import { RefreshIcon } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { TableComponent } from 'src/components/table';
@@ -80,7 +81,7 @@ export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps)
               <Box display="flex" justifyContent="space-between">
                 <Box>{t(LanguageKey.server.dockerContainer)}</Box>
                 <IconButton size="medium" sx={{ marginLeft: 1 }} onClick={refreshData}>
-                  <Iconify icon="prime:refresh" />
+                  <RefreshIcon icon={'mdi:refresh'} />
                 </IconButton>
               </Box>
             }
@@ -116,6 +117,8 @@ type ContainerActionProps = {
 };
 
 const ContainerAction = ({ row, updateRowData, connectionId }: ContainerActionProps) => {
+  const [loading, setLoading] = useState(false);
+
   const renderActions = (state: string) => {
     const actions: { [key: string]: ActionType[] } = {
       running: ['pause', 'stop', 'restart'],
@@ -128,14 +131,25 @@ const ContainerAction = ({ row, updateRowData, connectionId }: ContainerActionPr
         key={action}
         action={action}
         row={row}
+        handleClick={() => {
+          setLoading(true);
+        }}
         connectionId={connectionId}
-        updateRowData={updateRowData}
+        updateRowData={(rowId, values, action) => {
+          updateRowData && updateRowData(rowId, values, action);
+          setLoading(false);
+        }}
       />
     ));
   };
 
   return (
-    <Box display="flex" justifyContent="flex-end" gap={1}>
+    <Box
+      sx={{ pointerEvents: loading ? 'none' : 'auto' }}
+      display="flex"
+      justifyContent="flex-end"
+      gap={1}
+    >
       {renderActions(row.state)}
     </Box>
   );
@@ -146,6 +160,7 @@ type IconActionProps = {
   action: 'play' | 'pause' | 'stop' | 'restart' | 'resume' | 'remove';
   row: IContainerDocker;
   connectionId: string;
+  handleClick?: () => void;
   updateRowData?: (
     rowId: string,
     values: Record<string, any>,
@@ -162,7 +177,7 @@ const containerActionIcons = {
   remove: 'material-symbols:delete',
 } as const;
 
-const IconAction = ({ action, row, connectionId, updateRowData }: IconActionProps) => {
+const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: IconActionProps) => {
   const [loading, setLoading] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -173,6 +188,7 @@ const IconAction = ({ action, row, connectionId, updateRowData }: IconActionProp
   const handleButtonClick = () => {
     if (!loading) {
       setLoading(true);
+      handleClick && handleClick();
       invokeRequest({
         method: HttpMethod.POST,
         baseURL: `${PATH_DOCKER}/container/${connectionId}/${row.id}/${action}`,

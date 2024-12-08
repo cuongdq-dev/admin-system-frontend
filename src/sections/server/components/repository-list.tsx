@@ -21,6 +21,7 @@ import { PATH_DOCKER, PATH_REPOSITORY } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { RHFTextField } from 'src/components/hook-form';
+import { RefreshIcon } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
@@ -143,7 +144,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
                 </Box>
 
                 <IconButton size="medium" sx={{ marginLeft: 1 }} onClick={refreshData}>
-                  <Iconify icon="prime:refresh" />
+                  <RefreshIcon icon={'mdi:refresh'} />
                 </IconButton>
               </Box>
             }
@@ -296,7 +297,7 @@ const GitCloneComponent = ({
 
       invokeRequest({
         method: HttpMethod.POST,
-        baseURL: PATH_DOCKER + `/docker/image/${connectionId}/build`,
+        baseURL: PATH_DOCKER + `/image/${connectionId}/build`,
         params: {},
         onHandleError: (response) => {
           setLoading(false);

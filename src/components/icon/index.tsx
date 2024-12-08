@@ -1,3 +1,4 @@
+import { IconButton } from '@mui/material';
 import { Iconify, IconifyProps } from '../iconify';
 
 const SpinAnimationStyles = {
@@ -25,4 +26,22 @@ const BellShakeAnimationStyles = {
 
 export const BellIconShakeAnimation = (props: IconifyProps) => {
   return <Iconify sx={BellShakeAnimationStyles} {...props} />;
+};
+
+export const RefreshIcon = (props: { icon?: string; loading?: boolean }) => {
+  const { icon = 'mdi:refresh', loading } = props;
+  return (
+    <Iconify
+      icon={icon}
+      sx={
+        loading
+          ? {
+              ...SpinAnimationStyles,
+              animation: 'spin 1s linear infinite',
+              color: 'primary.main',
+            }
+          : undefined
+      }
+    />
+  );
 };
