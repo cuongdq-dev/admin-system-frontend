@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_DOCKER } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
@@ -123,7 +123,8 @@ const ContainerAction = ({ row, updateRowData, connectionId }: ContainerActionPr
     const actions: { [key: string]: ActionType[] } = {
       running: ['pause', 'stop', 'restart'],
       paused: ['resume', 'stop', 'restart'],
-      exited: ['play', 'remove'],
+      exited: ['restart', 'remove'],
+      created: ['remove'],
     };
 
     return actions[state]?.map((action) => (
@@ -131,14 +132,11 @@ const ContainerAction = ({ row, updateRowData, connectionId }: ContainerActionPr
         key={action}
         action={action}
         row={row}
-        handleClick={() => {
-          setLoading(true);
+        handleClick={(loading: boolean) => {
+          setLoading(loading);
         }}
         connectionId={connectionId}
-        updateRowData={(rowId, values, action) => {
-          updateRowData && updateRowData(rowId, values, action);
-          setLoading(false);
-        }}
+        updateRowData={updateRowData}
       />
     ));
   };
@@ -160,7 +158,7 @@ type IconActionProps = {
   action: 'play' | 'pause' | 'stop' | 'restart' | 'resume' | 'remove';
   row: IContainerDocker;
   connectionId: string;
-  handleClick?: () => void;
+  handleClick?: (loading: boolean) => void;
   updateRowData?: (
     rowId: string,
     values: Record<string, any>,
@@ -179,16 +177,14 @@ const containerActionIcons = {
 
 const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: IconActionProps) => {
   const [loading, setLoading] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
-    return () => clearTimeout(timer.current);
-  }, []);
-
+    handleClick && handleClick(loading);
+  }, [loading]);
   const handleButtonClick = () => {
     if (!loading) {
       setLoading(true);
-      handleClick && handleClick();
+      handleClick && handleClick(true);
       invokeRequest({
         method: HttpMethod.POST,
         baseURL: `${PATH_DOCKER}/container/${connectionId}/${row.id}/${action}`,
@@ -198,6 +194,7 @@ const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: I
           setLoading(false);
           updateRowData &&
             updateRowData(row?.id!, res?.result, action === 'remove' ? 'REMOVE' : 'UPDATE');
+
           enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
             variant: 'success',
             action: (key) => (
