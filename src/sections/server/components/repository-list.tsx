@@ -298,7 +298,7 @@ const GitCloneComponent = ({
       invokeRequest({
         method: HttpMethod.POST,
         baseURL: PATH_DOCKER + `/image/${connectionId}/build`,
-        params: {},
+        params: { repositoryId: row?.id },
         onHandleError: (response) => {
           setLoading(false);
           console.error('Unexpected error format:', response);
