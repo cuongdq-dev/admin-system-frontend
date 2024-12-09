@@ -1,26 +1,18 @@
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
   CircularProgress,
-  DialogActions,
-  DialogContent,
   DialogTitle,
   Grid,
   IconButton,
-  Tooltip,
 } from '@mui/material';
 import { t } from 'i18next';
-import { enqueueSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
-import { HttpMethod, invokeRequest } from 'src/api-core';
-import { PATH_DOCKER, PATH_REPOSITORY } from 'src/api-core/path';
-import { ButtonDismissNotify } from 'src/components/button';
+import { HttpMethod } from 'src/api-core';
+import { PATH_REPOSITORY } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
-import { RHFTextField } from 'src/components/hook-form';
 import { RefreshIcon } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
@@ -28,9 +20,15 @@ import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey } from 'src/constants';
 import * as Yup from 'yup';
 
+import { Dialog, Stack, Typography } from '@mui/material';
+import { Transition } from '../../../components/dialog';
+import { RunImageForm } from './image-form';
+import { RepositoryForm } from './repository-form';
+
 type FormConfigState = {
   open: boolean;
   title?: string;
+  description?: string;
   defaultValues?: IRepository;
   action?: HttpMethod;
 };
@@ -72,6 +70,7 @@ const HeadLabel: HeadLabelProps[] = [
     id: 'github_url',
     label: t(LanguageKey.repository.githubUrlItem),
     type: 'text',
+    width: '100%',
   },
 ];
 
@@ -83,6 +82,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
   const [formConfig, setFormConfig] = useState<FormConfigState>({
     open: false,
     title: '',
+    description: '',
     defaultValues: {},
     action: HttpMethod.PATCH,
   });
@@ -97,8 +97,12 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
       open: true,
       title:
         action == HttpMethod.POST
-          ? t(LanguageKey.form.createLabel)
-          : t(LanguageKey.form.updateLabel),
+          ? t(LanguageKey.repository.createFormTitle)
+          : t(LanguageKey.repository.updateFormTitle),
+      description:
+        action == HttpMethod.POST
+          ? t(LanguageKey.repository.createFormDescription)
+          : t(LanguageKey.repository.updateFormDescription),
       defaultValues: row,
       action,
     }));
@@ -107,20 +111,6 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
   const handleCloseForm = () => {
     setFormConfig({ open: false, title: '' });
   };
-
-  const headerColums = connectionId
-    ? HeadLabel.concat({
-        id: 'action',
-        label: '',
-        width: '5%',
-        type: 'custom',
-        render: ({ row, refreshData }) => {
-          return (
-            <GitCloneComponent row={row} refreshData={refreshData} connectionId={connectionId} />
-          );
-        },
-      })
-    : HeadLabel;
 
   return (
     <Grid container spacing={2} marginTop={1}>
@@ -161,7 +151,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
               indexCol={true}
               selectCol={false}
               actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
-              headLabel={headerColums}
+              headLabel={HeadLabel}
             />
           </CardContent>
         </Card>
@@ -179,7 +169,15 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
         render={({ isSubmitting }: { isSubmitting: boolean }) => {
           return (
             <>
-              <DialogTitle>{formConfig.title}</DialogTitle>
+              <DialogTitle id="scroll-dialog-title">
+                <Stack marginBottom={2} display="flex" flexDirection="row" justifyItems="center">
+                  <Iconify width={50} icon="mdi:source-repositories" />
+                  <Box marginLeft={2}>
+                    <Typography>{formConfig.title}</Typography>
+                    <Typography>{formConfig.description}</Typography>
+                  </Box>
+                </Stack>
+              </DialogTitle>
               <RepositoryForm
                 defaultValues={formConfig.defaultValues}
                 action={formConfig.action}
@@ -194,142 +192,79 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
   );
 };
 
-type RepositoryFormProps = {
-  defaultValues?: IRepository;
-  isSubmitting?: boolean;
-  action?: HttpMethod;
-  handleCloseForm: () => void;
-};
-const RepositoryForm = (props: RepositoryFormProps) => {
-  const { defaultValues, action = HttpMethod.PATCH, isSubmitting, handleCloseForm } = props;
-  return (
-    <>
-      <DialogContent>
-        <Box gap={4} paddingTop={1} component={'div'} display={'flex'} flexDirection={'column'}>
-          <RHFTextField
-            defaultValue={defaultValues?.name}
-            id="name"
-            name="name"
-            label={t(LanguageKey.repository.nameItem)}
-            type="text"
-            fullWidth
-            variant="outlined"
-          />
-
-          <RHFTextField
-            defaultValue={defaultValues?.email}
-            id="email"
-            name="email"
-            label={t(LanguageKey.repository.emailItem)}
-            type="email"
-            fullWidth
-            variant="outlined"
-          />
-
-          <RHFTextField
-            defaultValue={defaultValues?.username}
-            id="username"
-            name="username"
-            label={t(LanguageKey.repository.usernameItem)}
-            type="text"
-            fullWidth
-            variant="outlined"
-          />
-
-          <RHFTextField
-            defaultValue={defaultValues?.github_url}
-            id="github_url"
-            name="github_url"
-            label={t(LanguageKey.repository.githubUrlItem)}
-            type="text"
-            fullWidth
-            variant="outlined"
-          />
-
-          <RHFTextField
-            defaultValue={defaultValues?.fine_grained_token}
-            id="fine_grained_token"
-            name="fine_grained_token"
-            label={t(LanguageKey.repository.fineGrainedTokenItem)}
-            type="text"
-            fullWidth
-            variant="outlined"
-          />
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
-          {t(LanguageKey.button.cancel)}
-        </Button>
-
-        <LoadingButton type="submit" color="inherit" variant="contained" loading={isSubmitting}>
-          {action === HttpMethod.PATCH
-            ? t(LanguageKey.button.update)
-            : t(LanguageKey.button.create)}
-        </LoadingButton>
-      </DialogActions>
-    </>
-  );
+type IconActionProps = {
+  action: 'POST' | 'DELETE';
+  icon: string;
+  handleClick: (loading: boolean) => void;
+  baseUrl: string;
+  row?: Record<string, any>;
+  updateRowData?: (
+    rowId: string,
+    values: Record<string, any>,
+    action: 'ADD' | 'REMOVE' | 'UPDATE'
+  ) => void;
 };
 
-const GitCloneComponent = ({
-  row,
-  refreshData,
-  connectionId,
-}: {
-  connectionId?: string;
-  row?: IRepository;
-  refreshData?: () => void;
-}) => {
+const RunAction = (props: IconActionProps) => {
+  const { row, icon, handleClick, baseUrl, updateRowData } = props;
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const descriptionElementRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (open) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [open]);
 
   useEffect(() => {
-    return () => {
-      clearTimeout(timer.current);
-    };
-  }, []);
-
-  const handleButtonClick = () => {
-    if (!loading) {
-      setLoading(true);
-
-      invokeRequest({
-        method: HttpMethod.POST,
-        baseURL: PATH_DOCKER + `/image/${connectionId}/build`,
-        params: { repositoryId: row?.id },
-        onHandleError: (response) => {
-          setLoading(false);
-          console.error('Unexpected error format:', response);
-        },
-        onSuccess(res) {
-          setLoading(false);
-          enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
-            variant: 'success',
-            action: (key) => (
-              <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />
-            ),
-          });
-          refreshData && refreshData();
-        },
-      });
-    }
-  };
+    handleClick(loading);
+  }, [loading]);
 
   return (
-    <Tooltip title={t(LanguageKey.repository.repositoryBuildImageButton)}>
-      <Box sx={{ position: 'relative' }}>
-        <IconButton onClick={handleButtonClick}>
-          <Iconify color="" icon="codicon:git-pull-request-go-to-changes" />
-        </IconButton>
-        {loading && (
-          <CircularProgress
-            size={32}
-            sx={{ color: 'primary.main', position: 'absolute', top: 2, left: 2, zIndex: 1 }}
-          />
-        )}
-      </Box>
-    </Tooltip>
+    <Box sx={{ position: 'relative' }}>
+      <IconButton onClick={() => setOpen(true)}>
+        <Iconify icon={icon} />
+      </IconButton>
+      {loading && (
+        <CircularProgress
+          size={20}
+          sx={{ color: 'primary.main', position: 'absolute', top: 8, left: 8, zIndex: 1 }}
+        />
+      )}
+
+      <Dialog
+        PaperProps={{ sx: { borderRadius: 3 } }}
+        TransitionComponent={Transition}
+        maxWidth={'sm'}
+        open={open}
+        fullWidth
+        onClose={() => setOpen(false)}
+        scroll={'paper'}
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+      >
+        <DialogTitle id="scroll-dialog-title">
+          <Stack marginBottom={2} display="flex" flexDirection="row" justifyItems="center">
+            <Iconify width={50} icon="catppuccin:devcontainer" />
+            <Box marginLeft={2}>
+              <Typography>Run a new container</Typography>
+              <Typography variant="caption">{row?.name}</Typography>
+            </Box>
+          </Stack>
+        </DialogTitle>
+        <RunImageForm
+          row={row}
+          id={row?.id}
+          baseUrl={baseUrl}
+          handleLoading={setLoading}
+          handleOpen={setOpen}
+          updateRowData={updateRowData}
+        />
+      </Dialog>
+    </Box>
   );
 };

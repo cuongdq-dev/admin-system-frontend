@@ -38,7 +38,8 @@ export const RunImageForm = (props: {
   const { row, handleLoading, baseUrl, id, handleOpen, updateRowData } = props;
   const methods = useForm({
     defaultValues: {
-      name: '',
+      imageName: row?.name,
+      containerName: '',
       hostPort: '',
       containerPort: '',
       volumes: [{ hostPath: '', containerPath: '' }],
@@ -69,12 +70,11 @@ export const RunImageForm = (props: {
       method: HttpMethod.POST,
       baseURL: baseUrl,
       params: {
-        imageName: row?.name,
-        imageTag: row?.tag,
-        imageId: row?.id,
-        containerName: values.name,
-        hostPort: values.hostPort,
-        containerPort: values.containerPort,
+        imageName: values?.imageName,
+        repositoryId: row?.id,
+        containerName: values?.containerName,
+        hostPort: values?.hostPort,
+        containerPort: values?.containerPort,
         volumes: volumes,
         envVariables: envVariables,
       },
@@ -104,10 +104,20 @@ export const RunImageForm = (props: {
           </AccordionSummary>
           <AccordionDetails sx={{ padding: 0 }}>
             <Box gap={1} paddingTop={1} component={'div'} display={'flex'} flexDirection={'column'}>
+              <RHFTextField
+                id="imageName"
+                name="imageName"
+                defaultValue={row?.name}
+                label={t(LanguageKey.docker.imageNameItem)}
+                type="string"
+                required
+                fullWidth
+                variant="outlined"
+              />
               <Box>
                 <RHFTextField
-                  id="name"
-                  name="name"
+                  id="containerName"
+                  name="containerName"
                   label={t(LanguageKey.docker.containerNameItem)}
                   type="string"
                   required

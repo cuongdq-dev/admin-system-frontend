@@ -91,6 +91,8 @@ export const LanguageKey = {
     detail: 'detail_button',
     saveChanges: 'save_changes_button',
     needHelp: 'need_help_button',
+    clone: 'clone_button',
+    pull: 'pull_button',
   },
 
   menu: {
@@ -178,6 +180,10 @@ export const LanguageKey = {
     repositoryAddButton: 'repository_new_button',
     repositoryBuildImageButton: 'repository_build_button',
     repositoryListTitle: 'repository_list_title',
+    createFormTitle: 'repository_create_title',
+    createFormDescription: 'repository_create_description',
+    updateFormTitle: 'repository_update_title',
+    updateFormDescription: 'repository_update_description',
   },
   docker: {
     containerIdItem: 'docker_container_id_item',
