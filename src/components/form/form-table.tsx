@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Dialog } from '@mui/material';
+import { Dialog, DialogProps } from '@mui/material';
 import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { ButtonDismissNotify } from 'src/components/button';
@@ -77,7 +77,15 @@ export const PopupFormTable = (props: FormProps) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleCloseForm} fullWidth TransitionComponent={Transition}>
+    <Dialog
+      open={open}
+      onClose={handleCloseForm}
+      scroll={'paper'}
+      fullWidth
+      TransitionComponent={Transition}
+      aria-labelledby="scroll-dialog-title"
+      aria-describedby="scroll-dialog-description"
+    >
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         {render && render({ isSubmitting })}
       </FormProvider>

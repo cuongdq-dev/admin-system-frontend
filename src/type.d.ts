@@ -35,6 +35,7 @@ type IRepository = {
   email?: string;
   server_id?: string;
   services?: any[];
+  repo_env?: string;
 };
 
 type IServer = {

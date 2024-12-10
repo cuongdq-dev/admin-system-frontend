@@ -74,7 +74,7 @@ export function SiteView() {
               onChange={(_, value) => navigate(value ? '?lang=' + value : '')}
               aria-label="lab API tabs example"
             >
-              <Tab label={t(LanguageKey.language.tab_all)} value={''} />
+              <Tab label={t(LanguageKey.language.tabAll)} value={''} />
               {state?.map((s) => {
                 return <Tab key={s.name + '_' + s.code} label={s.name} value={s.code} />;
               })}

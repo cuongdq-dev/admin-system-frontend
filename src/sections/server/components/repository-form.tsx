@@ -1,40 +1,38 @@
-import LoadingButton from '@mui/lab/LoadingButton';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
-  DialogActions,
-  DialogContent,
+  Checkbox,
   Grid,
   IconButton,
   TextField,
   Typography,
 } from '@mui/material';
 import { t } from 'i18next';
-import { useEffect } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
-import { HttpMethod } from 'src/api-core';
+import { useEffect, useState } from 'react';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { RHFTextField } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
-
-type RepositoryFormProps = {
-  defaultValues?: IRepository;
-  isSubmitting?: boolean;
-  action?: HttpMethod;
-  handleCloseForm: () => void;
-};
+import { varAlpha } from 'src/theme/styles';
+type RepositoryFormProps = { defaultValues?: IRepository };
 
 export const RepositoryForm = (props: RepositoryFormProps) => {
-  const { defaultValues, action = HttpMethod.PATCH, isSubmitting, handleCloseForm } = props;
-  const { control, register, getValues } = useFormContext();
-  const { fields, append, remove, update } = useFieldArray({
-    control,
-    name: 'services',
-  });
-
+  const { defaultValues } = props;
+  const [withEnv, setWithEnv] = useState(defaultValues?.repo_env || false);
+  const { control, register, getValues, setValue } = useFormContext();
+  const { fields, append, remove, update } = useFieldArray({ control, name: 'services' });
   useEffect(() => {
-    defaultValues?.services && append(defaultValues?.services);
-  }, [defaultValues]);
+    if (Number(defaultValues?.services?.length) >= 0) {
+      append(defaultValues?.services);
+      setValue('with_docker_compose', true);
+    }
+    if (defaultValues?.repo_env) {
+      setValue('with_env', true);
+    }
+  }, []);
 
   const addEnvironmentVariable = (index: number) => {
     const field: any = fields[index];
@@ -67,226 +65,374 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
   };
 
   return (
-    <>
-      <DialogContent>
-        <Grid container columns={2} marginTop={1} spacing={2}>
-          <Grid item xs={2} sm={1} md={1}>
-            <RHFTextField
-              defaultValue={defaultValues?.name}
-              id="name"
-              name="name"
-              label={t(LanguageKey.repository.nameItem)}
-              type="text"
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={2} sm={1} md={1}>
-            <RHFTextField
-              defaultValue={defaultValues?.email}
-              id="email"
-              name="email"
-              label={t(LanguageKey.repository.emailItem)}
-              type="email"
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={2} sm={1} md={1}>
-            <RHFTextField
-              defaultValue={defaultValues?.username}
-              id="username"
-              name="username"
-              label={t(LanguageKey.repository.usernameItem)}
-              type="text"
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={2} sm={1} md={1}>
-            <RHFTextField
-              defaultValue={defaultValues?.github_url}
-              id="github_url"
-              name="github_url"
-              label={t(LanguageKey.repository.githubUrlItem)}
-              type="text"
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={2} sm={2} md={2}>
-            <RHFTextField
-              defaultValue={defaultValues?.fine_grained_token}
-              id="fine_grained_token"
-              name="fine_grained_token"
-              label={t(LanguageKey.repository.fineGrainedTokenItem)}
-              type="text"
-              variant="outlined"
-            />
-          </Grid>
-        </Grid>
-        <Box marginY={2}>
-          <Typography variant="button">Services</Typography>
-          <IconButton
-            onClick={() =>
-              append({
-                serviceName: '',
-                buildContext: '',
-                envFile: '',
-                environment: [{ variable: '', value: '' }],
-                volumes: [{ hostPath: '', containerPath: '' }],
-              })
-            }
-          >
-            <Iconify icon="ic:baseline-plus" />
-          </IconButton>
-          {fields.map((field: any, index) => (
-            <Box
-              sx={(theme) => {
-                return {
-                  backgroundColor: theme.palette.background.neutral,
-                  borderRadius: 2,
-                  padding: 2,
-                };
-              }}
-              key={field.id}
-              marginBottom={2}
-            >
-              <Grid container spacing={1} columns={2}>
-                <Grid item xs={2} sm={1} md={1}>
-                  <TextField
-                    {...register(`services.${index}.serviceName`)}
-                    label="Service Name"
-                    defaultValue={field.serviceName}
-                    fullWidth
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item xs={2} sm={1} md={1}>
-                  <TextField
-                    {...register(`services.${index}.buildContext`)}
-                    label="Build Context"
-                    defaultValue={field.buildContext}
-                    fullWidth
-                    variant="outlined"
-                  />
-                </Grid>
-
-                <Grid item xs={2} sm={1} md={1}>
-                  <TextField
-                    {...register(`services.${index}.envFile`)}
-                    label="Env File"
-                    defaultValue={field.envFile}
-                    fullWidth
-                    variant="outlined"
-                  />
-                </Grid>
+    <Box>
+      <Accordion
+        sx={(theme) => {
+          return {
+            paddingX: 1,
+            backgroundColor: varAlpha(theme.vars.palette.background.neutralChannel, 0.4),
+          };
+        }}
+      >
+        <AccordionSummary
+          expandIcon={<Iconify icon={'flat-color-icons:expand'} />}
+          aria-controls="repository-basic-formation-content"
+          id="repository-basic-formation-header"
+        >
+          <Typography variant="body2">{t(LanguageKey.repository.basicInformation)}</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ padding: 0, paddingBottom: 2 }}>
+          <Box>
+            <Grid container columns={2} marginTop={1} spacing={2}>
+              <Grid item xs={2} sm={1} md={1}>
+                <RHFTextField
+                  defaultValue={defaultValues?.name}
+                  id="name"
+                  name="name"
+                  label={t(LanguageKey.repository.nameItem)}
+                  type="text"
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={2} sm={1} md={1}>
+                <RHFTextField
+                  defaultValue={defaultValues?.email}
+                  id="email"
+                  name="email"
+                  label={t(LanguageKey.repository.emailItem)}
+                  type="email"
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={2} sm={1} md={1}>
+                <RHFTextField
+                  defaultValue={defaultValues?.username}
+                  id="username"
+                  name="username"
+                  label={t(LanguageKey.repository.usernameItem)}
+                  type="text"
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={2} sm={1} md={1}>
+                <RHFTextField
+                  defaultValue={defaultValues?.github_url}
+                  id="github_url"
+                  name="github_url"
+                  label={t(LanguageKey.repository.githubUrlItem)}
+                  type="text"
+                  variant="outlined"
+                />
               </Grid>
 
-              <Box marginTop={2}>
-                <Typography variant="button">Environment Variables</Typography>
-                {field.environment?.map(
-                  (environment: { variable: string; value: string }, idx: number) => {
-                    return (
-                      <Grid
-                        marginTop={2}
-                        gap={2}
-                        columns={1}
-                        container
-                        key={idx}
-                        display="flex"
-                        flexDirection="row"
-                        flexWrap={'nowrap'}
-                      >
-                        <TextField
-                          {...register(`services.${index}.environment.${idx}.variable`)}
-                          label={`Key:`}
-                          defaultValue={environment.variable}
-                          variant="outlined"
-                        />
-                        <TextField
-                          {...register(`services.${index}.environment.${idx}.value`)}
-                          label={`value:`}
-                          defaultValue={environment.value}
-                          variant="outlined"
-                        />
+              <Grid item xs={2} sm={2} md={2}>
+                <RHFTextField
+                  defaultValue={defaultValues?.fine_grained_token}
+                  id="fine_grained_token"
+                  name="fine_grained_token"
+                  label={t(LanguageKey.repository.fineGrainedTokenItem)}
+                  type=""
+                  variant="outlined"
+                />
+              </Grid>
+            </Grid>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
 
-                        {idx < field.environment.length - 1 && (
-                          <IconButton onClick={() => removeEnvironmentVariable(index, idx)}>
-                            <Iconify icon="ic:baseline-remove" />
-                          </IconButton>
-                        )}
-                        {idx === field.environment.length - 1 && (
-                          <IconButton onClick={() => addEnvironmentVariable(index)}>
-                            <Iconify icon="ic:baseline-plus" />
-                          </IconButton>
-                        )}
-                      </Grid>
-                    );
-                  }
-                )}
-              </Box>
-              <Box marginTop={2}>
-                <Typography variant="button">Volumes</Typography>
-                {field.volumes?.map(
-                  (volume: { hostPath: string; containerPath: string }, idx: number) => {
+      <Accordion
+        sx={(theme) => {
+          return {
+            marginTop: 2,
+            paddingX: 1,
+            backgroundColor: varAlpha(theme.vars.palette.background.neutralChannel, 0.4),
+          };
+        }}
+      >
+        <AccordionSummary
+          expandIcon={<Iconify icon={'flat-color-icons:expand'} />}
+          aria-controls="run-image-content"
+          id="run-image-header"
+        >
+          <Typography variant="body2">{t(LanguageKey.repository.optionalSettings)}</Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ padding: 0 }}>
+          <Box marginY={2}>
+            <Grid container columns={2} gap={1}>
+              <Grid xs={2} sm={2} md={2}>
+                <Controller
+                  {...register('with_env')}
+                  control={control}
+                  defaultValue={!!defaultValues?.repo_env}
+                  render={({ field }) => {
                     return (
-                      <Grid
-                        marginTop={2}
-                        gap={2}
-                        columns={1}
-                        container
-                        key={idx}
-                        display="flex"
-                        flexDirection="row"
-                        flexWrap={'nowrap'}
-                      >
-                        <TextField
-                          {...register(`services.${index}.volumes.${idx}.hostPath`)}
-                          label={`host:`}
-                          defaultValue={volume.hostPath}
-                          variant="outlined"
+                      <Box>
+                        <Checkbox
+                          {...field}
+                          defaultChecked={field.value as boolean}
+                          onChange={(_, checked) => {
+                            setValue('with_env', checked);
+                            if (checked == false) setValue('repo_env', undefined);
+                            else setValue('repo_env', defaultValues?.repo_env || '');
+                            setWithEnv(checked);
+                          }}
                         />
-                        <TextField
-                          {...register(`services.${index}.volumes.${idx}.containerPath`)}
-                          label={`container:`}
-                          defaultValue={volume.containerPath}
-                          variant="outlined"
-                        />
-
-                        {idx < field.volumes.length - 1 && (
-                          <IconButton onClick={() => removeVolumeVariable(index, idx)}>
-                            <Iconify icon="ic:baseline-remove" />
-                          </IconButton>
-                        )}
-                        {idx === field.volumes.length - 1 && (
-                          <IconButton onClick={() => addVolumeVariable(index)}>
-                            <Iconify icon="ic:baseline-plus" />
-                          </IconButton>
-                        )}
-                      </Grid>
+                        <Typography marginLeft={1} variant="caption">
+                          {t(LanguageKey.repository.buildWithEnv)}
+                        </Typography>
+                      </Box>
                     );
-                  }
+                  }}
+                />
+              </Grid>
+              {withEnv && (
+                <Grid item xs={2} sm={2} md={2}>
+                  <RHFTextField
+                    multiline
+                    label={t(LanguageKey.repository.repoEnv)}
+                    maxRows={3}
+                    defaultValue={defaultValues?.repo_env}
+                    id="repo_env"
+                    name="repo_env"
+                    placeholder={'KEY=value\nKEY_@=@'}
+                    type="text"
+                    variant="outlined"
+                  />
+                  <Typography variant="caption">
+                    {t(LanguageKey.repository.repoEnvGuide)}
+                  </Typography>
+                </Grid>
+              )}
+            </Grid>
+          </Box>
+
+          <Box>
+            <Grid container columns={2} gap={1}>
+              <Grid xs={2} sm={2} md={2}>
+                <Controller
+                  {...register('with_docker_compose')}
+                  control={control}
+                  defaultValue={Number(defaultValues?.services?.length) > 0}
+                  render={({ field }) => {
+                    return (
+                      <Box>
+                        <Checkbox
+                          {...field}
+                          defaultChecked={field.value as boolean}
+                          onChange={(_, checked) => {
+                            setValue('with_docker_compose', checked);
+                            if (!checked) {
+                              remove();
+                              setValue('services', undefined);
+                            } else {
+                              append(
+                                Number(defaultValues?.services?.length) > 0
+                                  ? defaultValues?.services
+                                  : {
+                                      serviceName: '',
+                                      buildContext: '',
+                                      envFile: '',
+                                      ports: '',
+                                      environment: [{ variable: '', value: '' }],
+                                      volumes: [{ hostPath: '', containerPath: '' }],
+                                    }
+                              );
+                            }
+                          }}
+                        />
+                        <Typography marginLeft={1} variant="caption">
+                          {t(LanguageKey.repository.buildWithDockerCompose)}
+                        </Typography>
+                      </Box>
+                    );
+                  }}
+                />
+              </Grid>
+
+              <Grid xs={2} sm={2} md={2}>
+                {fields.length > 0 && (
+                  <Box>
+                    <Typography variant="button">{t(LanguageKey.repository.services)}</Typography>
+                    <IconButton
+                      onClick={() =>
+                        append({
+                          serviceName: '',
+                          buildContext: '',
+                          envFile: '',
+                          port: '',
+                          environment: [{ variable: '', value: '' }],
+                          volumes: [{ hostPath: '', containerPath: '' }],
+                        })
+                      }
+                    >
+                      <Iconify icon="ic:baseline-plus" />
+                    </IconButton>
+                    {fields.map((field: any, index) => (
+                      <Box
+                        sx={(theme) => {
+                          return {
+                            backgroundColor: theme.palette.background.paper,
+                            borderRadius: 2,
+                            padding: 2,
+                          };
+                        }}
+                        key={field.id}
+                        marginBottom={2}
+                      >
+                        <Grid container spacing={1} columns={2}>
+                          <Grid item xs={2} sm={1} md={1}>
+                            <TextField
+                              {...register(`services.${index}.serviceName`)}
+                              label="Service Name"
+                              defaultValue={field.serviceName}
+                              fullWidth
+                              variant="outlined"
+                            />
+                          </Grid>
+                          <Grid item xs={2} sm={1} md={1}>
+                            <TextField
+                              {...register(`services.${index}.buildContext`)}
+                              label="Build Context"
+                              defaultValue={field.buildContext}
+                              fullWidth
+                              variant="outlined"
+                            />
+                          </Grid>
+
+                          <Grid item xs={2} sm={1} md={1}>
+                            <TextField
+                              {...register(`services.${index}.envFile`)}
+                              label="Env File"
+                              defaultValue={field.envFile}
+                              fullWidth
+                              variant="outlined"
+                            />
+                          </Grid>
+                          <Grid item xs={2} sm={1} md={1}>
+                            <TextField
+                              {...register(`services.${index}.ports`)}
+                              label="Port"
+                              defaultValue={field.ports}
+                              fullWidth
+                              variant="outlined"
+                            />
+                          </Grid>
+                        </Grid>
+
+                        <Box marginTop={2}>
+                          <Typography variant="button">
+                            {t(LanguageKey.repository.environment)}
+                          </Typography>
+                          {field.environment?.map(
+                            (environment: { variable: string; value: string }, idx: number) => {
+                              return (
+                                <Grid
+                                  marginTop={2}
+                                  gap={2}
+                                  columns={1}
+                                  container
+                                  key={idx}
+                                  display="flex"
+                                  flexDirection="row"
+                                  flexWrap={'nowrap'}
+                                >
+                                  <TextField
+                                    {...register(`services.${index}.environment.${idx}.variable`)}
+                                    label={`Key:`}
+                                    defaultValue={environment.variable}
+                                    variant="outlined"
+                                  />
+                                  <TextField
+                                    {...register(`services.${index}.environment.${idx}.value`)}
+                                    label={`value:`}
+                                    defaultValue={environment.value}
+                                    variant="outlined"
+                                  />
+
+                                  {idx < field.environment.length - 1 && (
+                                    <IconButton
+                                      onClick={() => removeEnvironmentVariable(index, idx)}
+                                    >
+                                      <Iconify icon="ic:baseline-remove" />
+                                    </IconButton>
+                                  )}
+                                  {idx === field.environment.length - 1 && (
+                                    <IconButton onClick={() => addEnvironmentVariable(index)}>
+                                      <Iconify icon="ic:baseline-plus" />
+                                    </IconButton>
+                                  )}
+                                </Grid>
+                              );
+                            }
+                          )}
+                        </Box>
+                        <Box marginTop={2}>
+                          <Typography variant="button">
+                            {t(LanguageKey.repository.volumes)}
+                          </Typography>
+
+                          {field.volumes?.map(
+                            (volume: { hostPath: string; containerPath: string }, idx: number) => {
+                              return (
+                                <Grid
+                                  marginTop={2}
+                                  gap={2}
+                                  columns={1}
+                                  container
+                                  key={idx}
+                                  display="flex"
+                                  flexDirection="row"
+                                  flexWrap={'nowrap'}
+                                >
+                                  <TextField
+                                    {...register(`services.${index}.volumes.${idx}.hostPath`)}
+                                    label={`host:`}
+                                    defaultValue={volume.hostPath}
+                                    variant="outlined"
+                                  />
+                                  <TextField
+                                    {...register(`services.${index}.volumes.${idx}.containerPath`)}
+                                    label={`container:`}
+                                    defaultValue={volume.containerPath}
+                                    variant="outlined"
+                                  />
+
+                                  {idx < field.volumes.length - 1 && (
+                                    <IconButton onClick={() => removeVolumeVariable(index, idx)}>
+                                      <Iconify icon="ic:baseline-remove" />
+                                    </IconButton>
+                                  )}
+                                  {idx === field.volumes.length - 1 && (
+                                    <IconButton onClick={() => addVolumeVariable(index)}>
+                                      <Iconify icon="ic:baseline-plus" />
+                                    </IconButton>
+                                  )}
+                                </Grid>
+                              );
+                            }
+                          )}
+                        </Box>
+                        {Number(fields.length) > 1 && (
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            sx={{ marginTop: 2 }}
+                            onClick={() => {
+                              remove(index);
+                            }}
+                          >
+                            {t(LanguageKey.button.delete)}
+                          </Button>
+                        )}
+                      </Box>
+                    ))}
+                  </Box>
                 )}
-              </Box>
-              <Button
-                variant="outlined"
-                color="error"
-                sx={{ marginTop: 2 }}
-                onClick={() => {
-                  remove(index);
-                }}
-              >
-                Remove Service
-              </Button>
-            </Box>
-          ))}
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
-          Cancel
-        </Button>
-        <LoadingButton type="submit" color="inherit" variant="contained" loading={isSubmitting}>
-          {action === HttpMethod.PATCH ? 'Pull' : 'Clone'}
-        </LoadingButton>
-      </DialogActions>
-    </>
+              </Grid>
+            </Grid>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+    </Box>
   );
 };

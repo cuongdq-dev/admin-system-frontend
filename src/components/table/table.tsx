@@ -80,6 +80,7 @@ export const TableComponent = (props: TableComponentProps) => {
         order: metaData?.sortBy![0][1].toLocaleLowerCase(),
       };
   };
+
   const updateRowData = (
     id: string,
     updatedData: Record<string, any>,

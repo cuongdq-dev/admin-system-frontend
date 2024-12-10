@@ -119,7 +119,7 @@ const MuiDialog: Components<Theme>['MuiDialog'] = {
   styleOverrides: {
     paper: ({ theme }) => ({
       borderRadius: 16,
-      padding: 10,
+      // padding: 10,
     }),
   },
 };

@@ -1,9 +1,12 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
   CircularProgress,
+  DialogActions,
+  DialogContent,
   DialogTitle,
   Grid,
   IconButton,
@@ -20,6 +23,7 @@ import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey } from 'src/constants';
 import * as Yup from 'yup';
 
+import { LoadingButton } from '@mui/lab';
 import { Dialog, Stack, Typography } from '@mui/material';
 import { Transition } from '../../../components/dialog';
 import { RunImageForm } from './image-form';
@@ -164,7 +168,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
         refreshData={refreshData}
         action={formConfig.action}
         defaultValues={formConfig.defaultValues}
-        baseUrl={PATH_REPOSITORY + `/${serverId}`}
+        baseUrl={PATH_REPOSITORY + `/${connectionId}/${serverId}`}
         schema={FormTableSchema}
         render={({ isSubmitting }: { isSubmitting: boolean }) => {
           return (
@@ -178,12 +182,25 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
                   </Box>
                 </Stack>
               </DialogTitle>
-              <RepositoryForm
-                defaultValues={formConfig.defaultValues}
-                action={formConfig.action}
-                handleCloseForm={handleCloseForm}
-                isSubmitting={isSubmitting}
-              />
+              <DialogContent dividers={true}>
+                <RepositoryForm defaultValues={formConfig.defaultValues} />
+              </DialogContent>
+
+              <DialogActions sx={{ padding: 2 }}>
+                <Button variant="outlined" color="inherit" onClick={handleCloseForm}>
+                  {t(LanguageKey.button.cancel)}
+                </Button>
+                <LoadingButton
+                  type="submit"
+                  color="inherit"
+                  variant="contained"
+                  loading={isSubmitting}
+                >
+                  {formConfig.action === HttpMethod.PATCH
+                    ? t(LanguageKey.button.pull)
+                    : t(LanguageKey.button.clone)}
+                </LoadingButton>
+              </DialogActions>
             </>
           );
         }}

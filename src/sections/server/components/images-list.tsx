@@ -1,8 +1,4 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
   Card,
@@ -16,27 +12,19 @@ import {
   DialogTitle,
   Grid,
   IconButton,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
 } from '@mui/material';
 import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
-import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_DOCKER } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
-import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import { RefreshIcon } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey } from 'src/constants';
-import * as Yup from 'yup';
 import { Transition } from '../../../components/dialog';
-import { RunImageForm } from './image-form';
 
 type ImagesDockerProps = { connectionId?: string };
 
@@ -112,19 +100,6 @@ const ImageAction = ({ row, updateRowData, connectionId }: ImageActionProps) => 
 
   return (
     <Box sx={{ pointerEvents: loading ? 'none' : 'auto' }} display="flex">
-      <Tooltip title={t(LanguageKey.docker.imageRun)}>
-        <RunAction
-          handleClick={(loading) => setLoading(loading)}
-          row={row}
-          baseUrl={`${PATH_DOCKER}/image/${connectionId}/run`}
-          params={{ imageName: row.name }}
-          action="POST"
-          updateRowData={(rowId, values, action) => {
-            updateRowData && updateRowData(rowId, values, action);
-          }}
-          icon="si:actions-fill"
-        />
-      </Tooltip>
       <DeleteAction
         row={row}
         handleClick={(loading) => setLoading(loading)}
@@ -229,72 +204,6 @@ const DeleteAction = (props: IconActionProps) => {
             {t(LanguageKey.button.cancel)}
           </Button>
         </DialogActions>
-      </Dialog>
-    </Box>
-  );
-};
-
-const RunAction = (props: IconActionProps) => {
-  const { row, icon, handleClick, baseUrl, updateRowData } = props;
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const descriptionElementRef = useRef<HTMLElement>(null);
-  useEffect(() => {
-    if (open) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [open]);
-
-  useEffect(() => {
-    handleClick(loading);
-  }, [loading]);
-
-  return (
-    <Box sx={{ position: 'relative' }}>
-      <IconButton onClick={() => setOpen(true)}>
-        <Iconify icon={icon} />
-      </IconButton>
-      {loading && (
-        <CircularProgress
-          size={20}
-          sx={{ color: 'primary.main', position: 'absolute', top: 8, left: 8, zIndex: 1 }}
-        />
-      )}
-
-      <Dialog
-        PaperProps={{ sx: { borderRadius: 3 } }}
-        TransitionComponent={Transition}
-        maxWidth={'sm'}
-        open={open}
-        fullWidth
-        onClose={() => setOpen(false)}
-        scroll={'paper'}
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-      >
-        <DialogTitle id="scroll-dialog-title">
-          <Stack marginBottom={2} display="flex" flexDirection="row" justifyItems="center">
-            <Iconify width={50} icon="catppuccin:devcontainer" />
-            <Box marginLeft={2}>
-              <Typography>Run a new container</Typography>
-              <Typography variant="caption">
-                {row?.name}:{row?.tag}
-              </Typography>
-            </Box>
-          </Stack>
-        </DialogTitle>
-        <RunImageForm
-          row={row}
-          id={row?.id}
-          baseUrl={baseUrl}
-          handleLoading={setLoading}
-          handleOpen={setOpen}
-          updateRowData={updateRowData}
-        />
       </Dialog>
     </Box>
   );
