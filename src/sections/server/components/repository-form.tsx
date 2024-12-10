@@ -11,27 +11,40 @@ import {
   Typography,
 } from '@mui/material';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { RHFTextField } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
 import { varAlpha } from 'src/theme/styles';
-type RepositoryFormProps = { defaultValues?: IRepository };
+
+type RepositoryFormProps = {
+  defaultValues?: IRepository;
+  withBuild?: boolean;
+  expanded?: 'basic_information' | 'optional_settings';
+};
 
 export const RepositoryForm = (props: RepositoryFormProps) => {
-  const { defaultValues } = props;
-  const [withEnv, setWithEnv] = useState(defaultValues?.repo_env || false);
+  const { defaultValues, expanded, withBuild = true } = props;
   const { control, register, getValues, setValue } = useFormContext();
-  const { fields, append, remove, update } = useFieldArray({ control, name: 'services' });
+  const { fields, append, remove, update, replace } = useFieldArray({
+    control,
+    name: 'services',
+  });
+
   useEffect(() => {
-    if (Number(defaultValues?.services?.length) >= 0) {
-      append(defaultValues?.services);
-      setValue('with_docker_compose', true);
-    }
-    if (defaultValues?.repo_env) {
-      setValue('with_env', true);
-    }
+    replace(
+      Number(defaultValues?.services?.length) > 0
+        ? defaultValues?.services
+        : {
+            serviceName: '',
+            buildContext: '',
+            envFile: '',
+            ports: '',
+            environment: [{ variable: '', value: '' }],
+            volumes: [{ hostPath: '', containerPath: '' }],
+          }
+    );
   }, []);
 
   const addEnvironmentVariable = (index: number) => {
@@ -67,6 +80,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
   return (
     <Box>
       <Accordion
+        defaultExpanded={expanded == 'basic_information'}
         sx={(theme) => {
           return {
             paddingX: 1,
@@ -86,6 +100,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
             <Grid container columns={2} marginTop={1} spacing={2}>
               <Grid item xs={2} sm={1} md={1}>
                 <RHFTextField
+                  disabled={withBuild}
                   defaultValue={defaultValues?.name}
                   id="name"
                   name="name"
@@ -96,6 +111,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
               </Grid>
               <Grid item xs={2} sm={1} md={1}>
                 <RHFTextField
+                  disabled={withBuild}
                   defaultValue={defaultValues?.email}
                   id="email"
                   name="email"
@@ -107,6 +123,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
               <Grid item xs={2} sm={1} md={1}>
                 <RHFTextField
                   defaultValue={defaultValues?.username}
+                  disabled={withBuild}
                   id="username"
                   name="username"
                   label={t(LanguageKey.repository.usernameItem)}
@@ -117,6 +134,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
               <Grid item xs={2} sm={1} md={1}>
                 <RHFTextField
                   defaultValue={defaultValues?.github_url}
+                  disabled={withBuild}
                   id="github_url"
                   name="github_url"
                   label={t(LanguageKey.repository.githubUrlItem)}
@@ -128,6 +146,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
               <Grid item xs={2} sm={2} md={2}>
                 <RHFTextField
                   defaultValue={defaultValues?.fine_grained_token}
+                  disabled={withBuild}
                   id="fine_grained_token"
                   name="fine_grained_token"
                   label={t(LanguageKey.repository.fineGrainedTokenItem)}
@@ -141,6 +160,25 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
       </Accordion>
 
       <Accordion
+        onChange={(_, expanded) => {
+          if (expanded == true) {
+            setValue('with_env', true);
+            setValue('with_docker_compose', true);
+            replace(
+              Number(defaultValues?.services?.length) > 0
+                ? defaultValues?.services
+                : {
+                    serviceName: '',
+                    buildContext: '',
+                    envFile: '',
+                    ports: '',
+                    environment: [{ variable: '', value: '' }],
+                    volumes: [{ hostPath: '', containerPath: '' }],
+                  }
+            );
+          }
+        }}
+        defaultExpanded={expanded == 'optional_settings'}
         sx={(theme) => {
           return {
             marginTop: 2,
@@ -159,114 +197,123 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
         <AccordionDetails sx={{ padding: 0 }}>
           <Box marginY={2}>
             <Grid container columns={2} gap={1}>
-              <Grid xs={2} sm={2} md={2}>
-                <Controller
-                  {...register('with_env')}
-                  control={control}
-                  defaultValue={!!defaultValues?.repo_env}
-                  render={({ field }) => {
-                    return (
-                      <Box>
-                        <Checkbox
-                          {...field}
-                          defaultChecked={field.value as boolean}
-                          onChange={(_, checked) => {
-                            setValue('with_env', checked);
-                            if (checked == false) setValue('repo_env', undefined);
-                            else setValue('repo_env', defaultValues?.repo_env || '');
-                            setWithEnv(checked);
-                          }}
-                        />
-                        <Typography marginLeft={1} variant="caption">
-                          {t(LanguageKey.repository.buildWithEnv)}
-                        </Typography>
-                      </Box>
-                    );
-                  }}
-                />
-              </Grid>
-              {withEnv && (
-                <Grid item xs={2} sm={2} md={2}>
-                  <RHFTextField
-                    multiline
-                    label={t(LanguageKey.repository.repoEnv)}
-                    maxRows={3}
-                    defaultValue={defaultValues?.repo_env}
-                    id="repo_env"
-                    name="repo_env"
-                    placeholder={'KEY=value\nKEY_@=@'}
-                    type="text"
-                    variant="outlined"
+              {withBuild && (
+                <Grid xs={2} sm={2} md={2}>
+                  <Controller
+                    {...register('with_env')}
+                    control={control}
+                    defaultValue={true}
+                    render={({ field }) => {
+                      return (
+                        <Box>
+                          <Checkbox
+                            {...field}
+                            defaultChecked={field.value}
+                            onChange={(_, checked) => {
+                              setValue('with_env', checked);
+                              if (withBuild) return;
+                              if (checked == false) setValue('repo_env', undefined);
+                              else setValue('repo_env', defaultValues?.repo_env || '');
+                            }}
+                          />
+                          <Typography marginLeft={1} variant="caption">
+                            {t(LanguageKey.repository.buildWithEnv)}
+                          </Typography>
+                        </Box>
+                      );
+                    }}
                   />
+                </Grid>
+              )}
+
+              <Grid item xs={2} sm={2} md={2}>
+                <RHFTextField
+                  disabled={withBuild}
+                  multiline
+                  label={t(LanguageKey.repository.repoEnv)}
+                  maxRows={3}
+                  defaultValue={defaultValues?.repo_env}
+                  id="repo_env"
+                  name="repo_env"
+                  placeholder={'KEY=value\nKEY_@=@'}
+                  type="text"
+                  variant="outlined"
+                />
+                {withBuild && (
                   <Typography variant="caption">
                     {t(LanguageKey.repository.repoEnvGuide)}
                   </Typography>
-                </Grid>
-              )}
+                )}
+              </Grid>
             </Grid>
           </Box>
 
           <Box>
             <Grid container columns={2} gap={1}>
-              <Grid xs={2} sm={2} md={2}>
-                <Controller
-                  {...register('with_docker_compose')}
-                  control={control}
-                  defaultValue={Number(defaultValues?.services?.length) > 0}
-                  render={({ field }) => {
-                    return (
-                      <Box>
-                        <Checkbox
-                          {...field}
-                          defaultChecked={field.value as boolean}
-                          onChange={(_, checked) => {
-                            setValue('with_docker_compose', checked);
-                            if (!checked) {
-                              remove();
-                              setValue('services', undefined);
-                            } else {
-                              append(
-                                Number(defaultValues?.services?.length) > 0
-                                  ? defaultValues?.services
-                                  : {
-                                      serviceName: '',
-                                      buildContext: '',
-                                      envFile: '',
-                                      ports: '',
-                                      environment: [{ variable: '', value: '' }],
-                                      volumes: [{ hostPath: '', containerPath: '' }],
-                                    }
-                              );
-                            }
-                          }}
-                        />
-                        <Typography marginLeft={1} variant="caption">
-                          {t(LanguageKey.repository.buildWithDockerCompose)}
-                        </Typography>
-                      </Box>
-                    );
-                  }}
-                />
-              </Grid>
+              {withBuild && (
+                <Grid xs={2} sm={2} md={2}>
+                  <Controller
+                    {...register('with_docker_compose')}
+                    control={control}
+                    defaultValue={true}
+                    render={({ field }) => {
+                      return (
+                        <Box>
+                          <Checkbox
+                            {...field}
+                            defaultChecked={field.value}
+                            onChange={(_, checked) => {
+                              setValue('with_docker_compose', checked);
+                              if (withBuild) return;
+                              if (!checked) {
+                                remove();
+                                setValue('services', undefined);
+                              } else {
+                                replace(
+                                  Number(defaultValues?.services?.length) > 0
+                                    ? defaultValues?.services
+                                    : {
+                                        serviceName: '',
+                                        buildContext: '',
+                                        envFile: '',
+                                        ports: '',
+                                        environment: [{ variable: '', value: '' }],
+                                        volumes: [{ hostPath: '', containerPath: '' }],
+                                      }
+                                );
+                              }
+                            }}
+                          />
+                          <Typography marginLeft={1} variant="caption">
+                            {t(LanguageKey.repository.buildWithDockerCompose)}
+                          </Typography>
+                        </Box>
+                      );
+                    }}
+                  />
+                </Grid>
+              )}
 
               <Grid xs={2} sm={2} md={2}>
                 {fields.length > 0 && (
                   <Box>
                     <Typography variant="button">{t(LanguageKey.repository.services)}</Typography>
-                    <IconButton
-                      onClick={() =>
-                        append({
-                          serviceName: '',
-                          buildContext: '',
-                          envFile: '',
-                          port: '',
-                          environment: [{ variable: '', value: '' }],
-                          volumes: [{ hostPath: '', containerPath: '' }],
-                        })
-                      }
-                    >
-                      <Iconify icon="ic:baseline-plus" />
-                    </IconButton>
+                    {!withBuild && (
+                      <IconButton
+                        onClick={() =>
+                          append({
+                            serviceName: '',
+                            buildContext: '',
+                            envFile: '',
+                            port: '',
+                            environment: [{ variable: '', value: '' }],
+                            volumes: [{ hostPath: '', containerPath: '' }],
+                          })
+                        }
+                      >
+                        <Iconify icon="ic:baseline-plus" />
+                      </IconButton>
+                    )}
                     {fields.map((field: any, index) => (
                       <Box
                         sx={(theme) => {
@@ -278,11 +325,13 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                         }}
                         key={field.id}
                         marginBottom={2}
+                        marginTop={1}
                       >
-                        <Grid container spacing={1} columns={2}>
+                        <Grid container spacing={2} columns={2}>
                           <Grid item xs={2} sm={1} md={1}>
                             <TextField
                               {...register(`services.${index}.serviceName`)}
+                              disabled={withBuild}
                               label="Service Name"
                               defaultValue={field.serviceName}
                               fullWidth
@@ -292,6 +341,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                           <Grid item xs={2} sm={1} md={1}>
                             <TextField
                               {...register(`services.${index}.buildContext`)}
+                              disabled={withBuild}
                               label="Build Context"
                               defaultValue={field.buildContext}
                               fullWidth
@@ -303,6 +353,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                             <TextField
                               {...register(`services.${index}.envFile`)}
                               label="Env File"
+                              disabled={withBuild}
                               defaultValue={field.envFile}
                               fullWidth
                               variant="outlined"
@@ -312,6 +363,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                             <TextField
                               {...register(`services.${index}.ports`)}
                               label="Port"
+                              disabled={withBuild}
                               defaultValue={field.ports}
                               fullWidth
                               variant="outlined"
@@ -338,25 +390,27 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                                 >
                                   <TextField
                                     {...register(`services.${index}.environment.${idx}.variable`)}
+                                    disabled={withBuild}
                                     label={`Key:`}
                                     defaultValue={environment.variable}
                                     variant="outlined"
                                   />
                                   <TextField
                                     {...register(`services.${index}.environment.${idx}.value`)}
+                                    disabled={withBuild}
                                     label={`value:`}
                                     defaultValue={environment.value}
                                     variant="outlined"
                                   />
 
-                                  {idx < field.environment.length - 1 && (
+                                  {!withBuild && idx < field.environment.length - 1 && (
                                     <IconButton
                                       onClick={() => removeEnvironmentVariable(index, idx)}
                                     >
                                       <Iconify icon="ic:baseline-remove" />
                                     </IconButton>
                                   )}
-                                  {idx === field.environment.length - 1 && (
+                                  {!withBuild && idx === field.environment.length - 1 && (
                                     <IconButton onClick={() => addEnvironmentVariable(index)}>
                                       <Iconify icon="ic:baseline-plus" />
                                     </IconButton>
@@ -386,6 +440,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                                 >
                                   <TextField
                                     {...register(`services.${index}.volumes.${idx}.hostPath`)}
+                                    disabled={withBuild}
                                     label={`host:`}
                                     defaultValue={volume.hostPath}
                                     variant="outlined"
@@ -393,16 +448,17 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                                   <TextField
                                     {...register(`services.${index}.volumes.${idx}.containerPath`)}
                                     label={`container:`}
+                                    disabled={withBuild}
                                     defaultValue={volume.containerPath}
                                     variant="outlined"
                                   />
 
-                                  {idx < field.volumes.length - 1 && (
+                                  {!withBuild && idx < field.volumes.length - 1 && (
                                     <IconButton onClick={() => removeVolumeVariable(index, idx)}>
                                       <Iconify icon="ic:baseline-remove" />
                                     </IconButton>
                                   )}
-                                  {idx === field.volumes.length - 1 && (
+                                  {!withBuild && idx === field.volumes.length - 1 && (
                                     <IconButton onClick={() => addVolumeVariable(index)}>
                                       <Iconify icon="ic:baseline-plus" />
                                     </IconButton>
@@ -412,7 +468,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                             }
                           )}
                         </Box>
-                        {Number(fields.length) > 1 && (
+                        {!withBuild && Number(fields.length) > 1 && (
                           <Button
                             variant="outlined"
                             color="error"

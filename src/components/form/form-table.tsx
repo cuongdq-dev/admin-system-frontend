@@ -1,16 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Dialog, DialogProps } from '@mui/material';
+import { Dialog } from '@mui/material';
 import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { ButtonDismissNotify } from 'src/components/button';
+import { LanguageKey } from 'src/constants';
+import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
 import { Transition } from '../dialog';
 import { FormProvider } from '../hook-form';
-import { LanguageKey } from 'src/constants';
-import { GetValuesFormChange } from 'src/utils/validation/form';
 
 type FormProps = {
   open: boolean;
@@ -35,7 +35,7 @@ export const PopupFormTable = (props: FormProps) => {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting, isDirty },
+    formState: { isSubmitting },
   } = methods;
 
   useEffect(() => {
