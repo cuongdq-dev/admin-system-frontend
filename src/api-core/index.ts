@@ -97,7 +97,9 @@ export const invokeRequest = async (options: RequestProps) => {
     }
 
     error?.response?.data?.message &&
-      enqueueSnackbar(error?.response?.data?.message, { variant: 'error' });
+      enqueueSnackbar(error?.response?.data?.message, {
+        variant: error?.response?.data?.variant || 'error',
+      });
     handleError(error as AxiosError);
     onHandleError && onHandleError(error?.response?.data);
   }

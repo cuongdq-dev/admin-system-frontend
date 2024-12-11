@@ -34,7 +34,16 @@ type IRepository = {
   username?: string;
   email?: string;
   server_id?: string;
-  services?: any[];
+  with_env?: boolean;
+  with_docker_composse?: boolean;
+  services?: {
+    serviceName?: string;
+    buildContext?: string;
+    envFile?: string;
+    environment?: { variable?: string; value?: string }[];
+    volumes: { hostPath?: string; containerPath?: string }[];
+    ports?: string;
+  }[];
   repo_env?: string;
 };
 
@@ -75,6 +84,7 @@ interface IRoute {
 interface IDetail {
   defaultData?: Record<string, any>;
   loading?: boolean;
+  handleReconnectServer?: () => void;
   handleUpdate?: (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => void;
 }
 

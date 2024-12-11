@@ -1,11 +1,5 @@
 import {
   Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   IconButton,
   MenuItem,
   menuItemClasses,
@@ -14,20 +8,18 @@ import {
   TableCell,
 } from '@mui/material';
 import { t } from 'i18next';
-import { enqueueSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HttpMethod, invokeRequest } from 'src/api-core';
+import { HttpMethod } from 'src/api-core';
 import { Iconify } from 'src/components/iconify';
-import { ButtonDismissNotify } from '../button';
-import { Transition } from '../dialog';
-import { TableActionComponentProps } from './type';
 import { LanguageKey } from 'src/constants';
+import { ButtonDelete } from '../button';
+import { TableActionComponentProps } from './type';
 
 export const TableActionComponent = (props: TableActionComponentProps) => {
   const navigate = useNavigate();
   const { deleteBtn, editBtn, popupEdit, row, baseUrl } = props;
-  const { refreshData, handleClickOpenForm } = props;
+  const { handleClickOpenForm, updateRowData } = props;
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -62,7 +54,11 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
             </IconButton>
           )}
           {deleteBtn && !editBtn && (
-            <ButtonDelete refreshData={refreshData} rowId={row?.id} baseUrl={baseUrl} />
+            <ButtonDelete
+              handleDelete={updateRowData}
+              rowId={row?.id}
+              baseUrl={baseUrl + '/delete/' + row?.id}
+            />
           )}
 
           {deleteBtn && editBtn && (
@@ -73,7 +69,6 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
         </Box>
       </TableCell>
 
-      {}
       <Popover
         open={!!openPopover}
         anchorEl={openPopover}
@@ -111,69 +106,13 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
           {deleteBtn && (
             <ButtonDelete
               title={t(LanguageKey.button.delete)}
-              refreshData={refreshData}
+              handleDelete={() => {}}
               rowId={row?.id}
-              baseUrl={baseUrl}
+              baseUrl={baseUrl + '/delete/' + row?.id}
             />
           )}
         </MenuList>
       </Popover>
-    </>
-  );
-};
-
-type ButtonDeleteProps = {
-  title?: string;
-  baseUrl: string;
-  rowId: string;
-  refreshData?: () => void;
-};
-export const ButtonDelete = (props: ButtonDeleteProps) => {
-  const { title = '', baseUrl, rowId, refreshData } = props;
-  const [open, setOpen] = useState(false);
-
-  const handleDeleteRow = () => {
-    invokeRequest({
-      method: HttpMethod.DELETE,
-      baseURL: baseUrl + '/delete/' + rowId,
-      onSuccess: () => {
-        enqueueSnackbar(t(LanguageKey.notify.successDelete), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
-        refreshData && refreshData();
-      },
-      onHandleError: (error) => {},
-    });
-  };
-  return (
-    <>
-      <MenuItem onClick={() => setOpen(true)} sx={{ color: 'error.main' }}>
-        <Iconify icon="solar:trash-bin-trash-bold" />
-        {title}
-      </MenuItem>
-      <Dialog
-        PaperProps={{ sx: { borderRadius: 3 } }}
-        TransitionComponent={Transition}
-        maxWidth={'sm'}
-        open={open}
-        fullWidth
-        onClose={() => setOpen(false)}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title">{t(LanguageKey.form.deleteLabel)}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{t(LanguageKey.form.deleteTitle)}</DialogContentText>
-        </DialogContent>
-        <DialogActions style={{ padding: 20 }}>
-          <Button color="error" variant="contained" onClick={handleDeleteRow}>
-            {t(LanguageKey.button.delete)}
-          </Button>
-          <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
-            {t(LanguageKey.button.cancel)}
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };

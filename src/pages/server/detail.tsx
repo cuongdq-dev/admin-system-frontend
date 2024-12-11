@@ -70,6 +70,29 @@ export default function Page() {
       },
     });
   };
+
+  const handleReconnectServer = () => {
+    invokeRequest({
+      method: HttpMethod.POST,
+      baseURL: PATH_SERVER + '/connection/' + id,
+      onHandleError: (response) => {
+        setState((state) => ({ ...state, loading: false }));
+      },
+      onSuccess(res) {
+        setState((s) => ({
+          ...s,
+          loading: false,
+          data: { ...s.data, connectionId: res.connectionId },
+        }));
+        enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
+          variant: 'success',
+          action: (key) => (
+            <ButtonDismissNotify key={key} textColor="white" textLabel="Re-connected" />
+          ),
+        });
+      },
+    });
+  };
   return (
     <>
       <Helmet>
@@ -77,7 +100,12 @@ export default function Page() {
       </Helmet>
 
       <DashboardContent>
-        <DetailView handleUpdate={handleUpdate} loading={state.loading} defaultData={state?.data} />
+        <DetailView
+          handleReconnectServer={handleReconnectServer}
+          handleUpdate={handleUpdate}
+          loading={state.loading}
+          defaultData={state?.data}
+        />
       </DashboardContent>
     </>
   );

@@ -48,6 +48,13 @@ export type TableActionComponentProps = {
   deleteBtn?: boolean;
   popupEdit?: boolean;
   refreshData?: () => void;
+
+  updateRowData?: (
+    id: string,
+    updatedData: Record<string, any>,
+    action: 'ADD' | 'UPDATE' | 'REMOVE'
+  ) => void;
+
   handleClickOpenForm?: (row: Record<string, any>, action: HttpMethod) => void;
 };
 export type TableComponentProps = {

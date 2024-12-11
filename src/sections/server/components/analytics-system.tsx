@@ -22,6 +22,7 @@ type Props = CardProps & {
   connectionId?: string;
   connected?: boolean;
   actived?: boolean;
+  handleReconnectServer?: () => void;
 };
 
 type State = {
@@ -48,7 +49,8 @@ const StyleChipActive = styled(Box)(({ theme }) => {
 });
 
 export function AnalyticsSystem(props: Props) {
-  const { title, subheader, connected, actived, connectionId, ...other } = props;
+  const { title, subheader, connected, actived, connectionId, handleReconnectServer, ...other } =
+    props;
   const theme = useTheme();
 
   const [state, setState] = useState<State>({
@@ -140,32 +142,41 @@ export function AnalyticsSystem(props: Props) {
           <RefreshIcon loading={state.loading} icon={'mdi:refresh'} />
         </IconButton>
 
-        {connected ? (
-          <StyleChipActive
-            sx={(theme) => {
-              return {
-                backgroundColor: varAlpha(theme.vars.palette.success.mainChannel, 0.16),
-                color: theme.vars.palette.success.dark,
-              };
+        <Box display="flex" alignItems="center">
+          <IconButton
+            onClick={() => {
+              handleReconnectServer && handleReconnectServer();
             }}
           >
-            {t(LanguageKey.server.connected)}
-          </StyleChipActive>
-        ) : (
-          <StyleChipActive
-            sx={(theme) => {
-              return {
-                backgroundColor: varAlpha(theme.vars.palette.error.mainChannel, 0.16),
-                color:
-                  theme.palette.mode === 'dark'
-                    ? theme.vars.palette.error.light
-                    : theme.vars.palette.error.dark,
-              };
-            }}
-          >
-            {t(LanguageKey.server.disconnected)}
-          </StyleChipActive>
-        )}
+            <RefreshIcon loading={state.loading} icon={'mdi:refresh'} />
+          </IconButton>
+          {connected ? (
+            <StyleChipActive
+              sx={(theme) => {
+                return {
+                  backgroundColor: varAlpha(theme.vars.palette.success.mainChannel, 0.16),
+                  color: theme.vars.palette.success.dark,
+                };
+              }}
+            >
+              {t(LanguageKey.server.connected)}
+            </StyleChipActive>
+          ) : (
+            <StyleChipActive
+              sx={(theme) => {
+                return {
+                  backgroundColor: varAlpha(theme.vars.palette.error.mainChannel, 0.16),
+                  color:
+                    theme.palette.mode === 'dark'
+                      ? theme.vars.palette.error.light
+                      : theme.vars.palette.error.dark,
+                };
+              }}
+            >
+              {t(LanguageKey.server.disconnected)}
+            </StyleChipActive>
+          )}
+        </Box>
       </Box>
       <Card sx={{ boxShadow: 'none' }} {...other}>
         <CardHeader

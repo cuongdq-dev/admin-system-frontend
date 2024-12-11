@@ -138,7 +138,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                   id="github_url"
                   name="github_url"
                   label={t(LanguageKey.repository.githubUrlItem)}
-                  type="text"
+                  type="url"
                   variant="outlined"
                 />
               </Grid>
@@ -200,7 +200,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
               {withBuild && (
                 <Grid xs={2} sm={2} md={2}>
                   <Controller
-                    {...register('with_env')}
+                    {...register('with_env', { value: true })}
                     control={control}
                     defaultValue={true}
                     render={({ field }) => {
@@ -253,7 +253,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
               {withBuild && (
                 <Grid xs={2} sm={2} md={2}>
                   <Controller
-                    {...register('with_docker_compose')}
+                    {...register('with_docker_compose', { value: true })}
                     control={control}
                     defaultValue={true}
                     render={({ field }) => {

@@ -261,6 +261,7 @@ export const TableComponent = (props: TableComponentProps) => {
                         {...actions}
                         baseUrl={url}
                         row={row}
+                        updateRowData={updateRowData}
                         refreshData={refreshData}
                         handleClickOpenForm={handleClickOpenForm}
                       />

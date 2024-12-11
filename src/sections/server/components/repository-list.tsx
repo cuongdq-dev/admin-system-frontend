@@ -1,3 +1,5 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
@@ -5,31 +7,33 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
+  Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   Grid,
   IconButton,
+  Stack,
+  Typography,
 } from '@mui/material';
 import { t } from 'i18next';
+import { enqueueSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_REPOSITORY } from 'src/api-core/path';
+import { ButtonDelete, ButtonDismissNotify } from 'src/components/button';
 import { RefreshIcon } from 'src/components/icon';
 import { Iconify, IconifyProps } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey } from 'src/constants';
+import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
-import { LoadingButton } from '@mui/lab';
-import { Dialog, Stack, Typography } from '@mui/material';
-import { enqueueSnackbar } from 'notistack';
-import { useForm } from 'react-hook-form';
-import { ButtonDismissNotify } from 'src/components/button';
-import { FormProvider } from '../../../components/hook-form';
 import { Transition } from '../../../components/dialog';
+import { FormProvider } from '../../../components/hook-form';
 import { RepositoryForm } from './repository-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 
 const FormTableSchema = {
   name: Yup.string().required('Name is required'),
@@ -57,7 +61,6 @@ const HeadLabel: HeadLabelProps[] = [
     width: '10%',
     type: 'text',
   },
-
   {
     id: 'username',
     label: t(LanguageKey.repository.usernameItem),
@@ -70,6 +73,7 @@ const HeadLabel: HeadLabelProps[] = [
     type: 'text',
     width: '20%',
   },
+
   {
     id: 'github_url',
     label: t(LanguageKey.repository.githubUrlItem),
@@ -94,7 +98,11 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
         type: 'custom',
         render: ({ row, updateRowData }) => {
           return (
-            <ActionGroup row={row} updateRowData={updateRowData} connectionId={connectionId} />
+            <ActionGroup
+              row={row as IRepository}
+              updateRowData={updateRowData}
+              connectionId={connectionId}
+            />
           );
         },
       })
@@ -112,6 +120,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
                   {t(LanguageKey.repository.repositoryListTitle)}
 
                   <RunAction
+                    expanded="basic_information"
                     actionTitle={t(LanguageKey.button.create)}
                     withBuild={false}
                     icon={{ icon: 'simple-line-icons:plus', color: 'primary.main' }}
@@ -141,7 +150,6 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
               url={PATH_REPOSITORY + `/${serverId}`}
               indexCol={true}
               selectCol={false}
-              actions={{ editBtn: false, deleteBtn: false, popupEdit: false }}
               headLabel={headLabel}
             />
           </CardContent>
@@ -163,7 +171,7 @@ type IconActionProps = {
   actionTitle: string;
   handleLoading: (loading: boolean) => void;
   baseUrl: string;
-  row?: Record<string, any>;
+  row?: IRepository;
   updateRowData?: (
     rowId: string,
     values: Record<string, any>,
@@ -174,6 +182,7 @@ type IconActionProps = {
 const RunAction = (props: IconActionProps) => {
   const {
     row,
+    action,
     withBuild = true,
     expanded,
     title,
@@ -203,6 +212,7 @@ const RunAction = (props: IconActionProps) => {
   }, [open]);
 
   const methods = useForm({
+    defaultValues: row as any,
     resolver: yupResolver(Yup.object().shape(FormTableSchema)),
   });
   const { handleSubmit, reset } = methods;
@@ -212,17 +222,28 @@ const RunAction = (props: IconActionProps) => {
   }, [open]);
 
   const onSubmit = async (values: Record<string, any>) => {
-    console.log(values);
+    const valuesChange = GetValuesFormChange(row as IRepository, values);
+    if (Object.keys(valuesChange).length == 0) {
+      reset();
+      setOpen(false);
+      return;
+    }
+
     handleLoading(true);
+    setLoading(true);
     setOpen(false);
     invokeRequest({
-      method: HttpMethod.POST,
+      method: action,
       baseURL: baseUrl,
       params: { ...values, repositoryId: row?.id },
-      onHandleError: () => handleLoading(false),
+      onHandleError: () => {
+        handleLoading(false);
+        setLoading(false);
+      },
       onSuccess(res) {
         handleLoading(false);
-        updateRowData && updateRowData(row?.id!, res?.result, 'UPDATE');
+        setLoading(false);
+        updateRowData && updateRowData(row?.id!, res, 'UPDATE');
         enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
           variant: 'success',
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
@@ -232,53 +253,59 @@ const RunAction = (props: IconActionProps) => {
   };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{ position: 'relative' }}>
-        <IconButton onClick={() => setOpen(true)}>
-          <Iconify {...icon} />
-        </IconButton>
-        {loading && (
-          <CircularProgress
-            size={20}
-            sx={{ color: 'primary.main', position: 'absolute', top: 8, left: 8, zIndex: 1 }}
-          />
-        )}
+    <Box sx={{ position: 'relative' }}>
+      <IconButton onClick={() => setOpen(true)}>
+        <Iconify {...icon} />
+      </IconButton>
+      {loading && (
+        <CircularProgress
+          size={20}
+          sx={{ color: 'primary.main', position: 'absolute', top: 8, left: 8, zIndex: 1 }}
+        />
+      )}
 
-        <Dialog
-          PaperProps={{ sx: { borderRadius: 3 } }}
-          TransitionComponent={Transition}
-          maxWidth={'sm'}
-          open={open}
-          fullWidth
-          onClose={() => setOpen(false)}
-          scroll={'paper'}
-          aria-labelledby="scroll-dialog-title"
-          aria-describedby="scroll-dialog-description"
-        >
-          <DialogTitle id="scroll-dialog-title">
-            <Stack marginBottom={2} display="flex" flexDirection="row" justifyItems="center">
-              <Iconify width={50} {...headerIcon} />
-              <Box marginLeft={2}>
-                <Typography>{title}</Typography>
-                <Typography variant="caption">{description}</Typography>
-              </Box>
-            </Stack>
-          </DialogTitle>
+      <Dialog
+        PaperProps={{ sx: { borderRadius: 3 } }}
+        TransitionComponent={Transition}
+        maxWidth={'sm'}
+        open={open}
+        fullWidth
+        onClose={() => setOpen(false)}
+        scroll={'paper'}
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+      >
+        <DialogTitle id="scroll-dialog-title">
+          <Stack marginBottom={2} display="flex" flexDirection="row" justifyItems="center">
+            <Iconify width={50} {...headerIcon} />
+            <Box marginLeft={2}>
+              <Typography>{title}</Typography>
+              <Typography variant="caption">{description}</Typography>
+            </Box>
+          </Stack>
+        </DialogTitle>
 
-          <DialogContent dividers={true}>
-            <RepositoryForm withBuild={withBuild} defaultValues={row} expanded={expanded} />
-          </DialogContent>
-          <DialogActions sx={{ paddingTop: 4 }}>
-            <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
-              {t(LanguageKey.button.cancel)}
-            </Button>
-            <LoadingButton type="submit" color="inherit" variant="contained">
-              {actionTitle}
-            </LoadingButton>
-          </DialogActions>
-        </Dialog>
-      </Box>
-    </FormProvider>
+        <DialogContent dividers={true}>
+          <DialogContentText
+            id="scroll-dialog-description"
+            ref={descriptionElementRef}
+            tabIndex={-1}
+          >
+            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+              <RepositoryForm withBuild={withBuild} defaultValues={row} expanded={expanded} />
+            </FormProvider>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ paddingTop: 4 }}>
+          <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
+            {t(LanguageKey.button.cancel)}
+          </Button>
+          <LoadingButton onClick={handleSubmit(onSubmit)} color="inherit" variant="contained">
+            {actionTitle}
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 
@@ -295,17 +322,24 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
   const [loading, setLoading] = useState(false);
 
   return (
-    <Box sx={{ pointerEvents: loading ? 'none' : 'auto', display: 'flex', gap: 1 }}>
+    <Box
+      sx={{
+        pointerEvents: loading ? 'none' : 'auto',
+        display: 'flex',
+        gap: 1,
+        justifyContent: 'flex-end',
+      }}
+    >
       {connectionId && row?.server_path && (
         <RunAction
           actionTitle={t(LanguageKey.button.submit)}
           handleLoading={(load) => setLoading(load)}
           connectionId={connectionId}
           title={t(LanguageKey.repository.buildRepositoryTitle)}
-          action={HttpMethod.POST}
+          action={HttpMethod.PATCH}
           updateRowData={updateRowData}
-          baseUrl={`${PATH_REPOSITORY}/image/${connectionId}/${row?.id}`}
-          row={row}
+          baseUrl={`${PATH_REPOSITORY}/${connectionId}/build/${row?.id}`}
+          row={{ ...row, with_env: true, with_docker_conpose: true } as any}
           expanded="optional_settings"
           icon={{ icon: 'material-symbols:build-circle' }}
           headerIcon={{ icon: 'skill-icons:docker' }}
@@ -320,11 +354,20 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
         title={t(LanguageKey.repository.updateFormTitle)}
         action={HttpMethod.PATCH}
         updateRowData={updateRowData}
-        baseUrl={`${PATH_REPOSITORY}/image/${connectionId}/${row?.id}`}
+        baseUrl={`${PATH_REPOSITORY}/update/${row?.id}`}
         row={row}
         expanded="basic_information"
         icon={{ icon: 'basil:edit-outline' }}
         headerIcon={{ icon: 'lucide:save-all' }}
+      />
+
+      <ButtonDelete
+        baseUrl={`${PATH_REPOSITORY}/${connectionId}/delete/${row?.id}`}
+        rowId={row?.id}
+        handleLoading={(load) => setLoading(load)}
+        handleDelete={() => {
+          updateRowData && updateRowData(row?.id, {}, 'REMOVE');
+        }}
       />
     </Box>
   );

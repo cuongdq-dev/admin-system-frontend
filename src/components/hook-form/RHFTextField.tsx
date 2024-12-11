@@ -15,7 +15,7 @@ interface RHFTextFieldProps {
 }
 
 export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldProps) => {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, clearErrors } = useFormContext();
 
   useEffect(() => {
     setValue(name, other.defaultValue);
@@ -32,6 +32,7 @@ export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldPr
             fullWidth
             onChange={(event) => {
               setValue(name, event.target.value);
+              clearErrors(name);
             }}
             onBlur={(event) => {
               setValue(name, event.target.value.trim());
@@ -49,7 +50,7 @@ export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldPr
 
 export const PasswordText = ({ name, ...other }: RHFTextFieldProps & TextFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
-  const { control, setValue } = useFormContext();
+  const { control, setValue, clearErrors } = useFormContext();
 
   useEffect(() => {
     setValue(name, other.defaultValue);
@@ -65,6 +66,7 @@ export const PasswordText = ({ name, ...other }: RHFTextFieldProps & TextFieldPr
           type={showPassword ? 'text' : 'password'}
           error={!!error}
           onChange={(event) => {
+            clearErrors(name);
             setValue(name, event.target.value);
           }}
           onBlur={(event) => {

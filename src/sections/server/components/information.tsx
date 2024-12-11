@@ -44,87 +44,85 @@ export const BasicInformation = (props: Props) => {
   };
 
   return (
-    <>
-      <FormProvider onSubmit={handleSubmit(onSubmit)} methods={methods}>
-        <Card sx={{ boxShadow: 'none' }}>
-          <CardHeader
-            sx={{ textAlign: 'left', marginBottom: 2 }}
-            title={t(LanguageKey.server.informationTitle)}
-            action={
-              <>
-                <Box display="flex" justifyContent="flex-end">
-                  <LoadingButton
-                    color="inherit"
-                    type="submit"
-                    variant="contained"
-                    loading={isSubmitting}
-                  >
-                    {t(LanguageKey.button.saveChanges)}
-                  </LoadingButton>
-                </Box>
-              </>
-            }
-          />
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid item sm={12} md={6} xs={12}>
-                <RHFTextField
-                  id="name"
-                  name="name"
-                  defaultValue={defaultData?.name}
-                  label={t(LanguageKey.server.nameItem)}
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item sm={12} md={6} xs={12}>
-                <RHFTextField
-                  id="host"
-                  name="host"
-                  defaultValue={defaultData?.host}
-                  label={t(LanguageKey.server.hostItem)}
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item sm={12} md={6} xs={12}>
-                <RHFTextField
-                  id="port"
-                  name="port"
-                  defaultValue={defaultData?.port}
-                  label={t(LanguageKey.server.portItem)}
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item sm={12} md={6} xs={12}>
-                <RHFTextField
-                  id="user"
-                  name="user"
-                  defaultValue={defaultData?.user}
-                  label={t(LanguageKey.server.userItem)}
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item sm={12} md={6} xs={12}>
-                <PasswordText
-                  id="password"
-                  name="password"
-                  defaultValue={defaultData?.password}
-                  label={t(LanguageKey.server.passwordItem)}
-                  fullWidth
-                  variant="outlined"
-                />
-              </Grid>
+    <FormProvider onSubmit={handleSubmit(onSubmit)} methods={methods}>
+      <Card sx={{ boxShadow: 'none' }}>
+        <CardHeader
+          sx={{ textAlign: 'left', marginBottom: 2 }}
+          title={t(LanguageKey.server.informationTitle)}
+          action={
+            <>
+              <Box display="flex" justifyContent="flex-end">
+                <LoadingButton
+                  color="inherit"
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                >
+                  {t(LanguageKey.button.saveChanges)}
+                </LoadingButton>
+              </Box>
+            </>
+          }
+        />
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid item sm={12} md={6} xs={12}>
+              <RHFTextField
+                id="name"
+                name="name"
+                defaultValue={defaultData?.name}
+                label={t(LanguageKey.server.nameItem)}
+                type="text"
+                fullWidth
+                variant="outlined"
+              />
             </Grid>
-          </CardContent>
-        </Card>
-      </FormProvider>
-    </>
+            <Grid item sm={12} md={6} xs={12}>
+              <RHFTextField
+                id="host"
+                name="host"
+                defaultValue={defaultData?.host}
+                label={t(LanguageKey.server.hostItem)}
+                type="text"
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item sm={12} md={6} xs={12}>
+              <RHFTextField
+                id="port"
+                name="port"
+                defaultValue={defaultData?.port}
+                label={t(LanguageKey.server.portItem)}
+                type="text"
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item sm={12} md={6} xs={12}>
+              <RHFTextField
+                id="user"
+                name="user"
+                defaultValue={defaultData?.user}
+                label={t(LanguageKey.server.userItem)}
+                type="text"
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item sm={12} md={6} xs={12}>
+              <PasswordText
+                id="password"
+                name="password"
+                defaultValue={defaultData?.password}
+                label={t(LanguageKey.server.passwordItem)}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    </FormProvider>
   );
 };

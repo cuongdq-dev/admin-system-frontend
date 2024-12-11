@@ -17,11 +17,12 @@ const Item = styled(Paper)(({ theme }) => ({
 
 type Props = {
   defaultData?: IServer;
+  handleReconnectServer?: () => void;
   handleUpdate?: (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => void;
 };
 
 export const GeneralComponent = (props: Props) => {
-  const { defaultData, handleUpdate } = props;
+  const { defaultData, handleUpdate, handleReconnectServer } = props;
 
   return (
     <>
@@ -29,6 +30,7 @@ export const GeneralComponent = (props: Props) => {
         <Grid item xs={12} sm={12} md={4}>
           <Item sx={{ height: '100%' }}>
             <AnalyticsSystem
+              handleReconnectServer={handleReconnectServer}
               connectionId={defaultData?.connectionId}
               connected={defaultData?.is_connected}
               actived={defaultData?.is_active}
