@@ -13,6 +13,26 @@ type IContainerDocker = {
   running_for: string;
   created_at: string;
 };
+type IImageDocker = {
+  container_id?: string;
+  container_name?: string;
+  created?: string;
+  id?: string;
+  name?: string;
+  server_path?: string;
+  size?: string;
+  status?: string;
+  tag?: string;
+  repository?: IRepository;
+  service?: {
+    serviceName?: string;
+    buildContext?: string;
+    envFile?: string;
+    environment?: { variable?: string; value?: string }[];
+    volumes: { hostPath?: string; containerPath?: string }[];
+    ports?: string;
+  };
+};
 
 type IService = {
   id?: string;

@@ -207,6 +207,12 @@ export const LanguageKey = {
 
     runRepositoryTitle: 'repository_run_title',
     runRepositoryDescription: 'repository_run_description',
+
+    upRepositoryTitle: 'repository_up_title',
+    upRepositoryDescription: 'repository_up_description',
+
+    downRepositoryTitle: 'repository_down_title',
+    downRepositoryDescription: 'repository_down_description',
   },
   docker: {
     containerIdItem: 'docker_container_id_item',

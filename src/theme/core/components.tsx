@@ -86,6 +86,10 @@ const MuiOutlinedInput: Components<Theme>['MuiOutlinedInput'] = {
   styleOverrides: {
     root: ({ theme }) => {
       return {
+        '.Mui-disabled': {
+          '-webkit-text-fill-color': theme.vars.palette.text.primary,
+          cursor: 'no-drop',
+        },
         '&:hover .MuiOutlinedInput-notchedOutline': {
           borderColor: theme.vars.palette.action.hover,
         },

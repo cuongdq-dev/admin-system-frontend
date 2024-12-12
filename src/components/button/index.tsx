@@ -34,7 +34,7 @@ export const ButtonDismissNotify = (props: {
 type ButtonDeleteProps = {
   title?: string;
   baseUrl: string;
-  rowId: string;
+  rowId?: string;
   refreshData?: () => void;
   handleLoading?: (load: boolean) => void;
   handleDelete?: (
@@ -63,7 +63,7 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
         });
         setLoading(false);
-        handleDelete && handleDelete(rowId, {}, 'REMOVE');
+        handleDelete && handleDelete(rowId!, {}, 'REMOVE');
         refreshData && refreshData();
       },
       onHandleError: (error) => {
@@ -76,7 +76,7 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
   return (
     <>
       <MenuItem sx={{ color: 'error.main' }} onClick={() => setOpen(true)}>
-        <Box sx={{ position: 'relative' }}>
+        <Box sx={{ position: 'relative', display: 'flex' }}>
           <Iconify icon="solar:trash-bin-trash-bold" />
           {loading && (
             <CircularProgress

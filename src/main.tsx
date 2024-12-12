@@ -10,14 +10,14 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <I18nextProvider i18n={i18n}>
-    {/* <StrictMode> */}
-    <HelmetProvider>
-      <BrowserRouter>
-        <Suspense>
-          <App />
-        </Suspense>
-      </BrowserRouter>
-    </HelmetProvider>
-    {/* </StrictMode> */}
+    <StrictMode>
+      <HelmetProvider>
+        <BrowserRouter>
+          <Suspense>
+            <App />
+          </Suspense>
+        </BrowserRouter>
+      </HelmetProvider>
+    </StrictMode>
   </I18nextProvider>
 );
