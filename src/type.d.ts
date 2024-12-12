@@ -35,7 +35,7 @@ type IRepository = {
   email?: string;
   server_id?: string;
   with_env?: boolean;
-  with_docker_composse?: boolean;
+  with_docker_compose?: boolean;
   services?: {
     serviceName?: string;
     buildContext?: string;

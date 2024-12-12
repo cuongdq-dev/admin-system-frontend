@@ -175,6 +175,7 @@ export const LanguageKey = {
     githubUrlItem: 'repository_github_item',
     usernameItem: 'repository_username_item',
     serverPathItem: 'repository_server_path_item',
+    imagesItem: 'repository_images_item',
     emailItem: 'repository_email_item',
     fineGrainedTokenItem: 'repository_fine_grained_token_item',
     repositoryPullButton: 'repository_pull_button',
@@ -194,10 +195,16 @@ export const LanguageKey = {
     buildWithDockerCompose: 'repository_build_docker_compose',
     optionalSettings: 'repository_optional_setting',
     basicInformation: 'repository_basic_information',
+
     cloneRepositoryTitle: 'repository_clone_title',
     cloneRepositoryDescription: 'repository_clone_description',
+
+    pullRepositoryTitle: 'repository_pull_title',
+    pullRepositoryDescription: 'repository_pull_description',
+
     buildRepositoryTitle: 'repository_build_title',
     buildRepositoryDescription: 'repository_build_description',
+
     runRepositoryTitle: 'repository_run_title',
     runRepositoryDescription: 'repository_run_description',
   },

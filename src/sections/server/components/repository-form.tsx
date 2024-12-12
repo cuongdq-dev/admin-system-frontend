@@ -162,8 +162,8 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
       <Accordion
         onChange={(_, expanded) => {
           if (expanded == true) {
-            setValue('with_env', true);
-            setValue('with_docker_compose', true);
+            setValue('with_env', defaultValues?.with_env);
+            setValue('with_docker_compose', defaultValues?.with_docker_compose);
             replace(
               Number(defaultValues?.services?.length) > 0
                 ? defaultValues?.services
@@ -200,15 +200,14 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
               {withBuild && (
                 <Grid xs={2} sm={2} md={2}>
                   <Controller
-                    {...register('with_env', { value: true })}
+                    {...register('with_env', { value: defaultValues?.with_env })}
                     control={control}
-                    defaultValue={true}
                     render={({ field }) => {
                       return (
                         <Box>
                           <Checkbox
                             {...field}
-                            defaultChecked={field.value}
+                            checked={field.value}
                             onChange={(_, checked) => {
                               setValue('with_env', checked);
                               if (withBuild) return;
@@ -253,15 +252,16 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
               {withBuild && (
                 <Grid xs={2} sm={2} md={2}>
                   <Controller
-                    {...register('with_docker_compose', { value: true })}
+                    {...register('with_docker_compose', {
+                      value: defaultValues?.with_docker_compose,
+                    })}
                     control={control}
-                    defaultValue={true}
                     render={({ field }) => {
                       return (
                         <Box>
                           <Checkbox
                             {...field}
-                            defaultChecked={field.value}
+                            checked={field.value}
                             onChange={(_, checked) => {
                               setValue('with_docker_compose', checked);
                               if (withBuild) return;
@@ -328,6 +328,16 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                         marginTop={1}
                       >
                         <Grid container spacing={2} columns={2}>
+                          <Grid item xs={2} sm={2} md={2}>
+                            <TextField
+                              {...register(`services.${index}.image`)}
+                              disabled={withBuild}
+                              label="Image Name"
+                              defaultValue={field.image}
+                              fullWidth
+                              variant="outlined"
+                            />
+                          </Grid>
                           <Grid item xs={2} sm={1} md={1}>
                             <TextField
                               {...register(`services.${index}.serviceName`)}
@@ -374,6 +384,11 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                         <Box marginTop={2}>
                           <Typography variant="button">
                             {t(LanguageKey.repository.environment)}
+                            {Number(field.environment.length) === 0 && !withBuild && (
+                              <IconButton onClick={() => addEnvironmentVariable(index)}>
+                                <Iconify icon="ic:baseline-plus" />
+                              </IconButton>
+                            )}
                           </Typography>
                           {field.environment?.map(
                             (environment: { variable: string; value: string }, idx: number) => {
@@ -404,16 +419,20 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                                   />
 
                                   {!withBuild && idx < field.environment.length - 1 && (
-                                    <IconButton
-                                      onClick={() => removeEnvironmentVariable(index, idx)}
-                                    >
-                                      <Iconify icon="ic:baseline-remove" />
-                                    </IconButton>
+                                    <Typography alignContent="center">
+                                      <IconButton
+                                        onClick={() => removeEnvironmentVariable(index, idx)}
+                                      >
+                                        <Iconify icon="ic:baseline-remove" />
+                                      </IconButton>
+                                    </Typography>
                                   )}
                                   {!withBuild && idx === field.environment.length - 1 && (
-                                    <IconButton onClick={() => addEnvironmentVariable(index)}>
-                                      <Iconify icon="ic:baseline-plus" />
-                                    </IconButton>
+                                    <Typography alignContent="center">
+                                      <IconButton onClick={() => addEnvironmentVariable(index)}>
+                                        <Iconify icon="ic:baseline-plus" />
+                                      </IconButton>
+                                    </Typography>
                                   )}
                                 </Grid>
                               );
@@ -423,6 +442,12 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                         <Box marginTop={2}>
                           <Typography variant="button">
                             {t(LanguageKey.repository.volumes)}
+
+                            {Number(field?.volumes?.length) === 0 && !withBuild && (
+                              <IconButton onClick={() => addVolumeVariable(index)}>
+                                <Iconify icon="ic:baseline-plus" />
+                              </IconButton>
+                            )}
                           </Typography>
 
                           {field.volumes?.map(
@@ -452,16 +477,19 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                                     defaultValue={volume.containerPath}
                                     variant="outlined"
                                   />
-
                                   {!withBuild && idx < field.volumes.length - 1 && (
-                                    <IconButton onClick={() => removeVolumeVariable(index, idx)}>
-                                      <Iconify icon="ic:baseline-remove" />
-                                    </IconButton>
+                                    <Typography alignContent="center">
+                                      <IconButton onClick={() => removeVolumeVariable(index, idx)}>
+                                        <Iconify icon="ic:baseline-remove" />
+                                      </IconButton>
+                                    </Typography>
                                   )}
                                   {!withBuild && idx === field.volumes.length - 1 && (
-                                    <IconButton onClick={() => addVolumeVariable(index)}>
-                                      <Iconify icon="ic:baseline-plus" />
-                                    </IconButton>
+                                    <Typography alignContent="center">
+                                      <IconButton onClick={() => addVolumeVariable(index)}>
+                                        <Iconify icon="ic:baseline-plus" />
+                                      </IconButton>
+                                    </Typography>
                                   )}
                                 </Grid>
                               );

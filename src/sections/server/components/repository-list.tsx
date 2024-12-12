@@ -29,12 +29,10 @@ import { Iconify, IconifyProps } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey } from 'src/constants';
-import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
 import { Transition } from '../../../components/dialog';
 import { FormProvider } from '../../../components/hook-form';
 import { RepositoryForm } from './repository-form';
-
 const FormTableSchema = {
   name: Yup.string().required('Name is required'),
   email: Yup.string().required('Email is required'),
@@ -73,12 +71,11 @@ const HeadLabel: HeadLabelProps[] = [
     type: 'text',
     width: '20%',
   },
-
   {
-    id: 'github_url',
-    label: t(LanguageKey.repository.githubUrlItem),
-    type: 'text',
-    width: '100%',
+    id: 'images',
+    label: t(LanguageKey.repository.imagesItem),
+    type: 'string-array',
+    width: '20%',
   },
 ];
 
@@ -121,9 +118,9 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
 
                   <RunAction
                     expanded="basic_information"
-                    actionTitle={t(LanguageKey.button.create)}
+                    actionTitle={t(LanguageKey.button.clone)}
                     withBuild={false}
-                    icon={{ icon: 'simple-line-icons:plus', color: 'primary.main' }}
+                    icon={{ icon: 'lets-icons:add-duotone', color: 'primary.main' }}
                     headerIcon={{ icon: 'catppuccin:devcontainer' }}
                     action={HttpMethod.POST}
                     baseUrl={PATH_REPOSITORY + `/${connectionId}/${serverId}/create`}
@@ -222,13 +219,6 @@ const RunAction = (props: IconActionProps) => {
   }, [open]);
 
   const onSubmit = async (values: Record<string, any>) => {
-    const valuesChange = GetValuesFormChange(row as IRepository, values);
-    if (Object.keys(valuesChange).length == 0) {
-      reset();
-      setOpen(false);
-      return;
-    }
-
     handleLoading(true);
     setLoading(true);
     setOpen(false);
@@ -336,13 +326,32 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
           handleLoading={(load) => setLoading(load)}
           connectionId={connectionId}
           title={t(LanguageKey.repository.buildRepositoryTitle)}
+          description={t(LanguageKey.repository.buildRepositoryDescription)}
           action={HttpMethod.PATCH}
           updateRowData={updateRowData}
           baseUrl={`${PATH_REPOSITORY}/${connectionId}/build/${row?.id}`}
-          row={{ ...row, with_env: true, with_docker_conpose: true } as any}
+          row={{ ...row, with_env: true, with_docker_compose: true } as any}
           expanded="optional_settings"
           icon={{ icon: 'material-symbols:build-circle' }}
           headerIcon={{ icon: 'skill-icons:docker' }}
+        />
+      )}
+
+      {connectionId && (
+        <RunAction
+          actionTitle={t(LanguageKey.button.pull)}
+          handleLoading={(load) => setLoading(load)}
+          connectionId={connectionId}
+          title={t(LanguageKey.repository.pullRepositoryTitle)}
+          description={t(LanguageKey.repository.pullRepositoryDescription)}
+          action={HttpMethod.PATCH}
+          withBuild={true}
+          updateRowData={updateRowData}
+          baseUrl={`${PATH_REPOSITORY}/${connectionId}/clone/${row?.id}`}
+          row={{ ...row, with_env: false, with_docker_compose: false } as any}
+          expanded="basic_information"
+          icon={{ icon: 'octicon:feed-pull-request-open-16' }}
+          headerIcon={{ icon: 'octicon:feed-pull-request-open-16' }}
         />
       )}
 

@@ -1,4 +1,4 @@
-import { IconButton } from '@mui/material';
+import { Chip, IconButton, Stack } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
@@ -11,7 +11,7 @@ import { Align, CellType } from './type';
 
 interface CommonTableCellProps {
   type: CellType;
-  value?: ReactNode;
+  value?: ReactNode | string[];
   checked?: boolean;
   onChange?: () => void;
   avatarUrl?: string;
@@ -27,7 +27,6 @@ interface CommonTableCellProps {
 export function CommonTableCell(props: CommonTableCellProps) {
   const { type, value, checked, avatarUrl, name, status, icon, align, minWidth, width } = props;
   const { onChange, onActionClick } = props;
-
   switch (type) {
     case 'checkbox':
       return (
@@ -64,6 +63,23 @@ export function CommonTableCell(props: CommonTableCellProps) {
       return (
         <TableCell width={width} sx={{ minWidth: minWidth }} align={align}>
           {value ? <Iconify width={22} icon={icon!} sx={{ color: 'success.main' }} /> : '-'}
+        </TableCell>
+      );
+
+    case 'string-array':
+      return (
+        <TableCell width={width} sx={{ minWidth: minWidth }} align={align}>
+          {(value as string[])?.map((v: string, index: number) => {
+            return (
+              <Chip
+                sx={{ marginTop: index === 0 ? 0 : 1 }}
+                variant="outlined"
+                color="info"
+                size="small"
+                label={v}
+              />
+            );
+          })}
         </TableCell>
       );
 

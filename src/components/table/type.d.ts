@@ -8,6 +8,7 @@ export type CellType =
   | 'icon'
   | 'action'
   | 'datetime'
+  | 'string-array'
   | 'custom';
 export type Align = 'left' | 'right' | 'center' | 'inherit' | 'justify';
 export type HeadLabelProps = {
