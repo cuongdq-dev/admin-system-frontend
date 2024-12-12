@@ -12,6 +12,8 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
@@ -223,6 +225,21 @@ const HeadLabel: HeadLabelProps[] = [
     width: '30%',
   },
   {
+    id: 'server_path',
+    label: t(LanguageKey.repository.serverPathItem),
+    type: 'custom',
+    align: 'left',
+    render: ({ row }) => {
+      const values = row?.server_path?.split('/');
+      return (
+        <Tooltip title={row?.server_path || ''}>
+          <Typography noWrap>{values[values?.length - 1] || '-'}</Typography>
+        </Tooltip>
+      );
+    },
+  },
+
+  {
     id: 'tag',
     label: t(LanguageKey.docker.imageTagItem),
     align: 'center',
@@ -250,9 +267,13 @@ const HeadLabel: HeadLabelProps[] = [
     label: t(LanguageKey.docker.containerNameItem),
     type: 'custom',
     align: 'center',
-    width: '10%',
+    width: '20%',
     render: ({ row }) => {
-      return <>{row?.container_name || row?.container_id || '-'}</>;
+      return (
+        <Tooltip title={row?.container_name || ''}>
+          <Typography noWrap>{row?.container_id || '-'}</Typography>
+        </Tooltip>
+      );
     },
   },
 

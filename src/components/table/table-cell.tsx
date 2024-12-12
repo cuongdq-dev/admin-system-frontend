@@ -1,4 +1,4 @@
-import { Chip, IconButton, Stack } from '@mui/material';
+import { Chip, IconButton, Stack, Tooltip } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
@@ -37,7 +37,14 @@ export function CommonTableCell(props: CommonTableCellProps) {
 
     case 'text':
       return (
-        <TableCell width={width} sx={{ minWidth: minWidth }} align={align}>
+        <TableCell
+          width={width}
+          sx={{
+            minWidth: minWidth,
+            textWrap: 'nowrap',
+          }}
+          align={align}
+        >
           {value}
         </TableCell>
       );
@@ -71,13 +78,15 @@ export function CommonTableCell(props: CommonTableCellProps) {
         <TableCell width={width} sx={{ minWidth: minWidth }} align={align}>
           {(value as string[])?.map((v: string, index: number) => {
             return (
-              <Chip
-                sx={{ marginTop: index === 0 ? 0 : 1 }}
-                variant="outlined"
-                color="info"
-                size="small"
-                label={v}
-              />
+              <Tooltip placement="left-start" title={v}>
+                <Chip
+                  sx={{ margin: 0.4, maxWidth: 200 }}
+                  variant="outlined"
+                  color="info"
+                  size="small"
+                  label={v}
+                />
+              </Tooltip>
             );
           })}
         </TableCell>

@@ -51,7 +51,7 @@ const HeadLabel: HeadLabelProps[] = [
     id: 'name',
     label: t(LanguageKey.repository.nameItem),
     type: 'text',
-    width: '10%',
+    width: '40%',
   },
   {
     id: 'email',
@@ -75,6 +75,7 @@ const HeadLabel: HeadLabelProps[] = [
     id: 'images',
     label: t(LanguageKey.repository.imagesItem),
     type: 'string-array',
+    align: 'center',
     width: '20%',
   },
 ];
