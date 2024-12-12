@@ -105,8 +105,8 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
           )}
           {deleteBtn && (
             <ButtonDelete
+              handleDelete={updateRowData}
               title={t(LanguageKey.button.delete)}
-              handleDelete={() => {}}
               rowId={row?.id}
               baseUrl={baseUrl + '/delete/' + row?.id}
             />
