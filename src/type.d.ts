@@ -104,7 +104,6 @@ interface IRoute {
 interface IDetail {
   defaultData?: Record<string, any>;
   loading?: boolean;
-  handleReconnectServer?: () => void;
   handleUpdate?: (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => void;
 }
 

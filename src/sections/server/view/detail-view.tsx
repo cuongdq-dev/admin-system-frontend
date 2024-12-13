@@ -22,7 +22,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 }));
 
 export function DetailView(props: IDetail) {
-  const { defaultData, loading, handleUpdate, handleReconnectServer } = props;
+  const { defaultData, loading, handleUpdate } = props;
   const [tabState, setTabState] = useState<{ value: string }>({ value: 'general' });
   if (loading) return <FetchingComponent />;
   return (
@@ -54,11 +54,7 @@ export function DetailView(props: IDetail) {
 
         <Box component={'div'} marginTop={3}>
           <TabPanel value="general" style={{ padding: 0, margin: 0 }}>
-            <GeneralComponent
-              handleReconnectServer={handleReconnectServer}
-              handleUpdate={handleUpdate}
-              defaultData={defaultData}
-            />
+            <GeneralComponent handleUpdate={handleUpdate} defaultData={defaultData} />
           </TabPanel>
           <TabPanel value="status">Item Two</TabPanel>
           <TabPanel value="config">Item Three</TabPanel>

@@ -22,7 +22,6 @@ type Props = CardProps & {
   connectionId?: string;
   connected?: boolean;
   actived?: boolean;
-  handleReconnectServer?: () => void;
 };
 
 type State = {
@@ -49,8 +48,7 @@ const StyleChipActive = styled(Box)(({ theme }) => {
 });
 
 export function AnalyticsSystem(props: Props) {
-  const { title, subheader, connected, actived, connectionId, handleReconnectServer, ...other } =
-    props;
+  const { title, subheader, connected, actived, connectionId, ...other } = props;
   const theme = useTheme();
 
   const [state, setState] = useState<State>({
@@ -143,13 +141,6 @@ export function AnalyticsSystem(props: Props) {
         </IconButton>
 
         <Box display="flex" alignItems="center">
-          <IconButton
-            onClick={() => {
-              handleReconnectServer && handleReconnectServer();
-            }}
-          >
-            <RefreshIcon loading={state.loading} icon={'mdi:refresh'} />
-          </IconButton>
           {connected ? (
             <StyleChipActive
               sx={(theme) => {

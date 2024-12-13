@@ -100,12 +100,7 @@ export default function Page() {
       </Helmet>
 
       <DashboardContent>
-        <DetailView
-          handleReconnectServer={handleReconnectServer}
-          handleUpdate={handleUpdate}
-          loading={state.loading}
-          defaultData={state?.data}
-        />
+        <DetailView handleUpdate={handleUpdate} loading={state.loading} defaultData={state?.data} />
       </DashboardContent>
     </>
   );
