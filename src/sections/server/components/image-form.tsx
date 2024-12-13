@@ -123,7 +123,7 @@ export const ImageForm = (props: ImageFormProps) => {
 
           <Box>
             <Grid container columns={2} gap={1}>
-              <Grid xs={2} sm={2} md={2}>
+              <Grid item xs={2} sm={2} md={2}>
                 <Box>
                   <Typography variant="button">{t(LanguageKey.repository.services)}</Typography>
 
@@ -137,7 +137,7 @@ export const ImageForm = (props: ImageFormProps) => {
                             padding: 2,
                           };
                         }}
-                        key={field.id}
+                        key={field?.id}
                         marginBottom={2}
                         marginTop={1}
                       >
@@ -146,7 +146,7 @@ export const ImageForm = (props: ImageFormProps) => {
                             <TextField
                               disabled={true}
                               label="Image Name"
-                              defaultValue={field.image}
+                              defaultValue={field?.image}
                               fullWidth
                               variant="outlined"
                             />
@@ -155,7 +155,7 @@ export const ImageForm = (props: ImageFormProps) => {
                             <TextField
                               disabled={true}
                               label="Service Name"
-                              defaultValue={field.serviceName}
+                              defaultValue={field?.serviceName}
                               fullWidth
                               variant="outlined"
                             />
@@ -164,7 +164,7 @@ export const ImageForm = (props: ImageFormProps) => {
                             <TextField
                               disabled={true}
                               label="Build Context"
-                              defaultValue={field.buildContext}
+                              defaultValue={field?.buildContext}
                               fullWidth
                               variant="outlined"
                             />
@@ -174,7 +174,7 @@ export const ImageForm = (props: ImageFormProps) => {
                             <TextField
                               label="Env File"
                               disabled={true}
-                              defaultValue={field.envFile}
+                              defaultValue={field?.envFile}
                               fullWidth
                               variant="outlined"
                             />
@@ -183,7 +183,7 @@ export const ImageForm = (props: ImageFormProps) => {
                             <TextField
                               label="Port"
                               disabled={true}
-                              defaultValue={field.ports}
+                              defaultValue={field?.ports}
                               fullWidth
                               variant="outlined"
                             />
@@ -194,7 +194,7 @@ export const ImageForm = (props: ImageFormProps) => {
                           <Typography variant="button">
                             {t(LanguageKey.repository.environment)}
                           </Typography>
-                          {field.environment?.map(
+                          {field?.environment?.map(
                             (environment: { variable: string; value: string }, idx: number) => {
                               return (
                                 <Grid
@@ -210,13 +210,13 @@ export const ImageForm = (props: ImageFormProps) => {
                                   <TextField
                                     disabled={true}
                                     label={`Key:`}
-                                    defaultValue={environment.variable}
+                                    defaultValue={environment?.variable}
                                     variant="outlined"
                                   />
                                   <TextField
                                     disabled={true}
                                     label={`value:`}
-                                    defaultValue={environment.value}
+                                    defaultValue={environment?.value}
                                     variant="outlined"
                                   />
                                 </Grid>
@@ -228,7 +228,7 @@ export const ImageForm = (props: ImageFormProps) => {
                           <Typography variant="button">
                             {t(LanguageKey.repository.volumes)}
                           </Typography>
-                          {field.volumes?.map(
+                          {field?.volumes?.map(
                             (volume: { hostPath: string; containerPath: string }, idx: number) => {
                               return (
                                 <Grid

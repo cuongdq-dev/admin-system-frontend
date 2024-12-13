@@ -133,7 +133,7 @@ export const TableComponent = (props: TableComponentProps) => {
           {notFound && <TableNoData searchQuery={filterName} />}
 
           {datasource?.map((data: Record<string, any>, index: number) => (
-            <Grid marginBottom={5} key={`card_item_${data.id}_${index}`} xs={12} sm={6} md={3}>
+            <Grid item marginBottom={5} key={`card_item_${data.id}_${index}`} xs={12} sm={6} md={3}>
               {customCard && customCard({ values: data })}
             </Grid>
           ))}
@@ -234,6 +234,7 @@ export const TableComponent = (props: TableComponentProps) => {
                         if (column.type == 'custom' && !!column?.render) {
                           return (
                             <TableCell
+                              key={column.id + '_head_label'}
                               align={column.align}
                               width={column.width}
                               sx={{ minWidth: column.width }}

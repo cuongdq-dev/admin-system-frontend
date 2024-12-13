@@ -98,7 +98,7 @@ export function AnalyticsSystem(props: Props) {
         title: { formatter: (seriesName: string) => `${seriesName}: ` },
       },
     },
-    xaxis: { categories: state?.chart?.categories },
+    xaxis: { categories: state?.chart?.categories || [] },
 
     dataLabels: {
       enabled: true,

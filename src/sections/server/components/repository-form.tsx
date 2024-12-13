@@ -198,7 +198,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
           <Box marginY={2}>
             <Grid container columns={2} gap={1}>
               {withBuild && (
-                <Grid xs={2} sm={2} md={2}>
+                <Grid item xs={2} sm={2} md={2}>
                   <Controller
                     {...register('with_env', { value: defaultValues?.with_env })}
                     control={control}
@@ -250,7 +250,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
           <Box>
             <Grid container columns={2} gap={1}>
               {withBuild && (
-                <Grid xs={2} sm={2} md={2}>
+                <Grid item xs={2} sm={2} md={2}>
                   <Controller
                     {...register('with_docker_compose', {
                       value: defaultValues?.with_docker_compose,
@@ -294,7 +294,7 @@ export const RepositoryForm = (props: RepositoryFormProps) => {
                 </Grid>
               )}
 
-              <Grid xs={2} sm={2} md={2}>
+              <Grid item xs={2} sm={2} md={2}>
                 {fields.length > 0 && (
                   <Box>
                     <Typography variant="button">{t(LanguageKey.repository.services)}</Typography>

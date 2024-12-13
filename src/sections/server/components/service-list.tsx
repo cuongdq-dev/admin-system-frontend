@@ -37,11 +37,11 @@ export const ServiceList = ({ services, connectionId }: ServerListProps) => {
       <Grid item xs={12} sm={12} marginTop={2}>
         <Typography variant="h6">{t(LanguageKey.server.allService)}</Typography>
       </Grid>
-      <Grid mt={2} item xs={12} sm={12} md={12}>
+      <Grid item mt={2} xs={12} sm={12} md={12}>
         <Grid container columns={4} spacing={2}>
           {services?.map((service: IServer) => {
             return (
-              <Grid item xs={4} sm={4} md={2}>
+              <Grid key={service.id} item xs={4} sm={4} md={2}>
                 <ServiceItem service={service} connectionId={connectionId} />
               </Grid>
             );

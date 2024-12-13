@@ -78,7 +78,7 @@ export function CommonTableCell(props: CommonTableCellProps) {
         <TableCell width={width} sx={{ minWidth: minWidth }} align={align}>
           {(value as string[])?.map((v: string, index: number) => {
             return (
-              <Tooltip placement="left-start" title={v}>
+              <Tooltip key={index + '_table_cell_string_array'} placement="left-start" title={v}>
                 <Chip
                   sx={{ margin: 0.4, maxWidth: 200 }}
                   variant="outlined"

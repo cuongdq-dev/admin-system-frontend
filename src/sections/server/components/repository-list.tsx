@@ -79,7 +79,6 @@ const HeadLabel: HeadLabelProps[] = [
     width: '20%',
   },
 ];
-
 export const RepositoryComponent = (props: RepositoryComponentProps) => {
   const { serverId, connectionId } = props;
   const tableKey = 'repository_key';
