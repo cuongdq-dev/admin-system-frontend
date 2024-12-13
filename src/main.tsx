@@ -1,4 +1,4 @@
-import { StrictMode, Suspense } from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { I18nextProvider } from 'react-i18next';
@@ -13,9 +13,7 @@ root.render(
     <StrictMode>
       <HelmetProvider>
         <BrowserRouter>
-          <Suspense>
-            <App />
-          </Suspense>
+          <App />
         </BrowserRouter>
       </HelmetProvider>
     </StrictMode>
