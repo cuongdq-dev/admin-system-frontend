@@ -9,8 +9,11 @@ import {
   Typography,
 } from '@mui/material';
 import { t } from 'i18next';
+import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
+import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
+import { ButtonDismissNotify } from 'src/components/button';
 import { RefreshIcon } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
@@ -71,6 +74,27 @@ const ServiceItem = (props: ServiceProps) => {
       setState((state) => ({ ...state, loading: false }));
     },
   });
+
+  const handleSetupService = () => {
+    setState((s) => ({ ...s, loading: true }));
+
+    invokeRequest({
+      method: HttpMethod.POST,
+      baseURL: PATH_SERVER + `/setup/service/${service?.id}/${connectionId}`,
+      onSuccess: () => {
+        setState((s) => ({ ...s, loading: false }));
+
+        enqueueSnackbar(t(LanguageKey.notify.successDelete), {
+          variant: 'success',
+          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
+        });
+      },
+      onHandleError: (error) => {
+        setState((s) => ({ ...s, loading: false }));
+      },
+    });
+  };
+
   if (state.loading && !state.data)
     return (
       <PaperCustom>
@@ -116,6 +140,7 @@ const ServiceItem = (props: ServiceProps) => {
         </Box>
       </PaperCustom>
     );
+
   return (
     <PaperCustom>
       <Box width={'100%'} display="flex" flexDirection="row">
@@ -178,7 +203,9 @@ const ServiceItem = (props: ServiceProps) => {
                   icon="icon-park-solid:folder-success"
                 />
               ) : (
-                <Iconify sx={{ color: 'grey', cursor: 'pointer' }} icon="line-md:download-loop" />
+                <IconButton onClick={handleSetupService}>
+                  <Iconify sx={{ color: 'grey', cursor: 'pointer' }} icon="line-md:download-loop" />
+                </IconButton>
               )}
             </>
           )}

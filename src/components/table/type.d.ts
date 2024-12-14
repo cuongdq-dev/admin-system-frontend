@@ -97,7 +97,7 @@ export type TableRowProps = {
   onSelectRow: () => void;
 };
 
-export type TableNoDataProps = TableRowPropMUI & { searchQuery: string };
+export type TableNoDataProps = TableRowPropMUI & { searchQuery: string; colSpan?: number };
 
 export type TableEmptyRowsProps = TableRowPropMUI & {
   emptyRows: number;

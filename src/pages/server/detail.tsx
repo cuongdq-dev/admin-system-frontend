@@ -1,3 +1,4 @@
+import { Fab } from '@mui/material';
 import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -7,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
+import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { CONFIG } from 'src/config-global';
 import { LanguageKey } from 'src/constants';
@@ -93,12 +95,29 @@ export default function Page() {
       },
     });
   };
+
   return (
     <>
       <Helmet>
         <title> {`${t(LanguageKey.server.detailPageTitle)} - ${CONFIG.appName}`}</title>
       </Helmet>
-
+      <Fab
+        onClick={handleReconnectServer}
+        size="medium"
+        aria-label="Github"
+        sx={{
+          zIndex: 9,
+          right: 20,
+          bottom: 20,
+          width: 44,
+          height: 44,
+          position: 'fixed',
+          bgcolor: 'grey.600',
+          color: 'blue',
+        }}
+      >
+        <Iconify width={24} icon="material-symbols:signal-wifi-statusbar-not-connected" />
+      </Fab>
       <DashboardContent>
         <DetailView handleUpdate={handleUpdate} loading={state.loading} defaultData={state?.data} />
       </DashboardContent>

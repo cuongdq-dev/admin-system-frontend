@@ -26,7 +26,7 @@ import { TableComponentProps, TableMetaData } from './type';
 
 type TableState = {
   data?: Record<string, any>;
-  meta: TableMetaData;
+  meta?: TableMetaData;
 };
 export const TableComponent = (props: TableComponentProps) => {
   const {
@@ -70,9 +70,14 @@ export const TableComponent = (props: TableComponentProps) => {
       setState(res);
       setLoading(false);
     },
+    onHandleError: () => {
+      setLoading(false);
+      setState({ data: undefined, meta: undefined });
+    },
   });
 
-  const notFound = !datasource?.length && !!filterName;
+  const notFound = !datasource || Number(datasource?.length) == 0;
+
   const getSortBy = () => {
     if (Number(metaData?.sortBy?.length) > 0)
       return {
@@ -206,72 +211,78 @@ export const TableComponent = (props: TableComponentProps) => {
                 }
                 headLabel={headLabel}
               />
-              <TableBody>
-                {datasource?.map((row: Record<string, any>, index: number) => {
-                  const keys = Object.keys(row);
-                  return (
-                    <TableRow hover tabIndex={-1} role="checkbox" key={row.id}>
-                      {selectCol && (
-                        <CommonTableCell
-                          type="checkbox"
-                          checked={table.selected.includes(row.id)}
-                          onChange={() => table.onSelectRow(row.id)}
-                          width={20}
-                          minWidth={20}
+              {notFound ? (
+                <TableBody>
+                  <TableNoData colSpan={headLabel.length} searchQuery={filterName} />
+                </TableBody>
+              ) : (
+                <TableBody>
+                  {datasource?.map((row: Record<string, any>, index: number) => {
+                    const keys = Object.keys(row);
+                    return (
+                      <TableRow hover tabIndex={-1} role="checkbox" key={row.id}>
+                        {selectCol && (
+                          <CommonTableCell
+                            type="checkbox"
+                            checked={table.selected.includes(row.id)}
+                            onChange={() => table.onSelectRow(row.id)}
+                            width={20}
+                            minWidth={20}
+                          />
+                        )}
+                        {indexCol && (
+                          <CommonTableCell
+                            align="center"
+                            width={60}
+                            minWidth={60}
+                            value={index + 1}
+                            type={'text'}
+                            key={'_index' + '_' + index}
+                          />
+                        )}
+                        {headLabel.map((column) => {
+                          if (column.type == 'custom' && !!column?.render) {
+                            return (
+                              <TableCell
+                                key={column.id + '_head_label'}
+                                align={column.align}
+                                width={column.width}
+                                sx={{ minWidth: column.width }}
+                              >
+                                {column?.render &&
+                                  column?.render({ row, refreshData, updateRowData })}
+                              </TableCell>
+                            );
+                          }
+                          if (keys.includes(column.id)) {
+                            return (
+                              <CommonTableCell
+                                value={row[column.id]}
+                                type={column.type!}
+                                key={column.id}
+                                align={column.align}
+                                minWidth={column.minWidth}
+                                width={column.width}
+                              />
+                            );
+                          }
+                          return null;
+                        })}
+                        <TableActionComponent
+                          {...actions}
+                          baseUrl={url}
+                          row={row}
+                          updateRowData={updateRowData}
+                          refreshData={refreshData}
+                          handleClickOpenForm={handleClickOpenForm}
                         />
-                      )}
-                      {indexCol && (
-                        <CommonTableCell
-                          align="center"
-                          width={60}
-                          minWidth={60}
-                          value={index + 1}
-                          type={'text'}
-                          key={'_index' + '_' + index}
-                        />
-                      )}
-                      {headLabel.map((column) => {
-                        if (column.type == 'custom' && !!column?.render) {
-                          return (
-                            <TableCell
-                              key={column.id + '_head_label'}
-                              align={column.align}
-                              width={column.width}
-                              sx={{ minWidth: column.width }}
-                            >
-                              {column?.render &&
-                                column?.render({ row, refreshData, updateRowData })}
-                            </TableCell>
-                          );
-                        }
-                        if (keys.includes(column.id)) {
-                          return (
-                            <CommonTableCell
-                              value={row[column.id]}
-                              type={column.type!}
-                              key={column.id}
-                              align={column.align}
-                              minWidth={column.minWidth}
-                              width={column.width}
-                            />
-                          );
-                        }
-                        return null;
-                      })}
-                      <TableActionComponent
-                        {...actions}
-                        baseUrl={url}
-                        row={row}
-                        updateRowData={updateRowData}
-                        refreshData={refreshData}
-                        handleClickOpenForm={handleClickOpenForm}
-                      />
-                    </TableRow>
-                  );
-                })}
+                      </TableRow>
+                    );
+                  })}
 
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
+                  {notFound && <TableNoData searchQuery={filterName} />}
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
         </Scrollbar>
