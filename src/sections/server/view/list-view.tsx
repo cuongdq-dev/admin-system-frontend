@@ -12,6 +12,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import * as Yup from 'yup';
 import { ServerItem } from '../components/card-item';
 import { ServerForm } from '../components/form-table';
+import { usePageStore } from 'src/store/store';
+import { useShallow } from 'zustand/react/shallow';
 type FormConfigState = {
   open: boolean;
   title?: string;
@@ -43,8 +45,7 @@ const FormTableSchema = {
 };
 
 export function ListView() {
-  const [refreshNumber, setRefresh] = useState<number>(0);
-
+  const storeName = StoreName.SERVER;
   const [formConfig, setFormConfig] = useState<FormConfigState>({
     open: false,
     title: '',
@@ -52,10 +53,14 @@ export function ListView() {
     action: HttpMethod.PATCH,
   });
 
-  const refreshData = () => {
-    setRefresh(refreshNumber + 1);
-    handleCloseForm();
-  };
+  const { setRefreshList } = usePageStore();
+
+  const { refreshNumber = 0 } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
+  );
+
+  const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
+
   const handleClickOpenForm = (row: Record<string, any>, action: HttpMethod) => {
     setFormConfig((s) => ({
       ...s,
@@ -87,9 +92,8 @@ export function ListView() {
       />
 
       <TableComponent
-        storeName={StoreName.SERVER}
+        storeName={storeName}
         component={isMobile ? 'CARD' : 'TABLE'}
-        refreshNumber={refreshNumber}
         url={PATH_SERVER}
         indexCol={true}
         selectCol={true}

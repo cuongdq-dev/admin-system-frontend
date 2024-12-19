@@ -30,6 +30,8 @@ import { Iconify, IconifyProps } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey, StoreName } from 'src/constants';
+import { usePageStore } from 'src/store/store';
+import { useShallow } from 'zustand/react/shallow';
 import { Transition } from '../../../components/dialog';
 import { ImageForm } from './image-form';
 
@@ -37,11 +39,14 @@ type ImagesDockerProps = { connectionId?: string };
 
 export const ImagesDockerComponent = (props: ImagesDockerProps) => {
   const { connectionId } = props;
-  const [refreshNumber, setRefresh] = useState<number>(0);
+  const storeName = StoreName.IMAGES;
 
-  const refreshData = () => {
-    setRefresh(refreshNumber + 1);
-  };
+  const { setRefreshList } = usePageStore();
+  const { refreshNumber = 0 } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
+  );
+
+  const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
 
   const headerColums = connectionId
     ? HeadLabel.concat({
@@ -74,9 +79,8 @@ export const ImagesDockerComponent = (props: ImagesDockerProps) => {
           />
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
-              storeName={StoreName.IMAGES}
+              storeName={storeName}
               component={'TABLE'}
-              refreshNumber={refreshNumber}
               refreshData={refreshData}
               withSearch={false}
               url={PATH_DOCKER + `/images/${connectionId}`}
@@ -103,6 +107,11 @@ type ImageActionProps = {
 };
 const ImageAction = ({ row, updateRowData, connectionId }: ImageActionProps) => {
   const [loading, setLoading] = useState(false);
+
+  const { setRefreshList } = usePageStore();
+  const { refreshNumber = 0 } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![StoreName.REPOSIROTY]?.list }))
+  );
 
   return (
     <Box
@@ -154,7 +163,10 @@ const ImageAction = ({ row, updateRowData, connectionId }: ImageActionProps) => 
         baseUrl={`${PATH_DOCKER}/image/${connectionId}/${row?.id}`}
         rowId={row?.id}
         handleLoading={setLoading}
-        handleDelete={updateRowData}
+        handleDelete={(id, updateData, action) => {
+          updateRowData && updateRowData(id, updateData, action);
+          setRefreshList(StoreName.REPOSIROTY, refreshNumber + 1);
+        }}
       />
     </Box>
   );
@@ -290,6 +302,11 @@ const RunAction = (props: IconActionProps) => {
     defaultValues: row as any,
   });
 
+  const { setRefreshList } = usePageStore();
+  const { refreshNumber = 0 } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![StoreName.CONTAINER]?.list }))
+  );
+
   const onSubmit = async () => {
     handleLoading(true);
     setLoading(true);
@@ -310,6 +327,7 @@ const RunAction = (props: IconActionProps) => {
       onSuccess(res) {
         handleLoading(false);
         setLoading(false);
+        setRefreshList(StoreName.CONTAINER, refreshNumber + 1);
         updateRowData && updateRowData(row?.id!, res, 'UPDATE');
         enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
           variant: 'success',

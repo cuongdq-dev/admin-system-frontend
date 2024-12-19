@@ -247,4 +247,6 @@ export const StoreName = {
   LANGUAGE: 'language_store',
   SERVER: 'server_store',
   SITE: 'site_store',
+  NGINX: 'nginx_store',
+  SERVICE: 'service_store',
 };

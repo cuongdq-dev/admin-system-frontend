@@ -16,6 +16,8 @@ import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
 import * as Yup from 'yup';
 import { LanguageForm } from '../components/form-table';
+import { usePageStore } from 'src/store/store';
+import { useShallow } from 'zustand/react/shallow';
 
 type State = { id: string; code: string; name: string; description: string }[];
 type FormConfigState = {
@@ -31,10 +33,14 @@ const HeadLabel: HeadLabelProps[] = [
 ];
 
 export function ListView() {
+  const storeName = StoreName.LANGUAGE;
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const [state, setState] = useState<State>();
-  const [refreshNumber, setRefresh] = useState<number>(0);
+  const { setRefreshList } = usePageStore();
+  const { refreshNumber = 0 } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
+  );
 
   const [formConfig, setFormConfig] = useState<FormConfigState>({
     open: false,
@@ -46,7 +52,7 @@ export function ListView() {
   useAPI({ baseURL: PATH_LANGUAGE, onSuccess: (res) => setState(res) });
 
   const refreshData = () => {
-    setRefresh(refreshNumber + 1);
+    setRefreshList(storeName, refreshNumber + 1);
     handleCloseForm();
   };
 
@@ -82,7 +88,6 @@ export function ListView() {
           </Box>
           <TableComponent
             storeName={StoreName.LANGUAGE}
-            refreshNumber={refreshNumber}
             url={PATH_LANGUAGE}
             indexCol={true}
             selectCol={true}

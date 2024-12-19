@@ -20,10 +20,12 @@ import { PATH_SERVER } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
 import { RefreshIcon } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
-import { LanguageKey } from 'src/constants';
+import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { ServiceFormJson } from './service-form';
 import { stringAvatar } from 'src/theme/styles/utils';
+import { usePageStore } from 'src/store/store';
+import { useShallow } from 'zustand/react/shallow';
 
 const PaperCustom = styled(Paper)(({ theme }) => ({
   borderWidth: 1,
@@ -57,31 +59,44 @@ export const ServiceList = ({ services, connectionId }: ServerListProps) => {
 type ServiceProps = { service?: IService; connectionId?: string };
 const ServiceItem = (props: ServiceProps) => {
   const { service, connectionId } = props;
-  const [refreshNumber, setRefresh] = useState(0);
-  const [state, setState] = useState<{ loading: boolean; data?: IService }>({
-    loading: true,
-    data: service,
-  });
+  const storeName = StoreName.SERVICE;
+
+  const { setRefreshList, setLoadingList, setList } = usePageStore();
+
+  const {
+    refreshNumber = 0,
+    data,
+    fetchOn,
+    isLoading: loading,
+  } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
+
+  const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
 
   useAPI({
+    clearRequest:
+      !loading &&
+      data &&
+      fetchOn &&
+      new Date().getTime() - new Date(fetchOn).getTime() < 5 * 60 * 1000,
+
     refreshNumber: refreshNumber,
     baseURL: PATH_SERVER + `/service/${service?.id}/${connectionId}`,
     onSuccess: (res) => {
-      setState({ loading: false, data: { ...service, ...res } });
+      setList(storeName, { data: res, isLoading: false, isFetching: false });
     },
     onHandleError: (res) => {
-      setState((state) => ({ ...state, loading: false }));
+      setLoadingList(storeName, false);
     },
   });
 
   const handleSetupService = () => {
-    setState((s) => ({ ...s, loading: true }));
+    setLoadingList(storeName, true);
 
     invokeRequest({
       method: HttpMethod.POST,
       baseURL: PATH_SERVER + `/setup/service/${service?.id}/${connectionId}`,
       onSuccess: () => {
-        setState((s) => ({ ...s, loading: false }));
+        setLoadingList(storeName, false);
 
         enqueueSnackbar(t(LanguageKey.notify.successDelete), {
           variant: 'success',
@@ -89,32 +104,33 @@ const ServiceItem = (props: ServiceProps) => {
         });
       },
       onHandleError: (error) => {
-        setState((s) => ({ ...s, loading: false }));
+        setLoadingList(storeName, false);
       },
     });
   };
 
   const handleUpdateService = (value?: Record<string, any>) => {
-    setState((s) => ({ ...s, loading: true }));
+    setLoadingList(storeName, true);
+
     invokeRequest({
       method: HttpMethod.POST,
       baseURL: PATH_SERVER + `/update/docker-compose/${connectionId}`,
       params: { values: value },
       onSuccess: () => {
-        setState((s) => ({ ...s, loading: false }));
-        setRefresh(refreshNumber + 1);
+        setLoadingList(storeName, false);
+        refreshData();
         enqueueSnackbar(t(LanguageKey.notify.successDelete), {
           variant: 'success',
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
         });
       },
       onHandleError: (error) => {
-        setState((s) => ({ ...s, loading: false }));
+        setLoadingList(storeName, false);
       },
     });
   };
 
-  if (state.loading && !state.data)
+  if (loading && !data)
     return (
       <PaperCustom>
         <Box width={'100%'} display="flex" flexDirection="row">
@@ -163,7 +179,7 @@ const ServiceItem = (props: ServiceProps) => {
   return (
     <PaperCustom>
       <Box height={'fit-content'} width={'100%'} display="flex" flexDirection="row">
-        <Iconify width={40} icon={state?.data?.icon!} />
+        <Iconify width={40} icon={data?.icon!} />
         <Box width={'100%'} marginX={1}>
           <Typography
             sx={(theme) => {
@@ -173,12 +189,12 @@ const ServiceItem = (props: ServiceProps) => {
               };
             }}
           >
-            {state?.data?.name}
+            {data?.name}
             <IconButton
               sx={{ marginLeft: 1, padding: 0 }}
               onClick={() => {
-                setState((state) => ({ ...state, loading: true }));
-                setRefresh(refreshNumber + 1);
+                setLoadingList(storeName, true);
+                refreshData();
               }}
             >
               <RefreshIcon />
@@ -192,22 +208,22 @@ const ServiceItem = (props: ServiceProps) => {
               };
             }}
           >
-            {state?.data?.description}
+            {data?.description}
           </Typography>
         </Box>
 
         <Box sx={{ display: 'flex', alignSelf: 'flex-start', alignItems: 'center', gap: 2 }}>
-          {state.loading ? (
+          {loading ? (
             <CircularProgress size={20} />
           ) : (
             <>
               <ServiceFormJson
                 icon={{ icon: 'cuida:edit-outline' }}
                 handleUpdateService={handleUpdateService}
-                json={state.data?.service_docker || []}
+                json={data?.service_docker || []}
                 title="Edit Docker Compose"
               />
-              {state?.data?.is_installed ? (
+              {data?.is_installed ? (
                 <Iconify
                   sx={{ color: 'primary.main', cursor: 'unset' }}
                   icon="icon-park-solid:folder-success"
@@ -231,8 +247,8 @@ const ServiceItem = (props: ServiceProps) => {
           };
         }}
       >
-        {state.data?.service_docker &&
-          Object.keys(state.data?.service_docker?.services!)?.map((name, index) => {
+        {data?.service_docker &&
+          Object.keys(data?.service_docker?.services!)?.map((name, index) => {
             return (
               <DockerServiceItem
                 key={name + '_' + index}
@@ -242,11 +258,11 @@ const ServiceItem = (props: ServiceProps) => {
                 }}
                 name={name}
                 handleUpdateService={(value) => {
-                  const new_data = state.data?.service_docker || {};
+                  const new_data = data?.service_docker || {};
                   new_data.services[name] = value;
                   handleUpdateService(new_data);
                 }}
-                item={state.data?.service_docker?.services[name]}
+                item={data?.service_docker?.services[name]}
               />
             );
           })}

@@ -21,6 +21,8 @@ import { Label } from 'src/components/label';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey, StoreName } from 'src/constants';
+import { usePageStore } from 'src/store/store';
+import { useShallow } from 'zustand/react/shallow';
 
 const HeadLabel: HeadLabelProps[] = [
   { id: 'id', label: t(LanguageKey.docker.containerIdItem), type: 'text', width: '10%' },
@@ -34,11 +36,11 @@ const HeadLabel: HeadLabelProps[] = [
     width: '5%',
     align: 'center',
     render: ({ row }) => {
-      const ports = row.ports.split(',');
+      const ports = row?.ports?.split(',');
       return (
         <Stack display="flex" alignItems="center" spacing={1}>
-          {ports[0] && <Label width="fit-content">{ports[0]}</Label>}
-          {ports[1] && <Label width="fit-content">{ports[1]}</Label>}
+          {ports && ports[0] && <Label width="fit-content">{ports[0]}</Label>}
+          {ports && ports[1] && <Label width="fit-content">{ports[1]}</Label>}
         </Stack>
       );
     },
@@ -48,8 +50,14 @@ const HeadLabel: HeadLabelProps[] = [
 
 type ContainerDockerProps = { connectionId?: string };
 export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps) => {
-  const [refreshNumber, setRefresh] = useState<number>(0);
-  const refreshData = () => setRefresh(refreshNumber + 1);
+  const storeName = StoreName.CONTAINER;
+
+  const { setRefreshList } = usePageStore();
+  const { refreshNumber = 0, isFetching } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
+  );
+
+  const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
 
   const headerColums = connectionId
     ? [
@@ -80,17 +88,16 @@ export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps)
               <Box display="flex" justifyContent="space-between">
                 <Box>{t(LanguageKey.server.dockerContainer)}</Box>
                 <IconButton size="medium" sx={{ marginLeft: 1 }} onClick={refreshData}>
-                  <RefreshIcon icon={'mdi:refresh'} />
+                  <RefreshIcon loading={isFetching} icon={'mdi:refresh'} />
                 </IconButton>
               </Box>
             }
           />
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
-              storeName={StoreName.CONTAINER}
+              storeName={storeName}
               component="TABLE"
               withSearch={false}
-              refreshNumber={refreshNumber}
               refreshData={refreshData}
               url={`${PATH_DOCKER}/containers/${connectionId}`}
               indexCol={true}
@@ -177,6 +184,11 @@ const containerActionIcons = {
 const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: IconActionProps) => {
   const [loading, setLoading] = useState(false);
 
+  const { setRefreshList } = usePageStore.getState();
+  const { refreshNumber = 0 } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![StoreName.IMAGES]?.list }))
+  );
+
   useEffect(() => {
     handleClick && handleClick(loading);
   }, [loading]);
@@ -193,7 +205,7 @@ const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: I
         onSuccess(res) {
           setLoading(false);
           updateRowData && updateRowData(row?.id!, res, action === 'remove' ? 'REMOVE' : 'UPDATE');
-
+          setRefreshList(StoreName.IMAGES, refreshNumber + 1);
           enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
             variant: 'success',
             action: (key) => (

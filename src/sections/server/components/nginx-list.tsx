@@ -25,9 +25,11 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { ButtonDelete, ButtonDismissNotify } from 'src/components/button';
 import { Iconify } from 'src/components/iconify';
-import { LanguageKey } from 'src/constants';
+import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
+import { usePageStore } from 'src/store/store';
 import { rgbaToHex, stringAvatar } from 'src/theme/styles';
+import { useShallow } from 'zustand/react/shallow';
 
 type NginxListProps = {
   serverId: string;
@@ -50,26 +52,30 @@ const PaperCustom = styled(Paper)(({ theme }) => ({
 
 export const NginxList = (props: NginxListProps) => {
   const { serverId, connectionId } = props;
-  const [refreshNumber, setRefresh] = useState(0);
-  const [state, setState] = useState<{
-    loading: boolean;
-    data?: { name: string; content?: string }[];
-  }>({
-    loading: true,
-  });
+  const storeName = StoreName.NGINX;
+
+  const { setRefreshList, setLoadingList, setList } = usePageStore();
+
+  const {
+    refreshNumber = 0,
+    data,
+    isLoading: loading,
+  } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
+
+  const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
 
   useAPI({
     refreshNumber: refreshNumber,
     baseURL: PATH_SERVER + `/nginx/${serverId}/${connectionId}`,
     onSuccess: (res) => {
-      setState({ loading: false, data: res });
+      setList(storeName, { data: res, isLoading: false, isFetching: false });
     },
     onHandleError: (res) => {
-      setState((state) => ({ ...state, loading: false }));
+      setLoadingList(storeName, false);
     },
   });
 
-  if (state?.loading)
+  if (loading)
     return (
       <PaperCustom>
         <Box width={'100%'} display="flex" flexDirection="row">
@@ -118,11 +124,11 @@ export const NginxList = (props: NginxListProps) => {
     <Box gap={2} display="flex" flexDirection="column">
       <AddComponent
         title={t(LanguageKey.nginx.addFileTitle)}
-        refreshData={() => setRefresh(refreshNumber + 1)}
+        refreshData={refreshData}
         connectionId={connectionId!}
       />
 
-      {state?.data?.map((item, index) => {
+      {data?.map((item: { name: string; content?: string }, index: number) => {
         return (
           <PaperCustom key={`nginx_${index}`}>
             <Box sx={{ px: 1, gap: 2, display: 'flex', alignItems: 'center' }}>
@@ -135,7 +141,7 @@ export const NginxList = (props: NginxListProps) => {
               />
               <Box>
                 <EditComponent
-                  refreshData={() => setRefresh(refreshNumber + 1)}
+                  refreshData={() => setRefreshList(storeName, refreshNumber + 1)}
                   connectionId={connectionId!}
                   title={item.name}
                   json={item.content}

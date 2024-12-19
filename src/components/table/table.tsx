@@ -14,56 +14,38 @@ import {
 import { t } from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useShallow } from 'zustand/react/shallow';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
+import { usePageStore } from 'src/store/store';
+import { useShallow } from 'zustand/react/shallow';
 import { Scrollbar } from '../scrollbar';
 import { TableActionComponent } from './table-action';
 import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
-import { CardToolbarComponent, TableToolbarComponent } from './table-toolbar';
 import { TableComponentProps, TableMetaData } from './type';
-import { usePageStore } from 'src/store/store';
-import { timeAgo } from './utils';
 
 type TableState = {
   data?: Record<string, any>;
   meta?: TableMetaData;
 };
 export const TableComponent = (props: TableComponentProps) => {
-  const {
-    headLabel,
-    url,
-    indexCol,
-    selectCol,
-    refreshNumber,
-    withSearch = true,
-    storeName,
-    component,
-  } = props;
+  const { headLabel, url, indexCol, selectCol, withSearch = true, storeName, component } = props;
 
-  const { setList, setLoadingList } = usePageStore.getState();
+  const { setList, setLoadingList, setFetchingList } = usePageStore.getState();
+  const table = useTable();
 
   const {
     data: datasource,
-    meta: metaData = {
-      currentPage: 1,
-      itemsPerPage: 10,
-      totalItems: 0,
-      totalPages: 0,
-      sortBy: [['created_ad', 'DESC']],
-    },
+    meta: metaData,
     isLoading: loading,
+    refreshNumber,
     fetchOn,
   } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
 
   const { refreshData, customCard, handleClickOpenForm } = props;
   const { actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true } } =
     props;
-
-  const table = useTable();
-  const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
     Number(refreshNumber) > 0 && setLoadingList(storeName, true);
@@ -74,11 +56,14 @@ export const TableComponent = (props: TableComponentProps) => {
       !loading &&
       datasource &&
       fetchOn &&
-      new Date().getTime() - new Date(fetchOn).getTime() < 10 * 1000,
+      new Date().getTime() - new Date(fetchOn).getTime() < 5 * 60 * 1000,
     refreshNumber: refreshNumber,
     baseURL: url + '/list' + window.location.search,
     onSuccess: (res) => setList(storeName, { ...res, isFetching: false, isLoading: false }),
-    onHandleError: () => setLoadingList(storeName, false),
+    onHandleError: () => {
+      setLoadingList(storeName, false);
+      setFetchingList(storeName, false);
+    },
   });
 
   const notFound = !datasource || Number(datasource?.length) == 0;
@@ -121,7 +106,7 @@ export const TableComponent = (props: TableComponentProps) => {
   if (component == 'CARD') {
     return (
       <>
-        {withSearch && (
+        {/* {withSearch && (
           <CardToolbarComponent
             filterName={filterName}
             onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,9 +114,9 @@ export const TableComponent = (props: TableComponentProps) => {
               table.onResetPage();
             }}
           />
-        )}
+        )} */}
         <Grid spacing={3}>
-          {notFound && <TableNoData searchQuery={filterName} />}
+          {notFound && <TableNoData />}
 
           {datasource?.map((data: Record<string, any>, index: number) => (
             <Grid item marginBottom={5} key={`card_item_${data.id}_${index}`} xs={12} sm={6} md={3}>
@@ -177,7 +162,7 @@ export const TableComponent = (props: TableComponentProps) => {
         </Box>
       )}
       <Card sx={{ opacity: loading ? 0.1 : 1, pointerEvents: loading ? 'none' : 'auto' }}>
-        {withSearch && (
+        {/* {withSearch && (
           <TableToolbarComponent
             filterName={filterName}
             onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,7 +170,7 @@ export const TableComponent = (props: TableComponentProps) => {
               table.onResetPage();
             }}
           />
-        )}
+        )} */}
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
@@ -209,7 +194,7 @@ export const TableComponent = (props: TableComponentProps) => {
               />
               {notFound ? (
                 <TableBody>
-                  <TableNoData colSpan={headLabel.length} searchQuery={filterName} />
+                  <TableNoData colSpan={headLabel.length} />
                 </TableBody>
               ) : (
                 <TableBody>
@@ -276,7 +261,7 @@ export const TableComponent = (props: TableComponentProps) => {
                     );
                   })}
 
-                  {notFound && <TableNoData searchQuery={filterName} />}
+                  {notFound && <TableNoData />}
                 </TableBody>
               )}
             </Table>

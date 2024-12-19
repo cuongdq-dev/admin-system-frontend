@@ -29,7 +29,9 @@ import { Iconify, IconifyProps } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey, StoreName } from 'src/constants';
+import { usePageStore } from 'src/store/store';
 import * as Yup from 'yup';
+import { useShallow } from 'zustand/react/shallow';
 import { Transition } from '../../../components/dialog';
 import { FormProvider } from '../../../components/hook-form';
 import { RepositoryForm } from './repository-form';
@@ -81,11 +83,14 @@ const HeadLabel: HeadLabelProps[] = [
 ];
 export const RepositoryComponent = (props: RepositoryComponentProps) => {
   const { serverId, connectionId } = props;
-  const [refreshNumber, setRefresh] = useState<number>(0);
+  const storeName = StoreName.REPOSIROTY;
 
-  const refreshData = () => {
-    setRefresh(refreshNumber + 1);
-  };
+  const { setRefreshList } = usePageStore();
+  const { refreshNumber = 0 } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
+  );
+
+  const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
 
   const headLabel = connectionId
     ? HeadLabel.concat({
@@ -124,7 +129,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
                     action={HttpMethod.POST}
                     baseUrl={PATH_REPOSITORY + `/${connectionId}/${serverId}/create`}
                     handleLoading={() => {}}
-                    updateRowData={() => setRefresh(refreshNumber + 1)}
+                    updateRowData={refreshData}
                     title={t(LanguageKey.repository.cloneRepositoryTitle)}
                     description={t(LanguageKey.repository.cloneRepositoryDescription)}
                   />
@@ -139,7 +144,6 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
               storeName={StoreName.REPOSIROTY}
-              refreshNumber={refreshNumber}
               refreshData={refreshData}
               component={'TABLE'}
               withSearch={false}
@@ -310,6 +314,11 @@ type ActionGroupProp = {
 const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
   const [loading, setLoading] = useState(false);
 
+  const { setRefreshList } = usePageStore();
+  const { refreshNumber = 0 } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![StoreName.IMAGES]?.list }))
+  );
+
   return (
     <Box
       sx={{
@@ -328,7 +337,10 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
           description={t(LanguageKey.repository.pullRepositoryDescription)}
           action={HttpMethod.PATCH}
           withBuild={true}
-          updateRowData={updateRowData}
+          updateRowData={(rowId, values, action) => {
+            updateRowData && updateRowData(rowId, values, action);
+            setRefreshList(StoreName.IMAGES, refreshNumber + 1);
+          }}
           baseUrl={`${PATH_REPOSITORY}/${connectionId}/build/${row?.id}`}
           row={row}
           expanded="optional_settings"

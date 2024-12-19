@@ -43,6 +43,7 @@ export function SiteView() {
     setRefresh(refreshNumber + 1);
     handleCloseForm();
   };
+
   const handleClickOpenForm = (row: Record<string, any>, action: HttpMethod) => {
     setFormConfig((s) => ({
       ...s,
@@ -80,7 +81,6 @@ export function SiteView() {
           </Box>
           <TableComponent
             storeName={StoreName.SITE}
-            refreshNumber={refreshNumber}
             url={PATH_LANGUAGE}
             indexCol={true}
             selectCol={true}

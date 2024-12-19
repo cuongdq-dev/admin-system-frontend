@@ -18,7 +18,7 @@ type ImageFormProps = {
 
 export const ImageForm = (props: ImageFormProps) => {
   const { defaultValues } = props;
-  console.log(defaultValues);
+
   return (
     <Box>
       <Accordion

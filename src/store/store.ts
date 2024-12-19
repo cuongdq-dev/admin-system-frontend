@@ -4,11 +4,13 @@ import { create } from 'zustand';
 interface IList {
   fetchOn?: Date;
   isFetching?: boolean;
+  refreshNumber?: number;
   isLoading?: boolean;
   data?: Record<string, any>;
   meta?: TableMetaData;
 }
 interface IDetail {
+  refreshNumber?: number;
   isFetching?: boolean;
   isLoading?: boolean;
   data?: Record<string, any>;
@@ -18,8 +20,10 @@ interface IDetail {
 interface IStore {
   dataStore?: Record<string, { detail?: IDetail; list?: IList }>;
   setLoadingList: (key: string, isLoading: boolean) => void;
+  setRefreshList: (key: string, refreshNumber: number) => void;
   setFetchingList: (key: string, isFetching: boolean) => void;
 
+  setRefreshDetail: (key: string, refreshNumber: number) => void;
   setLoadingDetail: (key: string, isLoading: boolean) => void;
   setFetchingDetail: (key: string, isFetching: boolean) => void;
 
@@ -29,6 +33,34 @@ interface IStore {
 
 export const usePageStore = create<IStore>((set) => ({
   dataStore: {},
+
+  setRefreshList: (key: string, refreshNumber: number) =>
+    set((state) => ({
+      dataStore: {
+        ...state.dataStore,
+        [key]: {
+          ...state?.dataStore![key],
+          list: {
+            ...state?.dataStore![key]?.list,
+            refreshNumber: refreshNumber,
+          },
+        },
+      },
+    })),
+
+  setRefreshDetail: (key: string, refreshNumber: number) =>
+    set((state) => ({
+      dataStore: {
+        ...state.dataStore,
+        [key]: {
+          ...state?.dataStore![key],
+          detail: {
+            ...state?.dataStore![key]?.detail,
+            refreshNumber: refreshNumber,
+          },
+        },
+      },
+    })),
 
   setLoadingList: (key: string, isLoading: boolean) =>
     set((state) => ({

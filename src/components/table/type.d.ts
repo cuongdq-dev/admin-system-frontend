@@ -65,7 +65,6 @@ export type TableComponentProps = {
   storeName: string;
   headLabel: HeadLabelProps[];
   indexCol?: boolean;
-  refreshNumber?: number;
   refreshData?: () => void;
   selectCol?: boolean;
   withSearch?: boolean;
@@ -97,7 +96,7 @@ export type TableRowProps = {
   onSelectRow: () => void;
 };
 
-export type TableNoDataProps = TableRowPropMUI & { searchQuery: string; colSpan?: number };
+export type TableNoDataProps = TableRowPropMUI & { searchQuery?: string; colSpan?: number };
 
 export type TableEmptyRowsProps = TableRowPropMUI & {
   emptyRows: number;

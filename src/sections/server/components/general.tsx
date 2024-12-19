@@ -25,7 +25,6 @@ type Props = {
 
 export const GeneralComponent = (props: Props) => {
   const { defaultData, handleUpdate } = props;
-
   return (
     <>
       <Grid container spacing={2}>
@@ -46,29 +45,22 @@ export const GeneralComponent = (props: Props) => {
         </Grid>
       </Grid>
 
-      {defaultData?.connectionId && (
-        <Grid container spacing={2} columns={2} marginTop={2}>
-          <Grid item xs={2} sm={2} md={1}>
-            <ServiceList
-              connectionId={defaultData?.connectionId!}
-              services={defaultData?.server_services}
-            />
-          </Grid>
-          <Grid item xs={2} sm={2} md={1}>
-            <NginxList connectionId={defaultData?.connectionId!} serverId={defaultData.id!} />
-          </Grid>
+      <Grid container spacing={2} columns={2} marginTop={2}>
+        <Grid item xs={2} sm={2} md={1}>
+          <ServiceList
+            connectionId={defaultData?.connectionId!}
+            services={defaultData?.server_services}
+          />
         </Grid>
-      )}
+        <Grid item xs={2} sm={2} md={1}>
+          <NginxList connectionId={defaultData?.connectionId!} serverId={defaultData?.id!} />
+        </Grid>
+      </Grid>
 
       <Divider sx={{ marginTop: 5 }} />
       <RepositoryComponent serverId={defaultData?.id!} connectionId={defaultData?.connectionId!} />
-      {defaultData?.connectionId && (
-        <ContainerDockerComponent connectionId={defaultData?.connectionId} />
-      )}
-
-      {defaultData?.connectionId && (
-        <ImagesDockerComponent connectionId={defaultData?.connectionId} />
-      )}
+      <ContainerDockerComponent connectionId={defaultData?.connectionId} />
+      <ImagesDockerComponent connectionId={defaultData?.connectionId} />
     </>
   );
 };

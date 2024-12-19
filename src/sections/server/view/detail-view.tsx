@@ -7,6 +7,8 @@ import { Iconify } from 'src/components/iconify';
 import { FetchingComponent } from 'src/components/progress';
 import { LanguageKey } from 'src/constants';
 import { GeneralComponent } from '../components/general';
+import { usePageStore } from 'src/store/store';
+import { useShallow } from 'zustand/react/shallow';
 
 const StyledTab = styled(Tab)(({ theme }) => ({
   marginRight: theme.spacing(1),
@@ -21,10 +23,17 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   },
 }));
 
-export function DetailView(props: IDetail & { handleReconnectServer?: () => void }) {
-  const { defaultData, loading, handleUpdate, handleReconnectServer } = props;
+export function DetailView(
+  props: IDetail & { storeName: string; handleReconnectServer?: () => void }
+) {
+  const { handleUpdate, handleReconnectServer, storeName } = props;
+
+  const { data: defaultData, isLoading: loading = true } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
+  );
   const [tabState, setTabState] = useState<{ value: string }>({ value: 'general' });
-  if (loading) return <FetchingComponent />;
+
+  if (loading && !defaultData) return <FetchingComponent />;
   return (
     <Box>
       <TabContext value={tabState.value}>
@@ -40,7 +49,11 @@ export function DetailView(props: IDetail & { handleReconnectServer?: () => void
             icon={<Iconify icon="fluent-mdl2:server-enviroment" />}
           />
           <Box display="flex" alignItems="center">
-            <IconButton size="small" color={defaultData?.is_connected ? 'success' : 'warning'}>
+            <IconButton
+              onClick={handleReconnectServer}
+              size="small"
+              color={defaultData?.is_connected ? 'success' : 'warning'}
+            >
               <Iconify
                 icon={
                   defaultData?.is_connected
@@ -56,8 +69,6 @@ export function DetailView(props: IDetail & { handleReconnectServer?: () => void
           <TabPanel value="general" style={{ padding: 0, margin: 0 }}>
             <GeneralComponent handleUpdate={handleUpdate} defaultData={defaultData} />
           </TabPanel>
-          <TabPanel value="status">Item Two</TabPanel>
-          <TabPanel value="config">Item Three</TabPanel>
         </Box>
       </TabContext>
     </Box>

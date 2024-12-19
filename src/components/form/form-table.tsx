@@ -71,6 +71,7 @@ export const PopupFormTable = (props: FormProps) => {
           action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
         });
         reset();
+        handleCloseForm();
         refreshData && refreshData();
       },
     });
