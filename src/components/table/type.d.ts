@@ -61,8 +61,8 @@ export type TableActionComponentProps = {
 export type TableComponentProps = {
   component?: 'CARD' | 'TABLE';
   customCard?: ({ values }: { values: Record<string, any> }) => JSX.Element;
-  tableKey: string;
   url: string;
+  storeName: string;
   headLabel: HeadLabelProps[];
   indexCol?: boolean;
   refreshNumber?: number;

@@ -1,3 +1,4 @@
+import { LoadingButton, LoadingButtonProps } from '@mui/lab';
 import {
   Box,
   Button,
@@ -7,7 +8,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
   MenuItem,
 } from '@mui/material';
 import { t } from 'i18next';
@@ -15,8 +15,8 @@ import { closeSnackbar, enqueueSnackbar, SnackbarKey } from 'notistack';
 import { useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { LanguageKey } from 'src/constants';
-import { Iconify } from '../iconify';
 import { Transition } from '../dialog';
+import { Iconify } from '../iconify';
 
 export const ButtonDismissNotify = (props: {
   textLabel?: string;
@@ -31,7 +31,7 @@ export const ButtonDismissNotify = (props: {
   );
 };
 
-type ButtonDeleteProps = {
+type IconButtonDeleteProps = {
   title?: string;
   baseUrl: string;
   rowId?: string;
@@ -44,7 +44,7 @@ type ButtonDeleteProps = {
   ) => void;
 };
 
-export const ButtonDelete = (props: ButtonDeleteProps) => {
+export const IconButtonDelete = (props: IconButtonDeleteProps) => {
   const { title = '', baseUrl, rowId, refreshData, handleLoading, handleDelete } = props;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -102,6 +102,49 @@ export const ButtonDelete = (props: ButtonDeleteProps) => {
         </DialogContent>
         <DialogActions style={{ padding: 20 }}>
           <Button color="error" variant="contained" onClick={handleDeleteRow}>
+            {t(LanguageKey.button.delete)}
+          </Button>
+          <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
+            {t(LanguageKey.button.cancel)}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+};
+
+type ButtonDeleteProps = { title?: string; handleDelete?: () => void };
+export const ButtonDelete = (props: ButtonDeleteProps & LoadingButtonProps) => {
+  const { title = '', handleDelete, ...other } = props;
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <LoadingButton onClick={() => setOpen(true)} {...other}>
+        {title}
+      </LoadingButton>
+      <Dialog
+        PaperProps={{ sx: { borderRadius: 3 } }}
+        TransitionComponent={Transition}
+        maxWidth={'sm'}
+        open={open}
+        fullWidth
+        onClose={() => setOpen(false)}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">{t(LanguageKey.form.deleteLabel)}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{t(LanguageKey.form.deleteTitle)}</DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ padding: 20 }}>
+          <Button
+            color="error"
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              handleDelete && handleDelete();
+            }}
+          >
             {t(LanguageKey.button.delete)}
           </Button>
           <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>

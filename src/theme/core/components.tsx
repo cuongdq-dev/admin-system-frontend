@@ -21,6 +21,48 @@ const MuiTooltip: Components<Theme>['MuiTooltip'] = {
     arrow: true,
   },
 };
+const MuiSwitch: Components<Theme>['MuiSwitch'] = {
+  styleOverrides: {
+    root: ({ theme }) => {
+      return {
+        width: 28,
+        height: 16,
+        padding: 0,
+        display: 'flex',
+        '&:active': {
+          '& .MuiSwitch-thumb': {
+            width: 15,
+          },
+          '& .MuiSwitch-switchBase.Mui-checked': {
+            transform: 'translateX(9px)',
+          },
+        },
+        '& .MuiSwitch-switchBase': {
+          padding: 2,
+          '&.Mui-checked': {
+            transform: 'translateX(12px)',
+            color: '#fff',
+          },
+        },
+        '& .MuiSwitch-thumb': {
+          boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+          width: 12,
+          height: 12,
+          borderRadius: 6,
+          transition: theme.transitions.create(['width'], {
+            duration: 200,
+          }),
+        },
+        '& .MuiSwitch-track': {
+          borderRadius: 16 / 2,
+          opacity: 1,
+          backgroundColor: 'rgba(0,0,0,.25)',
+          boxSizing: 'border-box',
+        },
+      };
+    },
+  },
+};
 
 const MuiButton: Components<Theme>['MuiButton'] = {
   defaultProps: {
@@ -168,6 +210,7 @@ const MuiDrawer: Components<Theme>['MuiDrawer'] = {
   styleOverrides: {
     paper: ({ theme }) => ({
       boxShadow: theme.customShadows.z4,
+      borderRadius: 0,
     }),
   },
 };
@@ -241,6 +284,7 @@ export const components = {
   MuiMenuItem,
   MuiDrawer,
   MuiCheckbox,
+  MuiSwitch,
   MuiTableCell,
   MuiCardHeader,
   MuiOutlinedInput,

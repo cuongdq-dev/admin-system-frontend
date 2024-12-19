@@ -44,6 +44,13 @@ export const LanguageKey = {
     dockerImages: 'docker_images',
   },
 
+  nginx: {
+    title: 'nginx_title',
+    addFileTitle: 'nginx_add_new_file_title',
+    nameFileItem: 'nginx_name_file_item',
+    contentFileItem: 'nginx_content_file_item',
+  },
+
   site: {
     nav: 'site_nav',
     listPageTitle: 'site_list_page',
@@ -231,4 +238,13 @@ export const LanguageKey = {
     imageRun: 'docker_image_run',
     imageStop: 'docker_image_stop',
   },
+};
+
+export const StoreName = {
+  REPOSIROTY: 'repository_store',
+  IMAGES: 'images_store',
+  CONTAINER: 'container_store',
+  LANGUAGE: 'language_store',
+  SERVER: 'server_store',
+  SITE: 'site_store',
 };

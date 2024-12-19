@@ -22,12 +22,19 @@
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@focus-reactive/react-yaml": "^1.1.2",
     "@fontsource-variable/dm-sans": "^5.0.7",
     "@fontsource/barlow": "^5.0.14",
     "@hookform/resolvers": "^3.9.1",
     "@iconify/react": "^5.0.2",
+    "@monaco-editor/react": "^4.6.0",
+    "@mui/icons-material": "^6.2.0",
     "@mui/lab": "^5.0.0-alpha.173",
     "@mui/material": "^5.16.7",
+    "@rjsf/core": "^5.23.2",
+    "@rjsf/mui": "^5.23.1",
+    "@rjsf/utils": "^5.23.1",
+    "@rjsf/validator-ajv8": "^5.23.1",
     "@types/js-cookie": "^3.0.6",
     "apexcharts": "^3.52.0",
     "axios": "^1.7.7",
@@ -39,6 +46,7 @@
     "i18next-http-backend": "^3.0.1",
     "i18next-localstorage-cache": "^1.1.1",
     "i18next-sprintf-postprocessor": "^0.2.2",
+    "immer": "^10.1.1",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "language-flag-colors": "^3.2.1",
@@ -59,16 +67,20 @@
     "zustand": "^5.0.1"
   },
   "devDependencies": {
+    "@types/i18next-sprintf-postprocessor": "^0.2.3",
     "@types/node": "^22.5.0",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.1",
     "@types/react-world-flags": "^1.6.0",
-    "@types/i18next-sprintf-postprocessor": "^0.2.3",
     "@vitejs/plugin-react-swc": "^3.7.0",
     "prettier": "^3.3.3",
     "sass-embedded": "^1.81.0",
     "typescript": "^5.5.4",
     "vite": "^5.4.2",
     "vite-plugin-checker": "^0.7.2"
+  },
+  "resolutions": {
+    "@types/react": "^18.3.4",
+    "@types/react-dom": "18.3.1"
   }
 }

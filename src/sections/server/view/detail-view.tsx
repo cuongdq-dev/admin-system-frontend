@@ -1,5 +1,5 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Paper, styled, Tab } from '@mui/material';
+import { Fab, IconButton, Paper, styled, Tab } from '@mui/material';
 import Box from '@mui/material/Box';
 import { t } from 'i18next';
 import { useState } from 'react';
@@ -21,8 +21,8 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   },
 }));
 
-export function DetailView(props: IDetail) {
-  const { defaultData, loading, handleUpdate } = props;
+export function DetailView(props: IDetail & { handleReconnectServer?: () => void }) {
+  const { defaultData, loading, handleUpdate, handleReconnectServer } = props;
   const [tabState, setTabState] = useState<{ value: string }>({ value: 'general' });
   if (loading) return <FetchingComponent />;
   return (
@@ -31,6 +31,7 @@ export function DetailView(props: IDetail) {
         <TabList
           onChange={(_, value) => setTabState((s) => ({ ...s, value: value }))}
           aria-label="tab_server"
+          allowScrollButtonsMobile
         >
           <StyledTab
             label={t(LanguageKey.server.generalTab)}
@@ -38,18 +39,17 @@ export function DetailView(props: IDetail) {
             iconPosition="start"
             icon={<Iconify icon="fluent-mdl2:server-enviroment" />}
           />
-          <StyledTab
-            label={t(LanguageKey.server.statusTab)}
-            value={'status'}
-            iconPosition="start"
-            icon={<Iconify icon="heroicons-solid:status-online" />}
-          />
-          <StyledTab
-            label={t(LanguageKey.server.setupTab)}
-            value={'config'}
-            iconPosition="start"
-            icon={<Iconify icon="icon-park-outline:config" />}
-          />
+          <Box display="flex" alignItems="center">
+            <IconButton size="small" color={defaultData?.is_connected ? 'success' : 'warning'}>
+              <Iconify
+                icon={
+                  defaultData?.is_connected
+                    ? 'icomoon-free:connection'
+                    : 'material-symbols:signal-wifi-statusbar-not-connected'
+                }
+              />
+            </IconButton>
+          </Box>
         </TabList>
 
         <Box component={'div'} marginTop={3}>

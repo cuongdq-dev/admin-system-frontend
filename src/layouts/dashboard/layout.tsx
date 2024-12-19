@@ -39,7 +39,6 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
   const [languages, setLanguages] = useState([]);
 
   useAPI({
-    key: 'languages_list',
     baseURL: PATH_LANGUAGE,
     onSuccess: (res) => setLanguages(res),
   });

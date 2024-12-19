@@ -3,17 +3,18 @@ import {
   Card,
   CircularProgress,
   Grid,
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TablePagination,
   TableRow,
+  Typography,
 } from '@mui/material';
 import { t } from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { Scrollbar } from '../scrollbar';
@@ -23,6 +24,8 @@ import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
 import { CardToolbarComponent, TableToolbarComponent } from './table-toolbar';
 import { TableComponentProps, TableMetaData } from './type';
+import { usePageStore } from 'src/store/store';
+import { timeAgo } from './utils';
 
 type TableState = {
   data?: Record<string, any>;
@@ -36,44 +39,46 @@ export const TableComponent = (props: TableComponentProps) => {
     selectCol,
     refreshNumber,
     withSearch = true,
+    storeName,
     component,
-    tableKey,
   } = props;
-  const { refreshData, customCard, handleClickOpenForm } = props;
-  const { actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true } } =
-    props;
 
-  const table = useTable();
-  const [filterName, setFilterName] = useState('');
-  const [loading, setLoading] = useState(true);
+  const { setList, setLoadingList } = usePageStore.getState();
 
-  const [{ meta: metaData, data: datasource }, setState] = useState<TableState>({
-    data: [],
-    meta: {
+  const {
+    data: datasource,
+    meta: metaData = {
       currentPage: 1,
       itemsPerPage: 10,
       totalItems: 0,
       totalPages: 0,
       sortBy: [['created_ad', 'DESC']],
     },
-  });
+    isLoading: loading,
+    fetchOn,
+  } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
+
+  const { refreshData, customCard, handleClickOpenForm } = props;
+  const { actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true } } =
+    props;
+
+  const table = useTable();
+  const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    setLoading(true);
+    Number(refreshNumber) > 0 && setLoadingList(storeName, true);
   }, [refreshNumber]);
 
   useAPI({
+    clearRequest:
+      !loading &&
+      datasource &&
+      fetchOn &&
+      new Date().getTime() - new Date(fetchOn).getTime() < 10 * 1000,
     refreshNumber: refreshNumber,
-    key: tableKey,
     baseURL: url + '/list' + window.location.search,
-    onSuccess: (res) => {
-      setState(res);
-      setLoading(false);
-    },
-    onHandleError: () => {
-      setLoading(false);
-      setState({ data: undefined, meta: undefined });
-    },
+    onSuccess: (res) => setList(storeName, { ...res, isFetching: false, isLoading: false }),
+    onHandleError: () => setLoadingList(storeName, false),
   });
 
   const notFound = !datasource || Number(datasource?.length) == 0;
@@ -91,35 +96,26 @@ export const TableComponent = (props: TableComponentProps) => {
     updatedData: Record<string, any>,
     action: 'ADD' | 'UPDATE' | 'REMOVE'
   ) => {
-    setState((prevState) => {
-      let updatedDatasource;
+    let updatedDatasource;
+    switch (action) {
+      case 'ADD':
+        updatedDatasource = datasource?.push(updatedData);
+        break;
 
-      switch (action) {
-        case 'ADD':
-          updatedDatasource = prevState.data?.push(updatedData);
-          break;
+      case 'UPDATE':
+        updatedDatasource = (datasource || []).map((row: Record<string, any>) =>
+          row.id === id ? { ...row, ...updatedData } : row
+        );
+        break;
 
-        case 'UPDATE':
-          updatedDatasource = (prevState.data || []).map((row: Record<string, any>) =>
-            row.id === id ? { ...row, ...updatedData } : row
-          );
-          break;
+      case 'REMOVE':
+        updatedDatasource = (datasource || []).filter((row: Record<string, any>) => row.id !== id);
+        break;
 
-        case 'REMOVE':
-          updatedDatasource = (prevState.data || []).filter(
-            (row: Record<string, any>) => row.id !== id
-          );
-          break;
-
-        default:
-          updatedDatasource = prevState.data || [];
-      }
-
-      return {
-        ...prevState,
-        data: updatedDatasource,
-      };
-    });
+      default:
+        updatedDatasource = datasource || [];
+    }
+    setList(storeName, { data: updatedDatasource });
   };
 
   if (component == 'CARD') {
@@ -287,16 +283,22 @@ export const TableComponent = (props: TableComponentProps) => {
           </TableContainer>
         </Scrollbar>
         {metaData && Object.keys(metaData).length > 0 && (
-          <TablePagination
-            component="div"
-            labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
-            page={metaData?.currentPage - 1}
-            count={metaData?.totalItems}
-            rowsPerPage={metaData?.itemsPerPage}
-            onPageChange={table.onChangePage}
-            rowsPerPageOptions={[10, 20, 30, 50, 100]}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-          />
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Typography marginLeft={2} variant="caption" color="grey">
+              <TimeAgo timestamp={fetchOn!} />
+            </Typography>
+
+            <TablePagination
+              component="div"
+              labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
+              page={metaData?.currentPage - 1}
+              count={metaData?.totalItems}
+              rowsPerPage={metaData?.itemsPerPage}
+              onPageChange={table.onChangePage}
+              rowsPerPageOptions={[10, 20, 30, 50, 100]}
+              onRowsPerPageChange={table.onChangeRowsPerPage}
+            />
+          </Box>
         )}
       </Card>
     </Box>
@@ -404,3 +406,34 @@ export function useTable() {
     onChangeRowsPerPage,
   };
 }
+
+const TimeAgo = ({ timestamp }: { timestamp: string | number | Date }) => {
+  const [timeAgo, setTimeAgo] = useState('');
+
+  useEffect(() => {
+    const updateTimeAgo = () => {
+      const now = new Date();
+      const timeDiff = now.getTime() - new Date(timestamp).getTime();
+      const seconds = Math.floor(timeDiff / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (seconds < 60) {
+        setTimeAgo(`${seconds} seconds ago`);
+      } else if (minutes < 60) {
+        setTimeAgo(`${minutes} minutes ago`);
+      } else if (hours < 24) {
+        setTimeAgo(`${hours} hours ago`);
+      } else {
+        setTimeAgo(`${days} days ago`);
+      }
+    };
+
+    updateTimeAgo();
+    const intervalId = setInterval(updateTimeAgo, 10000);
+    return () => clearInterval(intervalId);
+  }, [timestamp]);
+
+  return timeAgo;
+};

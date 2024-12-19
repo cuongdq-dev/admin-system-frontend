@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
 import { invokeRequest, RequestProps } from '../api-core';
 export const useAPI = (
-  options: RequestProps & { clearRequest?: boolean; key?: string; refreshNumber?: number }
+  options: RequestProps & { clearRequest?: boolean; refreshNumber?: number }
 ) => {
-  const { clearRequest = false, key, refreshNumber, ...rest } = options;
+  const { clearRequest = false, refreshNumber, ...rest } = options;
 
   useEffect(() => {
     if (clearRequest) return;
     if (rest.baseURL) {
       invokeRequest(rest);
     }
-  }, [rest.baseURL, clearRequest, key, refreshNumber]);
+  }, [rest.baseURL, clearRequest, refreshNumber]);
 };

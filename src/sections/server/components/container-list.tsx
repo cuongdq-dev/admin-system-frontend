@@ -20,7 +20,7 @@ import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
-import { LanguageKey } from 'src/constants';
+import { LanguageKey, StoreName } from 'src/constants';
 
 const HeadLabel: HeadLabelProps[] = [
   { id: 'id', label: t(LanguageKey.docker.containerIdItem), type: 'text', width: '10%' },
@@ -48,7 +48,6 @@ const HeadLabel: HeadLabelProps[] = [
 
 type ContainerDockerProps = { connectionId?: string };
 export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps) => {
-  const tableKey = 'container_docker_key';
   const [refreshNumber, setRefresh] = useState<number>(0);
   const refreshData = () => setRefresh(refreshNumber + 1);
 
@@ -88,8 +87,8 @@ export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps)
           />
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
+              storeName={StoreName.CONTAINER}
               component="TABLE"
-              tableKey={tableKey}
               withSearch={false}
               refreshNumber={refreshNumber}
               refreshData={refreshData}
@@ -181,6 +180,7 @@ const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: I
   useEffect(() => {
     handleClick && handleClick(loading);
   }, [loading]);
+
   const handleButtonClick = () => {
     if (!loading) {
       setLoading(true);
@@ -192,8 +192,7 @@ const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: I
         onHandleError: () => setLoading(false),
         onSuccess(res) {
           setLoading(false);
-          updateRowData &&
-            updateRowData(row?.id!, res?.result, action === 'remove' ? 'REMOVE' : 'UPDATE');
+          updateRowData && updateRowData(row?.id!, res, action === 'remove' ? 'REMOVE' : 'UPDATE');
 
           enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
             variant: 'success',

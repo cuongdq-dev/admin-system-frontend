@@ -16,7 +16,7 @@ import { t } from 'i18next';
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HttpMethod } from 'src/api-core';
-import { ButtonDelete } from 'src/components/button';
+import { IconButtonDelete } from 'src/components/button';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
 import { remToPx } from 'src/theme/styles';
@@ -80,7 +80,7 @@ export const ServerItem = (props: Props) => {
             <Iconify icon="solar:pen-bold" />
             {t(LanguageKey.button.update)}
           </MenuItem>
-          <ButtonDelete
+          <IconButtonDelete
             refreshData={refreshData}
             rowId={item?.id!}
             baseUrl={baseUrl + '/delete/' + item?.id}

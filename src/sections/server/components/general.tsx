@@ -1,4 +1,4 @@
-import { Grid, Paper, styled } from '@mui/material';
+import { Divider, Grid, Paper, styled, Typography } from '@mui/material';
 import { FieldValues, UseFormSetError } from 'react-hook-form';
 import { AnalyticsSystem } from './analytics-system';
 import { ContainerDockerComponent } from './container-list';
@@ -6,6 +6,9 @@ import { ImagesDockerComponent } from './images-list';
 import { BasicInformation } from './information';
 import { RepositoryComponent } from './repository-list';
 import { ServiceList } from './service-list';
+import { t } from 'i18next';
+import { LanguageKey } from 'src/constants';
+import { NginxList } from './nginx-list';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.vars.palette.background.paper,
@@ -43,12 +46,21 @@ export const GeneralComponent = (props: Props) => {
         </Grid>
       </Grid>
 
-      {defaultData?.connectionId && defaultData.server_services && (
-        <ServiceList
-          connectionId={defaultData?.connectionId!}
-          services={defaultData?.server_services}
-        />
+      {defaultData?.connectionId && (
+        <Grid container spacing={2} columns={2} marginTop={2}>
+          <Grid item xs={2} sm={2} md={1}>
+            <ServiceList
+              connectionId={defaultData?.connectionId!}
+              services={defaultData?.server_services}
+            />
+          </Grid>
+          <Grid item xs={2} sm={2} md={1}>
+            <NginxList connectionId={defaultData?.connectionId!} serverId={defaultData.id!} />
+          </Grid>
+        </Grid>
       )}
+
+      <Divider sx={{ marginTop: 5 }} />
       <RepositoryComponent serverId={defaultData?.id!} connectionId={defaultData?.connectionId!} />
       {defaultData?.connectionId && (
         <ContainerDockerComponent connectionId={defaultData?.connectionId} />

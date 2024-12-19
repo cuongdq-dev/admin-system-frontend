@@ -99,3 +99,48 @@ export function varAlpha(colorString: string, opacity = 1) {
 
   return `rgba(${color} / ${opacity})`;
 }
+
+export function stringToColor(string: string) {
+  let hash = 0;
+  let i;
+
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+
+  return color;
+}
+
+export function stringAvatar(name: string) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.slice(0, 1).toLocaleUpperCase()}`,
+  };
+}
+
+export function rgbaToHex(rgb: string): string {
+  if (/^#[0-9A-Fa-f]{6}$/.test(rgb)) {
+    return rgb;
+  }
+  const match = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)$/);
+  if (!match) {
+    throw new Error(`Invalid RGB(A) color: ${rgb}`);
+  }
+
+  const r = parseInt(match[1], 10);
+  const g = parseInt(match[2], 10);
+  const b = parseInt(match[3], 10);
+
+  // Convert RGB to hexadecimal
+  const toHex = (value: number) => value.toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}

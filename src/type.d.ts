@@ -44,6 +44,7 @@ type IService = {
   is_active?: boolean;
   port?: string;
   memory_usage?: string;
+  service_docker?: Record<string, any>;
 };
 
 type IRepository = {

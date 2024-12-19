@@ -67,3 +67,28 @@ export function applyFilter({ inputData, comparator, filterName }: ApplyFilterPr
 
   return inputData;
 }
+
+export function timeAgo(dateInput: string | Date): string {
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  const timeUnits = [
+    { unit: 'year', seconds: 60 * 60 * 24 * 365 },
+    { unit: 'month', seconds: 60 * 60 * 24 * 30 },
+    { unit: 'week', seconds: 60 * 60 * 24 * 7 },
+    { unit: 'day', seconds: 60 * 60 * 24 },
+    { unit: 'hour', seconds: 60 * 60 },
+    { unit: 'minute', seconds: 60 },
+    { unit: 'second', seconds: 1 },
+  ];
+
+  for (const { unit, seconds } of timeUnits) {
+    const value = Math.floor(diffInSeconds / seconds);
+    if (value > 0) {
+      return `${value} ${unit}${value > 1 ? 's' : ''} ago`;
+    }
+  }
+
+  return 'just now';
+}

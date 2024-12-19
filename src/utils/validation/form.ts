@@ -80,3 +80,30 @@ export const GetValuesFormChange = (
 
   return deepCompare(initialData, currentValues) || {};
 };
+
+export const generateJsonSchema = (data: Record<string, any>): any => {
+  if (Array.isArray(data)) {
+    return {
+      type: 'array',
+      items: generateJsonSchema(data[0]),
+      additionalItems: false,
+    };
+  } else if (typeof data === 'object' && data !== null) {
+    return {
+      type: 'object',
+      additionalProperties: false,
+      properties: Object.entries(data).reduce((acc: any, [key, value]) => {
+        acc[key] = generateJsonSchema(value);
+        return acc;
+      }, {}),
+    };
+  } else if (typeof data === 'string') {
+    return { type: 'string' };
+  } else if (typeof data === 'number') {
+    return { type: 'number' };
+  } else if (typeof data === 'boolean') {
+    return { type: 'boolean' };
+  } else {
+    return { type: 'null' };
+  }
+};

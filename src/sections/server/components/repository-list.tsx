@@ -23,12 +23,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_REPOSITORY } from 'src/api-core/path';
-import { ButtonDelete, ButtonDismissNotify } from 'src/components/button';
+import { ButtonDismissNotify, IconButtonDelete } from 'src/components/button';
 import { RefreshIcon } from 'src/components/icon';
 import { Iconify, IconifyProps } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
-import { LanguageKey } from 'src/constants';
+import { LanguageKey, StoreName } from 'src/constants';
 import * as Yup from 'yup';
 import { Transition } from '../../../components/dialog';
 import { FormProvider } from '../../../components/hook-form';
@@ -81,7 +81,6 @@ const HeadLabel: HeadLabelProps[] = [
 ];
 export const RepositoryComponent = (props: RepositoryComponentProps) => {
   const { serverId, connectionId } = props;
-  const tableKey = 'repository_key';
   const [refreshNumber, setRefresh] = useState<number>(0);
 
   const refreshData = () => {
@@ -139,10 +138,10 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
           />
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
+              storeName={StoreName.REPOSIROTY}
               refreshNumber={refreshNumber}
               refreshData={refreshData}
               component={'TABLE'}
-              tableKey={tableKey}
               withSearch={false}
               url={PATH_REPOSITORY + `/${serverId}`}
               indexCol={true}
@@ -320,17 +319,18 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
         justifyContent: 'flex-end',
       }}
     >
-      {connectionId && row?.server_path && (
+      {connectionId && (
         <RunAction
           actionTitle={t(LanguageKey.button.submit)}
           handleLoading={(load) => setLoading(load)}
           connectionId={connectionId}
-          title={t(LanguageKey.repository.buildRepositoryTitle)}
-          description={t(LanguageKey.repository.buildRepositoryDescription)}
+          title={t(LanguageKey.repository.pullRepositoryTitle)}
+          description={t(LanguageKey.repository.pullRepositoryDescription)}
           action={HttpMethod.PATCH}
+          withBuild={true}
           updateRowData={updateRowData}
           baseUrl={`${PATH_REPOSITORY}/${connectionId}/build/${row?.id}`}
-          row={{ ...row, with_env: true, with_docker_compose: true } as any}
+          row={row}
           expanded="optional_settings"
           icon={{ icon: 'material-symbols:build-circle' }}
           headerIcon={{ icon: 'skill-icons:docker' }}
@@ -345,10 +345,10 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
           title={t(LanguageKey.repository.pullRepositoryTitle)}
           description={t(LanguageKey.repository.pullRepositoryDescription)}
           action={HttpMethod.PATCH}
-          withBuild={true}
+          withBuild={false}
           updateRowData={updateRowData}
           baseUrl={`${PATH_REPOSITORY}/${connectionId}/clone/${row?.id}`}
-          row={{ ...row, with_env: false, with_docker_compose: false } as any}
+          row={row}
           expanded="basic_information"
           icon={{ icon: 'octicon:feed-pull-request-open-16' }}
           headerIcon={{ icon: 'octicon:feed-pull-request-open-16' }}
@@ -356,7 +356,7 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
       )}
 
       <RunAction
-        withBuild={false}
+        withBuild={true}
         actionTitle={t(LanguageKey.button.update)}
         handleLoading={(load) => setLoading(load)}
         connectionId={connectionId}
@@ -370,7 +370,7 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
         headerIcon={{ icon: 'lucide:save-all' }}
       />
 
-      <ButtonDelete
+      <IconButtonDelete
         baseUrl={`${PATH_REPOSITORY}/${connectionId}/delete/${row?.id}`}
         rowId={row?.id}
         handleLoading={(load) => setLoading(load)}

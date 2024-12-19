@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { HttpMethod } from 'src/api-core';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
-import { ButtonDelete } from '../button';
+import { IconButtonDelete } from '../button';
 import { TableActionComponentProps } from './type';
 
 export const TableActionComponent = (props: TableActionComponentProps) => {
@@ -54,7 +54,7 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
             </IconButton>
           )}
           {deleteBtn && !editBtn && (
-            <ButtonDelete
+            <IconButtonDelete
               handleDelete={updateRowData}
               rowId={row?.id}
               baseUrl={baseUrl + '/delete/' + row?.id}
@@ -104,7 +104,7 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
             </MenuItem>
           )}
           {deleteBtn && (
-            <ButtonDelete
+            <IconButtonDelete
               handleDelete={updateRowData}
               title={t(LanguageKey.button.delete)}
               rowId={row?.id}

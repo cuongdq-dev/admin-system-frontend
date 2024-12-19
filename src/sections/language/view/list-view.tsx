@@ -11,7 +11,7 @@ import { PopupFormTable } from 'src/components/form/form-table';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
-import { LanguageKey } from 'src/constants';
+import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
 import * as Yup from 'yup';
@@ -31,7 +31,6 @@ const HeadLabel: HeadLabelProps[] = [
 ];
 
 export function ListView() {
-  const tableKey = 'language_table';
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const [state, setState] = useState<State>();
@@ -44,16 +43,13 @@ export function ListView() {
     action: HttpMethod.PATCH,
   });
 
-  useAPI({
-    key: 'languaage_content_tab',
-    baseURL: PATH_LANGUAGE,
-    onSuccess: (res) => setState(res),
-  });
+  useAPI({ baseURL: PATH_LANGUAGE, onSuccess: (res) => setState(res) });
 
   const refreshData = () => {
     setRefresh(refreshNumber + 1);
     handleCloseForm();
   };
+
   const handleClickOpenForm = (row: ITransition, action: HttpMethod) => {
     setFormConfig((s) => ({
       ...s,
@@ -85,7 +81,7 @@ export function ListView() {
             </TabList>
           </Box>
           <TableComponent
-            tableKey={tableKey}
+            storeName={StoreName.LANGUAGE}
             refreshNumber={refreshNumber}
             url={PATH_LANGUAGE}
             indexCol={true}

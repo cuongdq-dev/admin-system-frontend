@@ -10,7 +10,7 @@ import { HttpMethod } from 'src/api-core';
 import { PATH_LANGUAGE } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey } from 'src/constants';
+import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -22,7 +22,6 @@ type FormConfigState = {
   action?: HttpMethod;
 };
 export function SiteView() {
-  const tableKey = 'site_table';
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const [state, setState] = useState<State>();
@@ -36,7 +35,6 @@ export function SiteView() {
   });
 
   useAPI({
-    key: 'languaage_content_tab',
     baseURL: PATH_LANGUAGE,
     onSuccess: (res) => setState(res),
   });
@@ -81,7 +79,7 @@ export function SiteView() {
             </TabList>
           </Box>
           <TableComponent
-            tableKey={tableKey}
+            storeName={StoreName.SITE}
             refreshNumber={refreshNumber}
             url={PATH_LANGUAGE}
             indexCol={true}

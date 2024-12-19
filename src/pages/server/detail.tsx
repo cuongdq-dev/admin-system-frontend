@@ -1,4 +1,3 @@
-import { Fab } from '@mui/material';
 import { t } from 'i18next';
 import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
@@ -8,8 +7,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { ButtonDismissNotify } from 'src/components/button';
-import { Iconify } from 'src/components/iconify';
-import { HeadComponent } from 'src/components/page-head';
 import { CONFIG } from 'src/config-global';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
@@ -21,12 +18,12 @@ export default function Page() {
   const [state, setState] = useState<{ data?: IServer; loading: boolean }>({
     loading: true,
   });
+  const [refreshNumber, setRefresh] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
   const id = location.pathname.split('/')[2];
 
   useAPI({
-    key: 'server_detail',
     baseURL: PATH_SERVER + '/detail/' + id,
     onSuccess: (res) => {
       setTimeout(() => {
@@ -77,10 +74,11 @@ export default function Page() {
     invokeRequest({
       method: HttpMethod.POST,
       baseURL: PATH_SERVER + '/connection/' + id,
-      onHandleError: (response) => {
+      onHandleError: () => {
         setState((state) => ({ ...state, loading: false }));
       },
       onSuccess(res) {
+        setRefresh(refreshNumber + 1);
         setState((s) => ({
           ...s,
           loading: false,
@@ -101,25 +99,15 @@ export default function Page() {
       <Helmet>
         <title> {`${t(LanguageKey.server.detailPageTitle)} - ${CONFIG.appName}`}</title>
       </Helmet>
-      <Fab
-        onClick={handleReconnectServer}
-        size="medium"
-        aria-label="Github"
-        sx={{
-          zIndex: 9,
-          right: 20,
-          bottom: 20,
-          width: 44,
-          height: 44,
-          position: 'fixed',
-          bgcolor: 'grey.600',
-          color: 'blue',
-        }}
-      >
-        <Iconify width={24} icon="material-symbols:signal-wifi-statusbar-not-connected" />
-      </Fab>
+
       <DashboardContent>
-        <DetailView handleUpdate={handleUpdate} loading={state.loading} defaultData={state?.data} />
+        <DetailView
+          key={'detail_' + refreshNumber}
+          handleUpdate={handleUpdate}
+          handleReconnectServer={handleReconnectServer}
+          loading={state.loading}
+          defaultData={state?.data}
+        />
       </DashboardContent>
     </>
   );

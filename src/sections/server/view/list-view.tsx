@@ -7,7 +7,7 @@ import { PopupFormTable } from 'src/components/form/form-table';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
-import { LanguageKey } from 'src/constants';
+import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import * as Yup from 'yup';
 import { ServerItem } from '../components/card-item';
@@ -43,7 +43,6 @@ const FormTableSchema = {
 };
 
 export function ListView() {
-  const tableKey = 'server_table';
   const [refreshNumber, setRefresh] = useState<number>(0);
 
   const [formConfig, setFormConfig] = useState<FormConfigState>({
@@ -88,8 +87,8 @@ export function ListView() {
       />
 
       <TableComponent
+        storeName={StoreName.SERVER}
         component={isMobile ? 'CARD' : 'TABLE'}
-        tableKey={tableKey}
         refreshNumber={refreshNumber}
         url={PATH_SERVER}
         indexCol={true}

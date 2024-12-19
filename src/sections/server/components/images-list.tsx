@@ -22,14 +22,14 @@ import { enqueueSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HttpMethod, invokeRequest } from 'src/api-core';
-import { PATH_DOCKER, PATH_REPOSITORY } from 'src/api-core/path';
-import { ButtonDelete, ButtonDismissNotify } from 'src/components/button';
+import { PATH_DOCKER } from 'src/api-core/path';
+import { ButtonDismissNotify, IconButtonDelete } from 'src/components/button';
 import { FormProvider } from 'src/components/hook-form';
 import { RefreshIcon } from 'src/components/icon';
 import { Iconify, IconifyProps } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
-import { LanguageKey } from 'src/constants';
+import { LanguageKey, StoreName } from 'src/constants';
 import { Transition } from '../../../components/dialog';
 import { ImageForm } from './image-form';
 
@@ -37,7 +37,6 @@ type ImagesDockerProps = { connectionId?: string };
 
 export const ImagesDockerComponent = (props: ImagesDockerProps) => {
   const { connectionId } = props;
-  const tableKey = 'images_docker_key';
   const [refreshNumber, setRefresh] = useState<number>(0);
 
   const refreshData = () => {
@@ -75,8 +74,8 @@ export const ImagesDockerComponent = (props: ImagesDockerProps) => {
           />
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
+              storeName={StoreName.IMAGES}
               component={'TABLE'}
-              tableKey={tableKey}
               refreshNumber={refreshNumber}
               refreshData={refreshData}
               withSearch={false}
@@ -151,7 +150,7 @@ const ImageAction = ({ row, updateRowData, connectionId }: ImageActionProps) => 
           )}
         </>
       )}
-      <ButtonDelete
+      <IconButtonDelete
         baseUrl={`${PATH_DOCKER}/image/${connectionId}/${row?.id}`}
         rowId={row?.id}
         handleLoading={setLoading}
