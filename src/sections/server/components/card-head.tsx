@@ -13,7 +13,7 @@ export const CardHead = (props: {
   const { fetchOn, storeName, title, actionRender } = props;
 
   const { setRefreshList } = usePageStore();
-  const { refreshNumber = 0 } = usePageStore(
+  const { refreshNumber = 0, isFetching } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
   );
 
@@ -34,7 +34,7 @@ export const CardHead = (props: {
               <RefreshIcon icon={'mdi:refresh'} />
             </IconButton>
           </Box>
-          <TimeAgo timestamp={fetchOn!} />
+          <TimeAgo isFetching={isFetching} timestamp={fetchOn!} />
         </>
       }
     />

@@ -24,14 +24,13 @@ import { TableActionComponent } from './table-action';
 import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
-import { TableComponentProps, TableMetaData } from './type';
+import { TableComponentProps } from './type';
+import { invokeRequest } from 'src/api-core';
 
-type TableState = {
-  data?: Record<string, any>;
-  meta?: TableMetaData;
-};
 export const TableComponent = (props: TableComponentProps) => {
   const { headLabel, url, indexCol, selectCol, withSearch = true, storeName, component } = props;
+  // const { setNotify } = useNotifyStore.getState();
+  const [animationKey, setAnimationKey] = useState(0);
 
   const { setList, setLoadingList, setFetchingList } = usePageStore.getState();
   const table = useTable();
@@ -39,7 +38,8 @@ export const TableComponent = (props: TableComponentProps) => {
   const {
     data: datasource,
     meta: metaData,
-    isLoading: loading,
+    isLoading: loading = true,
+    isFetching,
     refreshNumber,
     fetchOn,
   } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
@@ -51,6 +51,23 @@ export const TableComponent = (props: TableComponentProps) => {
   useEffect(() => {
     Number(refreshNumber) > 0 && setLoadingList(storeName, true);
   }, [refreshNumber]);
+
+  useEffect(() => {
+    !loading && setAnimationKey((prevKey) => prevKey + 1);
+  }, [loading]);
+
+  useEffect(() => {
+    if (isFetching) {
+      invokeRequest({
+        baseURL: url + '/list' + window.location.search,
+        onSuccess: (res) => setList(storeName, { ...res, isFetching: false, isLoading: false }),
+        onHandleError: () => {
+          setLoadingList(storeName, false);
+          setFetchingList(storeName, false);
+        },
+      });
+    }
+  }, [isFetching]);
 
   useAPI({
     clearRequest:
@@ -67,7 +84,7 @@ export const TableComponent = (props: TableComponentProps) => {
     },
   });
 
-  const notFound = !datasource || Number(datasource?.length) == 0;
+  const notFound = !loading && (!datasource || Number(datasource?.length) == 0);
 
   const getSortBy = () => {
     if (Number(metaData?.sortBy?.length) > 0)
@@ -101,7 +118,7 @@ export const TableComponent = (props: TableComponentProps) => {
       default:
         updatedDatasource = datasource || [];
     }
-    setList(storeName, { data: updatedDatasource });
+    setList(storeName, { data: updatedDatasource, isLoading: false, isFetching: false });
   };
 
   if (component == 'CARD') {
@@ -162,17 +179,22 @@ export const TableComponent = (props: TableComponentProps) => {
           />
         </Box>
       )}
-      <Card sx={{ opacity: loading ? 0.1 : 1, pointerEvents: loading ? 'none' : 'auto' }}>
-        {/* {withSearch && (
-          <TableToolbarComponent
-            filterName={filterName}
-            onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setFilterName(event.target.value);
-              table.onResetPage();
-            }}
-          />
-        )} */}
-
+      <Card
+        key={`${animationKey}_card_component`}
+        sx={{
+          opacity: loading ? 0.1 : 1,
+          pointerEvents: loading ? 'none' : 'auto',
+          animation: 'fadeIn 0.5s ease-in-out',
+          '@keyframes fadeIn': {
+            '0%': {
+              transform: 'translateY(-10px)',
+            },
+            '100%': {
+              transform: 'translateY(0)',
+            },
+          },
+        }}
+      >
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
@@ -202,7 +224,25 @@ export const TableComponent = (props: TableComponentProps) => {
                   {datasource?.map((row: Record<string, any>, index: number) => {
                     const keys = Object.keys(row);
                     return (
-                      <TableRow hover tabIndex={-1} role="checkbox" key={row.id}>
+                      <TableRow
+                        key={`${animationKey}-${row.id}-${index}`}
+                        sx={{
+                          animation: 'fadeIn 1.3s ease-in-out',
+                          '@keyframes fadeIn': {
+                            '0%': {
+                              opacity: 0,
+                              transform: 'translateY(-15px)',
+                            },
+                            '100%': {
+                              opacity: 1,
+                              transform: 'translateY(0)',
+                            },
+                          },
+                        }}
+                        hover
+                        tabIndex={-1}
+                        role="checkbox"
+                      >
                         {selectCol && (
                           <CommonTableCell
                             type="checkbox"
@@ -271,7 +311,7 @@ export const TableComponent = (props: TableComponentProps) => {
         {metaData && Object.keys(metaData).length > 0 && (
           <Box display="flex" alignItems="center" justifyContent="space-between">
             <Typography marginLeft={2} variant="caption" color="grey">
-              <TimeAgo timestamp={fetchOn!} />
+              <TimeAgo isFetching={isFetching} timestamp={fetchOn!} />
             </Typography>
 
             <TablePagination

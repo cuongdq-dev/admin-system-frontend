@@ -59,6 +59,7 @@ export const NginxList = (props: NginxListProps) => {
 
   const {
     refreshNumber = 0,
+    isFetching,
     data,
     fetchOn,
     isLoading: loading,
@@ -139,6 +140,7 @@ export const NginxList = (props: NginxListProps) => {
         timestamp={fetchOn!}
         alignSelf={'end'}
         fontSize={10}
+        isFetching={isFetching}
         icon={{ icon: 'mingcute:time-fill', width: 13 }}
       />
 

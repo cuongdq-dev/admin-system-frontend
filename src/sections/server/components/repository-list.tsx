@@ -239,13 +239,13 @@ const RunAction = (props: IconActionProps) => {
     <Box sx={{ position: 'relative' }}>
       <IconButton onClick={() => setOpen(true)}>
         <Iconify {...icon} />
+        {loading && (
+          <CircularProgress
+            size={30}
+            sx={{ color: 'primary.main', position: 'absolute', zIndex: 1 }}
+          />
+        )}
       </IconButton>
-      {loading && (
-        <CircularProgress
-          size={20}
-          sx={{ color: 'primary.main', position: 'absolute', top: 8, left: 8, zIndex: 1 }}
-        />
-      )}
 
       <Dialog
         PaperProps={{ sx: { borderRadius: 3 } }}
@@ -303,11 +303,7 @@ type ActionGroupProp = {
 };
 const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
   const [loading, setLoading] = useState(false);
-
-  const { setRefreshList } = usePageStore();
-  const { refreshNumber = 0 } = usePageStore(
-    useShallow((state) => ({ ...state.dataStore![StoreName.IMAGES]?.list }))
-  );
+  const { setFetchingList } = usePageStore();
 
   return (
     <Box
@@ -329,7 +325,7 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
           withBuild={true}
           updateRowData={(rowId, values, action) => {
             updateRowData && updateRowData(rowId, values, action);
-            setRefreshList(StoreName.IMAGES, refreshNumber + 1);
+            setFetchingList(StoreName.IMAGES, true);
           }}
           baseUrl={`${PATH_REPOSITORY}/${connectionId}/build/${row?.id}`}
           row={row}

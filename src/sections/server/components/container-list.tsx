@@ -177,7 +177,7 @@ const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: I
   const [loading, setLoading] = useState(false);
   const { setNotify } = useNotifyStore.getState();
 
-  const { setRefreshList } = usePageStore.getState();
+  const { setFetchingList } = usePageStore.getState();
   const { refreshNumber = 0 } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![StoreName.IMAGES]?.list }))
   );
@@ -198,7 +198,7 @@ const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: I
         onSuccess(res) {
           setLoading(false);
           updateRowData && updateRowData(row?.id!, res, action === 'remove' ? 'REMOVE' : 'UPDATE');
-          setRefreshList(StoreName.IMAGES, refreshNumber + 1);
+          setFetchingList(StoreName.IMAGES, true);
           setNotify({
             title: t(LanguageKey.notify.successUpdate),
             options: { variant: 'success' },
@@ -213,13 +213,13 @@ const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: I
       <Box sx={{ position: 'relative' }}>
         <IconButton onClick={handleButtonClick}>
           <Iconify icon={containerActionIcons[action]} />
+          {loading && (
+            <CircularProgress
+              size={30}
+              sx={{ color: 'primary.main', position: 'absolute', zIndex: 1 }}
+            />
+          )}
         </IconButton>
-        {loading && (
-          <CircularProgress
-            size={20}
-            sx={{ color: 'primary.main', position: 'absolute', top: 8, left: 8, zIndex: 1 }}
-          />
-        )}
       </Box>
     </Tooltip>
   );

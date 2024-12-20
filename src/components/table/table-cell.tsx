@@ -27,6 +27,7 @@ interface CommonTableCellProps {
 export function CommonTableCell(props: CommonTableCellProps) {
   const { type, value, checked, avatarUrl, name, status, icon, align, minWidth, width } = props;
   const { onChange, onActionClick } = props;
+
   switch (type) {
     case 'checkbox':
       return (

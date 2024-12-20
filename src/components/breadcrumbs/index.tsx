@@ -53,16 +53,17 @@ const Breadcrumbs = () => {
         aria-label="breadcrumb"
         sx={{ ml: -1, [theme.breakpoints.down(layoutQuery)]: { display: 'none' } }}
       >
-        <StyledBreadcrumbItem component="a" href="/" label={t(LanguageKey.dashboard.pageTitle)} />
+        <StyledBreadcrumbItem label={t(LanguageKey.dashboard.pageTitle)} />
         {pathnames.map((value, index) => {
           const key = value + '_' + index;
           const last = index === pathnames.length - 1;
           const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-          const routeName = findRouteName('/' + value, RouterConfig) || location?.state?.sitename;
+          const routeName =
+            findRouteName('/' + value, RouterConfig) || location?.state?.sitename || 'Detail';
           return last ? (
             <StyledBreadcrumbItem key={key} aria-current="page" label={routeName} />
           ) : (
-            <StyledBreadcrumbItem key={key} component={'a'} href={to} label={routeName} />
+            <StyledBreadcrumbItem key={key} label={routeName} />
           );
         })}
       </MUIBreadcrumbs>

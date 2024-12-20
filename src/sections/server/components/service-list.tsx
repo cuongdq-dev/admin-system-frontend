@@ -60,6 +60,7 @@ const ServiceItem = (props: { connectionId?: string }) => {
   const {
     refreshNumber = 0,
     data,
+    isFetching,
     fetchOn,
     isLoading: loading,
   } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
@@ -187,7 +188,7 @@ const ServiceItem = (props: { connectionId?: string }) => {
               <RefreshIcon />
             </IconButton>
           </Typography>
-          <TimeAgo timestamp={fetchOn!} />
+          <TimeAgo isFetching={isFetching} timestamp={fetchOn!} />
           <Typography
             sx={(theme) => {
               return {

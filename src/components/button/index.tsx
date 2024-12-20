@@ -75,12 +75,19 @@ export const IconButtonDelete = (props: IconButtonDeleteProps) => {
   return (
     <>
       <MenuItem sx={{ color: 'error.main' }} onClick={() => setOpen(true)}>
-        <Box sx={{ position: 'relative', display: 'flex' }}>
+        <Box
+          sx={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           <Iconify icon="solar:trash-bin-trash-bold" />
           {loading && (
             <CircularProgress
-              size={25}
-              sx={{ color: 'primary.main', position: 'absolute', left: -2, top: -2, zIndex: 1 }}
+              size={30}
+              sx={{ color: 'primary.main', position: 'absolute', zIndex: 1 }}
             />
           )}
         </Box>

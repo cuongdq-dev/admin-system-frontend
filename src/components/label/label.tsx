@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import { labelClasses } from './classes';
 import { StyledLabel } from './styles';
 
-import { Typography, TypographyProps } from '@mui/material';
+import { LinearProgress, Typography, TypographyProps } from '@mui/material';
 import { Iconify, IconifyProps } from '../iconify';
 import type { LabelProps } from './types';
 
@@ -65,14 +65,17 @@ function sentenceCase(string: string): string {
 
 export const TimeAgo = ({
   timestamp,
+  isFetching,
   icon = { width: 15, icon: 'mingcute:time-fill', color: 'grey' },
   ...props
 }: {
   timestamp: string | number | Date;
   icon?: IconifyProps;
+  isFetching?: boolean;
 } & TypographyProps) => {
   if (!timestamp) return <></>;
 
+  if (isFetching) return <LinearProgress sx={{ height: 2, marginTop: 2 }} />;
   const [timeAgo, setTimeAgo] = useState('');
 
   useEffect(() => {

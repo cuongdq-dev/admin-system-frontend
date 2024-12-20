@@ -18,7 +18,8 @@ export default function App() {
       enqueueSnackbar(notify.title, {
         ...notify.options,
         action: (key) => {
-          if (notify) return <ButtonDismissNotify keyNotify={key} textColor="white" />;
+          if (notify.dismissAction)
+            return <ButtonDismissNotify keyNotify={key} textColor="white" />;
           return <></>;
         },
       });

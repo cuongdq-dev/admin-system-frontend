@@ -1,7 +1,7 @@
 import { t } from 'i18next';
 import { Helmet } from 'react-helmet-async';
 import { FieldValues, UseFormSetError } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { CONFIG } from 'src/config-global';
@@ -29,53 +29,51 @@ export default function Page() {
   useAPI({
     baseURL: PATH_SERVER + '/connection/' + id,
     onSuccess: (res) => {
-      invokeRequest({
-        method: HttpMethod.GET,
-        baseURL: PATH_SERVER + `/detail/${res.connectionId}/${id}`,
-        onSuccess: (resDetail) => {
-          const {
-            listServices,
-            listNginx,
-            listRepositories,
-            listImages,
-            listContainer,
-            ...detail
-          } = resDetail;
-
-          listContainer?.value?.data &&
-            setList(StoreName.CONTAINER, {
-              data: listContainer?.value?.data,
-            });
-
-          listImages?.value?.data &&
-            setList(StoreName.IMAGES, {
-              data: listImages?.value?.data,
-            });
-
-          listRepositories?.value?.data &&
-            setList(StoreName.REPOSIROTY, {
-              data: listRepositories?.value?.data,
-            });
-
-          listNginx?.value?.data &&
-            setList(StoreName.NGINX, {
-              data: listNginx?.value?.data,
-            });
-
-          listServices?.value?.data &&
-            setList(StoreName.SERVICE, {
-              data: listServices?.value?.data,
-            });
-
-          setDetail(storeName, { data: detail, isLoading: false, isFetching: false });
-        },
-        onHandleError: () => {},
-      });
+      res?.connectionId && fetchDetail(res?.connectionId);
     },
     onHandleError: (error) => {
       setLoadingDetail(storeName, false);
     },
   });
+
+  const fetchDetail = (connectionId: string) => {
+    invokeRequest({
+      method: HttpMethod.GET,
+      baseURL: PATH_SERVER + `/detail/${connectionId}/${id}`,
+      onSuccess: (resDetail) => {
+        const { listServices, listNginx, listRepositories, listImages, listContainer, ...detail } =
+          resDetail;
+
+        listContainer?.value?.data &&
+          setList(StoreName.CONTAINER, {
+            data: listContainer?.value?.data,
+          });
+
+        listImages?.value?.data &&
+          setList(StoreName.IMAGES, {
+            data: listImages?.value?.data,
+          });
+
+        listRepositories?.value?.data &&
+          setList(StoreName.REPOSIROTY, {
+            data: listRepositories?.value?.data,
+          });
+
+        listNginx?.value?.data &&
+          setList(StoreName.NGINX, {
+            data: listNginx?.value?.data,
+          });
+
+        listServices?.value?.data &&
+          setList(StoreName.SERVICE, {
+            data: listServices?.value?.data,
+          });
+
+        setDetail(storeName, { data: detail, isLoading: false, isFetching: false });
+      },
+      onHandleError: () => {},
+    });
+  };
 
   const handleUpdate = (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => {
     invokeRequest({

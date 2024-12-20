@@ -102,10 +102,7 @@ type ImageActionProps = {
 const ImageAction = ({ row, updateRowData, connectionId }: ImageActionProps) => {
   const [loading, setLoading] = useState(false);
 
-  const { setRefreshList } = usePageStore();
-  const { refreshNumber = 0 } = usePageStore(
-    useShallow((state) => ({ ...state.dataStore![StoreName.REPOSIROTY]?.list }))
-  );
+  const { setFetchingList } = usePageStore();
 
   return (
     <Box
@@ -159,7 +156,7 @@ const ImageAction = ({ row, updateRowData, connectionId }: ImageActionProps) => 
         handleLoading={setLoading}
         handleDelete={(id, updateData, action) => {
           updateRowData && updateRowData(id, updateData, action);
-          setRefreshList(StoreName.REPOSIROTY, refreshNumber + 1);
+          setFetchingList(StoreName.REPOSIROTY, true);
         }}
       />
     </Box>
@@ -277,6 +274,7 @@ const RunAction = (props: IconActionProps) => {
   const { setNotify } = useNotifyStore.getState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { setFetchingList } = usePageStore();
 
   useEffect(() => {
     setLoading(loading);
@@ -296,11 +294,6 @@ const RunAction = (props: IconActionProps) => {
   const methods = useForm({
     defaultValues: row as any,
   });
-
-  const { setRefreshList } = usePageStore();
-  const { refreshNumber = 0 } = usePageStore(
-    useShallow((state) => ({ ...state.dataStore![StoreName.CONTAINER]?.list }))
-  );
 
   const onSubmit = async () => {
     handleLoading(true);
@@ -322,7 +315,7 @@ const RunAction = (props: IconActionProps) => {
       onSuccess(res) {
         handleLoading(false);
         setLoading(false);
-        setRefreshList(StoreName.CONTAINER, refreshNumber + 1);
+        setFetchingList(StoreName.CONTAINER, true);
         updateRowData && updateRowData(row?.id!, res, 'UPDATE');
         setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
@@ -333,13 +326,13 @@ const RunAction = (props: IconActionProps) => {
     <Box sx={{ position: 'relative' }}>
       <IconButton onClick={() => setOpen(true)}>
         <Iconify {...icon} />
+        {loading && (
+          <CircularProgress
+            size={30}
+            sx={{ color: 'primary.main', position: 'absolute', zIndex: 1 }}
+          />
+        )}
       </IconButton>
-      {loading && (
-        <CircularProgress
-          size={20}
-          sx={{ color: 'primary.main', position: 'absolute', top: 8, left: 8, zIndex: 1 }}
-        />
-      )}
 
       <Dialog
         PaperProps={{ sx: { borderRadius: 3 } }}
