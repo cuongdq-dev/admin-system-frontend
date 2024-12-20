@@ -14,6 +14,7 @@ import {
 import { t } from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { invokeRequest } from 'src/api-core';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { usePageStore } from 'src/store/store';
@@ -25,7 +26,6 @@ import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
 import { TableComponentProps } from './type';
-import { invokeRequest } from 'src/api-core';
 
 export const TableComponent = (props: TableComponentProps) => {
   const { headLabel, url, indexCol, selectCol, withSearch = true, storeName, component } = props;
@@ -38,7 +38,7 @@ export const TableComponent = (props: TableComponentProps) => {
   const {
     data: datasource,
     meta: metaData,
-    isLoading: loading = true,
+    isLoading: loading = false,
     isFetching,
     refreshNumber,
     fetchOn,
@@ -51,6 +51,10 @@ export const TableComponent = (props: TableComponentProps) => {
   useEffect(() => {
     Number(refreshNumber) > 0 && setLoadingList(storeName, true);
   }, [refreshNumber]);
+
+  useEffect(() => {
+    metaData && setFetchingList(storeName, true);
+  }, [window.location.search]);
 
   useEffect(() => {
     !loading && setAnimationKey((prevKey) => prevKey + 1);
@@ -124,15 +128,6 @@ export const TableComponent = (props: TableComponentProps) => {
   if (component == 'CARD') {
     return (
       <>
-        {/* {withSearch && (
-          <CardToolbarComponent
-            filterName={filterName}
-            onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setFilterName(event.target.value);
-              table.onResetPage();
-            }}
-          />
-        )} */}
         <Grid spacing={3}>
           {notFound && <TableNoData />}
 

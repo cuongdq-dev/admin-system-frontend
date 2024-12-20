@@ -37,6 +37,7 @@ export function ListView() {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const [state, setState] = useState<State>();
+
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0 } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
