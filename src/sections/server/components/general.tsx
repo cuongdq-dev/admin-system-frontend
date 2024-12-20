@@ -47,10 +47,7 @@ export const GeneralComponent = (props: Props) => {
 
       <Grid container spacing={2} columns={2} marginTop={2}>
         <Grid item xs={2} sm={2} md={1}>
-          <ServiceList
-            connectionId={defaultData?.connectionId!}
-            services={defaultData?.server_services}
-          />
+          <ServiceList connectionId={defaultData?.connectionId!} />
         </Grid>
         <Grid item xs={2} sm={2} md={1}>
           <NginxList connectionId={defaultData?.connectionId!} serverId={defaultData?.id!} />

@@ -85,7 +85,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
   const storeName = StoreName.REPOSIROTY;
 
   const { setRefreshList } = usePageStore();
-  const { refreshNumber = 0 } = usePageStore(
+  const { refreshNumber = 0, fetchOn } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
   );
 
@@ -113,6 +113,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
       <Grid item mt={2} xs={12} sm={12} md={12}>
         <Card sx={{ boxShadow: 'none' }}>
           <CardHead
+            fetchOn={fetchOn}
             title={t(LanguageKey.repository.repositoryListTitle)}
             storeName={storeName}
             actionRender={() => (

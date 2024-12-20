@@ -17,6 +17,7 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { RefreshIcon } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
+import { TimeAgo } from 'src/components/label';
 import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { useNotifyStore } from 'src/store/notify';
@@ -40,26 +41,20 @@ const PaperCustom = styled(Paper)(({ theme }) => ({
 }));
 
 type ServerListProps = { services?: IService[]; connectionId: string };
-export const ServiceList = ({ services, connectionId }: ServerListProps) => {
+export const ServiceList = ({ connectionId }: ServerListProps) => {
   return (
     <Grid container columns={4} spacing={2}>
-      {services?.map((service: IServer) => {
-        return (
-          <Grid key={service.id} item xs={4} sm={4} md={4}>
-            <ServiceItem service={service} connectionId={connectionId} />
-          </Grid>
-        );
-      })}
+      <Grid item xs={4} sm={4} md={4}>
+        <ServiceItem connectionId={connectionId} />
+      </Grid>
     </Grid>
   );
 };
 
-type ServiceProps = { service?: IService; connectionId?: string };
-const ServiceItem = (props: ServiceProps) => {
+const ServiceItem = (props: { connectionId?: string }) => {
   const { setNotify } = useNotifyStore.getState();
-  const { service, connectionId } = props;
+  const { connectionId } = props;
   const storeName = StoreName.SERVICE;
-
   const { setRefreshList, setLoadingList, setList } = usePageStore();
 
   const {
@@ -79,9 +74,9 @@ const ServiceItem = (props: ServiceProps) => {
       new Date().getTime() - new Date(fetchOn).getTime() < 5 * 60 * 1000,
 
     refreshNumber: refreshNumber,
-    baseURL: PATH_SERVER + `/service/${service?.id}/${connectionId}`,
+    baseURL: PATH_SERVER + `/service/${data?.id}/${connectionId}`,
     onSuccess: (res) => {
-      setList(storeName, { data: res, isLoading: false, isFetching: false });
+      setList(storeName, { data: res?.data, isLoading: false, isFetching: false });
     },
     onHandleError: (res) => {
       setLoadingList(storeName, false);
@@ -93,7 +88,7 @@ const ServiceItem = (props: ServiceProps) => {
 
     invokeRequest({
       method: HttpMethod.POST,
-      baseURL: PATH_SERVER + `/setup/service/${service?.id}/${connectionId}`,
+      baseURL: PATH_SERVER + `/setup/service/${data?.id}/${connectionId}`,
       onSuccess: () => {
         setLoadingList(storeName, false);
         setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
@@ -176,7 +171,7 @@ const ServiceItem = (props: ServiceProps) => {
           <Typography
             sx={(theme) => {
               return {
-                fontSize: theme.typography.button,
+                fontSize: theme.typography.h6,
                 fontWeight: theme.typography.fontWeightBold,
               };
             }}
@@ -192,6 +187,7 @@ const ServiceItem = (props: ServiceProps) => {
               <RefreshIcon />
             </IconButton>
           </Typography>
+          <TimeAgo timestamp={fetchOn!} />
           <Typography
             sx={(theme) => {
               return {

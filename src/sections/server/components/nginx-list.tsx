@@ -24,6 +24,7 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { ButtonDelete } from 'src/components/button';
 import { Iconify } from 'src/components/iconify';
+import { TimeAgo } from 'src/components/label';
 import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { useNotifyStore } from 'src/store/notify';
@@ -59,12 +60,19 @@ export const NginxList = (props: NginxListProps) => {
   const {
     refreshNumber = 0,
     data,
+    fetchOn,
     isLoading: loading,
   } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
 
   const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
 
   useAPI({
+    clearRequest:
+      !loading &&
+      data &&
+      fetchOn &&
+      new Date().getTime() - new Date(fetchOn).getTime() < 5 * 60 * 1000,
+
     refreshNumber: refreshNumber,
     baseURL: PATH_SERVER + `/nginx/${serverId}/${connectionId}`,
     onSuccess: (res) => {
@@ -126,6 +134,12 @@ export const NginxList = (props: NginxListProps) => {
         title={t(LanguageKey.nginx.addFileTitle)}
         refreshData={refreshData}
         connectionId={connectionId!}
+      />
+      <TimeAgo
+        timestamp={fetchOn!}
+        alignSelf={'end'}
+        fontSize={10}
+        icon={{ icon: 'mingcute:time-fill', width: 13 }}
       />
 
       {data?.map((item: { name: string; content?: string }, index: number) => {

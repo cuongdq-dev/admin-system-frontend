@@ -4,15 +4,14 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import { useTheme } from '@mui/material/styles';
 import { t } from 'i18next';
-import { useState } from 'react';
-import { PATH_SERVER } from 'src/api-core/path';
 import type { ChartOptions } from 'src/components/chart';
 import { Chart, useChart } from 'src/components/chart';
 import { RefreshIcon } from 'src/components/icon';
-import { LanguageKey } from 'src/constants';
-import { useAPI } from 'src/hooks/use-api';
+import { LanguageKey, StoreName } from 'src/constants';
+import { usePageStore } from 'src/store/store';
 import { varAlpha } from 'src/theme/styles';
 import { fNumber } from 'src/utils/format-number';
+import { useShallow } from 'zustand/react/shallow';
 
 // ----------------------------------------------------------------------
 
@@ -24,16 +23,13 @@ type Props = CardProps & {
   actived?: boolean;
 };
 
-type State = {
-  loading?: boolean;
-  chart?: {
-    units?: string[];
-    categories?: string[];
-    values?: string[];
-    used: number[];
-    available: number[];
-    options?: ChartOptions;
-  };
+type ChartType = {
+  units?: string[];
+  categories?: string[];
+  values?: string[];
+  used: number[];
+  available: number[];
+  options?: ChartOptions;
 };
 
 const StyleChipActive = styled(Box)(({ theme }) => {
@@ -48,33 +44,17 @@ const StyleChipActive = styled(Box)(({ theme }) => {
 });
 
 export function AnalyticsSystem(props: Props) {
+  const storeName = StoreName.SERVER;
   const { title, subheader, connected, actived, connectionId, ...other } = props;
   const theme = useTheme();
 
-  const [state, setState] = useState<State>({
-    loading: true,
-    chart: { used: [], available: [] },
-  });
-  const [refreshNumber, setRefresh] = useState(0);
-
-  useAPI({
-    refreshNumber: refreshNumber,
-    baseURL: PATH_SERVER + `/status/${connectionId}`,
-    onSuccess: (res) => {
-      setState({ loading: false, chart: res });
-    },
-
-    onHandleError: () => {
-      setState((s) => ({ ...s, loading: false }));
-    },
-  });
-
-  const totalValues = state?.chart?.used.map(
-    (used, index) => used + state?.chart?.available[index]!
+  const { data, isLoading: loading } = usePageStore(
+    useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
   );
-  const percentageUsed = state?.chart?.used.map(
-    (used, index) => (used / totalValues![index]) * 100
-  );
+  const chart = data?.serverStatus?.value as ChartType;
+
+  const totalValues = chart?.used.map((used, index) => used + chart?.available[index]!);
+  const percentageUsed = chart?.used.map((used, index) => (used / totalValues![index]) * 100);
   const chartOptions = useChart({
     colors: [
       theme.vars.palette.error['main'], //used
@@ -88,15 +68,15 @@ export function AnalyticsSystem(props: Props) {
         formatter: (value: number, opts: any) => {
           const originalValue =
             opts.seriesIndex === 0
-              ? state?.chart?.used[opts.dataPointIndex]
-              : state?.chart?.available[opts.dataPointIndex];
-          const unit = state?.chart?.units![opts.dataPointIndex];
+              ? chart?.used[opts.dataPointIndex]
+              : chart?.available[opts.dataPointIndex];
+          const unit = chart?.units![opts.dataPointIndex];
           return `${fNumber(originalValue, undefined, unit)}`;
         },
         title: { formatter: (seriesName: string) => `${seriesName}: ` },
       },
     },
-    xaxis: { categories: state?.chart?.categories || [] },
+    xaxis: { categories: chart?.categories || [] },
 
     dataLabels: {
       enabled: true,
@@ -105,13 +85,12 @@ export function AnalyticsSystem(props: Props) {
       formatter: (value: number, opts: any) => {
         const originalValue =
           opts.seriesIndex === 0
-            ? state?.chart?.used[opts.dataPointIndex]
-            : state?.chart?.available[opts.dataPointIndex]! +
-              state?.chart?.used[opts.dataPointIndex]!;
+            ? chart?.used[opts.dataPointIndex]
+            : chart?.available[opts.dataPointIndex]! + chart?.used[opts.dataPointIndex]!;
 
         return opts.seriesIndex === 0
           ? ''
-          : `${fNumber(originalValue)}(${state?.chart?.units![opts.dataPointIndex]})`;
+          : `${fNumber(originalValue)}(${chart?.units![opts.dataPointIndex]})`;
       },
       style: { fontSize: '10px', colors: ['#FFFFFF', theme.palette.text.primary] },
     },
@@ -125,20 +104,13 @@ export function AnalyticsSystem(props: Props) {
       },
     },
     chart: { type: 'bar', stacked: true, stackType: '100%' },
-    ...state?.chart?.options,
+    ...chart?.options,
   });
 
   return (
     <>
       <Box display="flex" justifyContent={'space-between'} paddingX={2} paddingY={2}>
-        <IconButton
-          onClick={() => {
-            setRefresh(refreshNumber + 1);
-            setState((s) => ({ ...s, loading: true }));
-          }}
-        >
-          <RefreshIcon loading={state.loading} icon={'mdi:refresh'} />
-        </IconButton>
+        <Box></Box>
 
         <Box display="flex" alignItems="center">
           {connected ? (

@@ -41,7 +41,7 @@ export const ImagesDockerComponent = (props: ImagesDockerProps) => {
   const storeName = StoreName.IMAGES;
 
   const { setRefreshList } = usePageStore();
-  const { refreshNumber = 0 } = usePageStore(
+  const { refreshNumber = 0, fetchOn } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
   );
 
@@ -65,7 +65,11 @@ export const ImagesDockerComponent = (props: ImagesDockerProps) => {
     <Grid container spacing={2} marginTop={1}>
       <Grid item mt={2} xs={12} sm={12} md={12}>
         <Card sx={{ boxShadow: 'none' }}>
-          <CardHead title={t(LanguageKey.server.dockerImages)} storeName={storeName} />
+          <CardHead
+            fetchOn={fetchOn}
+            title={t(LanguageKey.server.dockerImages)}
+            storeName={storeName}
+          />
 
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent

@@ -51,7 +51,7 @@ export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps)
   const storeName = StoreName.CONTAINER;
 
   const { setRefreshList } = usePageStore();
-  const { refreshNumber = 0, isFetching } = usePageStore(
+  const { refreshNumber = 0, fetchOn } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
   );
 
@@ -80,7 +80,11 @@ export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps)
     <Grid container spacing={2} marginTop={1}>
       <Grid item mt={2} xs={12}>
         <Card sx={{ boxShadow: 'none' }}>
-          <CardHead storeName={storeName} title={t(LanguageKey.server.dockerContainer)} />
+          <CardHead
+            fetchOn={fetchOn}
+            storeName={storeName}
+            title={t(LanguageKey.server.dockerContainer)}
+          />
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
               storeName={storeName}

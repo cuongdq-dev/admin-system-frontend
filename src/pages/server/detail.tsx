@@ -18,28 +18,63 @@ export default function Page() {
   const storeName = StoreName.SERVER;
   const { setNotify } = useNotifyStore.getState();
 
-  const { setLoadingDetail, setDetail } = usePageStore.getState();
+  const { setLoadingDetail, setDetail, setList } = usePageStore.getState();
   const { data, refreshNumber = 0 } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
   );
 
   const location = useLocation();
-  const navigate = useNavigate();
   const id = location.pathname.split('/')[2];
 
   useAPI({
-    baseURL: PATH_SERVER + '/detail/' + id,
+    baseURL: PATH_SERVER + '/connection/' + id,
     onSuccess: (res) => {
-      setTimeout(
-        () => setDetail(storeName, { data: res, isLoading: false, isFetching: false }),
-        700
-      );
-      navigate(location.pathname, {
-        replace: true,
-        state: { ...location.state, sitename: res.name },
+      invokeRequest({
+        method: HttpMethod.GET,
+        baseURL: PATH_SERVER + `/detail/${res.connectionId}/${id}`,
+        onSuccess: (resDetail) => {
+          const {
+            listServices,
+            listNginx,
+            listRepositories,
+            listImages,
+            listContainer,
+            ...detail
+          } = resDetail;
+
+          listContainer?.value?.data &&
+            setList(StoreName.CONTAINER, {
+              data: listContainer?.value?.data,
+            });
+
+          listImages?.value?.data &&
+            setList(StoreName.IMAGES, {
+              data: listImages?.value?.data,
+            });
+
+          listRepositories?.value?.data &&
+            setList(StoreName.REPOSIROTY, {
+              data: listRepositories?.value?.data,
+            });
+
+          listNginx?.value?.data &&
+            setList(StoreName.NGINX, {
+              data: listNginx?.value?.data,
+            });
+
+          listServices?.value?.data &&
+            setList(StoreName.SERVICE, {
+              data: listServices?.value?.data,
+            });
+
+          setDetail(storeName, { data: detail, isLoading: false, isFetching: false });
+        },
+        onHandleError: () => {},
       });
     },
-    onHandleError: (error) => setTimeout(() => setLoadingDetail(storeName, false), 700),
+    onHandleError: (error) => {
+      setLoadingDetail(storeName, false);
+    },
   });
 
   const handleUpdate = (setError: UseFormSetError<FieldValues>, values?: Record<string, any>) => {
@@ -70,7 +105,7 @@ export default function Page() {
 
   const handleReconnectServer = () => {
     invokeRequest({
-      method: HttpMethod.POST,
+      method: HttpMethod.GET,
       baseURL: PATH_SERVER + '/connection/' + id,
       onHandleError: () => {
         setLoadingDetail(storeName, false);

@@ -18,6 +18,7 @@ import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { usePageStore } from 'src/store/store';
 import { useShallow } from 'zustand/react/shallow';
+import { TimeAgo } from '../label';
 import { Scrollbar } from '../scrollbar';
 import { TableActionComponent } from './table-action';
 import { CommonTableCell } from './table-cell';
@@ -391,34 +392,3 @@ export function useTable() {
     onChangeRowsPerPage,
   };
 }
-
-const TimeAgo = ({ timestamp }: { timestamp: string | number | Date }) => {
-  const [timeAgo, setTimeAgo] = useState('');
-
-  useEffect(() => {
-    const updateTimeAgo = () => {
-      const now = new Date();
-      const timeDiff = now.getTime() - new Date(timestamp).getTime();
-      const seconds = Math.floor(timeDiff / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
-
-      if (seconds < 60) {
-        setTimeAgo(`${seconds} seconds ago`);
-      } else if (minutes < 60) {
-        setTimeAgo(`${minutes} minutes ago`);
-      } else if (hours < 24) {
-        setTimeAgo(`${hours} hours ago`);
-      } else {
-        setTimeAgo(`${days} days ago`);
-      }
-    };
-
-    updateTimeAgo();
-    const intervalId = setInterval(updateTimeAgo, 10000);
-    return () => clearInterval(intervalId);
-  }, [timestamp]);
-
-  return timeAgo;
-};
