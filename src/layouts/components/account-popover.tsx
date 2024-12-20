@@ -18,14 +18,11 @@ import { usePathname, useRouter } from 'src/routes/hooks';
 import { removeCookie } from 'src/utils/cookies';
 
 import { t } from 'i18next';
-import { enqueueSnackbar } from 'notistack';
 import { _myAccount } from 'src/_mock';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SIGN_OUT } from 'src/api-core/path';
-import { ButtonDismissNotify } from 'src/components/button';
 import { LanguageKey } from 'src/constants';
-
-// ----------------------------------------------------------------------
+import { useNotifyStore } from 'src/store/notify';
 
 export type AccountPopoverProps = IconButtonProps & {
   data?: {
@@ -38,6 +35,7 @@ export type AccountPopoverProps = IconButtonProps & {
 
 export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps) {
   const navigate = useNavigate();
+  const { setNotify } = useNotifyStore.getState();
 
   const router = useRouter();
 
@@ -145,12 +143,10 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
               invokeRequest({
                 method: HttpMethod.POST,
                 baseURL: PATH_SIGN_OUT,
-                onHandleError: (response) => {
-                  enqueueSnackbar(t(LanguageKey.notify.successApiCall), {
-                    variant: 'error',
-                    action: (key) => (
-                      <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />
-                    ),
+                onHandleError: () => {
+                  setNotify({
+                    title: t(LanguageKey.notify.successApiCall),
+                    options: { variant: 'error' },
                   });
                 },
                 onSuccess(res) {

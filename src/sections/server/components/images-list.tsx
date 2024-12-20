@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -18,23 +17,22 @@ import {
   Typography,
 } from '@mui/material';
 import { t } from 'i18next';
-import { enqueueSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_DOCKER } from 'src/api-core/path';
-import { ButtonDismissNotify, IconButtonDelete } from 'src/components/button';
+import { IconButtonDelete } from 'src/components/button';
 import { FormProvider } from 'src/components/hook-form';
-import { RefreshIcon } from 'src/components/icon';
 import { Iconify, IconifyProps } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey, StoreName } from 'src/constants';
+import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/store';
 import { useShallow } from 'zustand/react/shallow';
 import { Transition } from '../../../components/dialog';
-import { ImageForm } from './image-form';
 import { CardHead } from './card-head';
+import { ImageForm } from './image-form';
 
 type ImagesDockerProps = { connectionId?: string };
 
@@ -272,6 +270,7 @@ const RunAction = (props: IconActionProps) => {
     baseUrl,
     updateRowData,
   } = props;
+  const { setNotify } = useNotifyStore.getState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -321,10 +320,7 @@ const RunAction = (props: IconActionProps) => {
         setLoading(false);
         setRefreshList(StoreName.CONTAINER, refreshNumber + 1);
         updateRowData && updateRowData(row?.id!, res, 'UPDATE');
-        enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
+        setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
     });
   };

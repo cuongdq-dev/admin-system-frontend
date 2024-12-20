@@ -1,12 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Dialog } from '@mui/material';
 import { t } from 'i18next';
-import { enqueueSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { HttpMethod, invokeRequest } from 'src/api-core';
-import { ButtonDismissNotify } from 'src/components/button';
 import { LanguageKey } from 'src/constants';
+import { useNotifyStore } from 'src/store/notify';
 import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
 import { Transition } from '../dialog';
@@ -26,6 +25,8 @@ type FormProps = {
 };
 export const PopupFormTable = (props: FormProps) => {
   const { action, baseUrl, defaultValues, schema = {}, rowId, open } = props;
+  const { setNotify } = useNotifyStore.getState();
+
   const { render, handleCloseForm, refreshData } = props;
   const url = baseUrl + (action === HttpMethod.PATCH ? '/update/' + rowId : '/create');
   const methods = useForm({
@@ -65,11 +66,8 @@ export const PopupFormTable = (props: FormProps) => {
           console.error('Unexpected error format:', response);
         }
       },
-      onSuccess(res) {
-        enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
+      onSuccess() {
+        setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
         reset();
         handleCloseForm();
         refreshData && refreshData();

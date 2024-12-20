@@ -19,14 +19,14 @@ import {
   useTheme,
 } from '@mui/material';
 import { t } from 'i18next';
-import { enqueueSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
-import { ButtonDelete, ButtonDismissNotify } from 'src/components/button';
+import { ButtonDelete } from 'src/components/button';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
+import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/store';
 import { rgbaToHex, stringAvatar } from 'src/theme/styles';
 import { useShallow } from 'zustand/react/shallow';
@@ -166,6 +166,7 @@ const EditComponent = ({
   json?: string;
   refreshData: () => void;
 }) => {
+  const { setNotify } = useNotifyStore.getState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [values, setValue] = useState({ name: title, content: json });
@@ -190,10 +191,7 @@ const EditComponent = ({
         setLoading(false);
         refreshData();
         setValue((s) => ({ ...s, content: res }));
-        enqueueSnackbar(t(LanguageKey.notify.successDelete), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
+        setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
       onHandleError: (error) => {
         setLoading(false);
@@ -211,10 +209,7 @@ const EditComponent = ({
       onSuccess: (res) => {
         setLoading(false);
         refreshData();
-        enqueueSnackbar(t(LanguageKey.notify.successDelete), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
+        setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
       onHandleError: (error) => {
         setLoading(false);
@@ -335,6 +330,7 @@ const AddComponent = ({
   title: string;
   refreshData: () => void;
 }) => {
+  const { setNotify } = useNotifyStore.getState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [values, setValue] = useState<{ name?: string; content?: string } | undefined>();
@@ -358,10 +354,7 @@ const AddComponent = ({
       onSuccess: (res) => {
         setLoading(false);
         refreshData();
-        enqueueSnackbar(t(LanguageKey.notify.successDelete), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
+        setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
       onHandleError: (error) => {
         setLoading(false);

@@ -13,19 +13,17 @@ import {
   Typography,
 } from '@mui/material';
 import { t } from 'i18next';
-import { enqueueSnackbar } from 'notistack';
-import { useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
-import { ButtonDismissNotify } from 'src/components/button';
 import { RefreshIcon } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
-import { ServiceFormJson } from './service-form';
-import { stringAvatar } from 'src/theme/styles/utils';
+import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/store';
+import { stringAvatar } from 'src/theme/styles/utils';
 import { useShallow } from 'zustand/react/shallow';
+import { ServiceFormJson } from './service-form';
 
 const PaperCustom = styled(Paper)(({ theme }) => ({
   borderWidth: 1,
@@ -58,6 +56,7 @@ export const ServiceList = ({ services, connectionId }: ServerListProps) => {
 
 type ServiceProps = { service?: IService; connectionId?: string };
 const ServiceItem = (props: ServiceProps) => {
+  const { setNotify } = useNotifyStore.getState();
   const { service, connectionId } = props;
   const storeName = StoreName.SERVICE;
 
@@ -97,11 +96,7 @@ const ServiceItem = (props: ServiceProps) => {
       baseURL: PATH_SERVER + `/setup/service/${service?.id}/${connectionId}`,
       onSuccess: () => {
         setLoadingList(storeName, false);
-
-        enqueueSnackbar(t(LanguageKey.notify.successDelete), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
+        setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
       onHandleError: (error) => {
         setLoadingList(storeName, false);
@@ -119,10 +114,7 @@ const ServiceItem = (props: ServiceProps) => {
       onSuccess: () => {
         setLoadingList(storeName, false);
         refreshData();
-        enqueueSnackbar(t(LanguageKey.notify.successDelete), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
+        setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
       onHandleError: (error) => {
         setLoadingList(storeName, false);

@@ -1,6 +1,6 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
-import { enqueueSnackbar } from 'notistack';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { default as queryString } from 'query-string';
+import { useNotifyStore } from 'src/store/notify';
 import { getCookie, removeCookie } from '../utils/cookies';
 
 export enum HttpMethod {
@@ -67,16 +67,10 @@ const createAbortController = (endpoint: string) => {
 };
 
 export const invokeRequest = async (options: RequestProps) => {
-  const {
-    baseURL,
-    params: body,
-    method = HttpMethod.GET,
-    onSuccess,
-    onHandleError,
-    config,
-  } = options;
+  const { baseURL, params: body, method = HttpMethod.GET, config } = options;
+  const { onSuccess, onHandleError } = options;
   const endpointRequest = baseURL;
-
+  const { setNotify } = useNotifyStore.getState();
   try {
     let response: AxiosResponse;
     const signal = method === HttpMethod.GET ? createAbortController(endpointRequest) : undefined;
@@ -88,18 +82,17 @@ export const invokeRequest = async (options: RequestProps) => {
     else if (method === HttpMethod.POST)
       response = await ApiCore.post(endpointRequest, body, { ...config, timeout: 120000 });
     else response = await ApiCore.get(endpointRequest, { params: body, signal });
-
     onSuccess(response.data);
   } catch (error) {
-    if (axios.isCancel(error)) {
-      console.log('Request cancelled:', endpointRequest);
-      return; // Không gọi onHandleError nếu là lỗi hủy yêu cầu
-    }
-
+    if (axios.isCancel(error)) return;
     error?.response?.data?.message &&
-      enqueueSnackbar(error?.response?.data?.message, {
-        variant: error?.response?.data?.variant || 'error',
+      setNotify({
+        title: error?.response?.data?.message || '',
+        options: {
+          variant: error?.response?.data?.variant || 'error',
+        },
       });
+
     handleError(error as AxiosError);
     onHandleError && onHandleError(error?.response?.data);
   }

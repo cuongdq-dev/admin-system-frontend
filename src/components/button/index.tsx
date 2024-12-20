@@ -8,26 +8,24 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
   MenuItem,
 } from '@mui/material';
 import { t } from 'i18next';
-import { closeSnackbar, enqueueSnackbar, SnackbarKey } from 'notistack';
+import { closeSnackbar, SnackbarKey } from 'notistack';
 import { useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { LanguageKey } from 'src/constants';
+import { useNotifyStore } from 'src/store/notify';
 import { Transition } from '../dialog';
 import { Iconify } from '../iconify';
 
-export const ButtonDismissNotify = (props: {
-  textLabel?: string;
-  textColor?: string;
-  key: SnackbarKey;
-}) => {
-  const { textColor, key, textLabel = 'Dismiss' } = props;
+export const ButtonDismissNotify = (props: { textColor?: string; keyNotify: SnackbarKey }) => {
+  const { textColor, keyNotify } = props;
   return (
-    <Button style={{ color: textColor }} size="small" onClick={() => closeSnackbar(key)}>
-      {textLabel}
-    </Button>
+    <IconButton style={{ color: textColor }} size="small" onClick={() => closeSnackbar(keyNotify)}>
+      <Iconify icon={'fluent-color:dismiss-circle-32'} />
+    </IconButton>
   );
 };
 
@@ -48,7 +46,7 @@ export const IconButtonDelete = (props: IconButtonDeleteProps) => {
   const { title = '', baseUrl, rowId, refreshData, handleLoading, handleDelete } = props;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const { setNotify } = useNotifyStore.getState();
   const handleDeleteRow = () => {
     handleLoading && handleLoading(true);
     setLoading(true);
@@ -58,15 +56,16 @@ export const IconButtonDelete = (props: IconButtonDeleteProps) => {
       baseURL: baseUrl,
       onSuccess: () => {
         handleLoading && handleLoading(false);
-        enqueueSnackbar(t(LanguageKey.notify.successDelete), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
         setLoading(false);
         handleDelete && handleDelete(rowId!, {}, 'REMOVE');
         refreshData && refreshData();
+
+        setNotify({
+          title: t(LanguageKey.notify.successDelete),
+          options: { variant: 'success' },
+        });
       },
-      onHandleError: (error) => {
+      onHandleError: () => {
         handleLoading && handleLoading(false);
         setLoading(false);
       },

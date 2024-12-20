@@ -4,11 +4,10 @@ import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
 import { t } from 'i18next';
 import { getEmoji, getLanguage } from 'language-flag-colors';
-import { enqueueSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ButtonDismissNotify } from 'src/components/button';
 import { LanguageKey } from 'src/constants';
+import { useNotifyStore } from 'src/store/notify';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +16,7 @@ export type LanguagePopoverProps = IconButtonProps & {
 };
 
 export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProps) {
+  const { setNotify } = useNotifyStore.getState();
   const { i18n } = useTranslation();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const defaultLanguage = getLanguage(i18n.language);
@@ -32,10 +32,7 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
   const handleChangeLang = async (newLang: string) => {
     i18n.changeLanguage(newLang);
 
-    enqueueSnackbar(t(LanguageKey.notify.changedLanguage), {
-      variant: 'success',
-      key: 'change_language' + newLang,
-    });
+    setNotify({ title: t(LanguageKey.notify.changedLanguage), options: { variant: 'success' } });
 
     setTimeout(() => {
       window.location.reload();

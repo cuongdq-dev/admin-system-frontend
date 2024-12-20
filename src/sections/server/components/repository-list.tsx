@@ -5,7 +5,6 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -18,24 +17,23 @@ import {
   Typography,
 } from '@mui/material';
 import { t } from 'i18next';
-import { enqueueSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_REPOSITORY } from 'src/api-core/path';
-import { ButtonDismissNotify, IconButtonDelete } from 'src/components/button';
-import { RefreshIcon } from 'src/components/icon';
+import { IconButtonDelete } from 'src/components/button';
 import { Iconify, IconifyProps } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey, StoreName } from 'src/constants';
+import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/store';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
 import { Transition } from '../../../components/dialog';
 import { FormProvider } from '../../../components/hook-form';
-import { RepositoryForm } from './repository-form';
 import { CardHead } from './card-head';
+import { RepositoryForm } from './repository-form';
 const FormTableSchema = {
   name: Yup.string().required('Name is required'),
   email: Yup.string().required('Email is required'),
@@ -187,6 +185,7 @@ const RunAction = (props: IconActionProps) => {
     baseUrl,
     updateRowData,
   } = props;
+  const { setNotify } = useNotifyStore.getState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -230,10 +229,7 @@ const RunAction = (props: IconActionProps) => {
         handleLoading(false);
         setLoading(false);
         updateRowData && updateRowData(row?.id!, res, 'UPDATE');
-        enqueueSnackbar(t(LanguageKey.notify.successUpdate), {
-          variant: 'success',
-          action: (key) => <ButtonDismissNotify key={key} textColor="white" textLabel="Dismiss" />,
-        });
+        setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
     });
   };
