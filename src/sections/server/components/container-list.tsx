@@ -23,6 +23,7 @@ import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey, StoreName } from 'src/constants';
 import { usePageStore } from 'src/store/store';
 import { useShallow } from 'zustand/react/shallow';
+import { CardHead } from './card-head';
 
 const HeadLabel: HeadLabelProps[] = [
   { id: 'id', label: t(LanguageKey.docker.containerIdItem), type: 'text', width: '10%' },
@@ -82,17 +83,7 @@ export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps)
     <Grid container spacing={2} marginTop={1}>
       <Grid item mt={2} xs={12}>
         <Card sx={{ boxShadow: 'none' }}>
-          <CardHeader
-            sx={{ textAlign: 'left' }}
-            title={
-              <Box display="flex" justifyContent="space-between">
-                <Box>{t(LanguageKey.server.dockerContainer)}</Box>
-                <IconButton size="medium" sx={{ marginLeft: 1 }} onClick={refreshData}>
-                  <RefreshIcon loading={isFetching} icon={'mdi:refresh'} />
-                </IconButton>
-              </Box>
-            }
-          />
+          <CardHead storeName={storeName} title={t(LanguageKey.server.dockerContainer)} />
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
               storeName={storeName}

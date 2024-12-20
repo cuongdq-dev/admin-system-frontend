@@ -35,6 +35,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { Transition } from '../../../components/dialog';
 import { FormProvider } from '../../../components/hook-form';
 import { RepositoryForm } from './repository-form';
+import { CardHead } from './card-head';
 const FormTableSchema = {
   name: Yup.string().required('Name is required'),
   email: Yup.string().required('Email is required'),
@@ -113,34 +114,26 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
     <Grid container spacing={2} marginTop={1}>
       <Grid item mt={2} xs={12} sm={12} md={12}>
         <Card sx={{ boxShadow: 'none' }}>
-          <CardHeader
-            sx={{ textAlign: 'left' }}
-            title={
-              <Box display="flex" justifyContent="space-between">
-                <Box display={'flex'} flexDirection={'row'} alignItems={'center'} gap={1}>
-                  {t(LanguageKey.repository.repositoryListTitle)}
-
-                  <RunAction
-                    expanded="basic_information"
-                    actionTitle={t(LanguageKey.button.clone)}
-                    withBuild={false}
-                    icon={{ icon: 'lets-icons:add-duotone', color: 'primary.main' }}
-                    headerIcon={{ icon: 'catppuccin:devcontainer' }}
-                    action={HttpMethod.POST}
-                    baseUrl={PATH_REPOSITORY + `/${connectionId}/${serverId}/create`}
-                    handleLoading={() => {}}
-                    updateRowData={refreshData}
-                    title={t(LanguageKey.repository.cloneRepositoryTitle)}
-                    description={t(LanguageKey.repository.cloneRepositoryDescription)}
-                  />
-                </Box>
-
-                <IconButton size="medium" sx={{ marginLeft: 1 }} onClick={refreshData}>
-                  <RefreshIcon icon={'mdi:refresh'} />
-                </IconButton>
-              </Box>
-            }
+          <CardHead
+            title={t(LanguageKey.repository.repositoryListTitle)}
+            storeName={storeName}
+            actionRender={() => (
+              <RunAction
+                expanded="basic_information"
+                actionTitle={t(LanguageKey.button.clone)}
+                withBuild={false}
+                icon={{ icon: 'lets-icons:add-duotone', color: 'primary.main' }}
+                headerIcon={{ icon: 'catppuccin:devcontainer' }}
+                action={HttpMethod.POST}
+                baseUrl={PATH_REPOSITORY + `/${connectionId}/${serverId}/create`}
+                handleLoading={() => {}}
+                updateRowData={refreshData}
+                title={t(LanguageKey.repository.cloneRepositoryTitle)}
+                description={t(LanguageKey.repository.cloneRepositoryDescription)}
+              />
+            )}
           />
+
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
               storeName={StoreName.REPOSIROTY}

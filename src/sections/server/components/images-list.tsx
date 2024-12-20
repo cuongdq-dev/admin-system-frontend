@@ -34,6 +34,7 @@ import { usePageStore } from 'src/store/store';
 import { useShallow } from 'zustand/react/shallow';
 import { Transition } from '../../../components/dialog';
 import { ImageForm } from './image-form';
+import { CardHead } from './card-head';
 
 type ImagesDockerProps = { connectionId?: string };
 
@@ -66,17 +67,8 @@ export const ImagesDockerComponent = (props: ImagesDockerProps) => {
     <Grid container spacing={2} marginTop={1}>
       <Grid item mt={2} xs={12} sm={12} md={12}>
         <Card sx={{ boxShadow: 'none' }}>
-          <CardHeader
-            sx={{ textAlign: 'left' }}
-            title={
-              <Box display="flex" justifyContent="space-between">
-                <Box>{t(LanguageKey.server.dockerImages)}</Box>
-                <IconButton size="medium" sx={{ marginLeft: 1 }} onClick={refreshData}>
-                  <RefreshIcon icon={'mdi:refresh'} />
-                </IconButton>
-              </Box>
-            }
-          />
+          <CardHead title={t(LanguageKey.server.dockerImages)} storeName={storeName} />
+
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
               storeName={storeName}
