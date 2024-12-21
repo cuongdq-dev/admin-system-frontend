@@ -40,7 +40,6 @@ export default function Page() {
           setNotify({
             title: 'The data is being updated...',
             dismissAction: false,
-            loadingAction: true,
             key: 'server_connection',
             options: {
               action: (key) => {
@@ -69,7 +68,6 @@ export default function Page() {
           setNotify({
             title: 'Unable to connect to the server.',
             dismissAction: false,
-            loadingAction: true,
             key: 'server_connection',
             options: {
               action: () => {
@@ -107,7 +105,6 @@ export default function Page() {
           setNotify({
             title: 'The data is being updated...',
             dismissAction: false,
-            loadingAction: true,
             key: 'server_connection',
             options: {
               action: (key) => {
@@ -136,7 +133,6 @@ export default function Page() {
           setNotify({
             title: 'Unable to connect to the server.',
             dismissAction: false,
-            loadingAction: true,
             key: 'server_connection',
             options: {
               action: () => {
