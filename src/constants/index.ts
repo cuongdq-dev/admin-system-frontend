@@ -241,12 +241,12 @@ export const LanguageKey = {
 };
 
 export const StoreName = {
-  REPOSIROTY: 'repository_store',
-  IMAGES: 'images_store',
-  CONTAINER: 'container_store',
-  LANGUAGE: 'language_store',
   SERVER: 'server_store',
+  SERVER_REPOSIROTY: 'server_repository_store',
+  SERVER_SERVICE: 'server_service_store',
+  SERVER_IMAGES: 'server_images_store',
+  SERVER_CONTAINER: 'server_container_store',
+  SERVER_NGINX: 'server_nginx_store',
+  LANGUAGE: 'language_store',
   SITE: 'site_store',
-  NGINX: 'nginx_store',
-  SERVICE: 'service_store',
 };

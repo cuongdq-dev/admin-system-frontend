@@ -96,9 +96,9 @@ export function SiteView() {
       </Card>
 
       <PopupFormTable
+        storeName={StoreName.LANGUAGE}
         open={formConfig.open}
         handleCloseForm={handleCloseForm}
-        refreshData={refreshData}
         action={formConfig.action}
         baseUrl={PATH_LANGUAGE + '/update/' + formConfig.defaultValues?.id}
         render={() => {

@@ -54,7 +54,7 @@ export const ServiceList = ({ connectionId }: ServerListProps) => {
 const ServiceItem = (props: { connectionId?: string }) => {
   const { setNotify } = useNotifyStore.getState();
   const { connectionId } = props;
-  const storeName = StoreName.SERVICE;
+  const storeName = StoreName.SERVER_SERVICE;
   const { setRefreshList, setLoadingList, setList } = usePageStore();
 
   const {

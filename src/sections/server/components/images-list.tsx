@@ -38,7 +38,7 @@ type ImagesDockerProps = { connectionId?: string };
 
 export const ImagesDockerComponent = (props: ImagesDockerProps) => {
   const { connectionId } = props;
-  const storeName = StoreName.IMAGES;
+  const storeName = StoreName.SERVER_IMAGES;
 
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0, fetchOn } = usePageStore(
@@ -156,7 +156,7 @@ const ImageAction = ({ row, updateRowData, connectionId }: ImageActionProps) => 
         handleLoading={setLoading}
         handleDelete={(id, updateData, action) => {
           updateRowData && updateRowData(id, updateData, action);
-          setFetchingList(StoreName.REPOSIROTY, true);
+          setFetchingList(StoreName.SERVER_REPOSIROTY, true);
         }}
       />
     </Box>
@@ -315,7 +315,7 @@ const RunAction = (props: IconActionProps) => {
       onSuccess(res) {
         handleLoading(false);
         setLoading(false);
-        setFetchingList(StoreName.CONTAINER, true);
+        setFetchingList(StoreName.SERVER_CONTAINER, true);
         updateRowData && updateRowData(row?.id!, res, 'UPDATE');
         setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },

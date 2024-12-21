@@ -1,5 +1,4 @@
 import { OptionsWithExtraProps, SnackbarKey, SnackbarMessage } from 'notistack';
-import { useId } from 'react';
 import { create } from 'zustand';
 
 type BaseVariant = 'default' | 'error' | 'success' | 'warning' | 'info';

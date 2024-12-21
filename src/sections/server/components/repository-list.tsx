@@ -82,7 +82,7 @@ const HeadLabel: HeadLabelProps[] = [
 ];
 export const RepositoryComponent = (props: RepositoryComponentProps) => {
   const { serverId, connectionId } = props;
-  const storeName = StoreName.REPOSIROTY;
+  const storeName = StoreName.SERVER_REPOSIROTY;
 
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0, fetchOn } = usePageStore(
@@ -135,7 +135,7 @@ export const RepositoryComponent = (props: RepositoryComponentProps) => {
 
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
-              storeName={StoreName.REPOSIROTY}
+              storeName={StoreName.SERVER_REPOSIROTY}
               refreshData={refreshData}
               component={'TABLE'}
               withSearch={false}
@@ -325,7 +325,7 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
           withBuild={true}
           updateRowData={(rowId, values, action) => {
             updateRowData && updateRowData(rowId, values, action);
-            setFetchingList(StoreName.IMAGES, true);
+            setFetchingList(StoreName.SERVER_IMAGES, true);
           }}
           baseUrl={`${PATH_REPOSITORY}/${connectionId}/build/${row?.id}`}
           row={row}

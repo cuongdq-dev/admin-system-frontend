@@ -29,10 +29,28 @@ interface IStore {
 
   setList: (key: string, list: IList) => void;
   setDetail: (key: string, detail: IDetail) => void;
+
+  addItem: (key: string, data: Record<string, any>) => void;
+  editItem: (key: string, data: Record<string, any>, index?: number) => void;
+  deleteItem: (key: string, id?: string | number, index?: number) => void;
+
+  removeStore: (key: string) => void;
 }
 
 export const usePageStore = create<IStore>((set) => ({
   dataStore: {},
+
+  removeStore: (key: string) => {
+    set((state) => {
+      const newDataStore = { ...state.dataStore };
+
+      // Remove the item corresponding to the specified key
+      delete newDataStore[key];
+
+      // Return the updated state
+      return { dataStore: newDataStore };
+    });
+  },
 
   setRefreshList: (key: string, refreshNumber: number) =>
     set((state) => ({
@@ -116,6 +134,68 @@ export const usePageStore = create<IStore>((set) => ({
         },
       },
     })),
+
+  addItem: (key: string, item: Record<string, any>) =>
+    set((state) => {
+      const existingList = state?.dataStore![key]?.list?.data || [];
+      existingList.unshift(item);
+      return {
+        dataStore: {
+          ...state.dataStore,
+          [key]: {
+            ...state?.dataStore![key],
+            list: { ...state?.dataStore![key]?.list, data: existingList },
+          },
+        },
+      };
+    }),
+
+  editItem: (key: string, item: Record<string, any>, index?: number) =>
+    set((state) => {
+      const existingList = state.dataStore![key]?.list?.data || [];
+      const findIndex =
+        index || existingList.findIndex((row: Record<string, any>) => row?.id == item?.id);
+
+      const updatedList = existingList.map((currentItem: Record<string, any>, i: number) =>
+        i === findIndex ? { ...currentItem, ...item } : currentItem
+      );
+
+      return {
+        dataStore: {
+          ...state.dataStore!,
+          [key]: {
+            ...state?.dataStore![key],
+            list: {
+              ...state?.dataStore![key]?.list,
+              data: updatedList,
+            },
+          },
+        },
+      };
+    }),
+
+  deleteItem: (key: string, id?: string | number, index?: number) =>
+    set((state) => {
+      const existingList = state.dataStore![key]?.list?.data || [];
+      const findIndex =
+        index || existingList.findIndex((row: Record<string, any>) => row?.id == id);
+
+      const updatedList = existingList.filter(
+        (_: Record<string, any>, i: number) => i !== findIndex
+      );
+      return {
+        dataStore: {
+          ...state.dataStore,
+          [key]: {
+            ...state?.dataStore![key],
+            list: {
+              ...state?.dataStore![key]?.list,
+              data: updatedList,
+            },
+          },
+        },
+      };
+    }),
 
   setDetail: (key: string, detail: IDetail) =>
     set((state) => ({

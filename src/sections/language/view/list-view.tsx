@@ -28,8 +28,8 @@ type FormConfigState = {
 };
 
 const HeadLabel: HeadLabelProps[] = [
-  { id: 'code', label: t(LanguageKey.language.codeItem), sort: true, type: 'text' },
-  { id: 'content', label: t(LanguageKey.language.contentItem), sort: false },
+  { id: 'code', label: t(LanguageKey.language.codeItem), sort: true, type: 'text', width: '50%' },
+  { id: 'content', label: t(LanguageKey.language.contentItem), sort: false, width: '50%' },
 ];
 
 export function ListView() {
@@ -76,7 +76,7 @@ export function ListView() {
       <HeadComponent title={t(LanguageKey.language.tableTitle)} />
       <Card>
         <TabContext value={queryParams.get('lang') || ''}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', marginBottom: 2 }}>
             <TabList
               onChange={(_, value) => navigate(value ? '?lang=' + value : '')}
               aria-label="lab API tabs example"
@@ -88,7 +88,7 @@ export function ListView() {
             </TabList>
           </Box>
           <TableComponent
-            storeName={StoreName.LANGUAGE}
+            storeName={storeName}
             url={PATH_LANGUAGE}
             indexCol={true}
             selectCol={true}
@@ -101,10 +101,10 @@ export function ListView() {
       </Card>
 
       <PopupFormTable
+        storeName={storeName}
         rowId={formConfig.defaultValues?.id}
         open={formConfig.open}
         handleCloseForm={handleCloseForm}
-        refreshData={refreshData}
         defaultValues={formConfig.defaultValues}
         action={formConfig.action}
         baseUrl={PATH_LANGUAGE}

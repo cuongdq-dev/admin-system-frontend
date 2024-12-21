@@ -114,10 +114,10 @@ export function ListView() {
       />
 
       <PopupFormTable
+        storeName={storeName}
         rowId={formConfig.defaultValues?.id}
         open={formConfig.open}
         handleCloseForm={handleCloseForm}
-        refreshData={refreshData}
         action={formConfig.action}
         defaultValues={formConfig.defaultValues}
         baseUrl={PATH_SERVER}

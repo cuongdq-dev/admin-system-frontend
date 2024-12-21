@@ -10,13 +10,14 @@ import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
 import { Transition } from '../dialog';
 import { FormProvider } from '../hook-form';
+import { usePageStore } from 'src/store/store';
 
 type FormProps = {
+  storeName: string;
   open: boolean;
   baseUrl: string;
   action?: HttpMethod;
   handleCloseForm: () => void;
-  refreshData?: () => void;
   render?: ({ isSubmitting }: { isSubmitting: boolean }) => JSX.Element;
   rowId?: string;
   defaultValues?: Record<string, any>;
@@ -24,10 +25,10 @@ type FormProps = {
   schema?: Record<string, any>;
 };
 export const PopupFormTable = (props: FormProps) => {
-  const { action, baseUrl, defaultValues, schema = {}, rowId, open } = props;
+  const { editItem, addItem, deleteItem } = usePageStore.getState();
+  const { action, baseUrl, defaultValues, schema = {}, rowId, open, storeName } = props;
   const { setNotify } = useNotifyStore.getState();
-
-  const { render, handleCloseForm, refreshData } = props;
+  const { render, handleCloseForm } = props;
   const url = baseUrl + (action === HttpMethod.PATCH ? '/update/' + rowId : '/create');
   const methods = useForm({
     resolver: yupResolver(Yup.object().shape(schema)),
@@ -66,11 +67,17 @@ export const PopupFormTable = (props: FormProps) => {
           console.error('Unexpected error format:', response);
         }
       },
-      onSuccess() {
+      onSuccess(res) {
         setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
         reset();
         handleCloseForm();
-        refreshData && refreshData();
+        if (action === HttpMethod.POST) addItem(storeName, res);
+        if (action === HttpMethod.PATCH) {
+          editItem(storeName, res);
+        }
+        if (action === HttpMethod.DELETE) {
+          deleteItem(storeName, rowId);
+        }
       },
     });
   };

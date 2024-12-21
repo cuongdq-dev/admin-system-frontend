@@ -1,14 +1,15 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Fab, IconButton, Paper, styled, Tab } from '@mui/material';
+import { IconButton, styled, Tab } from '@mui/material';
 import Box from '@mui/material/Box';
 import { t } from 'i18next';
 import { useState } from 'react';
 import { Iconify } from 'src/components/iconify';
+import { NotFoundComponent } from 'src/components/no-found-data';
 import { FetchingComponent } from 'src/components/progress';
 import { LanguageKey } from 'src/constants';
-import { GeneralComponent } from '../components/general';
 import { usePageStore } from 'src/store/store';
 import { useShallow } from 'zustand/react/shallow';
+import { GeneralComponent } from '../components/general';
 
 const StyledTab = styled(Tab)(({ theme }) => ({
   marginRight: theme.spacing(1),

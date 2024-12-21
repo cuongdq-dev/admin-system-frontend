@@ -48,7 +48,7 @@ const HeadLabel: HeadLabelProps[] = [
 
 type ContainerDockerProps = { connectionId?: string };
 export const ContainerDockerComponent = ({ connectionId }: ContainerDockerProps) => {
-  const storeName = StoreName.CONTAINER;
+  const storeName = StoreName.SERVER_CONTAINER;
 
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0, fetchOn } = usePageStore(
@@ -179,7 +179,7 @@ const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: I
 
   const { setFetchingList } = usePageStore.getState();
   const { refreshNumber = 0 } = usePageStore(
-    useShallow((state) => ({ ...state.dataStore![StoreName.IMAGES]?.list }))
+    useShallow((state) => ({ ...state.dataStore![StoreName.SERVER_IMAGES]?.list }))
   );
 
   useEffect(() => {
@@ -198,7 +198,7 @@ const IconAction = ({ action, row, connectionId, updateRowData, handleClick }: I
         onSuccess(res) {
           setLoading(false);
           updateRowData && updateRowData(row?.id!, res, action === 'remove' ? 'REMOVE' : 'UPDATE');
-          setFetchingList(StoreName.IMAGES, true);
+          setFetchingList(StoreName.SERVER_IMAGES, true);
           setNotify({
             title: t(LanguageKey.notify.successUpdate),
             options: { variant: 'success' },

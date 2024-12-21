@@ -53,7 +53,7 @@ const PaperCustom = styled(Paper)(({ theme }) => ({
 
 export const NginxList = (props: NginxListProps) => {
   const { serverId, connectionId } = props;
-  const storeName = StoreName.NGINX;
+  const storeName = StoreName.SERVER_NGINX;
 
   const { setRefreshList, setLoadingList, setList } = usePageStore();
 
@@ -65,8 +65,6 @@ export const NginxList = (props: NginxListProps) => {
     isLoading: loading,
   } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
 
-  const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
-
   useAPI({
     clearRequest:
       !loading &&
@@ -77,14 +75,14 @@ export const NginxList = (props: NginxListProps) => {
     refreshNumber: refreshNumber,
     baseURL: PATH_SERVER + `/nginx/${serverId}/${connectionId}`,
     onSuccess: (res) => {
-      setList(storeName, { data: res, isLoading: false, isFetching: false });
+      setList(storeName, { data: res.data, isLoading: false, isFetching: false });
     },
     onHandleError: (res) => {
       setLoadingList(storeName, false);
     },
   });
 
-  if (loading)
+  if (loading && !data)
     return (
       <PaperCustom>
         <Box width={'100%'} display="flex" flexDirection="row">
@@ -131,22 +129,44 @@ export const NginxList = (props: NginxListProps) => {
     );
   return (
     <Box gap={2} display="flex" flexDirection="column">
-      <AddComponent
-        title={t(LanguageKey.nginx.addFileTitle)}
-        refreshData={refreshData}
-        connectionId={connectionId!}
-      />
-      <TimeAgo
-        timestamp={fetchOn!}
-        alignSelf={'end'}
-        fontSize={10}
-        isFetching={isFetching}
-        icon={{ icon: 'mingcute:time-fill', width: 13 }}
-      />
+      <AddComponent title={t(LanguageKey.nginx.addFileTitle)} connectionId={connectionId!} />
+      <Box display="flex" alignSelf="end" justifyItems="center">
+        <TimeAgo
+          timestamp={fetchOn!}
+          alignSelf={'end'}
+          fontSize={10}
+          isFetching={isFetching}
+          icon={{
+            icon: 'mdi:refresh',
+            width: 18,
+            onClick: () => {
+              setRefreshList(storeName, refreshNumber + 1);
+              setList(storeName, { data: undefined });
+              setLoadingList(storeName, true);
+            },
+            cursor: 'pointer',
+          }}
+        />
+      </Box>
 
       {data?.map((item: { name: string; content?: string }, index: number) => {
         return (
-          <PaperCustom key={`nginx_${index}`}>
+          <PaperCustom
+            sx={{
+              animation: 'fadeIn 1.3s ease-in-out',
+              '@keyframes fadeIn': {
+                '0%': {
+                  opacity: 0,
+                  transform: 'translateY(-15px)',
+                },
+                '100%': {
+                  opacity: 1,
+                  transform: 'translateY(0)',
+                },
+              },
+            }}
+            key={`nginx_${index}`}
+          >
             <Box sx={{ px: 1, gap: 2, display: 'flex', alignItems: 'center' }}>
               <Avatar {...stringAvatar(item.name)} />
               <ListItemText
@@ -157,7 +177,7 @@ export const NginxList = (props: NginxListProps) => {
               />
               <Box>
                 <EditComponent
-                  refreshData={() => setRefreshList(storeName, refreshNumber + 1)}
+                  rowIndex={index}
                   connectionId={connectionId!}
                   title={item.name}
                   json={item.content}
@@ -170,18 +190,16 @@ export const NginxList = (props: NginxListProps) => {
     </Box>
   );
 };
-
-const EditComponent = ({
-  title,
-  json,
-  connectionId,
-  refreshData,
-}: {
+type EditComponentProps = {
   title?: string;
   connectionId: string;
   json?: string;
-  refreshData: () => void;
-}) => {
+  rowIndex: number;
+};
+const EditComponent = (props: EditComponentProps) => {
+  const { editItem, deleteItem } = usePageStore();
+
+  const { title, json, connectionId, rowIndex } = props;
   const { setNotify } = useNotifyStore.getState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -205,8 +223,7 @@ const EditComponent = ({
       params: { fileName: values.name, fileContent: values.content },
       onSuccess: (res) => {
         setLoading(false);
-        refreshData();
-        setValue((s) => ({ ...s, content: res }));
+        editItem(StoreName.SERVER_NGINX, res, rowIndex);
         setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
       onHandleError: (error) => {
@@ -224,7 +241,7 @@ const EditComponent = ({
       params: { fileName: values.name },
       onSuccess: (res) => {
         setLoading(false);
-        refreshData();
+        deleteItem(StoreName.SERVER_NGINX, undefined, rowIndex);
         setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
       onHandleError: (error) => {
@@ -337,15 +354,8 @@ const EditComponent = ({
   );
 };
 
-const AddComponent = ({
-  refreshData,
-  connectionId,
-  title,
-}: {
-  connectionId: string;
-  title: string;
-  refreshData: () => void;
-}) => {
+const AddComponent = ({ connectionId, title }: { connectionId: string; title: string }) => {
+  const { addItem } = usePageStore();
   const { setNotify } = useNotifyStore.getState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -369,7 +379,7 @@ const AddComponent = ({
       params: { fileName: values?.name, fileContent: values?.content },
       onSuccess: (res) => {
         setLoading(false);
-        refreshData();
+        addItem(StoreName.SERVER_NGINX, res);
         setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
       },
       onHandleError: (error) => {
