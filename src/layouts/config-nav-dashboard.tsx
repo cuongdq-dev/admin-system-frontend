@@ -15,11 +15,11 @@ export const navData = [
     icon: icon('ic-analytics'),
   },
 
-  {
-    title: LanguageKey.user.nav,
-    path: '/user',
-    icon: icon('ic-user'),
-  },
+  // {
+  //   title: LanguageKey.user.nav,
+  //   path: '/user',
+  //   icon: icon('ic-user'),
+  // },
 
   {
     title: LanguageKey.server.nav,
@@ -32,20 +32,19 @@ export const navData = [
     path: '/site',
     icon: icon('ic-site'),
   },
-  {
-    title: LanguageKey.product.nav,
-    path: '/product',
-    icon: icon('ic-cart'),
-  },
-  {
-    title: LanguageKey.blog.nav,
-    path: '/blog',
-    icon: icon('ic-blog'),
-  },
-
-  {
-    title: LanguageKey.language.nav,
-    path: '/language',
-    icon: icon('ic-language'),
-  },
+  // {
+  //   title: LanguageKey.product.nav,
+  //   path: '/product',
+  //   icon: icon('ic-cart'),
+  // },
+  // {
+  //   title: LanguageKey.blog.nav,
+  //   path: '/blog',
+  //   icon: icon('ic-blog'),
+  // },
+  // {
+  //   title: LanguageKey.language.nav,
+  //   path: '/language',
+  //   icon: icon('ic-language'),
+  // },
 ];

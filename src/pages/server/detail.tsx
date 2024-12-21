@@ -1,25 +1,26 @@
 import { CircularProgress, IconButton, useTheme } from '@mui/material';
 import { t } from 'i18next';
+import { closeSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { FieldValues, UseFormSetError } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
+import { Iconify } from 'src/components/iconify';
 import { CONFIG } from 'src/config-global';
 import { LanguageKey, StoreName } from 'src/constants';
-import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { DetailView } from 'src/sections/server';
 import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/store';
 import { useShallow } from 'zustand/react/shallow';
-import { enqueueSnackbar, SnackbarProvider, closeSnackbar } from 'notistack';
-import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
 export default function Page() {
+  const { id } = useParams();
+
   const storeName = StoreName.SERVER;
   const { setNotify } = useNotifyStore.getState();
   const theme = useTheme();
@@ -28,9 +29,6 @@ export default function Page() {
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
   );
 
-  const location = useLocation();
-  const id = location.pathname.split('/')[2];
-
   const connectServer = () => {
     invokeRequest({
       baseURL: PATH_SERVER + '/connection/' + id,
@@ -38,7 +36,7 @@ export default function Page() {
         if (res.connectionId) {
           setDetail(storeName, { data: { ...res, connectionId: undefined } });
           setNotify({
-            title: 'The data is being updated...',
+            title: t(LanguageKey.server.notifyFetchingData),
             dismissAction: false,
             key: 'server_connection',
             options: {
@@ -66,7 +64,7 @@ export default function Page() {
           fetchDetail(res.connectionId);
         } else {
           setNotify({
-            title: 'Unable to connect to the server.',
+            title: t(LanguageKey.server.notifyDisconnected),
             dismissAction: false,
             key: 'server_connection',
             options: {
@@ -103,7 +101,7 @@ export default function Page() {
       onSuccess: (res) => {
         if (res.connectionId) {
           setNotify({
-            title: 'The data is being updated...',
+            title: t(LanguageKey.server.notifyFetchingData),
             dismissAction: false,
             key: 'server_connection',
             options: {
@@ -131,7 +129,7 @@ export default function Page() {
           fetchDetail(res.connectionId);
         } else {
           setNotify({
-            title: 'Unable to connect to the server.',
+            title: t(LanguageKey.server.notifyDisconnected),
             dismissAction: false,
             key: 'server_connection',
             options: {
@@ -161,9 +159,18 @@ export default function Page() {
     });
   };
 
+  const disconnect = () => {
+    data?.connectionId &&
+      invokeRequest({
+        baseURL: PATH_SERVER + '/disconnect/' + data?.connectionId,
+        method: HttpMethod.DELETE,
+        onSuccess: () => {},
+      });
+  };
+
   useEffect(() => {
     if (id == data?.id) {
-      connectServer();
+      re_connectServer();
     } else {
       setLoadingDetail(storeName, true);
       removeStore(storeName);
@@ -176,7 +183,8 @@ export default function Page() {
     }
 
     return () => {
-      closeSnackbar('server_connection'); // Removes the store when the component is unmounted
+      closeSnackbar('server_connection');
+      disconnect();
     };
   }, [id]);
 

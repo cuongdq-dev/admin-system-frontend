@@ -3,9 +3,14 @@ import { LoadingButton } from '@mui/lab';
 import { Card, CardHeader, Box, CardContent, Grid } from '@mui/material';
 import { t } from 'i18next';
 import { FieldValues, useForm, UseFormSetError } from 'react-hook-form';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { invokeRequest, HttpMethod } from 'src/api-core';
+import { PATH_SERVER } from 'src/api-core/path';
+import { ButtonDelete } from 'src/components/button';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import { PasswordText } from 'src/components/hook-form/RHFTextField';
 import { LanguageKey } from 'src/constants';
+import { useNotifyStore } from 'src/store/notify';
 import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
 
@@ -23,8 +28,26 @@ type Props = {
 };
 
 export const BasicInformation = (props: Props) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = useParams();
   const methods = useForm({ resolver: yupResolver(schema) });
   const { defaultData, handleUpdate } = props;
+  const { setNotify } = useNotifyStore.getState();
+
+  const handleDelete = () => {
+    invokeRequest({
+      method: HttpMethod.DELETE,
+      baseURL: PATH_SERVER + '/delete/' + props.defaultData?.id,
+      onSuccess(res) {
+        setNotify({
+          title: t(LanguageKey.notify.successDelete),
+          options: { variant: 'success' },
+        });
+        navigate('/server', { replace: true });
+      },
+    });
+  };
 
   const {
     handleSubmit,
@@ -51,7 +74,16 @@ export const BasicInformation = (props: Props) => {
           title={t(LanguageKey.server.informationTitle)}
           action={
             <>
-              <Box display="flex" justifyContent="flex-end">
+              <Box display="flex" justifyContent="flex-end" gap={2}>
+                <ButtonDelete
+                  color="error"
+                  type="submit"
+                  variant="outlined"
+                  loading={isSubmitting}
+                  title={t(LanguageKey.button.delete)}
+                  handleDelete={() => handleDelete()}
+                />
+
                 <LoadingButton
                   color="inherit"
                   type="submit"

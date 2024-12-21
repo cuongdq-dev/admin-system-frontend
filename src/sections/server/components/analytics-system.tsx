@@ -48,13 +48,24 @@ export function AnalyticsSystem(props: Props) {
   const { title, subheader, connected, actived, connectionId, ...other } = props;
   const theme = useTheme();
 
-  const { data, isLoading: loading } = usePageStore(
+  const { data } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
   );
-  const chart = data?.serverStatus?.value as ChartType;
+  const chart =
+    data?.serverStatus?.value ||
+    ({
+      available: [0, 0, 0],
+      used: [0, 0, 0],
+      categories: ['', '', ''],
+      units: ['', '', ''],
+    } as ChartType);
 
-  const totalValues = chart?.used.map((used, index) => used + chart?.available[index]!);
-  const percentageUsed = chart?.used.map((used, index) => (used / totalValues![index]) * 100);
+  const totalValues = chart?.used.map(
+    (used: number, index: number) => used + chart?.available[index]!
+  );
+  const percentageUsed = chart?.used.map(
+    (used: number, index: number) => (used / totalValues![index]) * 100
+  );
   const chartOptions = useChart({
     colors: [
       theme.vars.palette.error['main'], //used

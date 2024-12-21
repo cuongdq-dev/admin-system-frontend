@@ -42,11 +42,13 @@ export const LanguageKey = {
     allService: 'all_service',
     dockerContainer: 'docker_containers',
     dockerImages: 'docker_images',
+    notifyFetchingData: 'server_notify_fetching_data',
+    notifyDisconnected: 'server_notify_disconnected',
   },
 
   nginx: {
     title: 'nginx_title',
-    addFileTitle: 'nginx_add_new_file_title',
+    addFileTitle: 'nginx_add_file_title',
     nameFileItem: 'nginx_name_file_item',
     contentFileItem: 'nginx_content_file_item',
   },
