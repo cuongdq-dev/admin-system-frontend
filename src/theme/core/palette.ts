@@ -89,59 +89,21 @@ export const common = createPaletteChannel(COLORS.common);
 // Text
 
 export const text = {
-  light: createPaletteChannel({
-    primary: '#1C252E',
-    secondary: '#637381',
-    disabled: '#919EAB',
-  }),
+  light: createPaletteChannel(COLORS.text_light),
 
-  dark: createPaletteChannel({
-    primary: '#FFFFFF',
-    secondary: '#919EAB',
-    disabled: '#637381',
-  }),
+  dark: createPaletteChannel(COLORS.text_dark),
 };
 
 // Background
 
 export const background = {
-  light: createPaletteChannel({
-    paper: '#FFFFFF',
-    default: '#F4F6F8',
-    neutral: '#F4F6F8',
-  }),
-  dark: createPaletteChannel({
-    paper: '#1C252E',
-    default: '#141A21',
-    neutral: '#28323D',
-  }),
+  light: createPaletteChannel(COLORS.background_light),
+  dark: createPaletteChannel(COLORS.background_dark),
 };
 
 export const grey = {
-  light: createPaletteChannel({
-    '50': '#FCFDFD',
-    '100': '#F9FAFB',
-    '200': '#F4F6F8',
-    '300': '#DFE3E8',
-    '400': '#C4CDD5',
-    '500': '#919EAB',
-    '600': '#637381',
-    '700': '#454F5B',
-    '800': '#1C252E',
-    '900': '#141A21',
-  }),
-  dark: createPaletteChannel({
-    '50': '#FCFDFD',
-    '100': '#F9FAFB',
-    '200': '#F4F6F8',
-    '300': '#DFE3E8',
-    '400': '#C4CDD5',
-    '500': '#919EAB',
-    '600': '#637381',
-    '700': '#454F5B',
-    '800': '#1C252E',
-    '900': '#141A21',
-  }),
+  light: createPaletteChannel(COLORS.grey_light),
+  dark: createPaletteChannel(COLORS.grey_dark),
 };
 
 // Action
