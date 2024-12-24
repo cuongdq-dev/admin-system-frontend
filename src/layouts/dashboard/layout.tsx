@@ -25,6 +25,7 @@ import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { Main } from './main';
 import { NavDesktop, NavMobile } from './nav';
+import { IconButton } from '@mui/material';
 export type DashboardLayoutProps = {
   sx?: SxProps<Theme>;
   children: React.ReactNode;
@@ -47,6 +48,7 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
 
   const [navOpen, setNavOpen] = useState(false);
   const layoutQuery: Breakpoint = 'lg';
+  const [open, setOpen] = useState(true);
 
   return (
     <LayoutSection
@@ -113,7 +115,13 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
        * Sidebar
        *************************************** */
       sidebarSection={
-        <NavDesktop data={navData} layoutQuery={layoutQuery} workspaces={_workspaces} />
+        <NavDesktop
+          open={open}
+          data={navData}
+          layoutQuery={layoutQuery}
+          workspaces={_workspaces}
+          handleOpen={setOpen}
+        />
       }
       /** **************************************
        * Footer
@@ -131,7 +139,17 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
       sx={{
         [`& .${layoutClasses.hasSidebar}`]: {
           [theme.breakpoints.up(layoutQuery)]: {
-            pl: 'var(--layout-nav-vertical-width)',
+            // pl: open ? 'var(--layout-nav-vertical-width)' : '100px',
+
+            animation: `${open ? 'children-fade-open' : 'children-fade-close'} 0.5s ease-in-out forwards`,
+            '@keyframes children-fade-open': {
+              '0%': { pl: '100px' },
+              '100%': { pl: 'var(--layout-nav-vertical-width)' },
+            },
+            '@keyframes children-fade-close': {
+              '0%': { pl: 'var(--layout-nav-vertical-width)' },
+              '100%': { pl: '100px' },
+            },
           },
         },
         ...sx,
