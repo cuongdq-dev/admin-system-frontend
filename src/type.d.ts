@@ -114,3 +114,16 @@ interface Ilanguage {
   description: string;
   content: Record<string, string>;
 }
+
+interface NotificationItem {
+  id?: string;
+  created_at: Date;
+  updated_at: Date;
+  title?: string;
+  message?: string;
+  status: StatusEnum;
+  type?: TypeEnum;
+  meta_data: string;
+  user_id: string;
+  user?: Record<string, any>;
+}

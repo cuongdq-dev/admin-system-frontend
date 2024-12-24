@@ -43,6 +43,7 @@ export const LanguageKey = {
     dockerContainer: 'docker_containers',
     dockerImages: 'docker_images',
     notifyFetchingData: 'server_notify_fetching_data',
+    notifyConnecting: 'server_notify_connecting',
     notifyDisconnected: 'server_notify_disconnected',
   },
 
@@ -151,6 +152,9 @@ export const LanguageKey = {
     readAll: 'notification_read_all',
     beforeThat: 'notification_before_that',
     count: 'notification_count',
+    tab_all: 'notification_tab_all',
+    tab_new: 'notification_tab_new',
+    tab_archived: 'notification_tab_archived',
   },
 
   notify: {

@@ -5,15 +5,14 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 
-import { _notifications } from 'src/_mock';
-
 import { Iconify } from 'src/components/iconify';
 
 import { t } from 'i18next';
-import { PATH_LANGUAGE } from 'src/api-core/path';
+import { PATH_APP_SETTING } from 'src/api-core/path';
 import CommonBreadcrumbs from 'src/components/breadcrumbs';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
+import { useSettingStore } from 'src/store/setting';
 import { layoutClasses } from '../classes';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
@@ -36,11 +35,14 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
-  const [languages, setLanguages] = useState([]);
+
+  const { setSetting } = useSettingStore.getState();
 
   useAPI({
-    baseURL: PATH_LANGUAGE,
-    onSuccess: (res) => setLanguages(res),
+    baseURL: PATH_APP_SETTING,
+    onSuccess: (res) => {
+      setSetting(res);
+    },
   });
 
   const [navOpen, setNavOpen] = useState(false);
@@ -48,9 +50,6 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
 
   return (
     <LayoutSection
-      /** **************************************
-       * Header
-       *************************************** */
       headerSection={
         <HeaderSection
           layoutQuery={layoutQuery}
@@ -83,8 +82,8 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
             rightArea: (
               <Box gap={1} display="flex" alignItems="center">
                 {/* <Searchbar /> */}
-                <LanguagePopover data={languages} />
-                <NotificationsPopover data={_notifications} />
+                <LanguagePopover />
+                <NotificationsPopover />
                 <SettingPopover />
                 <AccountPopover
                   data={[

@@ -14,36 +14,33 @@ import { SpinIconAnimation } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey } from 'src/constants';
+import { varAlpha } from 'src/theme/styles';
 
 // ----------------------------------------------------------------------
 
-type SettingProps = {
-  mode?: Mode;
-  contrast?: boolean;
-  font?: string;
-  presets?: string;
-};
-const defaultSetting: SettingProps = {
-  mode: 'light',
-  contrast: false,
-};
+type SettingProps = { mode?: Mode; contrast?: boolean; font?: string; presets?: string };
+const defaultSetting: SettingProps = { mode: 'light', contrast: false };
 
-const ButtonCustom = styled(Button)(({ theme }) => ({
-  display: 'inline-flex',
-  justifyContent: 'center',
-  boxSizing: 'border-box',
-  outline: 0,
-  margin: 0,
-  userSelect: 'none',
-  verticalAlign: 'middle',
-  color: 'inherit',
-  padding: '20px 16px',
-  borderRadius: '16px',
-  cursor: 'pointer',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  border: 'solid 1px rgba(var(--palette-grey-500Channel) / 0.12)',
-}));
+const ButtonCustom = styled(Button)(({ theme }) => {
+  return {
+    display: 'inline-flex',
+    justifyContent: 'center',
+    boxSizing: 'border-box',
+    outline: 0,
+    margin: 0,
+    userSelect: 'none',
+    verticalAlign: 'middle',
+    color: 'inherit',
+    padding: '20px 16px',
+    borderRadius: '16px',
+    cursor: 'pointer',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
+  };
+});
 
 const SwitchBustom = styled(Switch)(({ theme }) => ({
   width: 28,
@@ -51,28 +48,19 @@ const SwitchBustom = styled(Switch)(({ theme }) => ({
   padding: 0,
   display: 'flex',
   '&:active': {
-    '& .MuiSwitch-thumb': {
-      width: 15,
-    },
-    '& .MuiSwitch-switchBase.Mui-checked': {
-      transform: 'translateX(9px)',
-    },
+    '& .MuiSwitch-thumb': { width: 15 },
+    '& .MuiSwitch-switchBase.Mui-checked': { transform: 'translateX(9px)' },
   },
   '& .MuiSwitch-switchBase': {
     padding: 2,
-    '&.Mui-checked': {
-      transform: 'translateX(12px)',
-      color: '#fff',
-    },
+    '&.Mui-checked': { transform: 'translateX(12px)', color: '#fff' },
   },
   '& .MuiSwitch-thumb': {
     boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
     width: 12,
     height: 12,
     borderRadius: 6,
-    transition: theme.transitions.create(['width'], {
-      duration: 200,
-    }),
+    transition: theme.transitions.create(['width'], { duration: 200 }),
   },
   '& .MuiSwitch-track': {
     borderRadius: 16 / 2,
@@ -101,7 +89,6 @@ export function SettingPopover() {
         anchor="right"
         open={openSetting}
         onClose={() => setOpenSetting(false)}
-        BackdropProps={{ sx: { backgroundColor: 'transparent' } }}
         PaperProps={{ sx: { width: 360, overflow: 'hidden' } }}
       >
         <Box display="flex" alignItems="center" sx={{ pl: 2.5, pr: 1.5, py: 2 }}>

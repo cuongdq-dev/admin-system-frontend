@@ -8,15 +8,17 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageKey } from 'src/constants';
 import { useNotifyStore } from 'src/store/notify';
+import { useSettingStore } from 'src/store/setting';
+import { useShallow } from 'zustand/react/shallow';
 
 // ----------------------------------------------------------------------
 
-export type LanguagePopoverProps = IconButtonProps & {
-  data?: { code: string; name: string }[];
-};
+export type LanguagePopoverProps = IconButtonProps;
 
-export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProps) {
+export function LanguagePopover({ sx, ...other }: LanguagePopoverProps) {
   const { setNotify } = useNotifyStore.getState();
+  const data = useSettingStore(useShallow((state) => state.lang));
+
   const { i18n } = useTranslation();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const defaultLanguage = getLanguage(i18n.language);
@@ -65,7 +67,6 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
           sx={{
             p: 0.5,
             gap: 0.5,
-            width: 160,
             display: 'flex',
             flexDirection: 'column',
             [`& .${menuItemClasses.root}`]: {

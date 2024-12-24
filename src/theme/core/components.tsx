@@ -21,6 +21,19 @@ const MuiTooltip: Components<Theme>['MuiTooltip'] = {
     arrow: true,
   },
 };
+
+const MuiPopover: Components<Theme>['MuiPopover'] = {
+  styleOverrides: {
+    paper: () => {
+      return {
+        padding: 4,
+        marginTop: 2,
+        borderRadius: 12,
+      };
+    },
+  },
+};
+
 const MuiSwitch: Components<Theme>['MuiSwitch'] = {
   styleOverrides: {
     root: ({ theme }) => {
@@ -272,14 +285,66 @@ const MuiRadio: Components<Theme>['MuiRadio'] = {
   },
 };
 
+// const MuiTabs: Components<Theme>['MuiTabs'] = {
+//   styleOverrides: {
+//     indicator: ({ theme }) => {
+//       return {
+//         height: '100%',
+//         borderRadius: theme.shape.borderRadius,
+//         backgroundColor: theme.vars.palette.background.default,
+//       };
+//     },
+//     root: ({ theme }) => {
+//       return {
+//         backgroundColor: theme.vars.palette.background.neutral,
+//         minHeight: 'fit-content',
+//         paddingTop: theme.spacing(1),
+//         paddingBottom: theme.spacing(1),
+//         paddingLeft: theme.spacing(2),
+//         paddingRight: theme.spacing(2),
+//       };
+//     },
+//     fixed: ({ theme }) => {
+//       return {
+//         alignContent: 'center',
+//       };
+//     },
+//     flexContainer: ({ theme }) => {
+//       return {
+//         display: 'flex',
+//         justifyContent: 'center',
+//       };
+//     },
+//   },
+// };
+
+// const MuiTab: Components<Theme>['MuiTab'] = {
+//   defaultProps: { disableRipple: true },
+//   styleOverrides: {
+//     root: ({ theme }) => {
+//       return {
+//         minHeight: 'auto',
+//         '&.Mui-selected': {
+//           color: theme.vars.palette.text.primary,
+//           zIndex: 1,
+//         },
+//       };
+//     },
+//   },
+// };
+
 // ----------------------------------------------------------------------
 
 export const components = {
+  // MuiTabs,
+  // MuiTab,
+
   MuiCard,
   MuiLink,
   MuiPaper,
   MuiRadio,
   MuiButton,
+  MuiPopover,
   MuiBackdrop,
   MuiMenuItem,
   MuiDrawer,
