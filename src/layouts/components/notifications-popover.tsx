@@ -134,14 +134,18 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
   }, []);
 
   const handleMarkAllAsRead = () => {
-    const updatedNotifications = notifications?.all?.data?.map((notification) => ({
-      ...notification,
-      status: notification.status === StatusEnum.NEW ? StatusEnum.READED : notification.status,
-    }));
-    setLoading(false);
-    setNotifyNew(0);
-    setNotificationsNew({ ...notifications?.new, data: [] });
-    setNotificationsAll({ ...notifications?.all, data: updatedNotifications });
+    setLoading(true);
+
+    invokeRequest({
+      baseURL: PATH_NOTIFICATION + '/read-all',
+      method: HttpMethod.PATCH,
+      onSuccess: (res) => {
+        handleRefresh();
+      },
+      onHandleError: () => {
+        setLoading(false);
+      },
+    });
   };
 
   useEffect(() => {
@@ -160,12 +164,6 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
       },
     });
   }, [openPopover]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     // console.log('ss');
-  //   };
-  // }, []);
 
   const handleRefresh = () => {
     setLoading(true);
@@ -597,7 +595,6 @@ function NotificationItem(props: ItemProps) {
   const { avatarUrl, title } = renderContent(notification);
   return (
     <ListItemButton
-      // sx={{}}
       onClick={() => {
         if (notification.status !== StatusEnum.NEW) return;
         handleRead && handleRead(notification?.id!);
