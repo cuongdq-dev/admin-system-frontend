@@ -32,6 +32,12 @@ export const navData = [
     path: '/site',
     icon: icon('ic-site'),
   },
+
+  {
+    title: 'Color',
+    path: '/color',
+    icon: icon('ic-color'),
+  },
   // {
   //   title: LanguageKey.product.nav,
   //   path: '/product',

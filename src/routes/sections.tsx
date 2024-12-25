@@ -30,6 +30,8 @@ export const RegisterPage = lazy(() => import('src/pages/register'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 //LANGUAGE PAGE
 export const LanguagePage = lazy(() => import('src/pages/language/list'));
+
+export const ColorPage = lazy(() => import('src/pages/color'));
 //
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
@@ -136,6 +138,15 @@ export const RouterConfig = [
         element: (
           <PrivateRoute>
             <LanguagePage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/color',
+        name: 'color',
+        element: (
+          <PrivateRoute>
+            <ColorPage />
           </PrivateRoute>
         ),
       },

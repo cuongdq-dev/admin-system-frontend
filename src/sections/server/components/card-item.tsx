@@ -107,7 +107,14 @@ export const ServerItem = (props: Props) => {
                 {item.name}
               </Link>
             }
-            secondaryTypographyProps={{ color: 'text.secondary', fontSize: 'typography.caption' }}
+            secondaryTypographyProps={{
+              sx: (theme) => {
+                return {
+                  color: theme.vars.palette.text.secondary,
+                  fontSize: theme.typography.subtitle2,
+                };
+              },
+            }}
             secondary={fDateTime(item.created_at?.toString(), formatStr.paramCase.dateTime)}
           />
         </ListItem>
@@ -117,7 +124,7 @@ export const ServerItem = (props: Props) => {
             return {
               color: theme.vars.palette.text.secondary,
               fontWeight: theme.typography.fontWeightRegular,
-              fontSize: theme.typography.caption,
+              fontSize: theme.typography.caption.fontSize,
             };
           }}
           paddingX={3}

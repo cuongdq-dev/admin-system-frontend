@@ -30,7 +30,7 @@ export function CartIcon({ totalItems, sx, ...other }: Props) {
         borderBottomLeftRadius: 16,
         bgcolor: 'background.paper',
         padding: (theme) => theme.spacing(1, 3, 1, 2),
-        boxShadow: (theme) => theme.customShadows.dropdown,
+        boxShadow: (theme) => theme.customShadows?.dropdown,
         transition: (theme) => theme.transitions.create(['opacity']),
         '&:hover': { opacity: 0.72 },
         ...sx,

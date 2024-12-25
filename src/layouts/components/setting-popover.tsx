@@ -14,8 +14,9 @@ import { SpinIconAnimation } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey } from 'src/constants';
+import { colorSchemes } from 'src/theme/core';
 import { varAlpha } from 'src/theme/styles';
-
+import COLORS from '../../theme/core/colors.json';
 // ----------------------------------------------------------------------
 
 type SettingProps = { mode?: Mode; contrast?: boolean; font?: string; presets?: string };
@@ -71,12 +72,24 @@ const SwitchBustom = styled(Switch)(({ theme }) => ({
 }));
 
 export function SettingPopover() {
-  const { mode, setMode } = useColorScheme();
+  const { mode, setMode, colorScheme } = useColorScheme();
+
   const [openSetting, setOpenSetting] = useState(false);
   const settings = { ...defaultSetting, mode };
   const canReset = Object.keys(settings).some(
     (key) => settings[key as keyof SettingProps] !== defaultSetting[key as keyof SettingProps]
   );
+  const scheme = localStorage.getItem('color-scheme');
+
+  const handleChangeColor = (value: string) => {
+    console.log(colorScheme);
+    if (colorSchemes) {
+      // TODO UPDATE CHANGE SCHEMES
+      localStorage.setItem('color-scheme', value);
+      window.dispatchEvent(new Event('storage'));
+      window.location.reload();
+    }
+  };
 
   return (
     <>
@@ -133,7 +146,7 @@ export function SettingPopover() {
                 </Box>
                 <Box>{t(LanguageKey.common.darkModeTitle)}</Box>
               </ButtonCustom>
-              <ButtonCustom
+              {/* <ButtonCustom
                 onClick={() => {
                   setMode('system');
                 }}
@@ -149,7 +162,76 @@ export function SettingPopover() {
                   <SwitchBustom checked={mode == 'dark'} />
                 </Box>
                 <Box>{t(LanguageKey.common.systemModeTitle)}</Box>
-              </ButtonCustom>
+              </ButtonCustom> */}
+            </Box>
+            <Box
+              sx={(theme) => {
+                return {
+                  border: 1,
+                  borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
+                  borderRadius: theme.spacing(2),
+                  display: 'flex',
+                  position: 'relative',
+                  padding: theme.spacing(4),
+                };
+              }}
+            >
+              <Typography
+                sx={(theme) => {
+                  return {
+                    position: 'absolute',
+                    top: -12,
+                    left: 20,
+                    alignItems: 'center',
+                    borderRadius: theme.vars.shape.borderRadius,
+                    paddingX: 1,
+                    fontWeight: theme.typography.fontWeightBold,
+                    color:
+                      mode === 'dark'
+                        ? theme.vars.palette.grey[800]
+                        : theme.vars.palette.common.white,
+                    backgroundColor: theme.vars.palette.text.primary,
+                  };
+                }}
+              >
+                Preset
+              </Typography>
+              <Box component={'div'} sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                {Object.keys(COLORS).map((key: string, index: number) => {
+                  const json = COLORS;
+                  const colors = json[key as keyof typeof COLORS];
+                  return (
+                    <Box
+                      onClick={() => {
+                        handleChangeColor(key);
+                      }}
+                      component={'span'}
+                      key={key + '_' + index}
+                      sx={(theme) => {
+                        return {
+                          cursor: 'pointer',
+                          borderRadius: theme.vars.shape.borderRadius,
+                          marginRight: 1,
+                          paddingX: 3,
+                          paddingY: 2,
+                          display: 'flex',
+
+                          backgroundColor:
+                            scheme == key
+                              ? varAlpha(theme.vars.palette.primary.mainChannel, 0.05)
+                              : 'transparent',
+                        };
+                      }}
+                    >
+                      <Iconify
+                        color={mode == 'dark' ? colors.primary.dark : colors?.primary.light}
+                        width={28}
+                        icon="solar:siderbar-outline"
+                      />
+                    </Box>
+                  );
+                })}
+              </Box>
             </Box>
           </Stack>
         </Scrollbar>

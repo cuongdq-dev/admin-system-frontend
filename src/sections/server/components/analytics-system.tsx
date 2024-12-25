@@ -1,4 +1,4 @@
-import { Box, IconButton, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import type { CardProps } from '@mui/material/Card';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -6,14 +6,11 @@ import { useTheme } from '@mui/material/styles';
 import { t } from 'i18next';
 import type { ChartOptions } from 'src/components/chart';
 import { Chart, useChart } from 'src/components/chart';
-import { RefreshIcon } from 'src/components/icon';
 import { LanguageKey, StoreName } from 'src/constants';
 import { usePageStore } from 'src/store/store';
 import { varAlpha } from 'src/theme/styles';
 import { fNumber } from 'src/utils/format-number';
 import { useShallow } from 'zustand/react/shallow';
-
-// ----------------------------------------------------------------------
 
 type Props = CardProps & {
   title?: string;
@@ -140,10 +137,7 @@ export function AnalyticsSystem(props: Props) {
               sx={(theme) => {
                 return {
                   backgroundColor: varAlpha(theme.vars.palette.error.mainChannel, 0.16),
-                  color:
-                    theme.palette.mode === 'dark'
-                      ? theme.vars.palette.error.light
-                      : theme.vars.palette.error.dark,
+                  color: theme.vars.palette.error.dark,
                 };
               }}
             >

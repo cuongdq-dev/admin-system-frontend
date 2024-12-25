@@ -231,7 +231,7 @@ const ServiceItem = (props: { connectionId?: string }) => {
         sx={(theme) => {
           return {
             marginTop: 2,
-            boxShadow: theme.customShadows.z1,
+            boxShadow: theme.customShadows?.z1,
             backgroundColor: theme.vars.palette.background.neutral,
           };
         }}

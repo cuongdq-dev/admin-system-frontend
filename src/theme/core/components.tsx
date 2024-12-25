@@ -83,31 +83,33 @@ const MuiButton: Components<Theme>['MuiButton'] = {
   },
   styleOverrides: {
     contained: {},
-    outlinedInherit: ({ theme }) =>
-      theme.palette.mode === 'dark'
-        ? {
-            borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
-          }
-        : {
-            borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
-          },
-    containedInherit: ({ theme }) =>
-      theme.palette.mode === 'dark'
-        ? {
-            backgroundColor: theme.vars.palette.common.white,
-            color: theme.vars.palette.grey[800],
-            '&:hover': {
-              backgroundColor: theme.vars.palette.grey[400],
-            },
-          }
-        : {
-            color: theme.vars.palette.common.white,
-            backgroundColor: theme.vars.palette.grey[800],
-            '&:hover': {
-              color: theme.vars.palette.common.white,
-              backgroundColor: theme.vars.palette.grey[700],
-            },
-          },
+    outlinedInherit: ({ theme }) => {
+      theme.applyStyles('dark', {
+        borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
+      });
+      theme.applyStyles('light', {
+        borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
+      });
+      return {};
+    },
+
+    containedInherit: ({ theme }) => {
+      theme.applyStyles('dark', {
+        backgroundColor: theme.vars.palette.common.white,
+        color: theme.vars.palette.grey[800],
+        '&:hover': {
+          backgroundColor: theme.vars.palette.grey[400],
+        },
+      });
+      theme.applyStyles('light', {
+        backgroundColor: theme.vars.palette.grey[800],
+        '&:hover': {
+          color: theme.vars.palette.common.white,
+          backgroundColor: theme.vars.palette.grey[700],
+        },
+      });
+      return {};
+    },
 
     sizeLarge: {
       minHeight: 48,
@@ -167,7 +169,7 @@ const MuiPaper: Components<Theme>['MuiPaper'] = {
     root: ({ theme }) => ({
       backgroundImage: 'none',
       borderRadius: theme.shape.borderRadius * 3,
-      boxShadow: theme.customShadows.z1,
+      boxShadow: theme.customShadows?.z1,
     }),
     outlined: ({ theme }) => ({
       borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.9),
@@ -222,7 +224,7 @@ const MuiMenuItem: Components<Theme>['MuiMenuItem'] = {
 const MuiDrawer: Components<Theme>['MuiDrawer'] = {
   styleOverrides: {
     paper: ({ theme }) => ({
-      boxShadow: theme.customShadows.z4,
+      boxShadow: theme.customShadows?.z4,
       borderRadius: 0,
     }),
   },

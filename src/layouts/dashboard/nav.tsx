@@ -35,13 +35,13 @@ export function NavDesktop(
   }
 ) {
   const theme = useTheme();
-  const { sx, data, slots, workspaces, layoutQuery, handleOpen, open } = props;
+  const { sx, data, slots, workspaces, layoutQuery, handleOpen, open = true } = props;
   return (
     <Box
       key={open + '-nav'}
       sx={{
         pt: 2.5,
-        px: 2.5,
+        px: open ? 2.5 : 1,
         top: 0,
         left: 0,
         height: 1,
@@ -97,7 +97,7 @@ export function NavDesktop(
           />
         </IconButton>
       </Box>
-      <NavContent open={open} data={data} slots={slots} workspaces={workspaces} />
+      <NavContent mode="desktop" open={open} data={data} slots={slots} workspaces={workspaces} />
     </Box>
   );
 }
@@ -133,7 +133,7 @@ export function NavMobile({
         },
       }}
     >
-      <NavContent data={data} slots={slots} workspaces={workspaces} />
+      <NavContent mode="mobile" data={data} slots={slots} workspaces={workspaces} />
     </Drawer>
   );
 }
@@ -145,13 +145,16 @@ export function NavContent({
   slots,
   workspaces,
   sx,
-  open,
-}: NavContentProps & { open?: boolean }) {
+  open = true,
+  mode,
+}: NavContentProps & { open?: boolean; mode: 'mobile' | 'desktop' }) {
   const pathname = usePathname();
 
   return (
     <>
-      <Logo />
+      <Box sx={{ alignSelf: open ? '' : 'center' }}>
+        <Logo />
+      </Box>
 
       {slots?.topArea}
 
@@ -173,13 +176,23 @@ export function NavContent({
                     sx={{
                       pl: 2,
                       py: 1,
-                      gap: 2,
-                      // pr: 1.5,
+                      gap: open ? 2 : 0.5,
+                      pr: 1.5,
                       borderRadius: 0.75,
                       typography: 'body2',
                       fontWeight: 'fontWeightMedium',
                       color: 'var(--layout-nav-item-color)',
                       minHeight: 'var(--layout-nav-item-height)',
+
+                      ...(!open &&
+                        mode == 'desktop' && {
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignContent: 'center',
+                          justifyItems: 'center',
+                          alignItems: 'center',
+                        }),
                       ...(isActived && {
                         fontWeight: 'fontWeightSemiBold',
                         bgcolor: 'var(--layout-nav-item-active-bg)',
@@ -195,23 +208,22 @@ export function NavContent({
                       sx={{
                         width: 24,
                         height: 24,
-                        color: isActived ? 'primary.light' : '',
+                        color: isActived ? 'primary.darker' : '',
                       }}
                     >
                       {item.icon}
                     </Box>
                     <Box
-                      sx={{
-                        color: isActived ? 'primary.light' : '',
-                        animation: `${open ? 'title-fade-open' : 'title-fade-close'} 0.2s ease-in-out forwards`,
-                        '@keyframes title-fade-open': {
-                          '0%': { display: 'none', width: 0 },
-                          '100%': { width: '2px' },
-                        },
-                        '@keyframes title-fade-close': {
-                          '0%': { opacity: 1 },
-                          '100%': { opacity: 0, display: 'none' },
-                        },
+                      sx={(theme) => {
+                        return {
+                          textOverflow: 'ellipsis',
+                          width: '100%',
+                          overflow: 'hidden',
+                          whiteSpace: 'nowrap',
+                          color: isActived ? theme.vars.palette.primary.darker : '',
+                          fontSize: open ? '' : theme.typography.button.fontSize,
+                          fontWeight: theme.typography.fontWeightSemiBold,
+                        };
                       }}
                       component="span"
                       flexGrow={1}

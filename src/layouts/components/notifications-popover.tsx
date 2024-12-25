@@ -72,7 +72,7 @@ const CustomTabs = styled(TabList)(({ theme }) => ({
   '& .MuiTabs-indicator': {
     height: '100%',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.vars.palette.background.default,
+    backgroundColor: varAlpha(theme.vars.palette.background.paperChannel, 1),
   },
   '& .MuiTabs-flexContainer': {
     display: 'flex',
@@ -93,7 +93,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   flexWrap: 'nowrap',
   '& span': {
     marginLeft: theme.spacing(1),
-    fontSize: remToPx('0.8'),
+    fontSize: theme.typography.caption.fontSize,
     padding: theme.spacing(2, 2),
     borderRadius: theme.spacing(0.5),
     alignItems: 'center',
@@ -103,7 +103,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   },
 
   '&.MuiTab-textColorPrimary': {
-    fontSize: theme.typography.caption,
+    fontSize: theme.typography.button.fontSize,
   },
   '&.Mui-selected': {
     color: theme.vars.palette.text.primary,
@@ -231,6 +231,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
         open={openPopover}
         onClose={() => {
           setOpenPopover(false);
+          setTabValue('');
         }}
         PaperProps={{
           sx: {
@@ -241,7 +242,12 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
         }}
       >
         <Box display="flex" alignItems="center" sx={{ pr: 1.5, py: 2 }}>
-          <IconButton onClick={() => setOpenPopover(false)}>
+          <IconButton
+            onClick={() => {
+              setOpenPopover(false);
+              setTabValue('');
+            }}
+          >
             <Iconify icon="ri:arrow-right-s-line" />
           </IconButton>
           <Typography variant="h6" flexGrow={1}>
@@ -744,7 +750,7 @@ const CountComponent = (props: { value: number; type?: StatusEnum | 'ALL'; activ
             }
             return {
               backgroundColor: varAlpha(theme.vars.palette.info.mainChannel, 0.16),
-              color: theme.vars.palette.info.light,
+              color: theme.vars.palette.info.main,
             };
           }}
         >
@@ -763,7 +769,7 @@ const CountComponent = (props: { value: number; type?: StatusEnum | 'ALL'; activ
             }
             return {
               backgroundColor: varAlpha(theme.vars.palette.success.mainChannel, 0.16),
-              color: theme.vars.palette.success.light,
+              color: theme.vars.palette.success.main,
             };
           }}
         >
@@ -774,9 +780,16 @@ const CountComponent = (props: { value: number; type?: StatusEnum | 'ALL'; activ
       return (
         <Icon
           sx={(theme) => {
+            if (active) {
+              return {
+                backgroundColor: theme.vars.palette.primary.main,
+                color: theme.vars.palette.primary.contrastText,
+              };
+            }
+
             return {
-              backgroundColor: theme.vars.palette.text.primary,
-              color: theme.vars.palette.grey[800],
+              backgroundColor: varAlpha(theme.vars.palette.primary.mainChannel, 0.16),
+              color: theme.vars.palette.primary.main,
             };
           }}
         >

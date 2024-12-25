@@ -1,10 +1,15 @@
 import type { ColorSystemOptions } from '@mui/material/styles';
-
+import COLORS_JSON from './colors.json';
 import { createPaletteChannel, varAlpha } from '../styles';
-import COLORS from './colors.json';
 
 // ----------------------------------------------------------------------
+function getScheme(scheme: string) {
+  return COLORS_JSON[scheme as keyof typeof COLORS_JSON];
+}
 
+const COLORS = getScheme(localStorage.getItem('color-scheme') || 'color_1');
+
+// ----
 declare module '@mui/material/styles/createPalette' {
   interface CommonColors {
     whiteChannel: string;
@@ -17,6 +22,7 @@ declare module '@mui/material/styles/createPalette' {
     neutral: string;
     neutralChannel: string;
   }
+
   interface NavbarColors {
     lighter: string;
     darker: string;
@@ -63,11 +69,8 @@ export type ColorType = 'primary' | 'secondary' | 'info' | 'success' | 'warning'
 
 // ----------------------------------------------------------------------
 
-// Grey
-
 // Primary
 export const primary = createPaletteChannel(COLORS.primary);
-
 // Secondary
 export const secondary = createPaletteChannel(COLORS.secondary);
 
@@ -87,10 +90,8 @@ export const error = createPaletteChannel(COLORS.error);
 export const common = createPaletteChannel(COLORS.common);
 
 // Text
-
 export const text = {
   light: createPaletteChannel(COLORS.text_light),
-
   dark: createPaletteChannel(COLORS.text_dark),
 };
 
@@ -108,7 +109,7 @@ export const grey = {
 
 // Action
 
-export const baseActionLight = {
+const baseActionLight = {
   hover: varAlpha(grey.light['500Channel'], 0.08),
   selected: varAlpha(grey.light['500Channel'], 0.16),
   focus: varAlpha(grey.light['500Channel'], 0.24),
@@ -119,7 +120,7 @@ export const baseActionLight = {
 };
 
 // Action
-export const baseActionDark = {
+const baseActionDark = {
   hover: varAlpha(grey.dark['500Channel'], 0.08),
   selected: varAlpha(grey.dark['500Channel'], 0.16),
   focus: varAlpha(grey.dark['500Channel'], 0.24),
@@ -129,7 +130,7 @@ export const baseActionDark = {
   disabledOpacity: 0.48,
 };
 
-export const action = {
+const action = {
   light: { ...baseActionLight, active: grey.light[600] },
   dark: { ...baseActionDark, active: grey.dark[600] },
 };
@@ -138,18 +139,18 @@ export const action = {
  * Base palette
  */
 
-export const basePalette = {
-  primary,
-  secondary,
-  info,
-  success,
-  warning,
-  error,
-  common,
+const basePalette = {
+  primary: primary,
+  secondary: secondary,
+  info: info,
+  success: success,
+  warning: warning,
+  error: error,
+  common: common,
   action,
 };
 
-export const lightPalette = {
+const lightPalette = {
   ...basePalette,
   text: text.light,
   background: background.light,
@@ -158,7 +159,7 @@ export const lightPalette = {
   grey: grey.light,
 };
 
-export const darkPalette = {
+const darkPalette = {
   ...basePalette,
   text: text.dark,
   background: background.dark,

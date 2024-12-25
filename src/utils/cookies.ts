@@ -14,7 +14,7 @@ export const getCookie = (cname: string) => {
   return '';
 };
 
-export const setCookie = (cname: string, cValue: string, expIns: string) => {
+export const setCookie = (cname: string, cValue: string, expIns?: string) => {
   const expires = `expires=${expIns}`;
   document.cookie = `${cname}=${cValue};${expires};path=/`;
 };
