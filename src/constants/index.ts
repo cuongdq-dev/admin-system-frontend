@@ -180,6 +180,7 @@ export const LanguageKey = {
     darkModeTitle: 'dark_mode_title',
     lightModeTitle: 'light_mode_title',
     systemModeTitle: 'system_mode_title',
+    contrastTitle: 'contrast_title',
   },
 
   repository: {

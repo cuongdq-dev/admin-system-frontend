@@ -134,7 +134,6 @@ export const NginxList = (props: NginxListProps) => {
         <TimeAgo
           timestamp={fetchOn!}
           alignSelf={'end'}
-          fontSize={10}
           isFetching={isFetching}
           icon={{
             icon: 'mdi:refresh',

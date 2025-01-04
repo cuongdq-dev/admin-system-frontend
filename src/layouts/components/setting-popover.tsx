@@ -14,6 +14,7 @@ import { SpinIconAnimation } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey } from 'src/constants';
+import { useContrast } from 'src/theme/core/use-shadow';
 import { varAlpha } from 'src/theme/styles';
 import COLORS from '../../theme/core/colors.json';
 // ----------------------------------------------------------------------
@@ -71,8 +72,8 @@ const SwitchBustom = styled(Switch)(({ theme }) => ({
 }));
 
 export function SettingPopover() {
-  const { mode, setMode, colorScheme, setColorScheme } = useColorScheme();
-
+  const { mode, setMode } = useColorScheme();
+  const contrast = useContrast();
   const [openSetting, setOpenSetting] = useState(false);
   const settings = { ...defaultSetting, mode };
   const canReset = Object.keys(settings).some(
@@ -84,6 +85,8 @@ export function SettingPopover() {
     localStorage.setItem('color-scheme', value);
     window.dispatchEvent(new Event('storage'));
   };
+
+  console.log(contrast);
 
   return (
     <>
@@ -139,6 +142,25 @@ export function SettingPopover() {
                   <SwitchBustom checked={mode == 'dark'} />
                 </Box>
                 <Box>{t(LanguageKey.common.darkModeTitle)}</Box>
+              </ButtonCustom>
+
+              <ButtonCustom
+                onClick={() => {
+                  localStorage.setItem('contrast', `${!contrast}`);
+                  window.dispatchEvent(new Event('storage'));
+                }}
+              >
+                <Box
+                  width={1}
+                  mb={1.2}
+                  component={'span'}
+                  display="flex"
+                  justifyContent={'space-between'}
+                >
+                  <Iconify icon="material-symbols:contrast"></Iconify>
+                  <SwitchBustom checked={contrast} />
+                </Box>
+                <Box>{t(LanguageKey.common.contrastTitle)}</Box>
               </ButtonCustom>
               {/* <ButtonCustom
                 onClick={() => {
