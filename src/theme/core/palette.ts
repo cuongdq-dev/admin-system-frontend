@@ -1,6 +1,7 @@
 import type { ColorSystemOptions } from '@mui/material/styles';
-import COLORS_JSON from './colors.json';
 import { createPaletteChannel, varAlpha } from '../styles';
+import COLORS_JSON from './colors.json';
+import { useColorScheme } from './use-color-scheme';
 
 // ----------------------------------------------------------------------
 function getScheme(scheme: string) {
@@ -8,7 +9,6 @@ function getScheme(scheme: string) {
 }
 
 const COLORS = getScheme(localStorage.getItem('color-scheme') || 'color_1');
-
 // ----
 declare module '@mui/material/styles/createPalette' {
   interface CommonColors {
@@ -69,108 +69,96 @@ export type ColorType = 'primary' | 'secondary' | 'info' | 'success' | 'warning'
 
 // ----------------------------------------------------------------------
 
-// Primary
-export const primary = createPaletteChannel(COLORS.primary);
-// Secondary
-export const secondary = createPaletteChannel(COLORS.secondary);
+export function useDynamicPalette() {
+  const COLORS = useColorScheme();
 
-// Info
-export const info = createPaletteChannel(COLORS.info);
+  const primary = createPaletteChannel(COLORS.primary);
+  const secondary = createPaletteChannel(COLORS.secondary);
+  const info = createPaletteChannel(COLORS.info);
+  const success = createPaletteChannel(COLORS.success);
+  const warning = createPaletteChannel(COLORS.warning);
+  const error = createPaletteChannel(COLORS.error);
+  const common = createPaletteChannel(COLORS.common);
 
-// Success
-export const success = createPaletteChannel(COLORS.success);
+  const text = {
+    light: createPaletteChannel(COLORS.text_light),
+    dark: createPaletteChannel(COLORS.text_dark),
+  };
 
-// Warning
-export const warning = createPaletteChannel(COLORS.warning);
+  const background = {
+    light: createPaletteChannel(COLORS.background_light),
+    dark: createPaletteChannel(COLORS.background_dark),
+  };
 
-// Error
-export const error = createPaletteChannel(COLORS.error);
+  const grey = {
+    light: createPaletteChannel(COLORS.grey_light),
+    dark: createPaletteChannel(COLORS.grey_dark),
+  };
 
-// Common
-export const common = createPaletteChannel(COLORS.common);
+  const baseActionLight = {
+    hover: varAlpha(grey.light['500Channel'], 0.08),
+    selected: varAlpha(grey.light['500Channel'], 0.16),
+    focus: varAlpha(grey.light['500Channel'], 0.24),
+    disabled: varAlpha(grey.light['500Channel'], 0.8),
+    disabledBackground: varAlpha(grey.light['500Channel'], 0.24),
+    hoverOpacity: 0.08,
+    disabledOpacity: 0.48,
+  };
 
-// Text
-export const text = {
-  light: createPaletteChannel(COLORS.text_light),
-  dark: createPaletteChannel(COLORS.text_dark),
-};
+  const baseActionDark = {
+    hover: varAlpha(grey.dark['500Channel'], 0.08),
+    selected: varAlpha(grey.dark['500Channel'], 0.16),
+    focus: varAlpha(grey.dark['500Channel'], 0.24),
+    disabled: varAlpha(grey.dark['500Channel'], 0.8),
+    disabledBackground: varAlpha(grey.dark['500Channel'], 0.24),
+    hoverOpacity: 0.08,
+    disabledOpacity: 0.48,
+  };
 
-// Background
+  const action = {
+    light: { ...baseActionLight, active: grey.light[600] },
+    dark: { ...baseActionDark, active: grey.dark[600] },
+  };
 
-export const background = {
-  light: createPaletteChannel(COLORS.background_light),
-  dark: createPaletteChannel(COLORS.background_dark),
-};
+  const basePalette = {
+    primary,
+    secondary,
+    info,
+    success,
+    warning,
+    error,
+    common,
+    action,
+  };
 
-export const grey = {
-  light: createPaletteChannel(COLORS.grey_light),
-  dark: createPaletteChannel(COLORS.grey_dark),
-};
+  const lightPalette = {
+    ...basePalette,
+    text: text.light,
+    background: background.light,
+    divider: varAlpha(grey.light['500Channel'], 0.2),
+    action: action.light,
+    grey: grey.light,
+  };
 
-// Action
+  const darkPalette = {
+    ...basePalette,
+    text: text.dark,
+    background: background.dark,
+    divider: varAlpha(grey.dark['500Channel'], 0.2),
+    action: action.dark,
+    grey: grey.dark,
+  };
 
-const baseActionLight = {
-  hover: varAlpha(grey.light['500Channel'], 0.08),
-  selected: varAlpha(grey.light['500Channel'], 0.16),
-  focus: varAlpha(grey.light['500Channel'], 0.24),
-  disabled: varAlpha(grey.light['500Channel'], 0.8),
-  disabledBackground: varAlpha(grey.light['500Channel'], 0.24),
-  hoverOpacity: 0.08,
-  disabledOpacity: 0.48,
-};
-
-// Action
-const baseActionDark = {
-  hover: varAlpha(grey.dark['500Channel'], 0.08),
-  selected: varAlpha(grey.dark['500Channel'], 0.16),
-  focus: varAlpha(grey.dark['500Channel'], 0.24),
-  disabled: varAlpha(grey.dark['500Channel'], 0.8),
-  disabledBackground: varAlpha(grey.dark['500Channel'], 0.24),
-  hoverOpacity: 0.08,
-  disabledOpacity: 0.48,
-};
-
-const action = {
-  light: { ...baseActionLight, active: grey.light[600] },
-  dark: { ...baseActionDark, active: grey.dark[600] },
-};
-
-/*
- * Base palette
- */
-
-const basePalette = {
-  primary: primary,
-  secondary: secondary,
-  info: info,
-  success: success,
-  warning: warning,
-  error: error,
-  common: common,
-  action,
-};
-
-const lightPalette = {
-  ...basePalette,
-  text: text.light,
-  background: background.light,
-  divider: varAlpha(grey.light['500Channel'], 0.2),
-  action: action.light,
-  grey: grey.light,
-};
-
-const darkPalette = {
-  ...basePalette,
-  text: text.dark,
-  background: background.dark,
-  divider: varAlpha(grey.dark['500Channel'], 0.2),
-  action: action.dark,
-  grey: grey.dark,
-};
-
-// ----------------------------------------------------------------------
-
-export const colorSchemes: Partial<Record<string, ColorSystemOptions>> = {
-  light: { palette: lightPalette },
-  dark: { palette: darkPalette },
-};
+  return {
+    light: { palette: lightPalette },
+    dark: { palette: darkPalette },
+    common,
+    error,
+    grey,
+    info,
+    primary,
+    secondary,
+    success,
+    warning,
+  };
+}

@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import { varAlpha } from '../styles';
-import { common, error, grey, info, primary, secondary, success, warning } from './palette';
+import { useDynamicPalette } from './palette';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +45,7 @@ export function createShadowColor(colorChannel: string) {
 
 export function customShadows() {
   const theme = useTheme();
+  const { common, error, grey, info, primary, secondary, success, warning } = useDynamicPalette();
   const colorChannel = grey[theme.palette.mode]['500Channel'];
 
   return {

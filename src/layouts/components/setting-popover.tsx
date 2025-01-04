@@ -14,7 +14,6 @@ import { SpinIconAnimation } from 'src/components/icon';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey } from 'src/constants';
-import { colorSchemes } from 'src/theme/core';
 import { varAlpha } from 'src/theme/styles';
 import COLORS from '../../theme/core/colors.json';
 // ----------------------------------------------------------------------
@@ -72,7 +71,7 @@ const SwitchBustom = styled(Switch)(({ theme }) => ({
 }));
 
 export function SettingPopover() {
-  const { mode, setMode, colorScheme } = useColorScheme();
+  const { mode, setMode, colorScheme, setColorScheme } = useColorScheme();
 
   const [openSetting, setOpenSetting] = useState(false);
   const settings = { ...defaultSetting, mode };
@@ -82,13 +81,8 @@ export function SettingPopover() {
   const scheme = localStorage.getItem('color-scheme');
 
   const handleChangeColor = (value: string) => {
-    console.log(colorScheme);
-    if (colorSchemes) {
-      // TODO UPDATE CHANGE SCHEMES
-      localStorage.setItem('color-scheme', value);
-      window.dispatchEvent(new Event('storage'));
-      window.location.reload();
-    }
+    localStorage.setItem('color-scheme', value);
+    window.dispatchEvent(new Event('storage'));
   };
 
   return (

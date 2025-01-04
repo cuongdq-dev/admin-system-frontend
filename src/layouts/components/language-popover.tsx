@@ -4,6 +4,7 @@ import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
 import { t } from 'i18next';
 import { getEmoji, getLanguage } from 'language-flag-colors';
+import { closeSnackbar } from 'notistack';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageKey } from 'src/constants';
@@ -30,14 +31,27 @@ export function LanguagePopover({ sx, ...other }: LanguagePopoverProps) {
     setOpenPopover(null);
   };
 
-  const handleChangeLang = async (newLang: string) => {
-    i18n.changeLanguage(newLang);
-
-    setNotify({ title: t(LanguageKey.notify.changedLanguage), options: { variant: 'success' } });
-
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
+  const handleChangeLang = async ({ code, name }: { code: string; name: string }) => {
+    closeSnackbar('change-language-' + i18n?.language);
+    await i18n
+      .init({
+        detection: { caches: ['localStorage'], lookupLocalStorage: 'i18nextLng' },
+        fallbackLng: code,
+        lng: code,
+        backend: {
+          loadPath: import.meta.env.VITE_API_URL + `/i18n/${code}/lang.json`,
+          reloadInterval: false,
+        },
+        interpolation: { escapeValue: false },
+        react: { useSuspense: true },
+      })
+      .finally(() => {
+        setNotify({
+          key: 'change-language-' + code,
+          title: t(LanguageKey.notify.changedLanguage) + ': ' + name,
+          options: { variant: 'success' },
+        });
+      });
   };
 
   return (
@@ -85,7 +99,7 @@ export function LanguagePopover({ sx, ...other }: LanguagePopoverProps) {
               <MenuItem
                 key={option.code}
                 selected={option.code === i18n?.language}
-                onClick={() => handleChangeLang(option.code)}
+                onClick={() => handleChangeLang(option)}
               >
                 {getEmoji(optionLanguage?.country!)}
                 <span>{optionLanguage?.country}</span>

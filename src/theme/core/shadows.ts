@@ -1,11 +1,13 @@
 import { useTheme, type Shadows } from '@mui/material/styles';
 import { varAlpha } from '../styles';
-import { grey } from './palette';
+import { useDynamicPalette } from './palette';
 
 // ----------------------------------------------------------------------
 
 export function shadows(): Shadows {
   const theme = useTheme();
+  const { grey } = useDynamicPalette();
+
   const colorChannel = grey[theme.palette.mode]['500Channel'];
 
   const color1 = varAlpha(colorChannel, 0.2);

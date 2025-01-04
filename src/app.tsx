@@ -68,7 +68,7 @@ export default function App() {
       socket.off('message', handleMessage);
     };
   }, []);
-  console.log('ss');
+
   return (
     <SnackbarProvider
       preventDuplicate

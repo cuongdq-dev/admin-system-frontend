@@ -10,11 +10,10 @@ interface IStore {
 }
 
 export const useNotifyStore = create<IStore>((set) => ({
-  setNotify: (notify: INotifyStore) =>
+  setNotify: async (notify: INotifyStore) =>
     set({
       notify: {
         dismissAction: true,
-        key: crypto.randomUUID(),
         ...notify,
       },
     }),

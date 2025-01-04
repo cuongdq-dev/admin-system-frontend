@@ -2,13 +2,10 @@ import type { Theme } from '@mui/material/styles';
 
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
-import { colorSchemes, components, customShadows, shadows, typography } from './core';
-
-// ----------------------------------------------------------------------
+import { components, customShadows, shadows, typography, useDynamicPalette } from './core';
 
 export function createTheme(): Theme {
   const initialTheme = {
-    colorSchemes,
     shadows: shadows(),
     customShadows: customShadows(),
     shape: { borderRadius: 8 },
@@ -18,7 +15,11 @@ export function createTheme(): Theme {
     shouldSkipGeneratingVar,
   };
 
-  const theme = extendTheme(initialTheme);
+  const { dark, light } = useDynamicPalette();
+  const theme = extendTheme({
+    ...initialTheme,
+    colorSchemes: { dark, light },
+  });
 
   return theme;
 }

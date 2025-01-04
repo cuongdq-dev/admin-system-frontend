@@ -584,7 +584,7 @@ function NotificationItem(props: ItemProps) {
       }}
       sx={(theme) => {
         return {
-          animation: 'fadeIn-list-notification 1s ease-in-out',
+          animation: 'fadeIn-list-notification 1s ease-in-out forwards',
           '@keyframes fadeIn-list-notification': {
             '0%': {
               opacity: 0,
@@ -593,6 +593,7 @@ function NotificationItem(props: ItemProps) {
             },
             '100%': { opacity: 1, transform: 'translateY(0)', marginBottom: 0 },
           },
+          opacity: 0,
           py: 1.5,
           px: 2.5,
           borderTop:
