@@ -7,7 +7,7 @@ import { t } from 'i18next';
 import type { ChartOptions } from 'src/components/chart';
 import { Chart, useChart } from 'src/components/chart';
 import { LanguageKey, StoreName } from 'src/constants';
-import { usePageStore } from 'src/store/store';
+import { usePageStore } from 'src/store/page';
 import { varAlpha } from 'src/theme/styles';
 import { fNumber } from 'src/utils/format-number';
 import { useShallow } from 'zustand/react/shallow';

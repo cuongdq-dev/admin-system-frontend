@@ -28,7 +28,7 @@ import { TimeAgo } from 'src/components/label';
 import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { useNotifyStore } from 'src/store/notify';
-import { usePageStore } from 'src/store/store';
+import { usePageStore } from 'src/store/page';
 import { rgbaToHex, stringAvatar } from 'src/theme/styles';
 import { useShallow } from 'zustand/react/shallow';
 

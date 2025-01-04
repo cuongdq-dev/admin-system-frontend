@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { TableNoDataProps } from './type';
 
 export function TableNoData({ searchQuery, colSpan, ...other }: TableNoDataProps) {
   return (

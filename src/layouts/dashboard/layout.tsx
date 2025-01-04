@@ -49,7 +49,6 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
   const [navOpen, setNavOpen] = useState(false);
   const layoutQuery: Breakpoint = 'lg';
   const [open, setOpen] = useState(true);
-
   return (
     <LayoutSection
       headerSection={
@@ -83,7 +82,6 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
             ),
             rightArea: (
               <Box gap={1} display="flex" alignItems="center">
-                {/* <Searchbar /> */}
                 <LanguagePopover />
                 <NotificationsPopover />
                 <SettingPopover />

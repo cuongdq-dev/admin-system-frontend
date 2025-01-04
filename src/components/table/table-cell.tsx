@@ -1,4 +1,4 @@
-import { Chip, IconButton, Stack, Tooltip } from '@mui/material';
+import { Chip, IconButton, Tooltip } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
@@ -7,7 +7,6 @@ import { ReactNode } from 'react';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { fDateTime, formatStr } from 'src/utils/format-time';
-import { Align, CellType } from './type';
 
 interface CommonTableCellProps {
   type: CellType;

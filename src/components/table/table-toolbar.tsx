@@ -4,11 +4,10 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 
+import { Badge, Button, Stack } from '@mui/material';
 import { t } from 'i18next';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
-import { TableToolbarProps } from './type';
-import { Badge, Box, Button, Stack } from '@mui/material';
 
 // ----------------------------------------------------------------------
 

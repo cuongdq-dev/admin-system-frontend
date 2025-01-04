@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { invokeRequest } from 'src/api-core';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
-import { usePageStore } from 'src/store/store';
+import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { TimeAgo } from '../label';
 import { Scrollbar } from '../scrollbar';
@@ -25,12 +25,11 @@ import { TableActionComponent } from './table-action';
 import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
-import { TableComponentProps } from './type';
 
 export const TableComponent = (props: TableComponentProps) => {
   const table = useTable();
 
-  const { headLabel, url, indexCol, selectCol, withSearch = true, storeName, component } = props;
+  const { headLabel, url, indexCol, selectCol, storeName, component } = props;
   const { refreshData, customCard, handleClickOpenForm } = props;
   const { actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true } } =
     props;
@@ -217,7 +216,12 @@ export const TableComponent = (props: TableComponentProps) => {
                     const keys = Object.keys(row);
 
                     return (
-                      <TableRow hover tabIndex={-1} role="checkbox">
+                      <TableRow
+                        key={'table_row_' + index + '_' + row?.id}
+                        hover
+                        tabIndex={-1}
+                        role="checkbox"
+                      >
                         {selectCol && (
                           <CommonTableCell
                             type="checkbox"

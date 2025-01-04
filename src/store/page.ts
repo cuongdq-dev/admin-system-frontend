@@ -1,24 +1,7 @@
-import { TableMetaData } from 'src/components/table/type';
 import { create } from 'zustand';
 
-interface IList {
-  fetchOn?: Date;
-  isFetching?: boolean;
-  refreshNumber?: number;
-  isLoading?: boolean;
-  data?: Record<string, any>;
-  meta?: TableMetaData;
-}
-interface IDetail {
-  refreshNumber?: number;
-  isFetching?: boolean;
-  isLoading?: boolean;
-  data?: Record<string, any>;
-  fetchOn?: Date;
-}
-
 interface IStore {
-  dataStore?: Record<string, { detail?: IDetail; list?: IList }>;
+  dataStore?: Record<string, { detail?: IStoreDetail; list?: IStoreList }>;
   setLoadingList: (key: string, isLoading: boolean) => void;
   setRefreshList: (key: string, refreshNumber: number) => void;
   setFetchingList: (key: string, isFetching: boolean) => void;
@@ -27,8 +10,8 @@ interface IStore {
   setLoadingDetail: (key: string, isLoading: boolean) => void;
   setFetchingDetail: (key: string, isFetching: boolean) => void;
 
-  setList: (key: string, list: IList) => void;
-  setDetail: (key: string, detail: IDetail) => void;
+  setList: (key: string, list: IStoreList) => void;
+  setDetail: (key: string, detail: IStoreDetail) => void;
 
   addItem: (key: string, data: Record<string, any>) => void;
   editItem: (key: string, data: Record<string, any>, index?: number) => void;
@@ -124,7 +107,7 @@ export const usePageStore = create<IStore>((set) => ({
       },
     })),
 
-  setList: (key: string, list: IList) =>
+  setList: (key: string, list: IStoreList) =>
     set((state) => ({
       dataStore: {
         ...state.dataStore,
@@ -197,7 +180,7 @@ export const usePageStore = create<IStore>((set) => ({
       };
     }),
 
-  setDetail: (key: string, detail: IDetail) =>
+  setDetail: (key: string, detail: IStoreDetail) =>
     set((state) => ({
       dataStore: {
         ...state.dataStore,

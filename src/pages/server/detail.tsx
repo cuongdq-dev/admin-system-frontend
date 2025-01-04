@@ -13,7 +13,7 @@ import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { DetailView } from 'src/sections/server';
 import { useNotifyStore } from 'src/store/notify';
-import { usePageStore } from 'src/store/store';
+import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 
 // ----------------------------------------------------------------------
@@ -34,7 +34,9 @@ export default function Page() {
       baseURL: PATH_SERVER + '/connection/' + id,
       onSuccess: (res) => {
         if (res.connectionId) {
-          setDetail(storeName, { data: { ...res, connectionId: undefined } });
+          setDetail(storeName, {
+            data: { ...res, connectionId: undefined, connectionTemp: res?.connectionId },
+          });
           setNotify({
             title: t(LanguageKey.server.notifyFetchingData),
             dismissAction: false,
@@ -160,9 +162,10 @@ export default function Page() {
   };
 
   const disconnect = () => {
-    data?.connectionId &&
+    const connectionId = data?.connectionId || data?.connectionTemp;
+    connectionId &&
       invokeRequest({
-        baseURL: PATH_SERVER + '/disconnect/' + data?.connectionId,
+        baseURL: PATH_SERVER + '/disconnect/' + connectionId,
         method: HttpMethod.DELETE,
         onSuccess: () => {},
       });
@@ -181,12 +184,14 @@ export default function Page() {
       removeStore(StoreName.SERVER_SERVICE);
       connectServer();
     }
+  }, [id]);
 
+  useEffect(() => {
     return () => {
       closeSnackbar('server_connection');
       disconnect();
     };
-  }, [id]);
+  }, []);
 
   const fetchDetail = (connectionId: string) => {
     invokeRequest({

@@ -33,31 +33,8 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey } from 'src/constants';
 import { useSettingStore } from 'src/store/setting';
-import { remToPx, varAlpha } from 'src/theme/styles';
+import { varAlpha } from 'src/theme/styles';
 import { useShallow } from 'zustand/react/shallow';
-
-enum TypeEnum {
-  MESSAGE = 'MESSAGE',
-  SYSTEM = 'SYSTEM',
-  COMMENT = 'COMMENT',
-  ORDER = 'ORDER',
-  DELIVERY = 'DELIVERY',
-  PROMOTION = 'PROMOTION', // Sales or discount notifications
-  PAYMENT = 'PAYMENT', // Payment-related updates
-  REFUND = 'REFUND', // Refund processing notifications
-  FEEDBACK = 'FEEDBACK', // Feedback requests or updates
-  REMINDER = 'REMINDER', // Scheduled reminders
-  ACCOUNT = 'ACCOUNT', // Account-related notifications
-}
-
-enum StatusEnum {
-  NEW = 'NEW', // Just created
-  RECEIVED = 'RECEIVED', // Acknowledged by the system
-  READED = 'READED', // Marked as read by the user
-  PENDING = 'PENDING', // Queued but not yet delivered
-  FAILED = 'FAILED', // Delivery failed
-  ARCHIVED = 'ARCHIVED', // Archived for reference
-}
 
 export type NotificationsPopoverProps = IconButtonProps & {
   data?: NotificationItem[];
@@ -123,15 +100,15 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
     setNotificationsNew,
     setNotificationsArchived,
   } = useSettingStore.getState();
-  const [tabValue, setTabValue] = useState<StatusEnum | ''>();
+  const [tabValue, setTabValue] = useState<StatusEnum | ''>('');
   const [openPopover, setOpenPopover] = useState(false);
   const [loading, setLoading] = useState(false);
   const newNotifications = notifications?.new?.data;
   const archivedNotifications = notifications?.archived?.data;
 
-  const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOpenPopover = () => {
     setOpenPopover(true);
-  }, []);
+  };
 
   const handleMarkAllAsRead = () => {
     setLoading(true);
@@ -192,10 +169,10 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
       onSuccess: (res) => {
         setTimeout(() => {
           switch (tabValue) {
-            case StatusEnum.NEW:
+            case 'NEW':
               setNotificationsNew({ ...res, data: [...newNotifications!, ...res?.data] });
               break;
-            case StatusEnum.ARCHIVED:
+            case 'ARCHIVED':
               setNotificationsArchived({ ...res, data: [...archivedNotifications!, ...res?.data] });
               break;
             default:
@@ -298,12 +275,12 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
               icon={
                 <CountComponent
                   value={newNotifications?.length || 0}
-                  type={StatusEnum.NEW}
-                  active={tabValue == StatusEnum.NEW}
+                  type={'NEW'}
+                  active={tabValue == 'NEW'}
                 />
               }
               iconPosition="end"
-              value={StatusEnum.NEW}
+              value={'NEW' as StatusEnum}
             />
             <CustomTab
               disableRipple
@@ -312,11 +289,11 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
               icon={
                 <CountComponent
                   value={archivedNotifications?.length || 0}
-                  type={StatusEnum.ARCHIVED}
-                  active={tabValue == StatusEnum.ARCHIVED}
+                  type={'ARCHIVED'}
+                  active={tabValue == 'ARCHIVED'}
                 />
               }
-              value={StatusEnum.ARCHIVED}
+              value={'ARCHIVED'}
             />
           </CustomTabs>
           <Scrollbar>
@@ -349,7 +326,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                           ),
                         });
 
-                        if (findRecord.status === StatusEnum.NEW && notifyNew > 0) {
+                        if (findRecord.status === 'NEW' && notifyNew > 0) {
                           setNotifyNew(notifyNew - 1);
                         }
 
@@ -388,7 +365,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                         setNotificationsAll({ ...notifications?.all, data: allData });
                         setNotificationsNew({ ...notifications?.new, data: newData });
 
-                        if (findRecord.status === StatusEnum.NEW && notifyNew > 0) {
+                        if (findRecord.status === 'NEW' && notifyNew > 0) {
                           setNotifyNew(notifyNew - 1);
                         }
 
@@ -406,7 +383,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                 }}
               />
             </CustomTabsPannel>
-            <CustomTabsPannel value={StatusEnum.NEW}>
+            <CustomTabsPannel value={'NEW'}>
               <NotificationList
                 loading={loading}
                 data={newNotifications!}
@@ -435,7 +412,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                         setNotificationsAll({ ...notifications?.all, data: allData });
                         setNotificationsNew({ ...notifications?.new, data: newData });
 
-                        if (findRecord.status === StatusEnum.NEW && notifyNew > 0) {
+                        if (findRecord.status === 'NEW' && notifyNew > 0) {
                           setNotifyNew(notifyNew - 1);
                         }
 
@@ -474,7 +451,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                           ),
                         });
 
-                        if (findRecord.status === StatusEnum.NEW && notifyNew > 0) {
+                        if (findRecord.status === 'NEW' && notifyNew > 0) {
                           setNotifyNew(notifyNew - 1);
                         }
                         setTimeout(() => {
@@ -491,7 +468,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                 }}
               />
             </CustomTabsPannel>
-            <CustomTabsPannel value={StatusEnum.ARCHIVED}>
+            <CustomTabsPannel value={'ARCHIVED'}>
               <NotificationList
                 loading={loading}
                 data={archivedNotifications!}
@@ -602,7 +579,7 @@ function NotificationItem(props: ItemProps) {
   return (
     <ListItemButton
       onClick={() => {
-        if (notification.status !== StatusEnum.NEW) return;
+        if (notification.status !== 'NEW') return;
         handleRead && handleRead(notification?.id!);
       }}
       sx={(theme) => {
@@ -622,7 +599,7 @@ function NotificationItem(props: ItemProps) {
             index == 0
               ? 'unset'
               : `0.2px dashed ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
-          ...(notification.status == StatusEnum.NEW && {
+          ...(notification.status == 'NEW' && {
             bgcolor: 'action.selected',
           }),
         };
@@ -649,7 +626,7 @@ function NotificationItem(props: ItemProps) {
           </Typography>
         }
       />
-      {notification.status !== StatusEnum.ARCHIVED ? (
+      {notification.status !== 'ARCHIVED' ? (
         <IconButton
           sx={{ zIndex: 1 }}
           onClick={(event) => {
@@ -686,7 +663,7 @@ function renderContent(notification: NotificationItem) {
     </Typography>
   );
 
-  if (notification.type === TypeEnum.ORDER) {
+  if (notification.type === 'ORDER') {
     return {
       avatarUrl: (
         <img
@@ -697,7 +674,7 @@ function renderContent(notification: NotificationItem) {
       title,
     };
   }
-  if (notification.type === TypeEnum.DELIVERY) {
+  if (notification.type === 'DELIVERY') {
     return {
       avatarUrl: (
         <img
@@ -708,7 +685,7 @@ function renderContent(notification: NotificationItem) {
       title,
     };
   }
-  if (notification.type === TypeEnum.FEEDBACK) {
+  if (notification.type === 'FEEDBACK') {
     return {
       avatarUrl: (
         <img alt={notification.title} src="/assets/icons/notification/ic-notification-mail.svg" />
@@ -716,7 +693,7 @@ function renderContent(notification: NotificationItem) {
       title,
     };
   }
-  if (notification.type === TypeEnum.COMMENT) {
+  if (notification.type === 'COMMENT') {
     return {
       avatarUrl: (
         <img alt={notification.title} src="/assets/icons/notification/ic-notification-chat.svg" />
@@ -738,7 +715,7 @@ const CountComponent = (props: { value: number; type?: StatusEnum | 'ALL'; activ
   if (defaultValue <= 0) return <></>;
   const value = defaultValue > 10 ? `${10}+` : defaultValue;
   switch (type) {
-    case StatusEnum.NEW:
+    case 'NEW':
       return (
         <Icon
           sx={(theme) => {
@@ -757,7 +734,7 @@ const CountComponent = (props: { value: number; type?: StatusEnum | 'ALL'; activ
           {value}
         </Icon>
       );
-    case StatusEnum.ARCHIVED:
+    case 'ARCHIVED':
       return (
         <Icon
           sx={(theme) => {

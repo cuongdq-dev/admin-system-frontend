@@ -10,14 +10,13 @@ import { PATH_LANGUAGE } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
-import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { usePageStore } from 'src/store/page';
 import * as Yup from 'yup';
-import { LanguageForm } from '../components/form-table';
-import { usePageStore } from 'src/store/store';
 import { useShallow } from 'zustand/react/shallow';
+import { LanguageForm } from '../components/form-table';
 
 type State = { id: string; code: string; name: string; description: string }[];
 type FormConfigState = {

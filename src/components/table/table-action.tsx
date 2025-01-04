@@ -14,7 +14,6 @@ import { HttpMethod } from 'src/api-core';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
 import { IconButtonDelete } from '../button';
-import { TableActionComponentProps } from './type';
 
 export const TableActionComponent = (props: TableActionComponentProps) => {
   const navigate = useNavigate();

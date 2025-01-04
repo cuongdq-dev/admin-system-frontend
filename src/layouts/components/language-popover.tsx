@@ -22,14 +22,13 @@ export function LanguagePopover({ sx, ...other }: LanguagePopoverProps) {
   const { i18n } = useTranslation();
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const defaultLanguage = getLanguage(i18n.language);
-
-  const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
-  }, []);
+  };
 
-  const handleClosePopover = useCallback(() => {
+  const handleClosePopover = () => {
     setOpenPopover(null);
-  }, []);
+  };
 
   const handleChangeLang = async (newLang: string) => {
     i18n.changeLanguage(newLang);

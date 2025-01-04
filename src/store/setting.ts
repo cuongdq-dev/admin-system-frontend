@@ -1,4 +1,3 @@
-import { TableMetaData } from 'src/components/table/type';
 import { create } from 'zustand';
 
 export interface IListNotification {

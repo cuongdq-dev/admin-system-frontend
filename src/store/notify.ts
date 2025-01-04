@@ -1,23 +1,16 @@
-import { OptionsWithExtraProps, SnackbarKey, SnackbarMessage } from 'notistack';
+import { OptionsWithExtraProps } from 'notistack';
 import { create } from 'zustand';
 
-type BaseVariant = 'default' | 'error' | 'success' | 'warning' | 'info';
-
-export interface INotify {
-  key?: SnackbarKey;
-  title?: SnackbarMessage;
-  options?: OptionsWithExtraProps<BaseVariant>;
-  dismissAction?: boolean;
-}
+export type INotifyStore = INotify & { options?: OptionsWithExtraProps<BaseVariant> };
 
 interface IStore {
-  notify?: INotify;
-  setNotify: (notify: INotify) => void;
+  notify?: INotifyStore;
+  setNotify: (notify: INotifyStore) => void;
   dismissNotify: () => void;
 }
 
 export const useNotifyStore = create<IStore>((set) => ({
-  setNotify: (notify: INotify) =>
+  setNotify: (notify: INotifyStore) =>
     set({
       notify: {
         dismissAction: true,

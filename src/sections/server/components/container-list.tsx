@@ -15,10 +15,9 @@ import { PATH_DOCKER } from 'src/api-core/path';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
 import { TableComponent } from 'src/components/table';
-import { HeadLabelProps } from 'src/components/table/type';
 import { LanguageKey, StoreName } from 'src/constants';
 import { useNotifyStore } from 'src/store/notify';
-import { usePageStore } from 'src/store/store';
+import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { CardHead } from './card-head';
 

@@ -1,15 +1,14 @@
+import { IconButton, Tooltip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import { TableHeadProps } from './type';
-import { visuallyHidden } from './utils';
-import { Button, IconButton, Tooltip, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { LanguageKey } from 'src/constants';
 import { Iconify } from '../iconify';
+import { visuallyHidden } from './utils';
 
 // ----------------------------------------------------------------------
 

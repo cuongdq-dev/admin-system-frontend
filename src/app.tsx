@@ -1,42 +1,65 @@
 import { enqueueSnackbar, SnackbarProvider } from 'notistack';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import 'src/global.css';
 import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
 import { Router } from 'src/routes/sections';
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { useShallow } from 'zustand/react/shallow';
 import { ButtonDismissNotify } from './components/button';
-import { INotify, useNotifyStore } from './store/notify';
+import { INotifyStore, useNotifyStore } from './store/notify';
 import { socket } from './utils/socket';
-
-interface Message {
-  text: string;
-  type: number;
-}
 
 export default function App() {
   useScrollToTop();
-
-  const notify = useNotifyStore(useShallow((state) => state.notify as INotify));
+  const { setNotify } = useNotifyStore.getState();
+  const notifyStore = useNotifyStore(useShallow((state) => state.notify as INotifyStore));
 
   useEffect(() => {
-    if (!!notify) {
-      enqueueSnackbar(notify.title, {
+    if (!!notifyStore) {
+      enqueueSnackbar(notifyStore.title, {
         action: (key) => {
-          if (notify.dismissAction)
+          if (notifyStore.dismissAction)
             return <ButtonDismissNotify keyNotify={key} textColor="white" />;
           return <></>;
         },
-        ...notify.options,
-        key: notify.key,
+        ...notifyStore.options,
+        key: notifyStore.key,
       });
       return;
     }
-  }, [notify]);
+  }, [notifyStore]);
 
   useEffect(() => {
-    function handleMessage(value: any) {
-      console.log(value);
+    function handleMessage(socket: ISocket) {
+      const notify = socket.notify;
+      switch (socket?.type) {
+        case 'MESSAGE':
+          enqueueSnackbar(notify?.title, {
+            action: (key) => {
+              if (notify.dismissAction)
+                return <ButtonDismissNotify keyNotify={key} textColor="white" />;
+              return <></>;
+            },
+            key: notify.key,
+          });
+          return;
+        case 'NOTIFY':
+          setNotify(notify);
+          return;
+        case 'STORE':
+          enqueueSnackbar(notify.title, {
+            action: (key) => {
+              if (notify.dismissAction)
+                return <ButtonDismissNotify keyNotify={key} textColor="white" />;
+              return <></>;
+            },
+            key: notify.key,
+          });
+          return;
+
+        default:
+          break;
+      }
     }
 
     socket.on('message', handleMessage);
@@ -45,7 +68,7 @@ export default function App() {
       socket.off('message', handleMessage);
     };
   }, []);
-
+  console.log('ss');
   return (
     <SnackbarProvider
       preventDuplicate

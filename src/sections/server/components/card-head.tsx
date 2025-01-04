@@ -1,7 +1,7 @@
 import { Box, CardHeader, IconButton } from '@mui/material';
 import { RefreshIcon } from 'src/components/icon';
 import { TimeAgo } from 'src/components/label';
-import { usePageStore } from 'src/store/store';
+import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 
 export const CardHead = (props: {
