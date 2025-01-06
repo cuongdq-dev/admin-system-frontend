@@ -27,13 +27,15 @@ export type NavContentProps = {
   sx?: SxProps<Theme>;
 };
 
-export function NavDesktop(
-  props: NavContentProps & {
-    open: boolean;
-    layoutQuery: Breakpoint;
-    handleOpen?: (open: boolean) => void;
-  }
-) {
+type NavContent = NavContentProps & { open?: boolean; mode: 'mobile' | 'desktop' };
+type NavDesktopProps = NavContentProps & {
+  open: boolean;
+  layoutQuery: Breakpoint;
+  handleOpen?: (open: boolean) => void;
+};
+type NavMobileProps = NavContentProps & { open: boolean; onClose: () => void };
+
+export function NavDesktop(props: NavDesktopProps) {
   const theme = useTheme();
   const { sx, data, slots, workspaces, layoutQuery, handleOpen, open = true } = props;
   return (
@@ -104,16 +106,9 @@ export function NavDesktop(
 
 // ----------------------------------------------------------------------
 
-export function NavMobile({
-  sx,
-  data,
-  open,
-  slots,
-  onClose,
-  workspaces,
-}: NavContentProps & { open: boolean; onClose: () => void }) {
+export function NavMobile(props: NavMobileProps) {
   const pathname = usePathname();
-
+  const { sx, data, open, slots, onClose, workspaces } = props;
   useEffect(() => {
     if (open) onClose();
   }, [pathname]);
@@ -140,33 +135,21 @@ export function NavMobile({
 
 // ----------------------------------------------------------------------
 
-export function NavContent({
-  data,
-  slots,
-  workspaces,
-  sx,
-  open = true,
-  mode,
-}: NavContentProps & { open?: boolean; mode: 'mobile' | 'desktop' }) {
+export function NavContent(props: NavContent) {
   const pathname = usePathname();
-
+  const { data, slots, sx, open = true, mode } = props;
   return (
     <>
       <Box sx={{ alignSelf: open ? '' : 'center' }}>
         <Logo />
       </Box>
-
       {slots?.topArea}
-
-      {/* <WorkspacesPopover data={workspaces} sx={{ my: 2 }} /> */}
-
       <Divider sx={{ marginTop: 2, marginBottom: 5 }} />
       <Scrollbar fillContent>
         <Box component="nav" display="flex" flex="1 1 auto" flexDirection="column" sx={sx}>
           <Box component="ul" gap={0.5} display="flex" flexDirection="column">
             {data.map((item) => {
               const isActived = item.path === pathname;
-
               return (
                 <ListItem disableGutters disablePadding key={item.title}>
                   <ListItemButton

@@ -210,7 +210,7 @@ export function SettingPopover() {
                   };
                 }}
               >
-                Preset
+                {t(LanguageKey.common.presetTitle)}
               </Typography>
               <Box component={'div'} sx={{ display: 'flex', flexWrap: 'wrap' }}>
                 {Object.keys(COLORS).map((key: string, index: number) => {

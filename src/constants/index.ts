@@ -181,6 +181,7 @@ export const LanguageKey = {
     lightModeTitle: 'light_mode_title',
     systemModeTitle: 'system_mode_title',
     contrastTitle: 'contrast_title',
+    presetTitle: 'preset_title',
   },
 
   repository: {
