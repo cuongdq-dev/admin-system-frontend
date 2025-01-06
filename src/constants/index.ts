@@ -1,3 +1,5 @@
+import { t } from 'i18next';
+
 export const LanguageKey = {
   dashboard: {
     nav: 'dashboard_nav',
@@ -10,6 +12,7 @@ export const LanguageKey = {
     detailPageTitle: 'user_detail_page',
     tableTitle: 'user_table_title',
     detailTitle: 'user_detail_title',
+    profileTitle: 'user_profile_title',
   },
   server: {
     nav: 'server_nav',
@@ -182,6 +185,8 @@ export const LanguageKey = {
     systemModeTitle: 'system_mode_title',
     contrastTitle: 'contrast_title',
     presetTitle: 'preset_title',
+    detailTitle: 'detail_title',
+    listTitle: 'list_title',
   },
 
   repository: {
@@ -257,4 +262,25 @@ export const StoreName = {
   SERVER_NGINX: 'server_nginx_store',
   LANGUAGE: 'language_store',
   SITE: 'site_store',
+
+  PROFILE: 'profile_store',
+};
+
+export const Breadcrumbs = {
+  COLOR: {
+    items: [{ href: '/color', title: LanguageKey.common.listTitle }],
+  },
+  SERVER_LIST: {
+    items: [{ href: '/server', title: LanguageKey.common.listTitle }],
+  },
+  SERVER_DETAIL: {
+    items: [{ title: LanguageKey.common.listTitle }, { title: LanguageKey.common.detailTitle }],
+  },
+
+  PROFILE: {
+    items: [{ href: '/profile', title: LanguageKey.user.profileTitle }],
+  },
+  LANGUAGE_LIST: {
+    items: [{ href: '/language', title: LanguageKey.common.listTitle }],
+  },
 };

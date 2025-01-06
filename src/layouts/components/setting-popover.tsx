@@ -86,8 +86,6 @@ export function SettingPopover() {
     window.dispatchEvent(new Event('storage'));
   };
 
-  console.log(contrast);
-
   return (
     <>
       <IconButton color={openSetting ? 'primary' : 'default'} onClick={() => setOpenSetting(true)}>

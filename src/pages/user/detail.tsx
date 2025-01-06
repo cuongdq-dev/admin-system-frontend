@@ -9,7 +9,7 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SERVER } from 'src/api-core/path';
 import { Iconify } from 'src/components/iconify';
 import { CONFIG } from 'src/config-global';
-import { Breadcrumbs, LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { DetailView } from 'src/sections/server';
 import { useNotifyStore } from 'src/store/notify';
@@ -267,9 +267,7 @@ export default function Page() {
       </Helmet>
 
       <DashboardContent
-        breadcrumb={{
-          items: [...Breadcrumbs.SERVER_DETAIL.items, { title: data?.name }],
-        }}
+      // breadcrumb={{ items: [{ href: '/color', title: t(LanguageKey.common.listTitle) }] }}
       >
         <DetailView
           key={'detail_' + refreshNumber}

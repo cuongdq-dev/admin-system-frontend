@@ -16,7 +16,8 @@ export const HomePage = lazy(() => import('src/pages/home'));
 //
 export const BlogPage = lazy(() => import('src/pages/blog'));
 //
-export const UserPage = lazy(() => import('src/pages/user'));
+export const UserPage = lazy(() => import('src/pages/user/list'));
+export const ProfilePage = lazy(() => import('src/pages/user/profile'));
 //SERVER PAGE
 export const ServersPage = lazy(() => import('src/pages/server/list'));
 export const ServerDetailPage = lazy(() => import('src/pages/server/detail'));
@@ -74,10 +75,23 @@ export const RouterConfig = [
       },
       {
         path: '/user',
-        name: LanguageKey.user.listPageTitle,
+        children: [
+          {
+            path: '',
+            name: LanguageKey.server.listPageTitle,
+            element: (
+              <PrivateRoute>
+                <UserPage />
+              </PrivateRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: '/profile',
         element: (
           <PrivateRoute>
-            <UserPage />
+            <ProfilePage />
           </PrivateRoute>
         ),
       },

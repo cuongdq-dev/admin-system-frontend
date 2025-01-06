@@ -59,7 +59,9 @@ export function SiteView() {
   };
 
   return (
-    <DashboardContent>
+    <DashboardContent
+    // breadcrumb={{ items: [{ href: '/color', title: t(LanguageKey.common.listTitle) }] }}
+    >
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
           {t(LanguageKey.language.tableTitle)}

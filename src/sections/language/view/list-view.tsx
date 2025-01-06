@@ -1,5 +1,5 @@
 import { TabContext, TabList } from '@mui/lab';
-import { DialogTitle, Tab } from '@mui/material';
+import { DialogTitle, Tab, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import { t } from 'i18next';
@@ -17,6 +17,7 @@ import { usePageStore } from 'src/store/page';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
 import { LanguageForm } from '../components/form-table';
+import { getEmoji, getLanguage } from 'language-flag-colors';
 
 type State = { id: string; code: string; name: string; description: string }[];
 type FormConfigState = {
@@ -28,7 +29,23 @@ type FormConfigState = {
 
 const HeadLabel: HeadLabelProps[] = [
   { id: 'code', label: t(LanguageKey.language.codeItem), sort: true, type: 'text', width: '50%' },
-  { id: 'content', label: t(LanguageKey.language.contentItem), sort: false, width: '50%' },
+  {
+    id: 'content',
+    label: t(LanguageKey.language.contentItem),
+    sort: false,
+    width: '50%',
+    type: 'custom',
+    render: ({ row }) => {
+      const lang = getLanguage(row?.lang?.code! as string);
+      return (
+        <Box component="div" display="flex" justifyItems="center">
+          <Typography>{getEmoji(lang?.country!)}</Typography>
+          <Typography sx={{ marginX: 1 }}>-</Typography>
+          {row.content}
+        </Box>
+      );
+    },
+  },
 ];
 
 export function ListView() {
@@ -71,7 +88,9 @@ export function ListView() {
   };
 
   return (
-    <DashboardContent>
+    <DashboardContent
+      breadcrumb={{ items: [{ href: '/language', title: t(LanguageKey.common.listTitle) }] }}
+    >
       <HeadComponent title={t(LanguageKey.language.tableTitle)} />
       <Card>
         <TabContext value={queryParams.get('lang') || ''}>

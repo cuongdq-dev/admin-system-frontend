@@ -1,12 +1,14 @@
 import type { BoxProps } from '@mui/material/Box';
-import type { Breakpoint } from '@mui/material/styles';
 import type { ContainerProps } from '@mui/material/Container';
+import type { Breakpoint } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
-import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
+import { useTheme } from '@mui/material/styles';
 
+import { useEffect } from 'react';
 import { layoutClasses } from 'src/layouts/classes';
+import { useSettingStore } from 'src/store/setting';
 
 // ----------------------------------------------------------------------
 
@@ -32,18 +34,28 @@ export function Main({ children, sx, ...other }: BoxProps) {
 
 type DashboardContentProps = ContainerProps & {
   disablePadding?: boolean;
+  breadcrumb?: IBreadcrumb;
 };
 
 export function DashboardContent({
   sx,
   children,
   disablePadding,
+  breadcrumb,
   maxWidth,
   ...other
 }: DashboardContentProps) {
+  const { setBreadcrumb } = useSettingStore.getState();
   const theme = useTheme();
 
   const layoutQuery: Breakpoint = 'lg';
+
+  useEffect(() => {
+    breadcrumb && Number(breadcrumb?.items?.length) > 0 && setBreadcrumb(breadcrumb);
+    return () => {
+      setBreadcrumb(undefined);
+    };
+  }, [breadcrumb]);
 
   return (
     <Container
@@ -55,18 +67,8 @@ export function DashboardContent({
         flexDirection: 'column',
         pt: 'var(--layout-dashboard-content-pt)',
         pb: 'var(--layout-dashboard-content-pb)',
-        [theme.breakpoints.up(layoutQuery)]: {
-          px: 'var(--layout-dashboard-content-px)',
-        },
-        ...(disablePadding && {
-          p: {
-            xs: 0,
-            sm: 0,
-            md: 0,
-            lg: 0,
-            xl: 0,
-          },
-        }),
+        [theme.breakpoints.up(layoutQuery)]: { px: 'var(--layout-dashboard-content-px)' },
+        ...(disablePadding && { p: { xs: 0, sm: 0, md: 0, lg: 0, xl: 0 } }),
         ...sx,
       }}
       {...other}

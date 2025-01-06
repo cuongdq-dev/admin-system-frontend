@@ -6,7 +6,7 @@ import { PATH_SERVER } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { Breadcrumbs, LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import * as Yup from 'yup';
@@ -77,7 +77,7 @@ export function ListView() {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
-    <DashboardContent>
+    <DashboardContent breadcrumb={Breadcrumbs.SERVER_LIST}>
       <HeadComponent
         title={t(LanguageKey.server.tableTitle)}
         buttonTitle={t(LanguageKey.server.addNewButton)}

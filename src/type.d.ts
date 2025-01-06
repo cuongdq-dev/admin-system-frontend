@@ -315,3 +315,7 @@ declare type TableMetaData = {
   totalItems: number;
   totalPages: number;
 };
+
+declare type IBreadcrumb = {
+  items?: { href?: string; title?: string }[];
+};

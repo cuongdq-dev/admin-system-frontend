@@ -10,11 +10,13 @@ export interface INotifications {
   archived?: IListNotification;
   all?: IListNotification;
 }
+
 export interface ISetting {
   lang?: { code: string; name: string }[];
   user?: Record<string, any>;
   notifyNew?: number;
   notifications?: INotifications;
+  breadcrumb?: IBreadcrumb;
 }
 
 interface ISettingStore {
@@ -22,7 +24,9 @@ interface ISettingStore {
   user?: Record<string, any>;
   notifyNew?: number;
   notifications?: INotifications;
+  breadcrumb?: IBreadcrumb;
   setSetting: (values: ISetting) => void;
+  setBreadcrumb: (breadcrumb?: IBreadcrumb) => void;
   setNotifyNew: (value: number) => void;
   setNotifications: (notifications: INotifications) => void;
 
@@ -37,6 +41,8 @@ interface ISettingStore {
 export const useSettingStore = create<ISettingStore>((set) => ({
   notifyNew: 0,
   setSetting: (settings: ISetting) => set((state) => ({ ...state, ...settings })),
+  setBreadcrumb: (breadcrumb?: IBreadcrumb) =>
+    set((state) => ({ ...state, breadcrumb: breadcrumb })),
 
   setNotifications: (notifications: INotifications) =>
     set((state) => ({ ...state, notifications: notifications })),

@@ -11,6 +11,8 @@ import { Iconify } from 'src/components/iconify';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { varAlpha } from 'src/theme/styles';
 import { default as colors } from '../theme/core/colors.json';
+import { Breadcrumbs, LanguageKey } from 'src/constants';
+import { t } from 'i18next';
 
 // Kiểu màu cho từng color
 type ColorKey =
@@ -110,7 +112,7 @@ const renderColor = (color: any, colorKey: string): any => {
 
 export default function Page() {
   return (
-    <DashboardContent>
+    <DashboardContent breadcrumb={Breadcrumbs.COLOR}>
       <Box>
         {Object.keys(colors).map((key: string, index: number) => {
           const colorSystem = colors[key as ColorKey] || {};

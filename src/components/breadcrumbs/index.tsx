@@ -1,9 +1,9 @@
 import { Chip, emphasize, Breadcrumbs as MUIBreadcrumbs, styled, useTheme } from '@mui/material';
 import type { Breakpoint } from '@mui/material/styles';
 import { t } from 'i18next';
-import { useLocation } from 'react-router-dom';
 import { LanguageKey } from 'src/constants';
-import { RouterConfig } from 'src/routes/sections';
+import { useSettingStore } from 'src/store/setting';
+import { useShallow } from 'zustand/react/shallow';
 
 const StyledBreadcrumbItem = styled(Chip)(({ theme }) => {
   return {
@@ -41,10 +41,8 @@ const findRouteName = (path: string, routes: any[]): string | undefined => {
 };
 
 const Breadcrumbs = () => {
-  const location = useLocation();
   const theme = useTheme();
-  const pathnames = location.pathname.split('/').filter((x) => x);
-
+  const { breadcrumb } = useSettingStore(useShallow((state) => state));
   const layoutQuery: Breakpoint = 'lg';
 
   return (
@@ -54,16 +52,15 @@ const Breadcrumbs = () => {
         sx={{ ml: -1, [theme.breakpoints.down(layoutQuery)]: { display: 'none' } }}
       >
         <StyledBreadcrumbItem label={t(LanguageKey.dashboard.pageTitle)} />
-        {pathnames.map((value, index) => {
-          const key = value + '_' + index;
-          const last = index === pathnames.length - 1;
-          const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-          const routeName =
-            findRouteName('/' + value, RouterConfig) || location?.state?.sitename || 'Detail';
-          return last ? (
-            <StyledBreadcrumbItem key={key} aria-current="page" label={routeName} />
-          ) : (
-            <StyledBreadcrumbItem key={key} label={routeName} />
+        {breadcrumb?.items?.map((value, index) => {
+          if (!value?.title) return undefined;
+          const text = t(value.title);
+          return (
+            <StyledBreadcrumbItem
+              key={text! + index}
+              aria-current={index == Number(breadcrumb.items?.length) - 1 ? 'page' : 'false'}
+              label={text}
+            />
           );
         })}
       </MUIBreadcrumbs>
