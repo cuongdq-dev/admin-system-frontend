@@ -11,7 +11,9 @@ export const PATH_LANGUAGE = '/i18n';
 // SITE
 export const PATH_SITE = '/site';
 
-// SITE
+export const PATH_BLOG = '/post';
+export const PATH_TRENDINGS_SEARCH = '/post/trendings';
 export const PATH_SERVER = '/server';
 export const PATH_DOCKER = '/docker';
 export const PATH_REPOSITORY = '/repository';
+export const PATH_CRAWLER = '/post/crawler';

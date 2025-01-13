@@ -1,15 +1,11 @@
-import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
-
-import { useState } from 'react';
-
 import Box from '@mui/material/Box';
+import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
-
-import { Iconify } from 'src/components/iconify';
-
 import { t } from 'i18next';
+import { useState } from 'react';
 import { PATH_APP_SETTING } from 'src/api-core/path';
 import CommonBreadcrumbs from 'src/components/breadcrumbs';
+import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { useSettingStore } from 'src/store/setting';
@@ -25,7 +21,8 @@ import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { Main } from './main';
 import { NavDesktop, NavMobile } from './nav';
-import { IconButton } from '@mui/material';
+
+//
 export type DashboardLayoutProps = {
   sx?: SxProps<Theme>;
   children: React.ReactNode;

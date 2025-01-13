@@ -1,36 +1,13 @@
 import type { CardProps } from '@mui/material/Card';
-
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Card from '@mui/material/Card';
 import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
-
-import { fDate } from 'src/utils/format-time';
-import { fShortenNumber } from 'src/utils/format-number';
-
+import { fDate, formatStr } from 'src/utils/format-time';
 import { varAlpha } from 'src/theme/styles';
-
-import { Iconify } from 'src/components/iconify';
+import { Link } from '@mui/material';
 import { SvgColor } from 'src/components/svg-color';
-
 // ----------------------------------------------------------------------
-
-export type PostItemProps = {
-  id: string;
-  title: string;
-  coverUrl: string;
-  totalViews: number;
-  description: string;
-  totalShares: number;
-  totalComments: number;
-  totalFavorites: number;
-  postedAt: string | number | null;
-  author: {
-    name: string;
-    avatarUrl: string;
-  };
-};
 
 export function PostItem({
   sx,
@@ -39,14 +16,14 @@ export function PostItem({
   latestPostLarge,
   ...other
 }: CardProps & {
-  post: PostItemProps;
+  post: IPost;
   latestPost: boolean;
   latestPostLarge: boolean;
 }) {
   const renderAvatar = (
     <Avatar
-      alt={post.author.name}
-      src={post.author.avatarUrl}
+      alt={post.thumbnail?.data}
+      src={post.thumbnail?.url}
       sx={{
         left: 24,
         zIndex: 9,
@@ -61,10 +38,13 @@ export function PostItem({
 
   const renderTitle = (
     <Link
+      target="_blank"
+      href={'/blog/' + post.slug}
       color="inherit"
       variant="subtitle2"
       underline="hover"
       sx={{
+        cursor: 'pointer',
         height: 44,
         overflow: 'hidden',
         WebkitLineClamp: 2,
@@ -80,54 +60,34 @@ export function PostItem({
     </Link>
   );
 
-  const renderInfo = (
-    <Box
-      gap={1.5}
-      display="flex"
-      flexWrap="wrap"
-      justifyContent="flex-end"
-      sx={{
-        mt: 3,
-        color: 'text.disabled',
+  const renderDescription = (
+    <Typography
+      variant="caption"
+      sx={(theme) => {
+        return {
+          height: 34,
+          overflow: 'hidden',
+          WebkitLineClamp: 2,
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          color: theme.vars.palette.grey[500],
+        };
       }}
     >
-      {[
-        { number: post.totalComments, icon: 'solar:chat-round-dots-bold' },
-        { number: post.totalViews, icon: 'solar:eye-bold' },
-        { number: post.totalShares, icon: 'solar:share-bold' },
-      ].map((info, _index) => (
-        <Box
-          key={_index}
-          display="flex"
-          sx={{
-            ...((latestPostLarge || latestPost) && {
-              opacity: 0.64,
-              color: 'common.white',
-            }),
-          }}
-        >
-          <Iconify width={16} icon={info.icon} sx={{ mr: 0.5 }} />
-          <Typography variant="caption">{fShortenNumber(info.number)}</Typography>
-        </Box>
-      ))}
-    </Box>
+      <span dangerouslySetInnerHTML={{ __html: post?.meta_description! }} />
+    </Typography>
   );
 
-  const renderCover = (
-    <Box
-      component="img"
-      alt={post.title}
-      src={post.coverUrl}
-      sx={{
-        top: 0,
-        width: 1,
-        height: 1,
-        objectFit: 'cover',
-        position: 'absolute',
-      }}
-    />
-  );
-
+  const renderCover = () => {
+    return (
+      <Box
+        component="img"
+        alt={post.title}
+        src={`data:image/png;base64,${post.thumbnail?.data}`}
+        sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
+      />
+    );
+  };
   const renderDate = (
     <Typography
       variant="caption"
@@ -135,13 +95,10 @@ export function PostItem({
       sx={{
         mb: 1,
         color: 'text.disabled',
-        ...((latestPostLarge || latestPost) && {
-          opacity: 0.48,
-          color: 'common.white',
-        }),
+        ...((latestPostLarge || latestPost) && { opacity: 0.48, color: 'common.white' }),
       }}
     >
-      {fDate(post.postedAt)}
+      {fDate(post.created_at, formatStr.dateTime)}
     </Typography>
   );
 
@@ -175,7 +132,7 @@ export function PostItem({
               width: '100%',
               height: '100%',
               position: 'absolute',
-              // bgcolor: varAlpha(theme.palette.grey['900Channel'], 0.72),
+              bgcolor: varAlpha(theme.palette.grey['900Channel'], 0.72),
             },
           }),
           ...(latestPostLarge && {
@@ -188,7 +145,7 @@ export function PostItem({
       >
         {renderShape}
         {renderAvatar}
-        {renderCover}
+        {renderCover()}
       </Box>
 
       <Box
@@ -203,7 +160,7 @@ export function PostItem({
       >
         {renderDate}
         {renderTitle}
-        {renderInfo}
+        {renderDescription}
       </Box>
     </Card>
   );

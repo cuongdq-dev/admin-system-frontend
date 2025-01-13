@@ -3,6 +3,7 @@ import {
   Card,
   CircularProgress,
   Grid,
+  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -122,25 +123,20 @@ export const TableComponent = (props: TableComponentProps) => {
   if (component == 'CARD') {
     return (
       <>
-        <Grid spacing={3}>
-          {notFound && <TableNoData />}
-
-          {datasource?.map((data: Record<string, any>, index: number) => (
-            <Grid item marginBottom={5} key={`card_item_${data.id}_${index}`} xs={12} sm={6} md={3}>
-              {customCard && customCard({ values: data })}
-            </Grid>
-          ))}
+        <Grid container>
+          {datasource?.map((data: Record<string, any>, index: number) => {
+            return customCard && customCard({ values: data, index: index });
+          })}
         </Grid>
         {metaData && Object.keys(metaData).length > 0 && (
-          <TablePagination
-            component="div"
-            labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
-            page={metaData?.currentPage - 1}
-            count={metaData?.totalItems}
-            rowsPerPage={metaData?.itemsPerPage}
-            onPageChange={table.onChangePage}
-            rowsPerPageOptions={[10, 20, 30, 50, 100]}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
+          <Pagination
+            page={metaData?.currentPage}
+            count={metaData?.totalPages}
+            onChange={(event, page) => {
+              table.onChangePage(event, page - 1);
+            }}
+            color="primary"
+            sx={{ mt: 8, mx: 'auto' }}
           />
         )}
       </>

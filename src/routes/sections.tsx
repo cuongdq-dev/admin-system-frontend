@@ -4,17 +4,18 @@ import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
+import { LanguageKey } from 'src/constants';
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
 import { varAlpha } from 'src/theme/styles';
-import { LanguageKey } from 'src/constants';
 import { PrivateRoute, PublicRoute } from './components';
 
 // ----------------------------------------------------------------------
 
 export const HomePage = lazy(() => import('src/pages/home'));
 //
-export const BlogPage = lazy(() => import('src/pages/blog'));
+export const BlogsPage = lazy(() => import('src/pages/blog/list'));
+export const BlogDetailPage = lazy(() => import('src/pages/blog/detail'));
 //
 export const UserPage = lazy(() => import('src/pages/user/list'));
 export const ProfilePage = lazy(() => import('src/pages/user/profile'));
@@ -140,11 +141,24 @@ export const RouterConfig = [
       {
         path: '/blog',
         name: LanguageKey.blog.listPageTitle,
-        element: (
-          <PrivateRoute>
-            <BlogPage />
-          </PrivateRoute>
-        ),
+        children: [
+          {
+            path: '',
+            element: (
+              <PrivateRoute>
+                <BlogsPage />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: ':id',
+            element: (
+              <PrivateRoute>
+                <BlogDetailPage />
+              </PrivateRoute>
+            ),
+          },
+        ],
       },
       {
         path: '/language',

@@ -18,6 +18,16 @@ declare type ISocketStore = {
   list?: IStoreList;
 };
 
+declare type TableBase = {
+  id: string;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
+  created_by?: string;
+  updated_by?: string;
+  deleted_by?: string;
+};
+
 declare type ISocket = ISocketNotify | ISocketMessage | ISocketStore;
 
 // NOTIFY
@@ -264,7 +274,7 @@ declare type TableActionComponentProps = {
 };
 declare type TableComponentProps = {
   component?: 'CARD' | 'TABLE';
-  customCard?: ({ values }: { values: Record<string, any> }) => JSX.Element;
+  customCard?: ({ values, index }: { values: Record<string, any>; index: number }) => JSX.Element;
   url: string;
   storeName: string;
   headLabel: HeadLabelProps[];
@@ -319,3 +329,76 @@ declare type TableMetaData = {
 declare type IBreadcrumb = {
   items?: { href?: string; title?: string }[];
 };
+
+// TRENDING
+
+interface IMedia extends TableBase {
+  id: string;
+  filename?: string; //unique
+  url?: string;
+  slug?: string;
+  data?: string;
+  minetype?: string;
+  starage_type?: 'LOCAL' | 'S3' | 'BASE64';
+  size?: number;
+}
+
+interface IPostCategory extends TableBase {
+  id: string;
+  name?: string;
+  slug?: string; //unique
+  description?: string;
+  posts?: IPost[];
+}
+interface IPost extends TableBase {
+  id: string;
+  is_published?: string;
+  slug?: string;
+  title?: string;
+  content?: string;
+  meta_description?: string;
+  relatedQueries?: { query?: string }[];
+  //
+  category_id?: string;
+  category?: IPostCategory;
+  //
+  thumbnail_id?: string;
+  thumbnail?: IMedia;
+  //
+  article_id?: string;
+  article?: ITrendingArticle;
+}
+
+interface ITrendingArticle extends TableBase {
+  id?: string;
+  title?: string;
+  url?: string; //unique
+  slug?: string;
+  source?: string;
+  meta_description?: string;
+  relatedQueries?: { query?: string }[];
+
+  thumbnail_id?: string;
+  thumbnail?: IMedia;
+
+  trending_id?: string;
+  trending?: ITrending;
+
+  posts?: IPost[];
+}
+
+interface ITrending extends TableBase {
+  id: string;
+  titleQuery?: string; //unique
+  titleExploreLink?: string;
+
+  trendDate?: string;
+
+  formattedTraffic?: string;
+  relatedQueries?: { query?: string }[];
+
+  thumbnail_id?: string;
+  thumbnail?: IMedia;
+
+  articles?: ITrendingArticle[];
+}

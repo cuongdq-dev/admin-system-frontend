@@ -43,11 +43,11 @@ export const navData = [
   //   path: '/product',
   //   icon: icon('ic-cart'),
   // },
-  // {
-  //   title: LanguageKey.blog.nav,
-  //   path: '/blog',
-  //   icon: icon('ic-blog'),
-  // },
+  {
+    title: LanguageKey.blog.nav,
+    path: '/blog',
+    icon: icon('ic-blog'),
+  },
   {
     title: LanguageKey.language.nav,
     path: '/language',

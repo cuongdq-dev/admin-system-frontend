@@ -13,6 +13,7 @@ export const LanguageKey = {
     tableTitle: 'user_table_title',
     detailTitle: 'user_detail_title',
     profileTitle: 'user_profile_title',
+    tabProfile: 'user_tab_profile',
   },
   server: {
     nav: 'server_nav',
@@ -55,6 +56,13 @@ export const LanguageKey = {
     addFileTitle: 'nginx_add_file_title',
     nameFileItem: 'nginx_name_file_item',
     contentFileItem: 'nginx_content_file_item',
+  },
+
+  trendings: {
+    trendingNowTitle: 'trending_now_title',
+    trendingTitleItem: 'trending_title_item',
+    trendingSearchVolumeItem: 'trending_search_volume_item',
+    trendingStartedItem: 'trending_started_item',
   },
 
   site: {
@@ -262,8 +270,8 @@ export const StoreName = {
   SERVER_NGINX: 'server_nginx_store',
   LANGUAGE: 'language_store',
   SITE: 'site_store',
-
   PROFILE: 'profile_store',
+  BLOG: 'blog_store',
 };
 
 export const Breadcrumbs = {

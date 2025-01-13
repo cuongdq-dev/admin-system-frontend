@@ -1,1 +1,2 @@
-export * from './blog-view';
+export * from './list-view';
+export * from './detail-view';

@@ -8,12 +8,11 @@ import { Iconify } from 'src/components/iconify';
 
 import { t } from 'i18next';
 import { LanguageKey } from 'src/constants';
-import type { PostItemProps } from './post-item';
 
 // ----------------------------------------------------------------------
 
 type PostSearchProps = {
-  posts: PostItemProps[];
+  posts: IPost[];
   sx?: SxProps<Theme>;
 };
 
@@ -35,7 +34,7 @@ export function PostSearch({ posts, sx }: PostSearchProps) {
         },
       }}
       options={posts}
-      getOptionLabel={(post) => post.title}
+      // getOptionLabel={(post) => post.title}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField
