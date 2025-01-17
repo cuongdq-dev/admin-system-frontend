@@ -74,7 +74,6 @@ export const invokeRequest = async (options: RequestProps) => {
   try {
     let response: AxiosResponse;
     const signal = method === HttpMethod.GET ? createAbortController(endpointRequest) : undefined;
-
     if (method === HttpMethod.DELETE)
       response = await ApiCore.delete(endpointRequest, { data: body, timeout: 120000 });
     else if (method === HttpMethod.PATCH)
@@ -85,6 +84,7 @@ export const invokeRequest = async (options: RequestProps) => {
     onSuccess(response.data);
   } catch (error) {
     if (axios.isCancel(error)) return;
+
     error?.response?.data?.message &&
       setNotify({
         title: error?.response?.data?.message || '',

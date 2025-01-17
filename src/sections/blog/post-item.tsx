@@ -88,6 +88,7 @@ export function PostItem({
       />
     );
   };
+
   const renderDate = (
     <Typography
       variant="caption"
@@ -99,6 +100,19 @@ export function PostItem({
       }}
     >
       {fDate(post.created_at, formatStr.dateTime)}
+    </Typography>
+  );
+
+  const renderSource = (
+    <Typography
+      variant="caption"
+      component="div"
+      sx={{
+        color: 'text.disabled',
+        ...((latestPostLarge || latestPost) && { opacity: 0.48, color: 'common.white' }),
+      }}
+    >
+      {post.article?.source}
     </Typography>
   );
 
@@ -159,6 +173,7 @@ export function PostItem({
         })}
       >
         {renderDate}
+        {renderSource}
         {renderTitle}
         {renderDescription}
       </Box>

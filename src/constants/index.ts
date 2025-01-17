@@ -87,6 +87,12 @@ export const LanguageKey = {
     addNewButton: 'blog_new_button',
     tableTitle: 'blog_table_title',
     detailTitle: 'blog_detail_title',
+    titleItem: 'blog_title_item',
+    descriptionItem: 'blog_description_item',
+    keywordsItem: 'blog_keywords_item',
+    contentItem: 'blog_content_item',
+    publicButton: 'blog_public_button',
+    draftButton: 'blog_draft_button',
   },
   language: {
     nav: 'language_nav',

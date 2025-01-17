@@ -350,6 +350,8 @@ interface IPostCategory extends TableBase {
   description?: string;
   posts?: IPost[];
 }
+
+declare type IPostStatus = 'NEW' | 'DRAFT' | 'PUBLISHED' | 'DELETED';
 interface IPost extends TableBase {
   id: string;
   is_published?: string;
@@ -361,6 +363,7 @@ interface IPost extends TableBase {
   //
   category_id?: string;
   category?: IPostCategory;
+  status?: IPostStatus;
   //
   thumbnail_id?: string;
   thumbnail?: IMedia;
