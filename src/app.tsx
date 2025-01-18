@@ -8,6 +8,8 @@ import { useShallow } from 'zustand/react/shallow';
 import { ButtonDismissNotify } from './components/button';
 import { INotifyStore, useNotifyStore } from './store/notify';
 import { socket } from './utils/socket';
+import { getToken } from 'firebase/messaging';
+import { messaging } from './firebase';
 
 export default function App() {
   useScrollToTop();
@@ -67,6 +69,27 @@ export default function App() {
     return () => {
       socket.off('message', handleMessage);
     };
+  }, []);
+
+  useEffect(() => {
+    const requestPermission = async () => {
+      try {
+        const token = await getToken(messaging, {
+          vapidKey:
+            'BFc7OwysRTO8q65ATePs0DrlOdomr3ildSqUeU2ydezqSRoBjP1v8VuTGYcH1MLJtiJyO63OXeyeMBGwU1lfRJU',
+        });
+
+        if (token) {
+          console.log('Token generated:', token);
+          // Send this token to your server to store it for later use
+        } else {
+          console.log('No registration token available.');
+        }
+      } catch (err) {
+        console.error('Error getting token:', err);
+      }
+    };
+    requestPermission();
   }, []);
 
   return (
