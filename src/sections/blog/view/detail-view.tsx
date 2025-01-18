@@ -12,11 +12,12 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_BLOG } from 'src/api-core/path';
+import { ButtonDelete } from 'src/components/button';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import { RHFAutocomplete, RHFEditor } from 'src/components/hook-form/RHFTextField';
 import { LanguageKey, StoreName } from 'src/constants';
@@ -31,6 +32,7 @@ export function DetailView() {
   const { setNotify } = useNotifyStore.getState();
   const storeName = StoreName.BLOG;
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const { setDetail, setLoadingDetail } = usePageStore();
   const { data } = usePageStore(
@@ -114,6 +116,7 @@ export function DetailView() {
       },
     });
   };
+
   const updateStatus = (values: { status?: IPostStatus }) => {
     invokeRequest({
       method: HttpMethod.PATCH,
@@ -121,33 +124,15 @@ export function DetailView() {
       params: values,
       onHandleError: (error) => {},
       onSuccess(res) {
+        if (values.status === 'DELETED') {
+          if (window.history.length > 1) navigate(-1);
+          else navigate('/blog');
+          return;
+        }
         reset();
         setDetail(storeName, { data: res, isFetching: false, isLoading: false });
         setNotify({
           title: t(LanguageKey.notify.successUpdate),
-          key: 'update_status_' + data?.id,
-          options: { variant: 'success', key: 'update' + data?.id },
-        });
-      },
-    });
-  };
-
-  const [indexDiv, setIndexDiv] = useState(1);
-  const fetchContent = () => {
-    invokeRequest({
-      method: HttpMethod.POST,
-      baseURL: PATH_BLOG + '/fetch-content/' + data?.id,
-      params: { index: indexDiv },
-      onHandleError: (error) => {},
-      onSuccess(res) {
-        setDetail(storeName, {
-          data: { ...data, content: res?.content },
-          isFetching: false,
-          isLoading: false,
-        });
-        setIndexDiv(indexDiv + 1);
-        setNotify({
-          title: t(LanguageKey.notify.successApiCall),
           key: 'update_status_' + data?.id,
           options: { variant: 'success', key: 'update' + data?.id },
         });
@@ -264,34 +249,38 @@ export function DetailView() {
                     />
                   )}
                 />
-                <Box display={'flex'} gap={1} marginTop={1} justifyContent="flex-end">
+                <Box
+                  display={'flex'}
+                  gap={1}
+                  marginTop={1}
+                  justifyContent="space-between"
+                  alignItems={'center'}
+                >
+                  <Link
+                    target="_blank"
+                    href={data?.article?.url}
+                    color="inherit"
+                    underline="always"
+                  >
+                    <Typography
+                      variant="caption"
+                      sx={(theme) => {
+                        return { color: theme.vars.palette.text.primary };
+                      }}
+                    >
+                      {data?.article?.source}
+                    </Typography>
+                  </Link>
                   {data?.status != 'DELETED' && (
-                    <LoadingButton
+                    <ButtonDelete
+                      title={t(LanguageKey.button.delete)}
                       size="small"
-                      onClick={() => updateStatus({ status: 'DELETED' })}
+                      handleDelete={() => updateStatus({ status: 'DELETED' })}
                       variant="outlined"
                       color="error"
-                      loading={isSubmitting}
-                    >
-                      {t(LanguageKey.button.delete)}
-                    </LoadingButton>
+                    />
                   )}
                 </Box>
-
-                <Link target="_blank" href={data?.article?.url} color="inherit" underline="hover">
-                  <Typography
-                    variant="caption"
-                    sx={(theme) => {
-                      return {
-                        paddingTop: 1,
-                        color: theme.vars.palette.text.primary,
-                        float: 'right',
-                      };
-                    }}
-                  >
-                    {data?.article?.source}
-                  </Typography>
-                </Link>
               </Box>
             </Card>
           </Grid>

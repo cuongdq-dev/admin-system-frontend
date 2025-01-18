@@ -7,6 +7,7 @@ import { fDate, formatStr } from 'src/utils/format-time';
 import { varAlpha } from 'src/theme/styles';
 import { Link } from '@mui/material';
 import { SvgColor } from 'src/components/svg-color';
+import { Iconify } from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export function PostItem({
@@ -21,24 +22,58 @@ export function PostItem({
   latestPostLarge: boolean;
 }) {
   const renderAvatar = (
-    <Avatar
-      alt={post.thumbnail?.data}
-      src={post.thumbnail?.url}
-      sx={{
-        left: 24,
-        zIndex: 9,
-        bottom: -24,
-        position: 'absolute',
-        ...((latestPostLarge || latestPost) && {
-          top: 24,
-        }),
-      }}
-    />
+    <>
+      {post.status == 'NEW' && (
+        <Iconify
+          sx={{
+            color: 'primary.main',
+            left: 24,
+            zIndex: 9,
+            bottom: -24,
+            position: 'absolute',
+            ...((latestPostLarge || latestPost) && {
+              top: 24,
+            }),
+          }}
+          width={40}
+          icon="lsicon:badge-new-outline"
+        />
+      )}
+      {post.status == 'DRAFT' && (
+        <Iconify
+          sx={{
+            color: 'warning.main',
+            left: 24,
+            zIndex: 9,
+            bottom: -24,
+            position: 'absolute',
+            ...((latestPostLarge || latestPost) && {
+              top: 24,
+            }),
+          }}
+          width={40}
+          icon="material-symbols:draft-orders"
+        />
+      )}
+      {/* <Avatar
+        alt={post.thumbnail?.data}
+        src={post.thumbnail?.url}
+        children={<></>}
+        sx={{
+          left: 24,
+          zIndex: 9,
+          bottom: -24,
+          position: 'absolute',
+          ...((latestPostLarge || latestPost) && {
+            top: 24,
+          }),
+        }}
+      /> */}
+    </>
   );
 
   const renderTitle = (
     <Link
-      target="_blank"
       href={'/blog/' + post.slug}
       color="inherit"
       variant="subtitle2"

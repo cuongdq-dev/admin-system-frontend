@@ -42,7 +42,7 @@ export type NotificationsPopoverProps = IconButtonProps & {
 
 const CustomTabs = styled(TabList)(({ theme }) => ({
   backgroundColor: theme.vars.palette.background.neutral,
-  minHeight: 'fit-content',
+  minHeight: theme.breakpoints.down('sm') ? '65px' : 'fit-content',
   paddingTop: theme.spacing(1),
   paddingBottom: theme.spacing(1),
 
