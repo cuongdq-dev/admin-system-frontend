@@ -296,17 +296,6 @@ export function DetailView() {
             </Card>
           </Grid>
           <Grid xs={12} sm={12} md={8} sx={{ position: 'relative' }}>
-            <LoadingButton
-              size="small"
-              sx={{ mb: 1 }}
-              fullWidth
-              variant="contained"
-              onClick={() => fetchContent()}
-              color="warning"
-              loading={isSubmitting}
-            >
-              Fetch Content (div :{indexDiv})
-            </LoadingButton>
             <RHFEditor name="content" defaultValue={data?.content} />
           </Grid>
         </Grid>
