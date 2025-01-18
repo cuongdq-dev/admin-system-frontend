@@ -318,8 +318,8 @@ const ActionGroup = ({ connectionId, row, updateRowData }: ActionGroupProp) => {
           actionTitle={t(LanguageKey.button.submit)}
           handleLoading={(load) => setLoading(load)}
           connectionId={connectionId}
-          title={t(LanguageKey.repository.pullRepositoryTitle)}
-          description={t(LanguageKey.repository.pullRepositoryDescription)}
+          title={t(LanguageKey.repository.buildRepositoryTitle)}
+          description={t(LanguageKey.repository.buildRepositoryDescription)}
           action={HttpMethod.PATCH}
           withBuild={true}
           updateRowData={(rowId, values, action) => {

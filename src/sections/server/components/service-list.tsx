@@ -56,7 +56,6 @@ const ServiceItem = (props: { connectionId?: string }) => {
   const { connectionId } = props;
   const storeName = StoreName.SERVER_SERVICE;
   const { setRefreshList, setLoadingList, setList } = usePageStore();
-
   const {
     refreshNumber = 0,
     data,
@@ -66,6 +65,7 @@ const ServiceItem = (props: { connectionId?: string }) => {
   } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
 
   const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
+  console.log(data);
 
   useAPI({
     clearRequest:
@@ -86,7 +86,6 @@ const ServiceItem = (props: { connectionId?: string }) => {
 
   const handleSetupService = () => {
     setLoadingList(storeName, true);
-
     invokeRequest({
       method: HttpMethod.POST,
       baseURL: PATH_SERVER + `/setup/service/${data?.id}/${connectionId}`,

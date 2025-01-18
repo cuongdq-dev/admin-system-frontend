@@ -36,7 +36,7 @@ const HeadLabel: HeadLabelProps[] = [
 ];
 
 const FormTableSchema = {
-  name: Yup.string().required('Email is required'),
+  name: Yup.string().required('Name is required'),
   host: Yup.string().required('host is required'),
   port: Yup.string().required('port is required'),
   password: Yup.string().required('password is required'),
