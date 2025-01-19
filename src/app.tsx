@@ -1,3 +1,4 @@
+import { getToken, onMessage } from 'firebase/messaging';
 import { enqueueSnackbar, SnackbarProvider } from 'notistack';
 import { useEffect } from 'react';
 import 'src/global.css';
@@ -6,10 +7,9 @@ import { Router } from 'src/routes/sections';
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { useShallow } from 'zustand/react/shallow';
 import { ButtonDismissNotify } from './components/button';
+import { messaging } from './firebase';
 import { INotifyStore, useNotifyStore } from './store/notify';
 import { socket } from './utils/socket';
-import { getToken, onMessage } from 'firebase/messaging';
-import { messaging } from './firebase';
 
 export default function App() {
   useScrollToTop();
@@ -75,8 +75,7 @@ export default function App() {
     const requestPermission = async () => {
       try {
         const token = await getToken(messaging, {
-          vapidKey:
-            'BFc7OwysRTO8q65ATePs0DrlOdomr3ildSqUeU2ydezqSRoBjP1v8VuTGYcH1MLJtiJyO63OXeyeMBGwU1lfRJU',
+          vapidKey: import.meta.env.VITE_TOKEN_API_KEY,
         });
 
         if (token) {
@@ -98,6 +97,7 @@ export default function App() {
         body: payload.notification.body,
         icon: payload.notification.icon,
       };
+
       new Notification(notificationTitle, notificationOptions);
     });
   }, []);

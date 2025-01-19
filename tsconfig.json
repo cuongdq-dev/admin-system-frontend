@@ -21,7 +21,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src"],
+  "include": ["src", "firebase-messaging-sw.ts"],
   "exclude": ["node_modules"],
   "references": [
     {

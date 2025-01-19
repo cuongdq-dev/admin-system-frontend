@@ -23,4 +23,7 @@ export default defineConfig({
   },
   server: { port: PORT, host: true },
   preview: { port: PORT, host: true },
+  worker: {
+    format: 'es', // Sử dụng ES Modules cho Service Workers
+  },
 });
