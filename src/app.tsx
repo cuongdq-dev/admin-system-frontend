@@ -8,7 +8,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { ButtonDismissNotify } from './components/button';
 import { INotifyStore, useNotifyStore } from './store/notify';
 import { socket } from './utils/socket';
-import { getToken } from 'firebase/messaging';
+import { getToken, onMessage } from 'firebase/messaging';
 import { messaging } from './firebase';
 
 export default function App() {
@@ -90,6 +90,16 @@ export default function App() {
       }
     };
     requestPermission();
+
+    onMessage(messaging, (payload: any) => {
+      console.log('Message received. ', payload);
+      const notificationTitle = payload.notification.title;
+      const notificationOptions = {
+        body: payload.notification.body,
+        icon: payload.notification.icon,
+      };
+      new Notification(notificationTitle, notificationOptions);
+    });
   }, []);
 
   return (
