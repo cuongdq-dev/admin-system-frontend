@@ -29,7 +29,6 @@ export function ListView() {
       breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent title={t(LanguageKey.blog.tableTitle)} />
-
       <Grid container spacing={3}>
         <TableComponent
           storeName={storeName}

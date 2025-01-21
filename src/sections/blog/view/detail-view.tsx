@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Card,
+  CircularProgress,
   Link,
   TextField,
   Theme,
@@ -12,6 +13,7 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { t } from 'i18next';
+import { closeSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -20,6 +22,7 @@ import { PATH_BLOG } from 'src/api-core/path';
 import { ButtonDelete } from 'src/components/button';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import { RHFAutocomplete, RHFEditor } from 'src/components/hook-form/RHFTextField';
+import { PageLoading } from 'src/components/loading';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useNotifyStore } from 'src/store/notify';
@@ -35,9 +38,9 @@ export function DetailView() {
   const navigate = useNavigate();
 
   const { setDetail, setLoadingDetail } = usePageStore();
-  const { data } = usePageStore(
+  const { data, isLoading = true } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
-  ) as { data?: IPost; refreshNumber?: number };
+  ) as { data?: IPost; refreshNumber?: number; isLoading?: boolean };
 
   const fetchPost = () => {
     invokeRequest({
@@ -102,42 +105,59 @@ export function DetailView() {
     content?: string;
     status?: IPostStatus;
   }) => {
+    setLoadingDetail(storeName, true);
     invokeRequest({
       method: HttpMethod.PATCH,
       baseURL: PATH_BLOG + '/' + data?.id,
       params: values,
-      onHandleError: (error) => {},
+      onHandleError() {
+        setTimeout(() => {
+          setLoadingDetail(storeName, false);
+        }, 1000);
+      },
       onSuccess(res) {
-        reset();
-        setDetail(storeName, { data: res, isFetching: false, isLoading: false });
-        setNotify({
-          title: t(LanguageKey.notify.successUpdate),
-          key: 'update' + data?.id,
-          options: { variant: 'success', key: 'update' + data?.id },
-        });
+        setTimeout(() => {
+          reset();
+          setLoadingDetail(storeName, false);
+          setDetail(storeName, { data: res, isFetching: false, isLoading: false });
+          setNotify({
+            title: t(LanguageKey.notify.successUpdate),
+            key: 'update' + data?.id,
+            options: { variant: 'success', key: 'update' + data?.id },
+          });
+        }, 1000);
       },
     });
   };
 
   const updateStatus = (values: { status?: IPostStatus }) => {
+    closeSnackbar(`update_status_${data?.status}_${data?.id}`);
+    setLoadingDetail(storeName, true);
     invokeRequest({
       method: HttpMethod.PATCH,
       baseURL: PATH_BLOG + '/' + data?.id,
       params: values,
-      onHandleError: (error) => {},
+      onHandleError() {
+        setTimeout(() => {
+          setLoadingDetail(storeName, false);
+        }, 1000);
+      },
       onSuccess(res) {
-        if (values.status === 'DELETED') {
-          if (window.history.length > 1) navigate(-1);
-          else navigate('/blog');
-          return;
-        }
-        reset();
-        setDetail(storeName, { data: res, isFetching: false, isLoading: false });
-        setNotify({
-          title: t(LanguageKey.notify.successUpdate),
-          key: 'update_status_' + data?.id,
-          options: { variant: 'success', key: 'update' + data?.id },
-        });
+        setTimeout(() => {
+          setLoadingDetail(storeName, false);
+          if (values.status === 'DELETED') {
+            if (window.history.length > 1) navigate(-1);
+            else navigate('/blog');
+            return;
+          }
+          reset();
+          setDetail(storeName, { data: res, isFetching: false, isLoading: false });
+          setNotify({
+            title: values.status === 'PUBLISHED' ? 'Published!' : 'Draft!',
+            key: `update_status_${res?.status}_${data?.id}`,
+            options: { variant: 'success' },
+          });
+        }, 1000);
       },
     });
   };
@@ -145,6 +165,7 @@ export function DetailView() {
     <DashboardContent
       breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.detailTitle) }] }}
     >
+      <PageLoading isLoading={isLoading} />
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid key={data?.id} xs={12} sm={12} md={4}>
