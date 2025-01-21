@@ -172,35 +172,31 @@ export function DetailView() {
                   };
                 }}
               >
-                <Box display={'flex'} gap={1} justifyContent="space-between">
-                  <Box>
-                    {data?.status == 'PUBLISHED' && (
-                      <LoadingButton
-                        size="small"
-                        variant="contained"
-                        onClick={() => updateStatus({ status: 'DRAFT' })}
-                        color="warning"
-                        loading={isSubmitting}
-                      >
-                        {t(LanguageKey.blog.draftButton)}
-                      </LoadingButton>
-                    )}
+                <Box display="flex" gap={1} justifyContent="space-between">
+                  <Box display="flex" gap={1}>
+                    <LoadingButton
+                      variant="contained"
+                      disabled={data?.status == 'DRAFT'}
+                      onClick={() => updateStatus({ status: 'DRAFT' })}
+                      color="warning"
+                      loading={isSubmitting}
+                    >
+                      {t(LanguageKey.blog.draftButton)}
+                    </LoadingButton>
 
-                    {(data?.status == 'DRAFT' || data?.status == 'NEW') && (
-                      <LoadingButton
-                        size="small"
-                        onClick={() => updateStatus({ status: 'PUBLISHED' })}
-                        variant="contained"
-                        loading={isSubmitting}
-                      >
-                        {t(LanguageKey.blog.publicButton)}
-                      </LoadingButton>
-                    )}
+                    <LoadingButton
+                      variant="contained"
+                      disabled={data?.status == 'PUBLISHED'}
+                      onClick={() => updateStatus({ status: 'PUBLISHED' })}
+                      color="primary"
+                      loading={isSubmitting}
+                    >
+                      {t(LanguageKey.blog.publicButton)}
+                    </LoadingButton>
                   </Box>
 
-                  <Box>
+                  <Box display="flex" gap={1}>
                     <LoadingButton
-                      size="small"
                       type="submit"
                       variant="contained"
                       color="inherit"
@@ -277,7 +273,7 @@ export function DetailView() {
                       title={t(LanguageKey.button.delete)}
                       size="small"
                       handleDelete={() => updateStatus({ status: 'DELETED' })}
-                      variant="outlined"
+                      variant="text"
                       color="error"
                     />
                   )}
