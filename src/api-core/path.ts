@@ -1,4 +1,5 @@
 export const PATH_APP_SETTING = '/setting';
+export const PATH_APP_FIREBASE_TOKEN = '/firebase-token';
 export const PATH_NOTIFICATION = '/notification';
 
 export const PATH_SIGN_IN = '/auth/email/login';

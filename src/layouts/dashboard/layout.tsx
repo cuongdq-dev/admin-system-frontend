@@ -33,7 +33,6 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
-
   const { setSetting } = useSettingStore.getState();
 
   useAPI({

@@ -6,15 +6,19 @@ import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
 import { Router } from 'src/routes/sections';
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { useShallow } from 'zustand/react/shallow';
+import { HttpMethod, invokeRequest } from './api-core';
 import { ButtonDismissNotify } from './components/button';
-import { messaging } from './firebase';
+import { messaging, requestFirebaseToken } from './utils/firebase/firebase';
 import { INotifyStore, useNotifyStore } from './store/notify';
+import { ISetting, useSettingStore } from './store/setting';
 import { socket } from './utils/socket';
 
 export default function App() {
   useScrollToTop();
   const { setNotify } = useNotifyStore.getState();
+  const { setSetting } = useSettingStore.getState();
   const notifyStore = useNotifyStore(useShallow((state) => state.notify as INotifyStore));
+  const settingStore = useSettingStore(useShallow((state) => state as ISetting));
 
   useEffect(() => {
     if (!!notifyStore) {
@@ -74,13 +78,19 @@ export default function App() {
   useEffect(() => {
     const requestPermission = async () => {
       try {
-        const token = await getToken(messaging, {
-          vapidKey: import.meta.env.VITE_TOKEN_API_KEY,
-        });
-
-        if (token) {
-          console.log('Token generated:', token);
-          // Send this token to your server to store it for later use
+        const token = await requestFirebaseToken();
+        if (token && settingStore.user && token !== settingStore.user?.firebase_token) {
+          invokeRequest({
+            baseURL: 'setting/firebase-token',
+            method: HttpMethod.POST,
+            params: { token: token },
+            onSuccess: () => {
+              setSetting({
+                ...settingStore,
+                user: { ...settingStore.user, firebase_token: token },
+              });
+            },
+          });
         } else {
           console.log('No registration token available.');
         }
@@ -89,18 +99,7 @@ export default function App() {
       }
     };
     requestPermission();
-
-    onMessage(messaging, (payload: any) => {
-      console.log('Message received. ', payload);
-      const notificationTitle = payload.notification.title;
-      const notificationOptions = {
-        body: payload.notification.body,
-        icon: payload.notification.icon,
-      };
-
-      new Notification(notificationTitle, notificationOptions);
-    });
-  }, []);
+  }, [settingStore.user]);
 
   return (
     <SnackbarProvider

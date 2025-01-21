@@ -1,7 +1,6 @@
 // Import Firebase libraries
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
-
 // Firebase configuration
 const firebaseConfig = {
   apiKey: 'AIzaSyAsq3up8q3FyBe-Veew21KbWwDQpTU-EtE',
@@ -30,6 +29,5 @@ messaging.onBackgroundMessage((payload) => {
     icon: payload.notification.icon || '/default-icon.png', // Thay thế bằng đường dẫn đến icon mặc định
   };
 
-  // Show the notification
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
