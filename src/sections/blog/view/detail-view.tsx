@@ -52,7 +52,9 @@ export function DetailView() {
     });
   };
 
-  useEffect(() => fetchPost(), [id]);
+  useEffect(() => {
+    id && fetchPost();
+  }, [id]);
 
   const drawerKeyword = Array.from(
     new Set(
@@ -139,7 +141,6 @@ export function DetailView() {
       },
     });
   };
-
   return (
     <DashboardContent
       breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.detailTitle) }] }}

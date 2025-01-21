@@ -26,7 +26,7 @@ export function PostItem({
       {post.status == 'NEW' && (
         <Iconify
           sx={{
-            color: 'primary.main',
+            color: 'secondary.main',
             left: 24,
             zIndex: 9,
             bottom: -24,
@@ -53,6 +53,22 @@ export function PostItem({
           }}
           width={40}
           icon="material-symbols:draft-orders"
+        />
+      )}
+      {post.status == 'PUBLISHED' && (
+        <Iconify
+          sx={{
+            color: 'primary.main',
+            left: 24,
+            zIndex: 9,
+            bottom: -24,
+            position: 'absolute',
+            ...((latestPostLarge || latestPost) && {
+              top: 24,
+            }),
+          }}
+          width={40}
+          icon="material-symbols:public"
         />
       )}
       {/* <Avatar

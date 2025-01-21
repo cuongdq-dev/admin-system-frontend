@@ -55,7 +55,7 @@ export function DashboardContent({
     return () => {
       setBreadcrumb(undefined);
     };
-  }, [breadcrumb]);
+  }, []);
 
   return (
     <Container
