@@ -313,23 +313,8 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                     invokeRequest({
                       baseURL: PATH_NOTIFICATION + '/archived/' + id,
                       method: HttpMethod.PATCH,
-                      onSuccess: (res) => {
-                        setNotificationsArchived({
-                          ...notifications?.archived,
-                          data: [res, ...archivedNotifications!],
-                        });
-
-                        setNotificationsAll({
-                          ...notifications?.all,
-                          data: notifications?.all?.data?.filter(
-                            (notification) => notification.id != id
-                          ),
-                        });
-
-                        if (findRecord.status === 'NEW' && notifyNew > 0) {
-                          setNotifyNew(notifyNew - 1);
-                        }
-
+                      onSuccess: () => {
+                        handleRefresh();
                         setTimeout(() => {
                           setLoading(false);
                         }, 1000);
@@ -353,22 +338,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                       baseURL: PATH_NOTIFICATION + '/read/' + id,
                       method: HttpMethod.PATCH,
                       onSuccess: (res) => {
-                        const allData = notifications?.all?.data?.map((notification) => {
-                          if (notification.id === res?.id) return res;
-                          return notification;
-                        });
-
-                        const newData = notifications?.new?.data?.map((notification) => {
-                          if (notification.id === res?.id) return res;
-                          return notification;
-                        });
-                        setNotificationsAll({ ...notifications?.all, data: allData });
-                        setNotificationsNew({ ...notifications?.new, data: newData });
-
-                        if (findRecord.status === 'NEW' && notifyNew > 0) {
-                          setNotifyNew(notifyNew - 1);
-                        }
-
+                        handleRefresh();
                         setTimeout(() => {
                           setLoading(false);
                         }, 1000);
@@ -400,22 +370,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                       baseURL: PATH_NOTIFICATION + '/read/' + id,
                       method: HttpMethod.PATCH,
                       onSuccess: (res) => {
-                        const allData = notifications?.all?.data?.map((notification) => {
-                          if (notification.id === res?.id) return res;
-                          return notification;
-                        });
-
-                        const newData = notifications?.new?.data?.map((notification) => {
-                          if (notification.id === res?.id) return res;
-                          return notification;
-                        });
-                        setNotificationsAll({ ...notifications?.all, data: allData });
-                        setNotificationsNew({ ...notifications?.new, data: newData });
-
-                        if (findRecord.status === 'NEW' && notifyNew > 0) {
-                          setNotifyNew(notifyNew - 1);
-                        }
-
+                        handleRefresh();
                         setTimeout(() => {
                           setLoading(false);
                         }, 1000);
@@ -439,21 +394,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                       baseURL: PATH_NOTIFICATION + '/archived/' + id,
                       method: HttpMethod.PATCH,
                       onSuccess: (res) => {
-                        setNotificationsArchived({
-                          ...notifications?.archived,
-                          data: [res, ...archivedNotifications!],
-                        });
-
-                        setNotificationsNew({
-                          ...notifications?.all,
-                          data: notifications?.new?.data?.filter(
-                            (notification) => notification.id != id
-                          ),
-                        });
-
-                        if (findRecord.status === 'NEW' && notifyNew > 0) {
-                          setNotifyNew(notifyNew - 1);
-                        }
+                        handleRefresh();
                         setTimeout(() => {
                           setLoading(false);
                         }, 1000);
@@ -474,7 +415,6 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                 data={archivedNotifications!}
                 next={notifications?.archived?.links?.next}
                 handleLoadMore={handleLoadMore}
-                handleRead={(id: string) => {}}
                 handleUnArchived={(id: string) => {
                   const findRecord = notifications?.archived?.data?.find(
                     (n) => n.id == id
@@ -486,12 +426,7 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
                       baseURL: PATH_NOTIFICATION + '/un-archived/' + id,
                       method: HttpMethod.PATCH,
                       onSuccess: (res) => {
-                        setNotificationsArchived({
-                          ...notifications?.archived,
-                          data: notifications?.archived?.data?.filter(
-                            (notification) => notification.id != id
-                          ),
-                        });
+                        handleRefresh();
 
                         setTimeout(() => {
                           setLoading(false);
@@ -702,6 +637,14 @@ function renderContent(notification: NotificationItem) {
       title,
     };
   }
+  if (notification.type === 'SYSTEM') {
+    return {
+      avatarUrl: (
+        <img alt={notification.title} src="/assets/icons/notification/ic-notification-system.svg" />
+      ),
+      title,
+    };
+  }
   return {};
   // return {
   //   avatarUrl: notification.avatarUrl ? (
@@ -713,7 +656,6 @@ function renderContent(notification: NotificationItem) {
 
 const CountComponent = (props: { value: number; type?: StatusEnum | 'ALL'; active: boolean }) => {
   const { value: defaultValue, type, active } = props;
-  if (defaultValue <= 0) return <></>;
   const value = defaultValue > 10 ? `${10}+` : defaultValue;
   switch (type) {
     case 'NEW':
