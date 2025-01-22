@@ -19,6 +19,6 @@ export const baseVars = (theme: Theme) => ({
   // header
   '--layout-header-blur': '8px',
   '--layout-header-zIndex': 1100,
-  '--layout-header-mobile-height': '64px',
+  '--layout-header-mobile-height': '72px',
   '--layout-header-desktop-height': '72px',
 });

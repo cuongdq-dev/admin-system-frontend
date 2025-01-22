@@ -70,7 +70,11 @@ export function AnalyticsNews({ title, subheader, ...other }: Props) {
       <CardHeader title={title} subheader={subheader} sx={{ mb: 1 }} />
 
       <Scrollbar sx={{ height: 600 }}>
-        <Box sx={{ minWidth: 640 }}>
+        <Box
+          sx={(theme) => {
+            return { minWidth: theme.breakpoints.up('md') ? '640' : '' };
+          }}
+        >
           {trendings.map((trending, index: number) => (
             <TrendingItem
               handleClick={() => setDrawer((s) => ({ ...s, open: true, values: trending }))}
@@ -211,6 +215,7 @@ function TrendingItem({
         return {
           py: 2,
           px: 3,
+          width: theme.breakpoints.up('md') ? '100%' : 'fit-content',
           gap: 2,
           display: 'flex',
           alignItems: 'center',
