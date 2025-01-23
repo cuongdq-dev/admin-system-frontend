@@ -1,7 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { IconButton, InputAdornment, Link, Stack } from '@mui/material';
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
+
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
@@ -22,10 +23,9 @@ export type JwtPayload = {
 };
 
 export const SignInForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-
   const [showPassword, setShowPassword] = useState(false);
-
   const SignInSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().required('Password is required'),
