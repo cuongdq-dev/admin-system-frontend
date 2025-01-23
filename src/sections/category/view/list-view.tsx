@@ -10,7 +10,6 @@ import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
-import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
 import { CategoryForm } from '../components/form-table';
 

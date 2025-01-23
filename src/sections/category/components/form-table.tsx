@@ -1,10 +1,9 @@
 import { LoadingButton } from '@mui/lab';
-import { DialogTitle, DialogContent, Box, DialogActions, Button } from '@mui/material';
+import { Box, Button, DialogActions, DialogContent } from '@mui/material';
 import { t } from 'i18next';
-import slugify from 'slugify';
 import { HttpMethod } from 'src/api-core';
 import { RHFTextField } from 'src/components/hook-form';
-import { PasswordText, RHFTextFieldWithSlug } from 'src/components/hook-form/RHFTextField';
+import { RHFTextFieldWithSlug } from 'src/components/hook-form/RHFTextField';
 import { LanguageKey } from 'src/constants';
 
 type Props = {

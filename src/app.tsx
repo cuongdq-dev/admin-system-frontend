@@ -1,4 +1,3 @@
-import { getToken, onMessage } from 'firebase/messaging';
 import { enqueueSnackbar, SnackbarProvider } from 'notistack';
 import { useEffect } from 'react';
 import 'src/global.css';
@@ -8,9 +7,9 @@ import { ThemeProvider } from 'src/theme/theme-provider';
 import { useShallow } from 'zustand/react/shallow';
 import { HttpMethod, invokeRequest } from './api-core';
 import { ButtonDismissNotify } from './components/button';
-import { messaging, requestFirebaseToken } from './utils/firebase/firebase';
 import { INotifyStore, useNotifyStore } from './store/notify';
 import { ISetting, useSettingStore } from './store/setting';
+import { requestFirebaseToken } from './utils/firebase/firebase';
 import { socket } from './utils/socket';
 
 export default function App() {

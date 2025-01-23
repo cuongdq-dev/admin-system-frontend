@@ -382,6 +382,7 @@ export function useTable() {
   const onChangePage = useCallback((event: unknown, newPage: number) => {
     setPage(newPage);
     updateUrl({ page: (newPage + 1).toString() });
+    window.scrollTo({ top: 0 });
   }, []);
 
   const onChangeRowsPerPage = useCallback(
