@@ -267,6 +267,7 @@ export function DetailView() {
                     />
                   )}
                 />
+
                 <Box
                   display={'flex'}
                   gap={1}

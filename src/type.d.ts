@@ -405,3 +405,10 @@ interface ITrending extends TableBase {
 
   articles?: ITrendingArticle[];
 }
+
+interface ICategory extends TableBase {
+  id?: string;
+  slug?: string; //unique
+  name?: string;
+  description?: string;
+}

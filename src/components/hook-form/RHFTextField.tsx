@@ -8,6 +8,7 @@ import { Autocomplete, Checkbox, Chip, IconButton, InputAdornment, TextField } f
 import { useEffect, useRef, useState } from 'react';
 import { Iconify } from '../iconify';
 import Editor from '../rich-editor/editor';
+import slugify from 'slugify';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,46 @@ export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldPr
             }}
             onBlur={(event) => {
               setValue(name, event.target.value.trim(), { shouldDirty: true });
+            }}
+            value={typeof field.value === 'number' && field.value === 0 ? '' : field.value}
+            error={!!error}
+            helperText={error?.message}
+            {...other}
+          />
+        );
+      }}
+    />
+  );
+};
+
+export const RHFTextFieldWithSlug = ({ name, ...other }: RHFTextFieldProps & TextFieldProps) => {
+  const { control, setValue, clearErrors } = useFormContext();
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState: { error } }) => {
+        return (
+          <TextField
+            {...field}
+            fullWidth
+            onChange={(event) => {
+              setValue(name, event.target.value, { shouldDirty: true });
+              clearErrors(name);
+            }}
+            onBlur={(event) => {
+              const value = event.target.value.trim();
+              setValue(name, value, { shouldDirty: true });
+              setValue(
+                'slug',
+                slugify(value, {
+                  lower: true,
+                  trim: true,
+                  strict: true,
+                  locale: 'vi',
+                })
+              );
             }}
             value={typeof field.value === 'number' && field.value === 0 ? '' : field.value}
             error={!!error}

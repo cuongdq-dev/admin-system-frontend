@@ -92,6 +92,14 @@ export const LanguageKey = {
     publicButton: 'blog_public_button',
     draftButton: 'blog_draft_button',
   },
+  category: {
+    nav: 'category_nav',
+    listPageTitle: 'category_list_page',
+    addNewButton: 'category_new_button',
+    slugItem: 'category_slug_item',
+    nameItem: 'category_name_item',
+    descriptionItem: 'category_description_item',
+  },
   language: {
     nav: 'language_nav',
     listPageTitle: 'language_list_page',
@@ -273,6 +281,7 @@ export const StoreName = {
   SERVER_CONTAINER: 'server_container_store',
   SERVER_NGINX: 'server_nginx_store',
   LANGUAGE: 'language_store',
+  CATEGORY: 'category_store',
   SITE: 'site_store',
   PROFILE: 'profile_store',
   BLOG: 'blog_store',

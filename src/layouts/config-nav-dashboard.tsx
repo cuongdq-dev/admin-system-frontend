@@ -14,12 +14,17 @@ export const navData = [
     path: '/',
     icon: icon('ic-analytics'),
   },
+  {
+    title: LanguageKey.blog.nav,
+    path: '/blog',
+    icon: icon('ic-blog'),
+  },
 
-  // {
-  //   title: LanguageKey.user.nav,
-  //   path: '/user',
-  //   icon: icon('ic-user'),
-  // },
+  {
+    title: LanguageKey.category.nav,
+    path: '/category',
+    icon: icon('ic-category'),
+  },
 
   // {
   //   title: LanguageKey.server.nav,
@@ -38,11 +43,7 @@ export const navData = [
   //   path: '/color',
   //   icon: icon('ic-color'),
   // },
-  {
-    title: LanguageKey.blog.nav,
-    path: '/blog',
-    icon: icon('ic-blog'),
-  },
+
   // {
   //   title: LanguageKey.language.nav,
   //   path: '/language',
