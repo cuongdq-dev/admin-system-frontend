@@ -20,18 +20,6 @@ type FormConfigState = {
   action?: HttpMethod;
 };
 
-const HeadLabel: HeadLabelProps[] = [
-  { id: 'slug', label: t(LanguageKey.category.slugItem), sort: true, type: 'text', width: '50%' },
-  { id: 'name', label: t(LanguageKey.category.nameItem), sort: false, type: 'text', width: '50%' },
-  {
-    id: 'description',
-    label: t(LanguageKey.category.descriptionItem),
-    sort: false,
-    type: 'text',
-    width: '50%',
-  },
-];
-
 export function ListView() {
   const storeName = StoreName.CATEGORY;
 
@@ -65,6 +53,24 @@ export function ListView() {
   const handleCloseForm = () => {
     setFormConfig({ open: false, title: '' });
   };
+
+  const HeadLabel: HeadLabelProps[] = [
+    { id: 'slug', label: t(LanguageKey.category.slugItem), sort: true, type: 'text', width: '50%' },
+    {
+      id: 'name',
+      label: t(LanguageKey.category.nameItem),
+      sort: false,
+      type: 'text',
+      width: '50%',
+    },
+    {
+      id: 'description',
+      label: t(LanguageKey.category.descriptionItem),
+      sort: false,
+      type: 'text',
+      width: '50%',
+    },
+  ];
 
   return (
     <DashboardContent
