@@ -11,7 +11,7 @@ import { IconButton, InputAdornment, Link, Stack, Typography } from '@mui/materi
 
 // components
 
-import { t } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_REGISTER } from 'src/api-core/path';
 import { LanguageKey } from 'src/constants';
@@ -22,6 +22,7 @@ import { Iconify } from '../../../components/iconify';
 
 export function RegisterForm() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [showPassword, setShowPassword] = useState(false);
 
