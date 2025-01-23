@@ -4,7 +4,7 @@ import { LanguageKey } from 'src/constants';
 
 import { RegisterForm } from 'src/sections/auth/register';
 
-export default function Register() {
+export const Register = () => {
   return (
     <>
       <Box gap={1.5} display="flex" flexDirection="column" alignItems="center" sx={{ mb: 5 }}>
@@ -16,4 +16,4 @@ export default function Register() {
       <RegisterForm />
     </>
   );
-}
+};

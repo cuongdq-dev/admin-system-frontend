@@ -5,7 +5,7 @@ import { LanguageKey } from 'src/constants';
 import AuthSocial from '../sections/auth/AuthSocial';
 import { SignInForm } from '../sections/auth/sign-in';
 
-export default function Login() {
+export const Login = () => {
   return (
     <>
       <Box gap={1.5} display="flex" flexDirection="column" alignItems="center" sx={{ mb: 5 }}>
@@ -21,4 +21,4 @@ export default function Login() {
       <SignInForm />
     </>
   );
-}
+};

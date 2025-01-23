@@ -20,7 +20,7 @@ import { Iconify } from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-export function RegisterForm() {
+export const RegisterForm = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -122,4 +122,4 @@ export function RegisterForm() {
       </Stack>
     </FormProvider>
   );
-}
+};
