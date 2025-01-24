@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Iconify } from '../iconify';
 import Editor from '../rich-editor/editor';
 import slugify from 'slugify';
+import { HttpMethod, invokeRequest } from 'src/api-core';
 
 // ----------------------------------------------------------------------
 
@@ -182,6 +183,85 @@ export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocomp
               );
             }}
             {...other}
+          />
+        );
+      }}
+    />
+  );
+};
+
+interface RHFAutocompleteWithApiProps extends AutocompleteProps<any, boolean, boolean, boolean> {
+  name: string;
+  baseUrl: string;
+  loading?: boolean;
+}
+export const RHFAutocompleteWithApi = ({
+  name,
+  baseUrl,
+  loading = false,
+  ...other
+}: RHFAutocompleteWithApiProps) => {
+  const { control, setValue, clearErrors } = useFormContext();
+  const [options, setOptions] = useState<any[]>([]);
+
+  useEffect(() => {
+    invokeRequest({
+      baseURL: baseUrl,
+      method: HttpMethod.GET,
+      onSuccess: (res) => {
+        setOptions(res);
+      },
+    });
+  }, []);
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field: { onChange, onBlur } }) => {
+        return (
+          <Autocomplete
+            sx={{ width: '100%', border: 'none', boxShadow: 'none' }}
+            multiple
+            id={name}
+            disableClearable
+            disableCloseOnSelect
+            disabled={loading}
+            onBlur={(event) => {
+              onBlur();
+              clearErrors(name);
+            }}
+            onChange={(event, newValue) => {
+              setValue(name, newValue, { shouldDirty: true });
+            }}
+            getOptionLabel={(option) => option.title}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            loadingText="Loading options..."
+            noOptionsText="No options available"
+            renderTags={(tagValue, getTagProps) => {
+              return (
+                <>
+                  {tagValue.map((option, index) => (
+                    <Chip label={option.title} {...getTagProps({ index })} deleteIcon={<></>} />
+                  ))}
+                </>
+              );
+            }}
+            renderOption={(props, option, { selected }) => {
+              const { key, ...optionProps } = props;
+              return (
+                <li key={key} {...optionProps}>
+                  <Checkbox
+                    icon={<Iconify icon="bx:checkbox" />}
+                    checkedIcon={<Iconify icon="mingcute:checkbox-fill" />}
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option.title}
+                </li>
+              );
+            }}
+            {...other}
+            options={options}
           />
         );
       }}

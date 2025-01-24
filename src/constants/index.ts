@@ -65,10 +65,16 @@ export const LanguageKey = {
 
   site: {
     nav: 'site_nav',
+    addNewButton: 'site_new_button',
     listPageTitle: 'site_list_page',
     detailPageTitle: 'site_detail_page',
     tableTitle: 'site_table_title',
     detailTitle: 'site_detail_title',
+    domainItem: 'site_domain_item',
+    nameItem: 'site_name_item',
+    descriptionItem: 'site_description_item',
+    postsItem: 'site_posts_item',
+    categoriesItem: 'site_categories_item',
   },
   product: {
     nav: 'product_nav',

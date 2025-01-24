@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import { t } from 'i18next';
 import { useState } from 'react';
 import { HttpMethod } from 'src/api-core';
-import { PATH_CATEGORY } from 'src/api-core/path';
+import { PATH_SITE } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
@@ -11,12 +11,12 @@ import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
-import { CategoryForm } from '../components/form-table';
+import { SiteForm } from '../components/form-table';
 
 type FormConfigState = {
   open: boolean;
   title?: string;
-  defaultValues?: IPostCategory;
+  defaultValues?: ISite;
   action?: HttpMethod;
 };
 
@@ -55,30 +55,45 @@ export function ListView() {
   };
 
   const HeadLabel: HeadLabelProps[] = [
-    { id: 'slug', label: t(LanguageKey.category.slugItem), sort: true, type: 'text', width: '50%' },
+    { id: 'name', label: t(LanguageKey.site.nameItem), sort: false, type: 'text' },
     {
-      id: 'name',
-      label: t(LanguageKey.category.nameItem),
+      id: 'domain',
+      label: t(LanguageKey.site.domainItem),
       sort: false,
       type: 'text',
-      width: '50%',
     },
     {
       id: 'description',
-      label: t(LanguageKey.category.descriptionItem),
+      label: t(LanguageKey.site.descriptionItem),
       sort: false,
       type: 'text',
+    },
+    {
+      id: 'posts',
+      label: t(LanguageKey.site.postsItem),
+      type: 'custom',
+      align: 'center',
+      render: ({ row }) => {
+        return <>{row?.posts?.length}</>;
+      },
       width: '50%',
     },
+    // {
+    //   id: 'categories',
+    //   label: t(LanguageKey.site.categoriesItem),
+    //   // type: 'text',
+    //   align: 'center',
+    //   width: '50%',
+    // },
   ];
 
   return (
     <DashboardContent
-      breadcrumb={{ items: [{ href: '/category', title: t(LanguageKey.common.listTitle) }] }}
+      breadcrumb={{ items: [{ href: '/site', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent
-        title={t(LanguageKey.category.listPageTitle)}
-        buttonTitle={t(LanguageKey.category.addNewButton)}
+        title={t(LanguageKey.site.listPageTitle)}
+        buttonTitle={t(LanguageKey.site.addNewButton)}
         onClickButton={() =>
           setFormConfig({
             open: true,
@@ -90,7 +105,7 @@ export function ListView() {
       <Card>
         <TableComponent
           storeName={storeName}
-          url={PATH_CATEGORY}
+          url={PATH_SITE}
           indexCol={true}
           selectCol={true}
           refreshData={refreshData}
@@ -107,12 +122,12 @@ export function ListView() {
         handleCloseForm={handleCloseForm}
         defaultValues={formConfig.defaultValues}
         action={formConfig.action}
-        baseUrl={PATH_CATEGORY}
+        baseUrl={PATH_SITE}
         render={({ isSubmitting }: { isSubmitting: boolean }) => {
           return (
             <>
               <DialogTitle>{formConfig.title}</DialogTitle>
-              <CategoryForm
+              <SiteForm
                 defaultValues={formConfig.defaultValues}
                 action={formConfig.action}
                 handleCloseForm={handleCloseForm}

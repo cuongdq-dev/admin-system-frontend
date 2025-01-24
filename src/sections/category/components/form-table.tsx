@@ -7,7 +7,7 @@ import { RHFTextFieldWithSlug } from 'src/components/hook-form/RHFTextField';
 import { LanguageKey } from 'src/constants';
 
 type Props = {
-  defaultValues?: ICategory;
+  defaultValues?: IPostCategory;
   isSubmitting?: boolean;
   action?: HttpMethod;
   handleCloseForm: () => void;

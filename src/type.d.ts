@@ -344,11 +344,12 @@ interface IMedia extends TableBase {
 }
 
 interface IPostCategory extends TableBase {
-  id: string;
+  id?: string;
   name?: string;
   slug?: string; //unique
   description?: string;
   posts?: IPost[];
+  sites?: ISite[];
 }
 
 declare type IPostStatus = 'NEW' | 'DRAFT' | 'PUBLISHED' | 'DELETED';
@@ -361,8 +362,8 @@ interface IPost extends TableBase {
   meta_description?: string;
   relatedQueries?: { query?: string }[];
   //
-  category_id?: string;
-  category?: IPostCategory;
+  categories?: IPostCategory[];
+  sites?: ISite[];
   status?: IPostStatus;
   //
   thumbnail_id?: string;
@@ -406,9 +407,11 @@ interface ITrending extends TableBase {
   articles?: ITrendingArticle[];
 }
 
-interface ICategory extends TableBase {
+interface ISite extends TableBase {
   id?: string;
-  slug?: string; //unique
-  name?: string;
   description?: string;
+  domain?: string;
+  name?: string;
+  posts?: IPost[];
+  categories?: IPostCategory[];
 }

@@ -1,19 +1,16 @@
+import { t } from 'i18next';
 import { Helmet } from 'react-helmet-async';
-
 import { CONFIG } from 'src/config-global';
-import { ListView } from 'src/sections/site/view';
-
-import { UserView } from 'src/sections/user/view';
+import { LanguageKey } from 'src/constants';
+import { ListView } from 'src/sections/site';
 
 // ----------------------------------------------------------------------
-
 export default function Page() {
   return (
     <>
       <Helmet>
-        <title> {`Sites - ${CONFIG.appName}`}</title>
+        <title> {`${t(LanguageKey.site.listPageTitle)} - ${CONFIG.appName}`}</title>
       </Helmet>
-
       <ListView />
     </>
   );

@@ -32,11 +32,11 @@ export const navData = [
   //   icon: icon('ic-server'),
   // },
 
-  // {
-  //   title: LanguageKey.site.nav,
-  //   path: '/site',
-  //   icon: icon('ic-site'),
-  // },
+  {
+    title: LanguageKey.site.nav,
+    path: '/site',
+    icon: icon('ic-site'),
+  },
 
   // {
   //   title: 'Color',
