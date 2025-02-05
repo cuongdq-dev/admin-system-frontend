@@ -1,9 +1,12 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, DialogActions, DialogContent } from '@mui/material';
+import { Box, Button, DialogActions, DialogContent, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { HttpMethod } from 'src/api-core';
 import { RHFTextField } from 'src/components/hook-form';
-import { RHFTextFieldWithSlug } from 'src/components/hook-form/RHFTextField';
+import {
+  RHFAutocompleteWithApi,
+  RHFTextFieldWithSlug,
+} from 'src/components/hook-form/RHFTextField';
 import { LanguageKey } from 'src/constants';
 
 type Props = {
@@ -19,6 +22,17 @@ export const CategoryForm = (props: Props) => {
     <>
       <DialogContent>
         <Box marginTop={1} gap={2} component={'div'} display={'flex'} flexDirection={'column'}>
+          <RHFTextFieldWithSlug
+            defaultValue={defaultValues?.name}
+            margin="dense"
+            id="name"
+            name="name"
+            label={t(LanguageKey.category.nameItem)}
+            type="text"
+            fullWidth
+            variant="outlined"
+          />
+
           <RHFTextField
             margin="dense"
             disabled
@@ -28,17 +42,6 @@ export const CategoryForm = (props: Props) => {
             type="text"
             fullWidth
             defaultValue={defaultValues?.slug || ' '}
-            variant="outlined"
-          />
-
-          <RHFTextFieldWithSlug
-            defaultValue={defaultValues?.name}
-            margin="dense"
-            id="name"
-            name="name"
-            label={t(LanguageKey.category.nameItem)}
-            type="text"
-            fullWidth
             variant="outlined"
           />
 
@@ -53,6 +56,32 @@ export const CategoryForm = (props: Props) => {
             type="text"
             fullWidth
             variant="outlined"
+          />
+
+          <RHFAutocompleteWithApi
+            baseUrl="/dropdown/posts"
+            options={[]}
+            defaultValue={defaultValues?.posts?.map((post) => {
+              return { id: post?.id, title: post.title };
+            })}
+            name="posts"
+            title={t(LanguageKey.category.postsItem)}
+            renderInput={(params) => (
+              <TextField {...params} margin="normal" label={t(LanguageKey.category.postsItem)} />
+            )}
+          />
+
+          <RHFAutocompleteWithApi
+            baseUrl="/dropdown/sites"
+            defaultValue={defaultValues?.sites?.map((site) => {
+              return { id: site?.id, title: site.domain };
+            })}
+            options={[]}
+            name="sites"
+            title={t(LanguageKey.category.sitesItem)}
+            renderInput={(params) => (
+              <TextField {...params} margin="normal" label={t(LanguageKey.category.sitesItem)} />
+            )}
           />
         </Box>
       </DialogContent>

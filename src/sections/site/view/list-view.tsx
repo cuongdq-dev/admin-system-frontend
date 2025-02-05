@@ -61,12 +61,14 @@ export function ListView() {
       label: t(LanguageKey.site.domainItem),
       sort: false,
       type: 'text',
+      width: '60%',
     },
     {
       id: 'description',
       label: t(LanguageKey.site.descriptionItem),
       sort: false,
       type: 'text',
+      width: '10%',
     },
     {
       id: 'posts',
@@ -76,15 +78,18 @@ export function ListView() {
       render: ({ row }) => {
         return <>{row?.posts?.length}</>;
       },
-      width: '50%',
+      width: '10%',
     },
-    // {
-    //   id: 'categories',
-    //   label: t(LanguageKey.site.categoriesItem),
-    //   // type: 'text',
-    //   align: 'center',
-    //   width: '50%',
-    // },
+    {
+      id: 'categories',
+      label: t(LanguageKey.site.categoriesItem),
+      type: 'custom',
+      align: 'center',
+      width: '10%',
+      render: ({ row }) => {
+        return <>{row?.categories?.length}</>;
+      },
+    },
   ];
 
   return (

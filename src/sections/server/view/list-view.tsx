@@ -21,7 +21,7 @@ type FormConfigState = {
 };
 
 const HeadLabel: HeadLabelProps[] = [
-  { id: 'name', label: t(LanguageKey.server.nameItem), sort: true, type: 'text', width: '20%' },
+  { id: 'name', label: t(LanguageKey.server.nameItem), sort: true, type: 'text', width: '10%' },
   { id: 'host', label: t(LanguageKey.server.hostItem), sort: true, type: 'text', width: '20%' },
   { id: 'port', label: t(LanguageKey.server.portItem), sort: false, type: 'text', width: '10%' },
   { id: 'user', label: t(LanguageKey.server.userItem), sort: true, type: 'text', width: '10%' },

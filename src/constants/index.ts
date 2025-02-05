@@ -105,6 +105,8 @@ export const LanguageKey = {
     slugItem: 'category_slug_item',
     nameItem: 'category_name_item',
     descriptionItem: 'category_description_item',
+    postsItem: 'category_posts_item',
+    sitesItem: 'category_sites_item',
   },
   language: {
     nav: 'language_nav',

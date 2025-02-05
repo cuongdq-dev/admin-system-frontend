@@ -6,10 +6,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { Autocomplete, Checkbox, Chip, IconButton, InputAdornment, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import { Iconify } from '../iconify';
-import Editor from '../rich-editor/editor';
 import slugify from 'slugify';
 import { HttpMethod, invokeRequest } from 'src/api-core';
+import { Iconify } from '../iconify';
+import Editor from '../rich-editor/editor';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ interface RHFTextFieldProps {
 }
 
 export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldProps) => {
-  const { control, setValue, clearErrors } = useFormContext();
+  const { control, setValue, clearErrors, resetField } = useFormContext();
 
   return (
     <Controller
@@ -62,6 +62,7 @@ export const RHFTextFieldWithSlug = ({ name, ...other }: RHFTextFieldProps & Tex
             onChange={(event) => {
               setValue(name, event.target.value, { shouldDirty: true });
               clearErrors(name);
+              clearErrors('slug');
             }}
             onBlur={(event) => {
               const value = event.target.value.trim();
@@ -202,22 +203,14 @@ export const RHFAutocompleteWithApi = ({
   ...other
 }: RHFAutocompleteWithApiProps) => {
   const { control, setValue, clearErrors } = useFormContext();
-  const [options, setOptions] = useState<any[]>([]);
+  const [options, setOptions] = useState<any[] | undefined>([]);
+  const [isLoading, setLoading] = useState(loading);
 
-  useEffect(() => {
-    invokeRequest({
-      baseURL: baseUrl,
-      method: HttpMethod.GET,
-      onSuccess: (res) => {
-        setOptions(res);
-      },
-    });
-  }, []);
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field: { onChange, onBlur } }) => {
+      render={({ field: { onBlur } }) => {
         return (
           <Autocomplete
             sx={{ width: '100%', border: 'none', boxShadow: 'none' }}
@@ -225,14 +218,31 @@ export const RHFAutocompleteWithApi = ({
             id={name}
             disableClearable
             disableCloseOnSelect
-            disabled={loading}
-            onBlur={(event) => {
+            loading={isLoading}
+            onFocus={() => {
+              setLoading(true);
+              (!options || options?.length == 0) &&
+                invokeRequest({
+                  baseURL: baseUrl,
+                  method: HttpMethod.GET,
+                  onSuccess: (res) => {
+                    setOptions(res);
+                    setTimeout(() => {
+                      setLoading(false);
+                    }, 2000);
+                  },
+                  onHandleError: () => {
+                    setTimeout(() => {
+                      setLoading(false);
+                    }, 2000);
+                  },
+                });
+            }}
+            onBlur={() => {
               onBlur();
               clearErrors(name);
             }}
-            onChange={(event, newValue) => {
-              setValue(name, newValue, { shouldDirty: true });
-            }}
+            onChange={(_, newValue) => setValue(name, newValue, { shouldDirty: true })}
             getOptionLabel={(option) => option.title}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             loadingText="Loading options..."
@@ -249,7 +259,7 @@ export const RHFAutocompleteWithApi = ({
             renderOption={(props, option, { selected }) => {
               const { key, ...optionProps } = props;
               return (
-                <li key={key} {...optionProps}>
+                <li key={key + optionProps.id} {...optionProps}>
                   <Checkbox
                     icon={<Iconify icon="bx:checkbox" />}
                     checkedIcon={<Iconify icon="mingcute:checkbox-fill" />}
@@ -261,7 +271,7 @@ export const RHFAutocompleteWithApi = ({
               );
             }}
             {...other}
-            options={options}
+            options={options!}
           />
         );
       }}

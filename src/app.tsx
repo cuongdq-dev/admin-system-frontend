@@ -5,11 +5,9 @@ import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
 import { Router } from 'src/routes/sections';
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { useShallow } from 'zustand/react/shallow';
-import { HttpMethod, invokeRequest } from './api-core';
 import { ButtonDismissNotify } from './components/button';
 import { INotifyStore, useNotifyStore } from './store/notify';
 import { ISetting, useSettingStore } from './store/setting';
-import { requestFirebaseToken } from './utils/firebase/firebase';
 import { socket } from './utils/socket';
 
 export default function App() {
@@ -75,29 +73,29 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const requestPermission = async () => {
-      try {
-        const token = await requestFirebaseToken();
-        if (token && settingStore.user && token !== settingStore.user?.firebase_token) {
-          invokeRequest({
-            baseURL: 'setting/firebase-token',
-            method: HttpMethod.POST,
-            params: { token: token },
-            onSuccess: () => {
-              setSetting({
-                ...settingStore,
-                user: { ...settingStore.user, firebase_token: token },
-              });
-            },
-          });
-        } else {
-          console.log('No registration token available.');
-        }
-      } catch (err) {
-        console.error('Error getting token:', err);
-      }
-    };
-    requestPermission();
+    // const requestPermission = async () => {
+    //   try {
+    //     const token = await requestFirebaseToken();
+    //     if (token && settingStore.user && token !== settingStore.user?.firebase_token) {
+    //       invokeRequest({
+    //         baseURL: 'setting/firebase-token',
+    //         method: HttpMethod.POST,
+    //         params: { token: token },
+    //         onSuccess: () => {
+    //           setSetting({
+    //             ...settingStore,
+    //             user: { ...settingStore.user, firebase_token: token },
+    //           });
+    //         },
+    //       });
+    //     } else {
+    //       console.log('No registration token available.');
+    //     }
+    //   } catch (err) {
+    //     console.error('Error getting token:', err);
+    //   }
+    // };
+    // requestPermission();
   }, [settingStore.user]);
 
   return (

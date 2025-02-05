@@ -1,10 +1,20 @@
-import { DialogTitle } from '@mui/material';
+import {
+  Box,
+  CardContent,
+  Chip,
+  DialogTitle,
+  IconButton,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import Card from '@mui/material/Card';
 import { t } from 'i18next';
 import { useState } from 'react';
 import { HttpMethod } from 'src/api-core';
 import { PATH_CATEGORY } from 'src/api-core/path';
+import { IconButtonDelete } from 'src/components/button';
 import { PopupFormTable } from 'src/components/form/form-table';
+import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
@@ -55,23 +65,42 @@ export function ListView() {
   };
 
   const HeadLabel: HeadLabelProps[] = [
-    { id: 'slug', label: t(LanguageKey.category.slugItem), sort: true, type: 'text', width: '50%' },
     {
       id: 'name',
       label: t(LanguageKey.category.nameItem),
       sort: false,
       type: 'text',
-      width: '50%',
+      width: '60%',
     },
     {
       id: 'description',
       label: t(LanguageKey.category.descriptionItem),
       sort: false,
       type: 'text',
-      width: '50%',
+      width: '20%',
+    },
+    {
+      id: 'posts',
+      label: t(LanguageKey.category.postsItem),
+      type: 'custom',
+      align: 'center',
+      render: ({ row }) => <>{row?.posts?.length || 0}</>,
+      width: '10%',
+    },
+
+    {
+      id: 'sites',
+      label: t(LanguageKey.category.sitesItem),
+      type: 'custom',
+      align: 'center',
+      render: ({ row }) => <>{row?.sites?.length || 0}</>,
+      width: '10%',
     },
   ];
 
+  const { deleteItem } = usePageStore.getState();
+
+  const isMobile = useMediaQuery('(max-width:600px)');
   return (
     <DashboardContent
       breadcrumb={{ items: [{ href: '/category', title: t(LanguageKey.common.listTitle) }] }}
@@ -87,18 +116,67 @@ export function ListView() {
           })
         }
       />
-      <Card>
-        <TableComponent
-          storeName={storeName}
-          url={PATH_CATEGORY}
-          indexCol={true}
-          selectCol={true}
-          refreshData={refreshData}
-          handleClickOpenForm={handleClickOpenForm}
-          actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
-          headLabel={HeadLabel}
-        />
-      </Card>
+      <TableComponent
+        component={isMobile ? 'CARD' : 'TABLE'}
+        storeName={storeName}
+        url={PATH_CATEGORY}
+        indexCol={true}
+        selectCol={true}
+        refreshData={refreshData}
+        handleClickOpenForm={handleClickOpenForm}
+        actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
+        headLabel={HeadLabel}
+        customCard={({ values, index }: { values: IPostCategory; index: number }) => {
+          return (
+            <Card key={values.id} sx={{ width: '100%', mb: 2 }}>
+              <CardContent>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Typography
+                    sx={{
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      textWrap: 'nowrap',
+                    }}
+                    fontWeight="bold"
+                  >
+                    {values?.name}
+                  </Typography>
+                  <Box display="flex" flexDirection="row">
+                    <IconButton onClick={() => handleClickOpenForm(values, HttpMethod.PATCH)}>
+                      <Iconify icon="material-symbols:edit-outline" />
+                    </IconButton>
+
+                    <IconButtonDelete
+                      handleDelete={() => {
+                        deleteItem(storeName, values?.id, index);
+                      }}
+                      rowId={values?.id}
+                      baseUrl={'category/delete/' + values?.id}
+                    />
+                  </Box>
+                </Box>
+
+                <Typography variant="caption" color="inherit" mb={1}>
+                  {values.description || 'No description provided'}
+                </Typography>
+                <Box display="flex" mt={2} gap={1} flexWrap="wrap">
+                  <Chip
+                    label={`Posts: ${values?.posts?.length || 0}`}
+                    size="small"
+                    variant="outlined"
+                  />
+                  <Chip
+                    label={`Sites: ${values?.sites?.length || 0}`}
+                    size="small"
+                    variant="outlined"
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          );
+        }}
+      />
 
       <PopupFormTable
         storeName={storeName}
