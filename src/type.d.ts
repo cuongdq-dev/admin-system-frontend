@@ -414,4 +414,5 @@ interface ISite extends TableBase {
   name?: string;
   posts?: IPost[];
   categories?: IPostCategory[];
+  token?: string;
 }

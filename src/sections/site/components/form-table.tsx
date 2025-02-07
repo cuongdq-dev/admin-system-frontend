@@ -69,6 +69,18 @@ export const SiteForm = (props: Props) => {
               <TextField {...params} margin="normal" label={t(LanguageKey.site.postsItem)} />
             )}
           />
+
+          <RHFTextField
+            multiline
+            disabled
+            defaultValue={defaultValues?.token}
+            margin="dense"
+            id="token"
+            name="token"
+            type="text"
+            fullWidth
+            variant="outlined"
+          />
         </Box>
       </DialogContent>
       <DialogActions style={{ padding: 20 }}>
