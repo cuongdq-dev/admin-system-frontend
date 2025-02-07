@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Dialog } from '@mui/material';
 import { t } from 'i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { LanguageKey } from 'src/constants';
@@ -30,25 +30,26 @@ export const PopupFormTable = (props: FormProps) => {
   const { setNotify } = useNotifyStore.getState();
   const { render, handleCloseForm } = props;
   const url = baseUrl + (action === HttpMethod.PATCH ? '/update/' + rowId : '/create');
-  const methods = useForm({
-    resolver: yupResolver(Yup.object().shape(schema)),
-  });
-
+  const methods = useForm({ resolver: yupResolver(Yup.object().shape(schema)) });
   const {
     handleSubmit,
     reset,
     formState: { isSubmitting },
   } = methods;
 
+  const [isLoading, setLoading] = useState(isSubmitting);
+
   useEffect(() => {
     reset();
   }, [open]);
 
   const onSubmit = async (values: Record<string, any>) => {
+    setLoading(true);
     const valuesChange = GetValuesFormChange(defaultValues as typeof values, values);
     if (Object.keys(valuesChange).length == 0) {
       reset();
       handleCloseForm();
+      setLoading(false);
       return;
     }
     invokeRequest({
@@ -56,6 +57,7 @@ export const PopupFormTable = (props: FormProps) => {
       baseURL: url,
       params: values,
       onHandleError: (response) => {
+        setLoading(false);
         if (response?.errors && typeof response.errors === 'object') {
           Object.keys(response.errors).forEach((key) => {
             methods.setError(key as any, {
@@ -68,6 +70,7 @@ export const PopupFormTable = (props: FormProps) => {
         }
       },
       onSuccess(res) {
+        setLoading(false);
         setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
         reset();
         handleCloseForm();
@@ -93,7 +96,7 @@ export const PopupFormTable = (props: FormProps) => {
       aria-describedby="scroll-dialog-description"
     >
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        {render && render({ isSubmitting })}
+        {render && render({ isSubmitting: isLoading })}
       </FormProvider>
     </Dialog>
   );
