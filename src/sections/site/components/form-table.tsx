@@ -32,7 +32,6 @@ export const SiteForm = (props: Props) => {
             defaultValue={defaultValues?.name}
             variant="outlined"
           />
-
           <RHFTextField
             defaultValue={defaultValues?.domain}
             margin="dense"
@@ -43,21 +42,21 @@ export const SiteForm = (props: Props) => {
             fullWidth
             variant="outlined"
           />
-
-          <RHFTextField
-            multiline
-            disabled
-            defaultValue={defaultValues?.token}
-            margin="dense"
-            id="token"
-            name="token"
-            label="API Token"
-            type="text"
-            fullWidth
-            variant="outlined"
-            copy
-          />
-
+          {action != HttpMethod.POST && (
+            <RHFTextField
+              multiline
+              disabled
+              defaultValue={defaultValues?.token}
+              margin="dense"
+              id="token"
+              name="token"
+              label="API Token"
+              type="text"
+              fullWidth
+              variant="outlined"
+              copy
+            />
+          )}
           <RHFAutocompleteWithApi
             baseUrl="/dropdown/categories"
             options={[]}
@@ -70,7 +69,6 @@ export const SiteForm = (props: Props) => {
               <TextField {...params} margin="normal" label={t(LanguageKey.site.categoriesItem)} />
             )}
           />
-
           <RHFAutocompleteWithApi
             baseUrl="/dropdown/posts"
             defaultValue={defaultValues?.posts?.map((post) => {

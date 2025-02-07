@@ -21,7 +21,7 @@ type FormConfigState = {
 };
 
 export function ListView() {
-  const storeName = StoreName.CATEGORY;
+  const storeName = StoreName.SITE;
 
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0 } = usePageStore(

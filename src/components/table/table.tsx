@@ -26,6 +26,7 @@ import { TableActionComponent } from './table-action';
 import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
+import { PageLoading } from '../loading';
 
 export const TableComponent = (props: TableComponentProps) => {
   const table = useTable();
@@ -41,7 +42,7 @@ export const TableComponent = (props: TableComponentProps) => {
   const {
     data: datasource,
     meta: metaData,
-    isLoading: loading = false,
+    isLoading: loading = true,
     isFetching,
     refreshNumber,
     fetchOn,
@@ -144,26 +145,7 @@ export const TableComponent = (props: TableComponentProps) => {
   }
   return (
     <Box sx={{ position: 'relative' }}>
-      {loading && (
-        <Box
-          sx={{
-            position: 'absolute',
-            height: '100%',
-            width: '100%',
-            zIndex: 1,
-          }}
-        >
-          <CircularProgress
-            size={50}
-            sx={{
-              left: '50%',
-              top: '50%',
-              position: 'absolute',
-              transform: 'translate(-50%, -50%)',
-            }}
-          />
-        </Box>
-      )}
+      <PageLoading isLoading={loading} />
       <Card
         sx={{
           opacity: loading ? 0.1 : 1,
