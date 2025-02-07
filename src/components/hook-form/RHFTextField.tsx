@@ -4,7 +4,16 @@ import type { AutocompleteProps, TextFieldProps } from '@mui/material';
 
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Autocomplete, Checkbox, Chip, IconButton, InputAdornment, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  Checkbox,
+  Chip,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Tooltip,
+} from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import slugify from 'slugify';
 import { HttpMethod, invokeRequest } from 'src/api-core';
@@ -15,10 +24,23 @@ import Editor from '../rich-editor/editor';
 
 interface RHFTextFieldProps {
   name: string;
+  copy?: boolean;
 }
 
-export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldProps) => {
-  const { control, setValue, clearErrors, resetField } = useFormContext();
+export const RHFTextField = ({
+  name,
+  copy = false,
+  ...other
+}: RHFTextFieldProps & TextFieldProps) => {
+  const { control, setValue, clearErrors, getValues } = useFormContext();
+
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    const value = getValues(name) || other.defaultValue;
+    navigator.clipboard.writeText(value);
+    setCopied(true);
+  };
 
   return (
     <Controller
@@ -39,6 +61,18 @@ export const RHFTextField = ({ name, ...other }: RHFTextFieldProps & TextFieldPr
             value={typeof field.value === 'number' && field.value === 0 ? '' : field.value}
             error={!!error}
             helperText={error?.message}
+            InputProps={{
+              endAdornment: copy ? (
+                <InputAdornment position="end">
+                  <Iconify
+                    sx={{ cursor: 'copy' }}
+                    color={copied ? 'green' : 'default'}
+                    onClick={handleCopy}
+                    icon="mynaui:copy"
+                  />
+                </InputAdornment>
+              ) : undefined,
+            }}
             {...other}
           />
         );
@@ -205,6 +239,7 @@ export const RHFAutocompleteWithApi = ({
   const { control, setValue, clearErrors } = useFormContext();
   const [options, setOptions] = useState<any[] | undefined>([]);
   const [isLoading, setLoading] = useState(loading);
+  const [showAll, setShowAll] = useState(false);
 
   return (
     <Controller
@@ -248,11 +283,27 @@ export const RHFAutocompleteWithApi = ({
             loadingText="Loading options..."
             noOptionsText="No options available"
             renderTags={(tagValue, getTagProps) => {
+              const displayedOptions = showAll ? tagValue : tagValue?.slice(0, 3);
               return (
                 <>
-                  {tagValue.map((option, index) => (
+                  {displayedOptions.map((option, index) => (
                     <Chip label={option.title} {...getTagProps({ index })} deleteIcon={<></>} />
                   ))}
+
+                  {tagValue?.length > 3 && !showAll && (
+                    <Chip
+                      label={'+' + Number(tagValue.length - 3) + ' posts...'}
+                      deleteIcon={<></>}
+                      onClick={() => setShowAll(true)}
+                    />
+                  )}
+                  {tagValue?.length > 3 && showAll && (
+                    <Chip
+                      label={'- Collapse'}
+                      deleteIcon={<></>}
+                      onClick={() => setShowAll(false)}
+                    />
+                  )}
                 </>
               );
             }}

@@ -44,6 +44,20 @@ export const SiteForm = (props: Props) => {
             variant="outlined"
           />
 
+          <RHFTextField
+            multiline
+            disabled
+            defaultValue={defaultValues?.token}
+            margin="dense"
+            id="token"
+            name="token"
+            label="API Token"
+            type="text"
+            fullWidth
+            variant="outlined"
+            copy
+          />
+
           <RHFAutocompleteWithApi
             baseUrl="/dropdown/categories"
             options={[]}
@@ -68,18 +82,6 @@ export const SiteForm = (props: Props) => {
             renderInput={(params) => (
               <TextField {...params} margin="normal" label={t(LanguageKey.site.postsItem)} />
             )}
-          />
-
-          <RHFTextField
-            multiline
-            disabled
-            defaultValue={defaultValues?.token}
-            margin="dense"
-            id="token"
-            name="token"
-            type="text"
-            fullWidth
-            variant="outlined"
           />
         </Box>
       </DialogContent>
