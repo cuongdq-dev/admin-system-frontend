@@ -21,7 +21,11 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_BLOG } from 'src/api-core/path';
 import { ButtonDelete } from 'src/components/button';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
-import { RHFAutocomplete, RHFEditor } from 'src/components/hook-form/RHFTextField';
+import {
+  RHFAutocomplete,
+  RHFAutocompleteWithApi,
+  RHFEditor,
+} from 'src/components/hook-form/RHFTextField';
 import { PageLoading } from 'src/components/loading';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -265,6 +269,35 @@ export function DetailView() {
                       margin="normal"
                       label={t(LanguageKey.blog.keywordsItem)}
                     />
+                  )}
+                />
+
+                <RHFAutocompleteWithApi
+                  baseUrl="/dropdown/categories"
+                  options={[]}
+                  defaultValue={data?.categories?.map((category) => {
+                    return { id: category?.id, title: category.name };
+                  })}
+                  name="categories"
+                  title={t(LanguageKey.site.categoriesItem)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      margin="normal"
+                      label={t(LanguageKey.blog.categoryItem)}
+                    />
+                  )}
+                />
+                <RHFAutocompleteWithApi
+                  baseUrl="/dropdown/sites"
+                  defaultValue={data?.sites?.map((site) => {
+                    return { id: site?.id, title: site.name };
+                  })}
+                  options={[]}
+                  name="sites"
+                  title={t(LanguageKey.blog.siteItem)}
+                  renderInput={(params) => (
+                    <TextField {...params} margin="normal" label={t(LanguageKey.site.postsItem)} />
                   )}
                 />
 

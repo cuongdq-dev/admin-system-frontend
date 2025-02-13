@@ -124,7 +124,7 @@ export function ListView() {
         selectCol={true}
         refreshData={refreshData}
         handleClickOpenForm={handleClickOpenForm}
-        actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
+        actions={{ editBtn: true, deleteBtn: true, popupEdit: true }}
         headLabel={HeadLabel}
         customCard={({ values, index }: { values: IPostCategory; index: number }) => {
           return (

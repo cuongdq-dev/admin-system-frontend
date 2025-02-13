@@ -92,6 +92,8 @@ export const LanguageKey = {
     tableTitle: 'blog_table_title',
     detailTitle: 'blog_detail_title',
     titleItem: 'blog_title_item',
+    siteItem: 'blog_site_item',
+    categoryItem: 'blog_category_item',
     descriptionItem: 'blog_description_item',
     keywordsItem: 'blog_keywords_item',
     contentItem: 'blog_content_item',
