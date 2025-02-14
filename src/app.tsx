@@ -9,6 +9,8 @@ import { ButtonDismissNotify } from './components/button';
 import { INotifyStore, useNotifyStore } from './store/notify';
 import { ISetting, useSettingStore } from './store/setting';
 import { socket } from './utils/socket';
+import { HttpMethod, invokeRequest } from './api-core';
+import { requestFirebaseToken } from './utils/firebase/firebase';
 
 export default function App() {
   useScrollToTop();
@@ -73,29 +75,29 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // const requestPermission = async () => {
-    //   try {
-    //     const token = await requestFirebaseToken();
-    //     if (token && settingStore.user && token !== settingStore.user?.firebase_token) {
-    //       invokeRequest({
-    //         baseURL: 'setting/firebase-token',
-    //         method: HttpMethod.POST,
-    //         params: { token: token },
-    //         onSuccess: () => {
-    //           setSetting({
-    //             ...settingStore,
-    //             user: { ...settingStore.user, firebase_token: token },
-    //           });
-    //         },
-    //       });
-    //     } else {
-    //       console.log('No registration token available.');
-    //     }
-    //   } catch (err) {
-    //     console.error('Error getting token:', err);
-    //   }
-    // };
-    // requestPermission();
+    const requestPermission = async () => {
+      try {
+        const token = await requestFirebaseToken();
+        if (token && settingStore.user && token !== settingStore.user?.firebase_token) {
+          invokeRequest({
+            baseURL: 'setting/firebase-token',
+            method: HttpMethod.POST,
+            params: { token: token },
+            onSuccess: () => {
+              setSetting({
+                ...settingStore,
+                user: { ...settingStore.user, firebase_token: token },
+              });
+            },
+          });
+        } else {
+          console.log('No registration token available.');
+        }
+      } catch (err) {
+        console.error('Error getting token:', err);
+      }
+    };
+    requestPermission();
   }, [settingStore.user]);
 
   return (
