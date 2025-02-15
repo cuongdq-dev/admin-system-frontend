@@ -78,6 +78,7 @@ export default function App() {
     const requestPermission = async () => {
       try {
         const token = await requestFirebaseToken();
+        console.log(token);
         if (token && settingStore.user && token !== settingStore.user?.firebase_token) {
           invokeRequest({
             baseURL: 'setting/firebase-token',
