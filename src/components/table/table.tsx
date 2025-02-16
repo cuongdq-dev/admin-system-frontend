@@ -27,6 +27,7 @@ import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
 import { PageLoading } from '../loading';
+import { NotFoundComponent } from '../no-found-data';
 
 export const TableComponent = (props: TableComponentProps) => {
   const table = useTable();
@@ -129,7 +130,18 @@ export const TableComponent = (props: TableComponentProps) => {
             return customCard && customCard({ values: data, index: index });
           })}
         </Grid>
-        {metaData && Object.keys(metaData).length > 0 && (
+        {metaData?.totalItems == 0 && (
+          <Box sx={{ py: 2, width: '100%', textAlign: 'center' }}>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              Not found
+            </Typography>
+
+            <Typography variant="body2">
+              <br /> Try checking for typos or using complete words.
+            </Typography>
+          </Box>
+        )}
+        {metaData && metaData.totalItems > 0 && (
           <Pagination
             page={metaData?.currentPage}
             count={metaData?.totalPages}

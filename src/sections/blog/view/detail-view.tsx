@@ -297,7 +297,7 @@ export function DetailView() {
                   name="sites"
                   title={t(LanguageKey.blog.siteItem)}
                   renderInput={(params) => (
-                    <TextField {...params} margin="normal" label={t(LanguageKey.site.postsItem)} />
+                    <TextField {...params} margin="normal" label={t(LanguageKey.blog.siteItem)} />
                   )}
                 />
 
