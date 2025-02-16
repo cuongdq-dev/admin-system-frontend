@@ -2,7 +2,8 @@
 FROM node:20-bullseye-slim AS builder
 
 WORKDIR /app
-RUN git pull || echo "⚠️ Git pull failed, but continuing..."
+RUN apk add --no-cache git && git pull || true
+
 
 # Copy only the package.json and yarn.lock first to leverage Docker's cache
 COPY package.json yarn.lock ./
