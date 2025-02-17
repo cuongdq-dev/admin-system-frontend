@@ -68,7 +68,7 @@ export const TableComponent = (props: TableComponentProps) => {
         },
       });
     }
-  }, [isFetching]);
+  }, [isFetching, url]);
 
   useAPI({
     clearRequest:
@@ -125,6 +125,8 @@ export const TableComponent = (props: TableComponentProps) => {
   if (component == 'CARD') {
     return (
       <>
+        <PageLoading isLoading={loading} />
+
         <Grid container>
           {datasource?.map((data: Record<string, any>, index: number) => {
             return customCard && customCard({ values: data, index: index });

@@ -1,13 +1,12 @@
-import type { CardProps } from '@mui/material/Card';
-import Avatar from '@mui/material/Avatar';
+import { Link } from '@mui/material';
 import Box from '@mui/material/Box';
+import type { CardProps } from '@mui/material/Card';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
-import { fDate, formatStr, fRelativeTime } from 'src/utils/format-time';
-import { varAlpha } from 'src/theme/styles';
-import { Link } from '@mui/material';
-import { SvgColor } from 'src/components/svg-color';
 import { Iconify } from 'src/components/iconify';
+import { SvgColor } from 'src/components/svg-color';
+import { varAlpha } from 'src/theme/styles';
+import { fRelativeTime } from 'src/utils/format-time';
 // ----------------------------------------------------------------------
 
 export function PostItem({
@@ -150,7 +149,7 @@ export function PostItem({
         ...((latestPostLarge || latestPost) && { opacity: 0.48, color: 'common.white' }),
       }}
     >
-      {post?.categories?.map((cate) => cate?.name).join(', ') || 'not found category'}
+      {post?.categories?.map((cate) => cate?.name).join(', ') || 'No description provided'}
     </Typography>
   );
 

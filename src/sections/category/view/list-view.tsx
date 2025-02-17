@@ -79,23 +79,6 @@ export function ListView() {
       type: 'text',
       width: '20%',
     },
-    {
-      id: 'posts',
-      label: t(LanguageKey.category.postsItem),
-      type: 'custom',
-      align: 'center',
-      render: ({ row }) => <>{row?.posts?.length || 0}</>,
-      width: '10%',
-    },
-
-    {
-      id: 'sites',
-      label: t(LanguageKey.category.sitesItem),
-      type: 'custom',
-      align: 'center',
-      render: ({ row }) => <>{row?.sites?.length || 0}</>,
-      width: '10%',
-    },
   ];
 
   const { deleteItem } = usePageStore.getState();
@@ -160,18 +143,6 @@ export function ListView() {
                 <Typography variant="caption" color="inherit" mb={1}>
                   {values.description || 'No description provided'}
                 </Typography>
-                <Box display="flex" mt={2} gap={1} flexWrap="wrap">
-                  <Chip
-                    label={`Posts: ${values?.posts?.length || 0}`}
-                    size="small"
-                    variant="outlined"
-                  />
-                  <Chip
-                    label={`Sites: ${values?.sites?.length || 0}`}
-                    size="small"
-                    variant="outlined"
-                  />
-                </Box>
               </CardContent>
             </Card>
           );

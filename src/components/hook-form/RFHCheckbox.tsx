@@ -23,7 +23,11 @@ export const RHFCheckbox = ({ name, ...other }: RHFCheckboxProps & FormControlLa
         <Controller
           name={name}
           control={control}
-          render={({ field }) => <Checkbox {...field} checked={field.value} />}
+          render={({ field }) => {
+            return (
+              <Checkbox {...field} defaultChecked={other.defaultChecked} checked={other.checked} />
+            );
+          }}
         />
       }
     />

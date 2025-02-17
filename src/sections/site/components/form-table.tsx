@@ -2,7 +2,7 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Button, DialogActions, DialogContent, TextField } from '@mui/material';
 import { t } from 'i18next';
 import { HttpMethod } from 'src/api-core';
-import { RHFTextField } from 'src/components/hook-form';
+import { RHFCheckbox, RHFTextField } from 'src/components/hook-form';
 import {
   RHFAutocompleteWithApi,
   RHFTextFieldWithSlug,
@@ -17,7 +17,6 @@ type Props = {
 };
 export const SiteForm = (props: Props) => {
   const { defaultValues, action = HttpMethod.PATCH, isSubmitting, handleCloseForm } = props;
-
   return (
     <>
       <DialogContent>
@@ -32,6 +31,23 @@ export const SiteForm = (props: Props) => {
             defaultValue={defaultValues?.name}
             variant="outlined"
           />
+
+          <RHFTextField
+            name="description"
+            margin="normal"
+            multiline
+            maxRows={10}
+            label={t(LanguageKey.site.descriptionItem)}
+            defaultValue={defaultValues?.description || ''}
+          />
+
+          <RHFCheckbox
+            name="autoPost"
+            control={<></>}
+            label={t(LanguageKey.site.autoPostItem)}
+            defaultChecked={defaultValues?.autoPost}
+          />
+
           <RHFTextField
             defaultValue={defaultValues?.domain}
             margin="dense"
@@ -42,6 +58,7 @@ export const SiteForm = (props: Props) => {
             fullWidth
             variant="outlined"
           />
+
           {action != HttpMethod.POST && (
             <RHFTextField
               multiline

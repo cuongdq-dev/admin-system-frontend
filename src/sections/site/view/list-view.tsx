@@ -1,19 +1,21 @@
 import {
-  Box,
   CardContent,
-  Chip,
+  CardHeader,
   DialogTitle,
   IconButton,
-  Link,
-  Typography,
+  IconButtonProps,
+  styled,
   useMediaQuery,
 } from '@mui/material';
 import Card from '@mui/material/Card';
 import { t } from 'i18next';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HttpMethod } from 'src/api-core';
 import { PATH_SITE } from 'src/api-core/path';
+import { IconButtonDelete } from 'src/components/button';
 import { PopupFormTable } from 'src/components/form/form-table';
+import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
@@ -21,9 +23,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { SiteForm } from '../components/form-table';
-import { IconButtonDelete } from 'src/components/button';
-import { Iconify } from 'src/components/iconify';
-import { useNavigate } from 'react-router-dom';
+import { fRelativeTime } from 'src/utils/format-time';
+import { SiteItem } from '../components/site-item';
 
 type FormConfigState = {
   open: boolean;
@@ -106,7 +107,6 @@ export function ListView() {
 
   const isMobile = useMediaQuery('(max-width:600px)');
   const { deleteItem } = usePageStore.getState();
-  const navigate = useNavigate();
 
   return (
     <DashboardContent
@@ -135,54 +135,12 @@ export function ListView() {
         headLabel={HeadLabel}
         customCard={({ values, index }: { values: ISite; index: number }) => {
           return (
-            <Card key={values.id} sx={{ width: '100%', mb: 2 }}>
-              <CardContent>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Typography
-                    sx={{
-                      overflow: 'hidden',
-                      whiteSpace: 'nowrap',
-                      textOverflow: 'ellipsis',
-                      textWrap: 'nowrap',
-                    }}
-                    fontWeight="bold"
-                  >
-                    <Link onClick={() => navigate(values?.id!)} sx={{ color: 'text.primary' }}>
-                      {values.name}
-                    </Link>
-                  </Typography>
-                  <Box display="flex" flexDirection="row">
-                    <IconButton onClick={() => handleClickOpenForm(values, HttpMethod.PATCH)}>
-                      <Iconify icon="material-symbols:edit-outline" />
-                    </IconButton>
-
-                    <IconButtonDelete
-                      handleDelete={() => {
-                        deleteItem(storeName, values?.id, index);
-                      }}
-                      rowId={values?.id}
-                      baseUrl={'site/delete/' + values?.id}
-                    />
-                  </Box>
-                </Box>
-
-                <Typography variant="caption" color="inherit" mb={1}>
-                  {values.domain || 'No description provided'}
-                </Typography>
-                <Box display="flex" mt={2} gap={1} flexWrap="wrap">
-                  <Chip
-                    label={`Posts: ${values?.posts?.length || 0}`}
-                    size="small"
-                    variant="outlined"
-                  />
-                  <Chip
-                    label={`Categories: ${values?.categories?.length || 0}`}
-                    size="small"
-                    variant="outlined"
-                  />
-                </Box>
-              </CardContent>
-            </Card>
+            <SiteItem
+              values={values}
+              index={index}
+              storeName={storeName}
+              handleClickOpenForm={handleClickOpenForm}
+            />
           );
         }}
       />
@@ -212,3 +170,31 @@ export function ListView() {
     </DashboardContent>
   );
 }
+
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme }) => ({
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+  variants: [
+    {
+      props: ({ expand }) => !expand,
+      style: {
+        transform: 'rotate(0deg)',
+      },
+    },
+    {
+      props: ({ expand }) => !!expand,
+      style: {
+        transform: 'rotate(180deg)',
+      },
+    },
+  ],
+}));

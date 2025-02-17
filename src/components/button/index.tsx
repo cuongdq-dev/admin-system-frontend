@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { t } from 'i18next';
 import { closeSnackbar, SnackbarKey } from 'notistack';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { LanguageKey } from 'src/constants';
 import { useNotifyStore } from 'src/store/notify';
@@ -119,16 +119,22 @@ export const IconButtonDelete = (props: IconButtonDeleteProps) => {
   );
 };
 
-type ButtonDeleteProps = { title?: string; handleDelete?: () => void };
+type ButtonDeleteProps = { title?: string; withLoading?: boolean; handleDelete?: () => void };
 export const ButtonDelete = (props: ButtonDeleteProps & LoadingButtonProps) => {
-  const { title = '', handleDelete, ...other } = props;
+  const { title, withLoading, handleDelete, ...other } = props;
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <LoadingButton onClick={() => setOpen(true)} {...other}>
-        {title}
-      </LoadingButton>
+      {withLoading ? (
+        <LoadingButton onClick={() => setOpen(true)} {...other}>
+          {title}
+        </LoadingButton>
+      ) : (
+        <IconButton onClick={() => setOpen(true)} {...other}>
+          <Iconify icon="solar:trash-bin-trash-bold" />
+        </IconButton>
+      )}
       <Dialog
         PaperProps={{ sx: { borderRadius: 3 } }}
         TransitionComponent={Transition}
