@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
-import { fDate, formatStr } from 'src/utils/format-time';
+import { fDate, formatStr, fRelativeTime } from 'src/utils/format-time';
 import { varAlpha } from 'src/theme/styles';
 import { Link } from '@mui/material';
 import { SvgColor } from 'src/components/svg-color';
@@ -71,20 +71,6 @@ export function PostItem({
           icon="material-symbols:public"
         />
       )}
-      {/* <Avatar
-        alt={post.thumbnail?.data}
-        src={post.thumbnail?.url}
-        children={<></>}
-        sx={{
-          left: 24,
-          zIndex: 9,
-          bottom: -24,
-          position: 'absolute',
-          ...((latestPostLarge || latestPost) && {
-            top: 24,
-          }),
-        }}
-      /> */}
     </>
   );
 
@@ -150,7 +136,21 @@ export function PostItem({
         ...((latestPostLarge || latestPost) && { opacity: 0.48, color: 'common.white' }),
       }}
     >
-      {fDate(post.created_at, formatStr.dateTime)}
+      {fRelativeTime(post.created_at)}
+    </Typography>
+  );
+
+  const renderCategories = (
+    <Typography
+      variant="caption"
+      component="div"
+      sx={{
+        mb: 1,
+        color: 'text.disabled',
+        ...((latestPostLarge || latestPost) && { opacity: 0.48, color: 'common.white' }),
+      }}
+    >
+      {post?.categories?.map((cate) => cate?.name).join(', ') || 'not found category'}
     </Typography>
   );
 
@@ -215,7 +215,7 @@ export function PostItem({
 
       <Box
         sx={(theme) => ({
-          p: theme.spacing(6, 3, 3, 3),
+          p: theme.spacing(4, 3, 3, 3),
           ...((latestPostLarge || latestPost) && {
             width: 1,
             bottom: 0,
@@ -224,6 +224,7 @@ export function PostItem({
         })}
       >
         {renderDate}
+        {renderCategories}
         {renderSource}
         {renderTitle}
         {renderDescription}

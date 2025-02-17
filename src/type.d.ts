@@ -348,6 +348,7 @@ interface IPostCategory extends TableBase {
   name?: string;
   slug?: string; //unique
   description?: string;
+  postCount?: number;
   posts?: IPost[];
   sites?: ISite[];
 }
@@ -411,6 +412,7 @@ interface ISite extends TableBase {
   id?: string;
   description?: string;
   domain?: string;
+  autoPost?: boolean;
   name?: string;
   posts?: IPost[];
   categories?: IPostCategory[];

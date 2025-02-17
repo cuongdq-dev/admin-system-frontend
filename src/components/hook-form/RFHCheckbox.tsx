@@ -1,6 +1,6 @@
 // form
 // @mui
-import type { FormControlLabelProps} from '@mui/material';
+import type { FormControlLabelProps } from '@mui/material';
 
 import { Controller, useFormContext } from 'react-hook-form';
 

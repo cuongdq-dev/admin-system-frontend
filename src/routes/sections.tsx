@@ -27,6 +27,7 @@ export const ServersPage = lazy(() => import('src/pages/server/list'));
 export const ServerDetailPage = lazy(() => import('src/pages/server/detail'));
 //
 export const SitesPage = lazy(() => import('src/pages/site/list'));
+export const SiteDetailPage = lazy(() => import('src/pages/site/detail'));
 //
 // AUTHEN PAGE
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
@@ -197,14 +198,14 @@ export const RouterConfig = [
               </PrivateRoute>
             ),
           },
-          // {
-          //   path: ':id',
-          //   element: (
-          //     <PrivateRoute>
-          //       <CategoryDetailPage />
-          //     </PrivateRoute>
-          //   ),
-          // },
+          {
+            path: ':id',
+            element: (
+              <PrivateRoute>
+                <SiteDetailPage />
+              </PrivateRoute>
+            ),
+          },
         ],
       },
       {

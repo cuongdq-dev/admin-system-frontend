@@ -7,7 +7,7 @@ export const FetchingComponent = () => {
       <LinearProgress
         sx={{
           width: 1,
-          maxWidth: 320,
+          // maxWidth: 320,
           bgcolor: (theme) => varAlpha(theme.vars.palette.text.primaryChannel, 0.16),
           [`& .${linearProgressClasses.bar}`]: { bgcolor: 'text.primary' },
         }}

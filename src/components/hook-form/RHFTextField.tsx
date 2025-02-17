@@ -4,16 +4,7 @@ import type { AutocompleteProps, TextFieldProps } from '@mui/material';
 
 import { Controller, useFormContext } from 'react-hook-form';
 
-import {
-  Autocomplete,
-  Button,
-  Checkbox,
-  Chip,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Tooltip,
-} from '@mui/material';
+import { Autocomplete, Checkbox, Chip, IconButton, InputAdornment, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import slugify from 'slugify';
 import { HttpMethod, invokeRequest } from 'src/api-core';
@@ -292,7 +283,7 @@ export const RHFAutocompleteWithApi = ({
 
                   {tagValue?.length > 3 && !showAll && (
                     <Chip
-                      label={'+' + Number(tagValue.length - 3) + ' posts...'}
+                      label={'+' + Number(tagValue.length - 3)}
                       deleteIcon={<></>}
                       onClick={() => setShowAll(true)}
                     />

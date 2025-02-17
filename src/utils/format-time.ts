@@ -50,6 +50,38 @@ export function fDateTime(date: DatePickerFormat, format?: string) {
 
 // ----------------------------------------------------------------------
 
+/**
+ * Hiển thị thời gian gần đây:
+ * - Nếu < 60 phút → "20 phút trước"
+ * - Nếu < 24 giờ → "3 giờ trước"
+ * - Nếu < 3 ngày → "2 ngày trước"
+ * - Nếu >= 3 ngày → Hiển thị theo fDate()
+ */
+export function fRelativeTime(date: DatePickerFormat) {
+  if (!date) {
+    return null;
+  }
+
+  const isValid = dayjs(date).isValid();
+  if (!isValid) return 'Invalid time value';
+
+  const now = dayjs();
+  const inputDate = dayjs(date);
+  const diffMinutes = now.diff(inputDate, 'minute');
+  const diffHours = now.diff(inputDate, 'hour');
+  const diffDays = now.diff(inputDate, 'day');
+
+  if (diffMinutes < 60) {
+    return `${diffMinutes} phút trước`;
+  } else if (diffHours < 24) {
+    return `${diffHours} giờ trước`;
+  } else if (diffDays < 3) {
+    return `${diffDays} ngày trước`;
+  } else {
+    return fDate(date); // Hiển thị dạng ngày nếu > 3 ngày
+  }
+}
+
 /** output: 17 Apr 2022
  */
 export function fDate(date: DatePickerFormat, format?: string) {

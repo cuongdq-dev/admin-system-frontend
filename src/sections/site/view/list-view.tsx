@@ -1,4 +1,13 @@
-import { DialogTitle } from '@mui/material';
+import {
+  Box,
+  CardContent,
+  Chip,
+  DialogTitle,
+  IconButton,
+  Link,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import Card from '@mui/material/Card';
 import { t } from 'i18next';
 import { useState } from 'react';
@@ -12,6 +21,9 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { SiteForm } from '../components/form-table';
+import { IconButtonDelete } from 'src/components/button';
+import { Iconify } from 'src/components/iconify';
+import { useNavigate } from 'react-router-dom';
 
 type FormConfigState = {
   open: boolean;
@@ -92,6 +104,10 @@ export function ListView() {
     },
   ];
 
+  const isMobile = useMediaQuery('(max-width:600px)');
+  const { deleteItem } = usePageStore.getState();
+  const navigate = useNavigate();
+
   return (
     <DashboardContent
       breadcrumb={{ items: [{ href: '/site', title: t(LanguageKey.common.listTitle) }] }}
@@ -107,18 +123,69 @@ export function ListView() {
           })
         }
       />
-      <Card>
-        <TableComponent
-          storeName={storeName}
-          url={PATH_SITE}
-          indexCol={true}
-          selectCol={true}
-          refreshData={refreshData}
-          handleClickOpenForm={handleClickOpenForm}
-          actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
-          headLabel={HeadLabel}
-        />
-      </Card>
+      <TableComponent
+        component={isMobile ? 'CARD' : 'TABLE'}
+        storeName={storeName}
+        url={PATH_SITE}
+        indexCol={true}
+        selectCol={true}
+        refreshData={refreshData}
+        handleClickOpenForm={handleClickOpenForm}
+        actions={{ editBtn: true, deleteBtn: true, popupEdit: true }}
+        headLabel={HeadLabel}
+        customCard={({ values, index }: { values: ISite; index: number }) => {
+          return (
+            <Card key={values.id} sx={{ width: '100%', mb: 2 }}>
+              <CardContent>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Typography
+                    sx={{
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      textWrap: 'nowrap',
+                    }}
+                    fontWeight="bold"
+                  >
+                    <Link onClick={() => navigate(values?.id!)} sx={{ color: 'text.primary' }}>
+                      {values.name}
+                    </Link>
+                  </Typography>
+                  <Box display="flex" flexDirection="row">
+                    <IconButton onClick={() => handleClickOpenForm(values, HttpMethod.PATCH)}>
+                      <Iconify icon="material-symbols:edit-outline" />
+                    </IconButton>
+
+                    <IconButtonDelete
+                      handleDelete={() => {
+                        deleteItem(storeName, values?.id, index);
+                      }}
+                      rowId={values?.id}
+                      baseUrl={'site/delete/' + values?.id}
+                    />
+                  </Box>
+                </Box>
+
+                <Typography variant="caption" color="inherit" mb={1}>
+                  {values.domain || 'No description provided'}
+                </Typography>
+                <Box display="flex" mt={2} gap={1} flexWrap="wrap">
+                  <Chip
+                    label={`Posts: ${values?.posts?.length || 0}`}
+                    size="small"
+                    variant="outlined"
+                  />
+                  <Chip
+                    label={`Categories: ${values?.categories?.length || 0}`}
+                    size="small"
+                    variant="outlined"
+                  />
+                </Box>
+              </CardContent>
+            </Card>
+          );
+        }}
+      />
 
       <PopupFormTable
         storeName={storeName}

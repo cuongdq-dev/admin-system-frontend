@@ -74,6 +74,8 @@ export const LanguageKey = {
     nameItem: 'site_name_item',
     descriptionItem: 'site_description_item',
     postsItem: 'site_posts_item',
+    tokenItem: 'site_token_item',
+    autoPostItem: 'site_auto_post_item',
     categoriesItem: 'site_categories_item',
   },
   product: {
@@ -293,6 +295,8 @@ export const StoreName = {
   LANGUAGE: 'language_store',
   CATEGORY: 'category_store',
   SITE: 'site_store',
+  SITE_CATEGORIES: 'site_categories_store',
+  SITE_BLOG: 'site_blog_store',
   PROFILE: 'profile_store',
   BLOG: 'blog_store',
 };
