@@ -77,6 +77,11 @@ export const LanguageKey = {
     tokenItem: 'site_token_item',
     autoPostItem: 'site_auto_post_item',
     categoriesItem: 'site_categories_item',
+    teleToken: 'site_tele_token',
+    teleBotName: 'site_tele_bot_name',
+    teleChatName: 'site_tele_chat_name',
+    teleChatId: 'site_tele_chat_id',
+    teleVerify: 'site_tele_verify',
   },
   product: {
     nav: 'product_nav',

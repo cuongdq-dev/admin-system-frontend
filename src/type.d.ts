@@ -417,4 +417,8 @@ interface ISite extends TableBase {
   posts?: IPost[];
   categories?: IPostCategory[];
   token?: string;
+  teleToken?: string;
+  teleBotName?: string;
+  teleChatName?: string;
+  teleChatId?: string;
 }

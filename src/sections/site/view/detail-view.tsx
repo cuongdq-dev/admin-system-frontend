@@ -1,6 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Theme, Typography, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Card,
+  CircularProgress,
+  TextField,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
@@ -19,7 +27,6 @@ import { usePageStore } from 'src/store/page';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
 import { Categories } from '../components/categories';
-import { HeadComponent } from 'src/components/page-head';
 
 // ----------------------------------------------------------------------
 export function DetailView() {
@@ -112,6 +119,25 @@ export function DetailView() {
                 };
               }}
             >
+              <Card
+                sx={(theme) => {
+                  return {
+                    mt: 2,
+                    boxShadow: 'none',
+                    border: `1px solid ${theme.vars.palette.divider}`,
+                  };
+                }}
+              >
+                <Categories
+                  selected={selectCategory}
+                  handleClick={(category: IPostCategory) => {
+                    setCategory(category);
+                    setFetchingList(StoreName.SITE_BLOG, true);
+                    setLoadingList(StoreName.SITE_BLOG, true);
+                  }}
+                />
+              </Card>
+
               <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <RHFTextField
                   name="name"
@@ -157,7 +183,7 @@ export function DetailView() {
                   multiline
                   disabled
                   defaultValue={data?.token}
-                  margin="dense"
+                  margin="normal"
                   id="token"
                   name="token"
                   label="API Token"
@@ -168,24 +194,16 @@ export function DetailView() {
                 />
               </FormProvider>
 
-              <Card
-                sx={(theme) => {
-                  return {
-                    mt: 2,
-                    boxShadow: 'none',
-                    border: `1px solid ${theme.vars.palette.divider}`,
-                  };
+              <TelegramTokenInput
+                siteId={id}
+                defaultToken={data?.teleToken!}
+                defaultValues={{
+                  botId: data?.teleChatId,
+                  botName: data?.teleChatName,
+                  botUsername: data?.teleBotName,
+                  chatId: data?.teleChatId,
                 }}
-              >
-                <Categories
-                  selected={selectCategory}
-                  handleClick={(category: IPostCategory) => {
-                    setCategory(category);
-                    setFetchingList(StoreName.SITE_BLOG, true);
-                    setLoadingList(StoreName.SITE_BLOG, true);
-                  }}
-                />
-              </Card>
+              />
             </Box>
           </Card>
         </Grid>
@@ -234,3 +252,105 @@ export function DetailView() {
     </DashboardContent>
   );
 }
+
+const TelegramTokenInput = ({
+  defaultValues,
+  defaultToken,
+  siteId,
+}: {
+  siteId?: string;
+  defaultToken?: string;
+  defaultValues: { chatId?: string; botName?: string; botUsername?: string; botId?: string };
+}) => {
+  const [token, setToken] = useState(defaultToken);
+  const [botInfo, setBotInfo] = useState<{
+    chatId?: string;
+    botName?: string;
+    botUsername?: string;
+    botId?: string;
+  } | null>(defaultValues);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setToken(defaultToken);
+    setBotInfo(defaultValues);
+  }, [defaultToken, defaultValues]);
+
+  const handleBlur = () => {
+    if (!token) return;
+
+    setLoading(true);
+    setError(null);
+    setBotInfo(null);
+
+    invokeRequest({
+      baseURL: PATH_SITE + '/telegram/' + siteId,
+      method: HttpMethod.POST,
+      params: { token: token },
+      onSuccess: (res) => {
+        setBotInfo(res);
+        setLoading(false);
+      },
+      onHandleError: (err) => {
+        setLoading(false);
+        setBotInfo(null);
+        setError((err as Error).message);
+      },
+    });
+  };
+
+  return (
+    <Box>
+      <Box display={'flex'} gap={2}>
+        <TextField
+          label={t(LanguageKey.site.tokenItem)}
+          variant="outlined"
+          fullWidth
+          disabled={loading}
+          margin="dense"
+          value={token}
+          onChange={(e) => setToken(e.target.value)}
+          onBlur={handleBlur}
+          error={!!error}
+          helperText={error || 'Nhập token bot của bạn để kiểm tra và lưu lại'}
+        />
+
+        {loading && (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <CircularProgress size={20} />
+          </Box>
+        )}
+      </Box>
+
+      {botInfo?.chatId && (
+        <Box>
+          <TextField
+            label={t(LanguageKey.site.teleChatName)}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={botInfo.botName}
+            disabled
+          />
+          <TextField
+            label={t(LanguageKey.site.teleBotName)}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={botInfo.botUsername}
+            disabled
+          />
+          <TextField
+            label={t(LanguageKey.site.teleChatId)}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={botInfo.chatId}
+            disabled
+          />
+        </Box>
+      )}
+    </Box>
+  );
+};

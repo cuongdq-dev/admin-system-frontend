@@ -189,23 +189,34 @@ export const AddNewCategory = ({ siteId, ...other }: AddNewCategoryProps) => {
       }}
       getOptionLabel={(option) => option.title}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      renderTags={(tagValue, getTagProps) => {
+      renderTags={(_, getTagProps) => {
         const displayedOptions = showAll ? selectedCategories : selectedCategories?.slice(0, 3);
         return (
           <>
             {displayedOptions.map((option, index) => (
-              <Chip label={option.title} {...getTagProps({ index })} deleteIcon={<></>} />
+              <Chip
+                size="small"
+                label={option.title}
+                {...getTagProps({ index })}
+                deleteIcon={<></>}
+              />
             ))}
 
             {selectedCategories?.length > 3 && !showAll && (
               <Chip
+                size="small"
                 label={'+' + Number(selectedCategories.length - 3)}
                 deleteIcon={<></>}
                 onClick={() => setShowAll(true)}
               />
             )}
             {selectedCategories?.length > 3 && showAll && (
-              <Chip label={'- Collapse'} deleteIcon={<></>} onClick={() => setShowAll(false)} />
+              <Chip
+                size="small"
+                label={'- Collapse'}
+                deleteIcon={<></>}
+                onClick={() => setShowAll(false)}
+              />
             )}
           </>
         );
