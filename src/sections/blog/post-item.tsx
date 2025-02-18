@@ -9,17 +9,14 @@ import { varAlpha } from 'src/theme/styles';
 import { fRelativeTime } from 'src/utils/format-time';
 // ----------------------------------------------------------------------
 
-export function PostItem({
-  sx,
-  post,
-  latestPost,
-  latestPostLarge,
-  ...other
-}: CardProps & {
-  post: IPost;
-  latestPost: boolean;
-  latestPostLarge: boolean;
-}) {
+export function PostItem(
+  props: CardProps & {
+    post: IPost;
+    latestPost: boolean;
+    latestPostLarge: boolean;
+  }
+) {
+  const { sx, post, latestPost, latestPostLarge, ...other } = props;
   const renderAvatar = (
     <>
       {post.status == 'NEW' && (
@@ -149,7 +146,7 @@ export function PostItem({
         ...((latestPostLarge || latestPost) && { opacity: 0.48, color: 'common.white' }),
       }}
     >
-      {post?.categories?.map((cate) => cate?.name).join(', ') || 'No description provided'}
+      {post?.categories?.map((cate) => cate?.name).join(', ') || 'No category provided'}
     </Typography>
   );
 

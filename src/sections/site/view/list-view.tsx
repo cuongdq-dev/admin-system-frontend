@@ -68,40 +68,26 @@ export function ListView() {
   };
 
   const HeadLabel: HeadLabelProps[] = [
-    { id: 'name', label: t(LanguageKey.site.nameItem), sort: false, type: 'text' },
+    {
+      id: 'name',
+      label: t(LanguageKey.site.nameItem),
+      sort: false,
+      type: 'text',
+      width: '20%',
+    },
     {
       id: 'domain',
       label: t(LanguageKey.site.domainItem),
       sort: false,
       type: 'text',
-      width: '60%',
+      width: '30%',
     },
     {
       id: 'description',
       label: t(LanguageKey.site.descriptionItem),
       sort: false,
       type: 'text',
-      width: '10%',
-    },
-    {
-      id: 'posts',
-      label: t(LanguageKey.site.postsItem),
-      type: 'custom',
-      align: 'center',
-      render: ({ row }) => {
-        return <>{row?.posts?.length}</>;
-      },
-      width: '10%',
-    },
-    {
-      id: 'categories',
-      label: t(LanguageKey.site.categoriesItem),
-      type: 'custom',
-      align: 'center',
-      width: '10%',
-      render: ({ row }) => {
-        return <>{row?.categories?.length}</>;
-      },
+      width: '50%',
     },
   ];
 

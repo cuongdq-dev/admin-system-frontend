@@ -89,6 +89,7 @@ export const SiteForm = (props: Props) => {
           <RHFAutocompleteWithApi
             baseUrl="/dropdown/posts"
             defaultValue={defaultValues?.posts?.map((post) => {
+              console.log(post);
               return { id: post?.id, title: post.title };
             })}
             options={[]}
