@@ -116,7 +116,7 @@ export function PostItem(
       <Box
         component="img"
         alt={post.title}
-        src={`data:image/png;base64,${post.thumbnail?.data}`}
+        src={`${post.thumbnail?.data}`}
         sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
       />
     );

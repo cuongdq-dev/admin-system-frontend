@@ -184,7 +184,7 @@ export function DetailView() {
                 <Box
                   component="img"
                   alt={data?.title}
-                  src={`data:image/png;base64,${data?.thumbnail?.data}`}
+                  src={`${data?.thumbnail?.data}`}
                   sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
                 />
               </Box>

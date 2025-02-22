@@ -124,7 +124,7 @@ export function AnalyticsNews({ title, subheader, ...other }: Props) {
                 <Avatar
                   variant="rounded"
                   alt={drawer?.values?.thumbnail?.slug}
-                  src={`data:image/png;base64,${drawer?.values?.thumbnail?.data}`}
+                  src={`${drawer?.values?.thumbnail?.url}`}
                   sx={{ width: 60, height: 60, flexShrink: 0 }}
                 />
 
@@ -232,7 +232,7 @@ function TrendingItem({
       <Avatar
         variant="rounded"
         alt={item.thumbnail?.slug}
-        src={`data:image/png;base64,${item?.thumbnail?.data}`}
+        src={`${item?.thumbnail?.url}`}
         sx={{ width: 48, height: 48, flexShrink: 0 }}
       />
 
@@ -290,7 +290,7 @@ function ArticleItem({ sx, item, ...other }: BoxProps & { item: ITrendingArticle
           className="image-article"
           variant="rounded"
           alt={item.thumbnail?.slug}
-          src={`data:image/png;base64,${item?.thumbnail?.data}`}
+          src={`${item?.thumbnail?.url}`}
           sx={{ width: 80, height: 80, flexShrink: 0 }}
         />
       </Box>
