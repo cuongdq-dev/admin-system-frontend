@@ -33,43 +33,40 @@ export default function App() {
   }, [notifyStore]);
 
   useEffect(() => {
-    function handleMessage(socket: ISocket) {
-      const notify = socket.notify;
-      switch (socket?.type) {
-        case 'MESSAGE':
-          enqueueSnackbar(notify?.title, {
-            action: (key) => {
-              if (notify.dismissAction)
-                return <ButtonDismissNotify keyNotify={key} textColor="white" />;
-              return <></>;
-            },
-            key: notify.key,
-          });
-          return;
-        case 'NOTIFY':
-          setNotify(notify);
-          return;
-        case 'STORE':
-          enqueueSnackbar(notify.title, {
-            action: (key) => {
-              if (notify.dismissAction)
-                return <ButtonDismissNotify keyNotify={key} textColor="white" />;
-              return <></>;
-            },
-            key: notify.key,
-          });
-          return;
-
-        default:
-          break;
-      }
-    }
-
-    socket.on('message', handleMessage);
-
-    return () => {
-      socket.off('message', handleMessage);
-    };
+    // function handleMessage(socket: ISocket) {
+    //   const notify = socket.notify;
+    //   switch (socket?.type) {
+    //     case 'MESSAGE':
+    //       enqueueSnackbar(notify?.title, {
+    //         action: (key) => {
+    //           if (notify.dismissAction)
+    //             return <ButtonDismissNotify keyNotify={key} textColor="white" />;
+    //           return <></>;
+    //         },
+    //         key: notify.key,
+    //       });
+    //       return;
+    //     case 'NOTIFY':
+    //       setNotify(notify);
+    //       return;
+    //     case 'STORE':
+    //       enqueueSnackbar(notify.title, {
+    //         action: (key) => {
+    //           if (notify.dismissAction)
+    //             return <ButtonDismissNotify keyNotify={key} textColor="white" />;
+    //           return <></>;
+    //         },
+    //         key: notify.key,
+    //       });
+    //       return;
+    //     default:
+    //       break;
+    //   }
+    // }
+    // // socket.on('message', handleMessage);
+    // // return () => {
+    // //   socket.off('message', handleMessage);
+    // // };
   }, []);
 
   // useEffect(() => {

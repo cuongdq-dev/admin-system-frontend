@@ -361,7 +361,7 @@ interface IPost extends TableBase {
   title?: string;
   content?: string;
   meta_description?: string;
-  relatedQueries?: { query?: string }[];
+  relatedQueries?: { query?: string; slug?: string }[];
   //
   categories?: IPostCategory[];
   sites?: ISite[];
@@ -381,7 +381,7 @@ interface ITrendingArticle extends TableBase {
   slug?: string;
   source?: string;
   meta_description?: string;
-  relatedQueries?: { query?: string }[];
+  relatedQueries?: { query?: string; slug?: string }[];
 
   thumbnail_id?: string;
   thumbnail?: IMedia;
@@ -400,7 +400,7 @@ interface ITrending extends TableBase {
   trendDate?: string;
 
   formattedTraffic?: string;
-  relatedQueries?: { query?: string }[];
+  relatedQueries?: { query?: string; slug?: string }[];
 
   thumbnail_id?: string;
   thumbnail?: IMedia;

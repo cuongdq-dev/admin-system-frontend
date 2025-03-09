@@ -105,7 +105,7 @@ export function DetailView() {
   const onSubmit = async (values: {
     title?: string;
     meta_description?: string;
-    relatedQueries?: { query?: string }[];
+    relatedQueries?: { query?: string; slug?: string }[];
     content?: string;
     status?: IPostStatus;
   }) => {
