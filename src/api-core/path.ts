@@ -13,6 +13,7 @@ export const PATH_LANGUAGE = '/i18n';
 export const PATH_SITE = '/site';
 
 export const PATH_CATEGORY = '/category';
+export const PATH_DROPDOWN = '/dropdown';
 export const PATH_BLOG = '/post';
 export const PATH_TRENDINGS_SEARCH = '/post/trendings';
 export const PATH_SERVER = '/server';

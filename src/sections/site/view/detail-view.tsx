@@ -241,7 +241,12 @@ export function DetailView() {
               customCard={({ values }: { values: Record<string, any>; index: number }) => {
                 return (
                   <Grid key={values?.id} xs={12} sm={4} md={4}>
-                    <PostItem post={values as any} latestPost={false} latestPostLarge={false} />
+                    <PostItem
+                      post={values as any}
+                      latestPost={false}
+                      latestPostLarge={false}
+                      siteId={id}
+                    />
                   </Grid>
                 );
               }}

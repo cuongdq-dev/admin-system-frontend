@@ -1,22 +1,29 @@
-import { Link } from '@mui/material';
+import { Autocomplete, AutocompleteProps, Checkbox, Chip, Link, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import type { CardProps } from '@mui/material/Card';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
+import { t } from 'i18next';
+import { useState, useEffect } from 'react';
+import { invokeRequest, HttpMethod } from 'src/api-core';
+import { PATH_BLOG, PATH_DROPDOWN, PATH_SITE } from 'src/api-core/path';
+import { RHFAutocompleteWithApi } from 'src/components/hook-form/RHFTextField';
 import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
+import { LanguageKey, StoreName } from 'src/constants';
+import { usePageStore } from 'src/store/page';
 import { varAlpha } from 'src/theme/styles';
 import { fRelativeTime } from 'src/utils/format-time';
-// ----------------------------------------------------------------------
-
 export function PostItem(
   props: CardProps & {
+    siteId?: string;
     post: IPost;
     latestPost: boolean;
     latestPostLarge: boolean;
+    categories?: IPostCategory[];
   }
 ) {
-  const { sx, post, latestPost, latestPostLarge, ...other } = props;
+  const { siteId, sx, post, latestPost, latestPostLarge, ...other } = props;
   const renderAvatar = (
     <>
       {post.status == 'NEW' && (
@@ -111,16 +118,14 @@ export function PostItem(
     </Typography>
   );
 
-  const renderCover = () => {
-    return (
-      <Box
-        component="img"
-        alt={post.title}
-        src={`${post.thumbnail?.data}`}
-        sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
-      />
-    );
-  };
+  const renderCover = (
+    <Box
+      component="img"
+      alt={post.title}
+      src={`${post.thumbnail?.data}`}
+      sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
+    />
+  );
 
   const renderDate = (
     <Typography
@@ -149,6 +154,28 @@ export function PostItem(
       {post?.categories?.map((cate) => cate?.name).join(', ') || 'No category provided'}
     </Typography>
   );
+  const renderCategoriesInput = () => {
+    return (
+      <AddNewCategory
+        postId={post.id}
+        siteId={siteId!}
+        options={[]}
+        defaultValue={post?.categories?.map((category: IPostCategory) => {
+          return { id: category?.id, title: category.name };
+        })}
+        renderInput={(params) => {
+          return (
+            <TextField
+              {...params}
+              variant="standard"
+              margin="dense"
+              label={t(LanguageKey.site.categoriesItem)}
+            />
+          );
+        }}
+      />
+    );
+  };
 
   const renderSource = (
     <Typography
@@ -206,7 +233,7 @@ export function PostItem(
       >
         {renderShape}
         {renderAvatar}
-        {renderCover()}
+        {renderCover}
       </Box>
 
       <Box
@@ -219,8 +246,10 @@ export function PostItem(
           }),
         })}
       >
+        {siteId && renderCategoriesInput()}
         {renderDate}
-        {renderCategories}
+        {!siteId && renderCategories}
+
         {renderSource}
         {renderTitle}
         {renderDescription}
@@ -228,3 +257,124 @@ export function PostItem(
     </Card>
   );
 }
+
+interface AddNewCategoryProps extends AutocompleteProps<any, boolean, boolean, boolean> {
+  siteId: string;
+  postId: string;
+}
+
+export const AddNewCategory = ({ siteId, postId, ...other }: AddNewCategoryProps) => {
+  const [options, setOptions] = useState<any[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<any[]>(other?.defaultValue);
+
+  const [loadingCategories, setLoadingCategories] = useState<string[]>([]);
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setSelectedCategories(other?.defaultValue);
+  }, [other.defaultValue]);
+
+  const handleCategorySelect = async (category: any) => {
+    if (loadingCategories.includes(category.id)) return;
+
+    setLoadingCategories((prev) => [...prev, category.id]);
+
+    const checkExist = selectedCategories.find((cate) => cate.id === category.id);
+    const newCategories = checkExist
+      ? selectedCategories.filter((cate) => category.id !== cate.id)
+      : [...selectedCategories, category];
+
+    invokeRequest({
+      baseURL: `${PATH_BLOG}/${postId}`,
+      method: HttpMethod.PATCH,
+      params: {
+        categories: newCategories.map((cate) => ({ id: cate.id })),
+      },
+      onSuccess: () => {
+        setSelectedCategories(newCategories);
+        setLoadingCategories((prev) => prev.filter((id) => id !== category.id));
+      },
+      onHandleError: () => {
+        setLoadingCategories((prev) => prev.filter((id) => id !== category.id));
+      },
+    });
+  };
+
+  return (
+    <Autocomplete
+      key={JSON.stringify(selectedCategories)}
+      className="post-item-select-categories"
+      sx={{ width: '100%', border: 'none', boxShadow: 'none', flexWrap: 'nowrap' }}
+      multiple
+      disableClearable
+      disableCloseOnSelect
+      loading={isLoading}
+      onFocus={() => {
+        setLoading(true);
+        if (!options.length) {
+          invokeRequest({
+            baseURL: '/dropdown/categories/' + siteId,
+            method: HttpMethod.GET,
+            onSuccess: (res) => {
+              setOptions(res);
+              setLoading(false);
+            },
+            onHandleError: () => {
+              setLoading(false);
+            },
+          });
+        }
+      }}
+      onChange={(_, newValue) => {
+        const newCategory = newValue.find(
+          (cat: IPostCategory) => !selectedCategories.some((selected) => selected.id === cat.id)
+        );
+        if (newCategory) handleCategorySelect(newCategory);
+      }}
+      getOptionLabel={(option) => option.title}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
+      renderTags={(value) => {
+        return (
+          <>
+            {selectedCategories.length > 0 && (
+              <Chip size="small" label={selectedCategories[0]?.title} deleteIcon={<></>} />
+            )}
+            {selectedCategories.length > 1 && (
+              <Chip size="small" label={`+${selectedCategories.length - 1}`} deleteIcon={<></>} />
+            )}
+          </>
+        );
+      }}
+      renderOption={(props, option) => {
+        const isLoading = loadingCategories.includes(option.id);
+        const isSelected = selectedCategories.some((cat) => cat.id === option.id);
+
+        return (
+          <li
+            {...props}
+            key={option.id}
+            aria-selected={isSelected}
+            style={{ opacity: isLoading ? 0.5 : 1, pointerEvents: isLoading ? 'none' : 'auto' }}
+            onClick={() => !isLoading && handleCategorySelect(option)}
+          >
+            <Checkbox
+              icon={<Iconify icon="bx:checkbox" />}
+              checkedIcon={<Iconify icon="mingcute:checkbox-fill" />}
+              style={{ marginRight: 8 }}
+              checked={isSelected}
+              disabled={isLoading} // Disable nếu đang gọi API
+            />
+            <Typography width={'100%'} variant="body2">
+              {option.title}
+            </Typography>
+            <Box>{isLoading && <Iconify icon="eos-icons:loading" />}</Box>
+          </li>
+        );
+      }}
+      // {...other}
+      renderInput={other.renderInput}
+      defaultValue={selectedCategories}
+      options={options}
+    />
+  );
+};

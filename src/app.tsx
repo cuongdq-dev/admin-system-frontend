@@ -8,7 +8,6 @@ import { useShallow } from 'zustand/react/shallow';
 import { ButtonDismissNotify } from './components/button';
 import { INotifyStore, useNotifyStore } from './store/notify';
 import { ISetting, useSettingStore } from './store/setting';
-import { socket } from './utils/socket';
 
 export default function App() {
   useScrollToTop();

@@ -61,3 +61,7 @@ input[type='number']::-webkit-inner-spin-button {
   margin: 0;
   -webkit-appearance: none;
 }
+
+.post-item-select-categories .MuiInput-root {
+  flex-wrap: nowrap !important
+}
