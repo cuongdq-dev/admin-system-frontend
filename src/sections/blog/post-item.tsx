@@ -276,13 +276,14 @@ export const AddNewCategory = ({ siteId, postId, ...other }: AddNewCategoryProps
 
   const handleCategorySelect = async (category: any) => {
     if (loadingCategories.includes(category.id)) return;
-
     setLoadingCategories((prev) => [...prev, category.id]);
 
     const checkExist = selectedCategories.find((cate) => cate.id === category.id);
     const newCategories = checkExist
       ? selectedCategories.filter((cate) => category.id !== cate.id)
       : [...selectedCategories, category];
+
+    setSelectedCategories(newCategories);
 
     invokeRequest({
       baseURL: `${PATH_BLOG}/${postId}`,
@@ -291,10 +292,10 @@ export const AddNewCategory = ({ siteId, postId, ...other }: AddNewCategoryProps
         categories: newCategories.map((cate) => ({ id: cate.id })),
       },
       onSuccess: () => {
-        setSelectedCategories(newCategories);
         setLoadingCategories((prev) => prev.filter((id) => id !== category.id));
       },
       onHandleError: () => {
+        setSelectedCategories(selectedCategories);
         setLoadingCategories((prev) => prev.filter((id) => id !== category.id));
       },
     });
@@ -302,7 +303,6 @@ export const AddNewCategory = ({ siteId, postId, ...other }: AddNewCategoryProps
 
   return (
     <Autocomplete
-      key={JSON.stringify(selectedCategories)}
       className="post-item-select-categories"
       sx={{ width: '100%', border: 'none', boxShadow: 'none', flexWrap: 'nowrap' }}
       multiple
@@ -373,7 +373,7 @@ export const AddNewCategory = ({ siteId, postId, ...other }: AddNewCategoryProps
       }}
       // {...other}
       renderInput={other.renderInput}
-      defaultValue={selectedCategories}
+      value={selectedCategories}
       options={options}
     />
   );
