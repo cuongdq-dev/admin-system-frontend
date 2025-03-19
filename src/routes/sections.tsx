@@ -28,6 +28,7 @@ export const ServerDetailPage = lazy(() => import('src/pages/server/detail'));
 //
 export const SitesPage = lazy(() => import('src/pages/site/list'));
 export const SiteDetailPage = lazy(() => import('src/pages/site/detail'));
+export const SiteIndexingPage = lazy(() => import('src/pages/site/indexing'));
 //
 // AUTHEN PAGE
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
@@ -207,6 +208,15 @@ export const RouterConfig = [
             ),
           },
         ],
+      },
+      {
+        name: LanguageKey.indexing.listPageTitle,
+        path: 'indexing',
+        element: (
+          <PrivateRoute>
+            <SiteIndexingPage />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/language',

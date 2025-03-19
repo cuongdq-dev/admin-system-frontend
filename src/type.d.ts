@@ -274,6 +274,7 @@ declare type TableActionComponentProps = {
 };
 declare type TableComponentProps = {
   component?: 'CARD' | 'TABLE';
+  updateUrlEnabled?: boolean;
   customCard?: ({ values, index }: { values: Record<string, any>; index: number }) => JSX.Element;
   url: string;
   storeName: string;

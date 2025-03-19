@@ -29,6 +29,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { Categories } from '../components/categories';
 
 // ----------------------------------------------------------------------
+
 export function DetailView() {
   const { setNotify } = useNotifyStore.getState();
   const storeName = StoreName.SITE;
@@ -234,6 +235,7 @@ export function DetailView() {
           </Box>
           <Grid container spacing={3}>
             <TableComponent
+              updateUrlEnabled={false}
               storeName={StoreName.SITE_BLOG}
               component={'CARD'}
               url={`${PATH_SITE}/${id}/${selectCategory.slug || selectCategory.id}/posts`}

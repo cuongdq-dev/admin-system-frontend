@@ -5,6 +5,7 @@ import {
   IconButton,
   IconButtonProps,
   styled,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -88,6 +89,26 @@ export function ListView() {
       sort: false,
       type: 'text',
       width: '50%',
+    },
+    {
+      id: 'indexing',
+      label: t(LanguageKey.site.indexingItem),
+      type: 'custom',
+      align: 'center',
+      width: '10%',
+      render: ({ row }) => {
+        return (
+          <Typography
+            sx={{ cursor: 'pointer' }}
+            variant="caption"
+            onClick={() => {
+              window.open(`/indexing?site_id=${row.id}`);
+            }}
+          >
+            Sitemap
+          </Typography>
+        );
+      },
     },
   ];
 

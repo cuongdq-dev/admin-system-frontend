@@ -292,7 +292,7 @@ export const TableComponent = (props: TableComponentProps) => {
               count={metaData?.totalItems}
               rowsPerPage={metaData?.itemsPerPage}
               onPageChange={table.onChangePage}
-              rowsPerPageOptions={[10, 20, 30, 50, 100]}
+              rowsPerPageOptions={[10, 20, 30, 50, 100, 200, 500]}
               onRowsPerPageChange={table.onChangeRowsPerPage}
             />
           </Box>
