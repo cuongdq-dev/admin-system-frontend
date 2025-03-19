@@ -7,24 +7,21 @@ import {
   CardContent,
   CardHeader,
   Chip,
-  Grid,
-  IconButton,
   TextField,
   Typography,
   useMediaQuery,
 } from '@mui/material';
 import { t } from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PATH_DROPDOWN, PATH_SITE } from 'src/api-core/path';
 import { AutocompleteComponent, AutocompleteComponentWithUrl } from 'src/components/autocomplete';
-import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { fDate, formatStr } from 'src/utils/format-time';
 import { useShallow } from 'zustand/react/shallow';
-import { useNavigate } from 'react-router-dom';
 
 export function IndexingListView() {
   const navigate = useNavigate();
