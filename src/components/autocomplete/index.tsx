@@ -76,7 +76,7 @@ export const AutocompleteComponent = ({ loading = false, ...other }: RHFAutocomp
       sx={{ width: '100%', border: 'none', boxShadow: 'none' }}
       disableClearable
       disabled={loading}
-      onChange={(event, newValue) => {}}
+      // onChange={(event, newValue) => {}}
       getOptionLabel={(option) => option.title}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderOption={(props, option, { selected }) => {

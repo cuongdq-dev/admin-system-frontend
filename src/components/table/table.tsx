@@ -1,7 +1,6 @@
 import {
   Box,
   Card,
-  CircularProgress,
   Grid,
   Pagination,
   Table,
@@ -21,13 +20,12 @@ import { useAPI } from 'src/hooks/use-api';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { TimeAgo } from '../label';
+import { PageLoading } from '../loading';
 import { Scrollbar } from '../scrollbar';
 import { TableActionComponent } from './table-action';
 import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
-import { PageLoading } from '../loading';
-import { NotFoundComponent } from '../no-found-data';
 
 export const TableComponent = (props: TableComponentProps) => {
   const table = useTable();

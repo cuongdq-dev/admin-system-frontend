@@ -7,13 +7,14 @@ import {
   CardContent,
   CardHeader,
   Chip,
+  Grid,
   IconButton,
   TextField,
   Typography,
   useMediaQuery,
 } from '@mui/material';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { PATH_DROPDOWN, PATH_SITE } from 'src/api-core/path';
 import { AutocompleteComponent, AutocompleteComponentWithUrl } from 'src/components/autocomplete';
 import { Iconify } from 'src/components/iconify';
@@ -23,8 +24,11 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { fDate, formatStr } from 'src/utils/format-time';
 import { useShallow } from 'zustand/react/shallow';
+import { useNavigate } from 'react-router-dom';
 
 export function IndexingListView() {
+  const navigate = useNavigate();
+
   const storeName = StoreName.SITE_INDEXING;
   const [siteSelect, setSiteSelect] = useState<{ id: string; name?: string } | null>({
     id: new URLSearchParams(location.search).get('site_id')!,
@@ -38,6 +42,19 @@ export function IndexingListView() {
   const refreshData = () => {
     setRefreshList(storeName, refreshNumber + 1);
   };
+
+  const updateUrl = useCallback(
+    (newParams: Record<string, string | undefined>) => {
+      const queryParams = new URLSearchParams(location.search);
+
+      Object.entries(newParams).forEach(([key, value]) => {
+        if (value) queryParams.set(key, value);
+        else queryParams.delete(key);
+      });
+      navigate(`?${queryParams.toString()}`, { replace: true });
+    },
+    [location.search, navigate]
+  );
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -97,33 +114,12 @@ export function IndexingListView() {
       render: ({ row }) => {
         return (
           <Typography sx={{ textWrap: 'nowrap' }}>
-            {fDate(row.updated_at, formatStr.dateTime)}
+            {fDate(row.created_at, formatStr.dateTime)}
           </Typography>
         );
       },
     },
 
-    {
-      id: 'indexing',
-      label: t(LanguageKey.site.indexingItem),
-      type: 'custom',
-      align: 'center',
-      width: '10%',
-      sort: true,
-      render: ({ row }) => {
-        if (row.indexing)
-          return (
-            <IconButton>
-              <Iconify icon={'raphael:checked'}></Iconify>
-            </IconButton>
-          );
-        return (
-          <IconButton>
-            <Iconify icon={'ci:checkbox-unchecked'}></Iconify>
-          </IconButton>
-        );
-      },
-    },
     {
       id: 'indexStatus',
       label: 'Status',
@@ -136,6 +132,8 @@ export function IndexingListView() {
   ];
   const isMobile = useMediaQuery('(max-width:600px)');
 
+  const indexS = new URLSearchParams(location.search).get('indexStatus')!;
+
   return (
     <DashboardContent
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
@@ -145,12 +143,52 @@ export function IndexingListView() {
         name="site_index"
         multiple={false}
         options={[]}
-        sx={{ mb: 4 }}
-        onChange={(_, value) => setSiteSelect(value)}
+        onChange={(_, value) => {
+          setSiteSelect(value);
+          updateUrl({ siteId: value?.id });
+        }}
         renderInput={(params) => {
           return <TextField {...params} margin="normal" label={t(LanguageKey.site.indexingItem)} />;
         }}
       />
+
+      <Box>
+        <AutocompleteComponent
+          sx={{ my: 2 }}
+          multiple
+          disableCloseOnSelect
+          defaultValue={indexS?.split(',').map((i) => {
+            return { id: i, title: i };
+          })}
+          onChange={(event, values) => {
+            const statuValues = values.map((value: { id: string; title: string }) => {
+              return value.id;
+            });
+
+            updateUrl({ indexStatus: statuValues.toString() });
+          }}
+          clearIcon
+          options={[
+            { title: 'NEW', id: 'NEW' },
+            { title: 'INDEXING', id: 'INDEXING' },
+            { title: 'DELETED', id: 'DELETED' },
+            { title: 'VERDICT_UNSPECIFIED', id: 'VERDICT_UNSPECIFIED' },
+            { title: 'PASS', id: 'PASS' },
+            { title: 'PARTIAL', id: 'PARTIAL' },
+            { title: 'FAIL', id: 'FAIL' },
+            { title: 'NEUTRAL', id: 'NEUTRAL' },
+          ]}
+          renderInput={(params) => {
+            return <TextField {...params} label="Filter Status" />;
+          }}
+        />
+        {/* <Grid item sm={12} md={2} alignContent="center">
+            <Button onClick={() => {}} size="medium" fullWidth variant="outlined">
+              Search
+              <Iconify sx={{ ml: 2 }} icon="icon-park-twotone:search" />
+            </Button>
+          </Grid> */}
+      </Box>
 
       {siteSelect?.id && (
         <TableComponent
@@ -186,9 +224,12 @@ export function IndexingListView() {
                     options={[
                       { title: 'NEW', id: 'NEW' },
                       { title: 'INDEXING', id: 'INDEXING' },
-                      { title: 'INDEXED', id: 'INDEXED' },
-                      { title: 'ERROR', id: 'ERROR' },
                       { title: 'DELETED', id: 'DELETED' },
+                      { title: 'VERDICT_UNSPECIFIED', id: 'VERDICT_UNSPECIFIED' },
+                      { title: 'PASS', id: 'PASS' },
+                      { title: 'PARTIAL', id: 'PARTIAL' },
+                      { title: 'FAIL', id: 'FAIL' },
+                      { title: 'NEUTRAL', id: 'NEUTRAL' },
                     ]}
                     renderInput={(params) => {
                       return <TextField {...params} margin="normal" />;
@@ -229,14 +270,22 @@ export function IndexingListView() {
 const IndexStatus = ({ status }: { status?: string }) => {
   switch (status) {
     case 'NEW':
-      return <Chip size="small" variant="outlined" label={status} color="primary" />;
-    case 'INDEXED':
-      return <Chip size="small" variant="outlined" label={status} color="success" />;
-    case 'ERROR':
-      return <Chip size="small" variant="outlined" label={status} color="error" />;
+      return <Chip size="small" variant="outlined" label={status} color="primary" />; // Xanh dương - mới
+    case 'INDEXING':
+      return <Chip size="small" variant="outlined" label={status} color="info" />; // Xanh nhạt - đang index
     case 'DELETED':
-      return <Chip size="small" variant="outlined" label={status} color="default" />;
+      return <Chip size="small" variant="outlined" label={status} color="default" />; // Xám - đã xóa
+    case 'PASS':
+      return <Chip size="small" variant="outlined" label={status} color="success" />; // Xanh lá - index thành công
+    case 'FAIL':
+      return <Chip size="small" variant="outlined" label={status} color="error" />; // Đỏ - lỗi
+    case 'PARTIAL':
+      return <Chip size="small" variant="outlined" label={status} color="warning" />; // Vàng - chưa hoàn chỉnh
+    case 'NEUTRAL':
+      return <Chip size="small" variant="outlined" label={status} color="secondary" />; // Tím - bị loại trừ
+    case 'VERDICT_UNSPECIFIED':
+      return <Chip size="small" variant="outlined" label={status} color="default" />; // Xám - không rõ trạng thái
     default:
-      return <Chip size="small" variant="outlined" label={status} color="warning" />;
+      return <Chip size="small" variant="outlined" label={status} color="warning" />; // Mặc định vàng - không xác định
   }
 };
