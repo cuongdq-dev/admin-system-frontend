@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 import { HttpMethod } from 'src/api-core';
 import { ButtonDelete } from 'src/components/button';
 import { Iconify } from 'src/components/iconify';
-import { usePageStore } from 'src/store/page';
 import { fRelativeTime } from 'src/utils/format-time';
 
 type Props = {
@@ -23,8 +22,7 @@ type Props = {
   handleClickOpenForm: (row: ITransition, action: HttpMethod) => void;
 };
 export const SiteItem = (props: Props) => {
-  const { values, index, storeName, handleClickOpenForm } = props;
-  const { deleteItem } = usePageStore.getState();
+  const { values, handleClickOpenForm } = props;
 
   const navigate = useNavigate();
 
@@ -34,7 +32,11 @@ export const SiteItem = (props: Props) => {
         avatar={<Avatar aria-label="recipe">{values.name?.slice(0, 1)}</Avatar>}
         action={
           <Box display={'flex'}>
-            <IconButton size="small" onClick={() => navigate(values?.id!)} aria-label="settings">
+            <IconButton
+              size="small"
+              onClick={() => window.open(`/indexing?site_id=${values.id}`)}
+              aria-label="settings"
+            >
               <Iconify icon={'solar:to-pip-linear'} />
             </IconButton>
             <IconButton size="small" onClick={() => handleClickOpenForm(values, HttpMethod.PATCH)}>
@@ -44,7 +46,7 @@ export const SiteItem = (props: Props) => {
             <ButtonDelete size="small" withLoading={false} handleDelete={() => {}} />
           </Box>
         }
-        title={values.name}
+        title={<Typography onClick={() => navigate(values.id!)}>{values.name}</Typography>}
         subheader={fRelativeTime(values.created_at)}
       />
 

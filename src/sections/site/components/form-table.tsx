@@ -86,7 +86,7 @@ export const SiteForm = (props: Props) => {
               <TextField {...params} margin="normal" label={t(LanguageKey.site.categoriesItem)} />
             )}
           />
-          <RHFAutocompleteWithApi
+          {/* <RHFAutocompleteWithApi
             baseUrl="/dropdown/posts"
             defaultValue={defaultValues?.posts?.map((post) => {
               console.log(post);
@@ -98,7 +98,7 @@ export const SiteForm = (props: Props) => {
             renderInput={(params) => (
               <TextField {...params} margin="normal" label={t(LanguageKey.site.postsItem)} />
             )}
-          />
+          /> */}
         </Box>
       </DialogContent>
       <DialogActions style={{ padding: 20 }}>
