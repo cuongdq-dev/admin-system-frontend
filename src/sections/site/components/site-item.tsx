@@ -34,7 +34,9 @@ export const SiteItem = (props: Props) => {
           <Box display={'flex'}>
             <IconButton
               size="small"
-              onClick={() => window.open(`/indexing?site_id=${values.id}`)}
+              onClick={() =>
+                window.open(`/google-index?site_id=${values.id}&site_name=${values.name}`)
+              }
               aria-label="settings"
             >
               <Iconify icon={'solar:to-pip-linear'} />

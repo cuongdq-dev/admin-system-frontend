@@ -88,21 +88,7 @@ export const LanguageKey = {
     requestIndex: 'site_request_index',
     createdAtItem: 'site_created_at_item',
   },
-  indexing: {
-    nav: 'indexing_nav',
-    addNewButton: 'indexing_new_button',
-    listPageTitle: 'indexing_list_page',
-    detailPageTitle: 'indexing_detail_page',
-    tableTitle: 'indexing_table_title',
-    detailTitle: 'indexing_detail_title',
-    domainItem: 'indexing_domain_item',
-    nameItem: 'indexing_name_item',
-    descriptionItem: 'indexing_description_item',
-    postsItem: 'indexing_posts_item',
-    tokenItem: 'indexing_token_item',
-    autoPostItem: 'indexing_auto_post_item',
-    categoriesItem: 'indexing_categories_item',
-  },
+
   product: {
     nav: 'product_nav',
     listPageTitle: 'product_list_page',
@@ -308,6 +294,15 @@ export const LanguageKey = {
     imageRun: 'docker_image_run',
     imageStop: 'docker_image_stop',
   },
+
+  googleConsole: {
+    nav: 'google_console_nav',
+    nav_website: 'google_website_nav',
+    nav_sitemap: 'google_sitemap_nav',
+    nav_indexing: 'google_indexing_nav',
+
+    listPageTitle: 'google_console_list_page',
+  },
 };
 
 export const StoreName = {
@@ -321,10 +316,13 @@ export const StoreName = {
   CATEGORY: 'category_store',
   SITE: 'site_store',
   SITE_CATEGORIES: 'site_categories_store',
-  SITE_INDEXING: 'site_indexing_store',
   SITE_BLOG: 'site_blog_store',
   PROFILE: 'profile_store',
   BLOG: 'blog_store',
+
+  GOOGLE_INDEXING: 'google_indexing_store',
+  GOOGLE_SITEMAP: 'google_sitemap_store',
+  GOOGLE_WEBSITE: 'google_website_store',
 };
 
 export const Breadcrumbs = {

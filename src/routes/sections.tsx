@@ -42,6 +42,16 @@ export const ColorPage = lazy(() => import('src/pages/color'));
 //
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
+//GOOGLE PAGE
+export const GoogleWebsiteDetail = lazy(() => import('src/pages/google/website/detail'));
+export const GoogleWebsiteList = lazy(() => import('src/pages/google/website/list'));
+
+export const GoogleSitemapDetail = lazy(() => import('src/pages/google/sitemap/detail'));
+export const GoogleSitemapList = lazy(() => import('src/pages/google/sitemap/list'));
+
+export const GoogleIndexingDetail = lazy(() => import('src/pages/google/indexing/detail'));
+export const GoogleIndexingList = lazy(() => import('src/pages/google/indexing/list'));
+
 // ----------------------------------------------------------------------
 
 const renderFallback = (
@@ -209,8 +219,41 @@ export const RouterConfig = [
           },
         ],
       },
+
       {
-        name: LanguageKey.indexing.listPageTitle,
+        name: LanguageKey.googleConsole.listPageTitle,
+        children: [
+          {
+            path: '/google-index',
+            element: (
+              <PrivateRoute>
+                <GoogleIndexingList />
+              </PrivateRoute>
+            ),
+          },
+
+          {
+            path: '/google-website',
+            element: (
+              <PrivateRoute>
+                <GoogleWebsiteList />
+              </PrivateRoute>
+            ),
+          },
+
+          {
+            path: '/google-sitemap',
+            element: (
+              <PrivateRoute>
+                <GoogleSitemapList />
+              </PrivateRoute>
+            ),
+          },
+        ],
+      },
+
+      {
+        name: LanguageKey.googleConsole.listPageTitle,
         path: 'indexing',
         element: (
           <PrivateRoute>

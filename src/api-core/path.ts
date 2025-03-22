@@ -11,6 +11,10 @@ export const PATH_REGISTER = '/auth/email/register';
 export const PATH_LANGUAGE = '/i18n';
 // SITE
 export const PATH_SITE = '/site';
+// GOOGLE
+export const PATH_GOOGLE_INDEXING_LIST = '/google/indexing';
+export const PATH_GOOGLE_SITEMAP_LIST = '/google/sitemaps';
+export const PATH_GOOGLE_WEBSITE_LIST = '/google/websites';
 
 export const PATH_CATEGORY = '/category';
 export const PATH_DROPDOWN = '/dropdown';

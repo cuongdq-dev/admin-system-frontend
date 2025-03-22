@@ -38,6 +38,28 @@ export const navData = [
     icon: icon('ic-site'),
   },
 
+  {
+    title: LanguageKey.googleConsole.nav,
+    path: '/google-console',
+    icon: icon('ic-google-console'),
+    children: [
+      {
+        path: '/google-website',
+        title: LanguageKey.googleConsole.nav_website,
+        icon: icon('ic-google-website'),
+      },
+      {
+        path: '/google-sitemap',
+        title: LanguageKey.googleConsole.nav_sitemap,
+        icon: icon('ic-sitemap'),
+      },
+      {
+        path: '/google-index',
+        title: LanguageKey.googleConsole.nav_indexing,
+        icon: icon('ic-google-search'),
+      },
+    ],
+  },
   // {
   //   title: 'Color',
   //   path: '/color',

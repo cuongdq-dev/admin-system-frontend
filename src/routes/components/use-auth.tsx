@@ -11,7 +11,6 @@ export const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-
 export const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = getCookie('token');
   if (isAuthenticated) {

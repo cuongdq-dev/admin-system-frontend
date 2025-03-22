@@ -1,22 +1,9 @@
-import {
-  CardContent,
-  CardHeader,
-  DialogTitle,
-  IconButton,
-  IconButtonProps,
-  styled,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
-import Card from '@mui/material/Card';
+import { DialogTitle, Typography, useMediaQuery } from '@mui/material';
 import { t } from 'i18next';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { HttpMethod } from 'src/api-core';
 import { PATH_SITE } from 'src/api-core/path';
-import { IconButtonDelete } from 'src/components/button';
 import { PopupFormTable } from 'src/components/form/form-table';
-import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
@@ -24,7 +11,6 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { SiteForm } from '../components/form-table';
-import { fRelativeTime } from 'src/utils/format-time';
 import { SiteItem } from '../components/site-item';
 
 type FormConfigState = {
@@ -102,7 +88,7 @@ export function ListView() {
             sx={{ cursor: 'pointer' }}
             variant="caption"
             onClick={() => {
-              window.open(`/indexing?site_id=${row.id}`);
+              window.open(`/google-index?site_id=${row.id}&site_name=${row.name}`);
             }}
           >
             Sitemap
@@ -177,31 +163,3 @@ export function ListView() {
     </DashboardContent>
   );
 }
-
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme }) => ({
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-  variants: [
-    {
-      props: ({ expand }) => !expand,
-      style: {
-        transform: 'rotate(0deg)',
-      },
-    },
-    {
-      props: ({ expand }) => !!expand,
-      style: {
-        transform: 'rotate(180deg)',
-      },
-    },
-  ],
-}));

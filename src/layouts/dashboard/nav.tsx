@@ -1,6 +1,6 @@
 import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
@@ -16,12 +16,27 @@ import { varAlpha } from 'src/theme/styles';
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { Divider, IconButton } from '@mui/material';
+import {
+  Collapse,
+  Divider,
+  IconButton,
+  List,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 import { t } from 'i18next';
 import { Iconify } from 'src/components/iconify';
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 export type NavContentProps = {
-  data: { path: string; title: string; icon: React.ReactNode; info?: React.ReactNode }[];
+  data: {
+    path: string;
+    title: string;
+    icon: React.ReactNode;
+    info?: React.ReactNode;
+    children?: { path: string; title: string; icon: React.ReactNode }[];
+  }[];
   slots?: { topArea?: React.ReactNode; bottomArea?: React.ReactNode };
   workspaces: WorkspacesPopoverProps['data'];
   sx?: SxProps<Theme>;
@@ -138,6 +153,8 @@ export function NavMobile(props: NavMobileProps) {
 export function NavContent(props: NavContent) {
   const pathname = usePathname();
   const { data, slots, sx, open = true, mode } = props;
+  const [menuSelect, setMenuSelect] = useState<number | undefined>(0);
+
   return (
     <>
       <Box sx={{ alignSelf: open ? '' : 'center' }}>
@@ -148,74 +165,156 @@ export function NavContent(props: NavContent) {
       <Scrollbar fillContent>
         <Box component="nav" display="flex" flex="1 1 auto" flexDirection="column" sx={sx}>
           <Box component="ul" gap={0.5} display="flex" flexDirection="column">
-            {data.map((item) => {
+            {data.map((item, index) => {
               const isActived = item.path === pathname;
-              return (
-                <ListItem disableGutters disablePadding key={item.title}>
-                  <ListItemButton
-                    disableGutters
-                    component={RouterLink}
-                    href={item.path}
-                    sx={{
-                      pl: 2,
-                      py: 1,
-                      gap: open ? 2 : 0.5,
-                      pr: 1.5,
-                      borderRadius: 0.75,
-                      typography: 'body2',
-                      fontWeight: 'fontWeightMedium',
-                      color: 'var(--layout-nav-item-color)',
-                      minHeight: 'var(--layout-nav-item-height)',
 
-                      ...(!open &&
-                        mode == 'desktop' && {
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignContent: 'center',
-                          justifyItems: 'center',
-                          alignItems: 'center',
-                        }),
-                      ...(isActived && {
-                        fontWeight: 'fontWeightSemiBold',
-                        bgcolor: 'var(--layout-nav-item-active-bg)',
-                        color: 'var(--layout-nav-item-active-color)',
-                        '&:hover': {
-                          bgcolor: 'var(--layout-nav-item-hover-bg)',
-                        },
-                      }),
-                    }}
-                  >
-                    <Box
-                      component="span"
+              return (
+                <>
+                  <ListItem onClick={() => {}} disableGutters disablePadding key={item.title}>
+                    <ListItemButton
+                      disableGutters
+                      onClick={() => {
+                        setMenuSelect(index == menuSelect ? undefined : index);
+                      }}
+                      component={Number(item.children?.length) > 0 ? 'span' : RouterLink}
+                      href={item.path}
                       sx={{
-                        width: 24,
-                        height: 24,
-                        color: isActived ? 'primary.darker' : '',
+                        pl: 2,
+                        py: 1,
+                        gap: open ? 2 : 0.5,
+                        pr: 1.5,
+                        borderRadius: 0.75,
+                        typography: 'body2',
+                        fontWeight: 'fontWeightMedium',
+                        color: 'var(--layout-nav-item-color)',
+                        minHeight: 'var(--layout-nav-item-height)',
+
+                        ...(!open &&
+                          mode == 'desktop' && {
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            justifyItems: 'center',
+                            alignItems: 'center',
+                          }),
+                        ...(isActived && {
+                          fontWeight: 'fontWeightSemiBold',
+                          bgcolor: 'var(--layout-nav-item-active-bg)',
+                          color: 'var(--layout-nav-item-active-color)',
+                          '&:hover': {
+                            bgcolor: 'var(--layout-nav-item-hover-bg)',
+                          },
+                        }),
                       }}
                     >
-                      {item.icon}
-                    </Box>
-                    <Box
-                      sx={(theme) => {
-                        return {
-                          textOverflow: 'ellipsis',
-                          width: '100%',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          color: isActived ? theme.vars.palette.primary.darker : '',
-                          fontSize: open ? '' : theme.typography.button.fontSize,
-                          fontWeight: theme.typography.fontWeightSemiBold,
-                        };
-                      }}
-                      component="span"
-                      flexGrow={1}
-                    >
-                      {t(item.title)}
-                    </Box>
-                    {item.info && item.info}
-                  </ListItemButton>
-                </ListItem>
+                      <Box
+                        component="span"
+                        sx={{
+                          width: 24,
+                          height: 24,
+                          color: isActived ? 'primary.darker' : '',
+                        }}
+                      >
+                        {item.icon}
+                      </Box>
+                      <Box
+                        sx={(theme) => {
+                          return {
+                            textOverflow: 'ellipsis',
+                            width: '100%',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            color: isActived ? theme.vars.palette.primary.darker : '',
+                            fontSize: open ? '' : theme.typography.button.fontSize,
+                            fontWeight: theme.typography.fontWeightSemiBold,
+                            display: open ? 'block' : 'none',
+                          };
+                        }}
+                        component="span"
+                        flexGrow={1}
+                      >
+                        {t(item.title)}
+                      </Box>
+                      {item.info && item.info}
+                    </ListItemButton>
+                  </ListItem>
+                  <Collapse
+                    in={menuSelect == index || !!item.children?.find((c) => c.path == pathname)}
+                    timeout="auto"
+                  >
+                    <List component="div" disablePadding>
+                      {item?.children?.map((childItem) => {
+                        const childrenActived = childItem.path === pathname;
+                        return (
+                          <ListItemButton
+                            disableGutters
+                            component={RouterLink}
+                            href={childItem.path}
+                            sx={{
+                              py: 1,
+                              pl: 1,
+                              width: '80%',
+                              float: 'right',
+                              gap: open ? 2 : 0.5,
+                              borderRadius: 0.75,
+                              typography: 'body2',
+                              fontWeight: 'fontWeightMedium',
+                              color: 'var(--layout-nav-item-color)',
+
+                              ...(!open &&
+                                mode == 'desktop' && {
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'center',
+                                  alignContent: 'center',
+                                  justifyItems: 'center',
+                                  alignItems: 'center',
+                                }),
+                              ...(childrenActived && {
+                                fontWeight: 'fontWeightSemiBold',
+                                bgcolor: 'var(--layout-nav-item-active-bg)',
+                                color: 'var(--layout-nav-item-active-color)',
+                                '&:hover': {
+                                  bgcolor: 'var(--layout-nav-item-hover-bg)',
+                                },
+                              }),
+                            }}
+                          >
+                            <Box
+                              component="span"
+                              sx={{
+                                width: 24,
+                                height: 24,
+                                color: childrenActived ? 'primary.darker' : '',
+                              }}
+                            >
+                              {childItem.icon}
+                            </Box>
+                            <Box
+                              sx={(theme) => {
+                                return {
+                                  textOverflow: 'ellipsis',
+                                  width: '100%',
+                                  overflow: 'hidden',
+                                  whiteSpace: 'nowrap',
+                                  color: childrenActived ? theme.vars.palette.primary.darker : '',
+                                  fontSize: open ? '' : theme.typography.button.fontSize,
+                                  fontWeight: theme.typography.fontWeightSemiBold,
+                                  display: open ? 'block' : 'none',
+                                };
+                              }}
+                              component="span"
+                              flexGrow={1}
+                            >
+                              {t(childItem.title)}
+                            </Box>
+                          </ListItemButton>
+                        );
+                      })}
+                    </List>
+                  </Collapse>
+                </>
               );
             })}
           </Box>
