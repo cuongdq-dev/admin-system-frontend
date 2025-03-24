@@ -300,7 +300,7 @@ export const LanguageKey = {
     nav_website: 'google_website_nav',
     nav_sitemap: 'google_sitemap_nav',
     nav_indexing: 'google_indexing_nav',
-
+    nav_logs: 'google_logs_nav',
     listPageTitle: 'google_console_list_page',
   },
 };
@@ -323,6 +323,7 @@ export const StoreName = {
   GOOGLE_INDEXING: 'google_indexing_store',
   GOOGLE_SITEMAP: 'google_sitemap_store',
   GOOGLE_WEBSITE: 'google_website_store',
+  GOOGLE_LOGS: 'google_logs_store',
 };
 
 export const Breadcrumbs = {

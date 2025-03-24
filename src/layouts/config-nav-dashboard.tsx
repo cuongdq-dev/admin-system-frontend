@@ -58,6 +58,12 @@ export const navData = [
         title: LanguageKey.googleConsole.nav_indexing,
         icon: icon('ic-google-search'),
       },
+
+      {
+        path: '/google-logs',
+        title: LanguageKey.googleConsole.nav_logs,
+        icon: icon('ic-logs'),
+      },
     ],
   },
   // {

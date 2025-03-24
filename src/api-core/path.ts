@@ -15,6 +15,7 @@ export const PATH_SITE = '/site';
 export const PATH_GOOGLE_INDEXING_LIST = '/google/indexing';
 export const PATH_GOOGLE_SITEMAP_LIST = '/google/sitemaps';
 export const PATH_GOOGLE_WEBSITE_LIST = '/google/websites';
+export const PATH_GOOGLE_LOGS_LIST = '/google/logs';
 
 export const PATH_CATEGORY = '/category';
 export const PATH_DROPDOWN = '/dropdown';

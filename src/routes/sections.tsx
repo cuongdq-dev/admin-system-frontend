@@ -43,6 +43,9 @@ export const ColorPage = lazy(() => import('src/pages/color'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 //GOOGLE PAGE
+export const GoogleLogsDetail = lazy(() => import('src/pages/google/logs/detail'));
+export const GoogleLogsList = lazy(() => import('src/pages/google/logs/list'));
+
 export const GoogleWebsiteDetail = lazy(() => import('src/pages/google/website/detail'));
 export const GoogleWebsiteList = lazy(() => import('src/pages/google/website/list'));
 
@@ -237,6 +240,15 @@ export const RouterConfig = [
             element: (
               <PrivateRoute>
                 <GoogleWebsiteList />
+              </PrivateRoute>
+            ),
+          },
+
+          {
+            path: '/google-logs',
+            element: (
+              <PrivateRoute>
+                <GoogleLogsList />
               </PrivateRoute>
             ),
           },

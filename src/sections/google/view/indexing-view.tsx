@@ -28,7 +28,7 @@ export function IndexingListView() {
 
   const storeName = StoreName.GOOGLE_INDEXING;
   const [siteSelect, setSiteSelect] = useState<{ id: string; title?: string } | undefined | null>(
-    new URLSearchParams(location.search)
+    new URLSearchParams(location.search).get('site_id')
       ? {
           id: new URLSearchParams(location.search).get('site_id')!,
           title: new URLSearchParams(location.search).get('site_name')!,
