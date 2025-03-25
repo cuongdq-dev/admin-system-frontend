@@ -176,7 +176,7 @@ export function DetailView() {
             <Card sx={{ position: 'sticky', top: '80px' }}>
               <Box sx={{ position: 'relative', pt: 'calc(100% * 3 / 6)' }}>
                 <Avatar
-                  alt={data?.thumbnail?.data}
+                  alt={data?.thumbnail?.slug}
                   src={data?.thumbnail?.url}
                   sx={{ left: 24, zIndex: 9, bottom: -24, position: 'absolute' }}
                 />
@@ -184,7 +184,7 @@ export function DetailView() {
                 <Box
                   component="img"
                   alt={data?.title}
-                  src={`${data?.thumbnail?.data}`}
+                  src={`${data?.thumbnail?.url}`}
                   sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
                 />
               </Box>

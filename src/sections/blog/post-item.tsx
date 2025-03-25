@@ -122,7 +122,7 @@ export function PostItem(
     <Box
       component="img"
       alt={post.title}
-      src={`${post.thumbnail?.data}`}
+      src={`${post.thumbnail?.url}`}
       sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
     />
   );
