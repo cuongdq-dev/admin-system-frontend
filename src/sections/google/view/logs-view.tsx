@@ -78,7 +78,7 @@ export function GoogleLogsListView() {
 
     {
       id: 'google_index',
-      label: 'Google Console URL',
+      label: 'GC URL',
       sort: false,
       type: 'custom',
       render: ({ row }) => {
@@ -100,6 +100,15 @@ export function GoogleLogsListView() {
       },
     },
 
+    {
+      id: 'type',
+      label: 'Type',
+      align: 'center',
+      type: 'custom',
+      render: ({ row }) => {
+        return <Chip size="small" variant="filled" label={row.type} color="default" />;
+      },
+    },
     {
       id: 'status',
       label: 'Status',
