@@ -43,11 +43,11 @@ export const navData = [
     path: '/google-console',
     icon: icon('ic-google-console'),
     children: [
-      {
-        path: '/google-website',
-        title: LanguageKey.googleConsole.nav_website,
-        icon: icon('ic-google-website'),
-      },
+      // {
+      //   path: '/google-website',
+      //   title: LanguageKey.googleConsole.nav_website,
+      //   icon: icon('ic-google-website'),
+      // },
       {
         path: '/google-sitemap',
         title: LanguageKey.googleConsole.nav_sitemap,

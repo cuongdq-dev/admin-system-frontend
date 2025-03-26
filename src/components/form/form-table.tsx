@@ -18,6 +18,7 @@ type FormProps = {
   baseUrl: string;
   action?: HttpMethod;
   handleCloseForm: () => void;
+  handleSuccess?: () => void;
   render?: ({ isSubmitting }: { isSubmitting: boolean }) => JSX.Element;
   rowId?: string;
   defaultValues?: Record<string, any>;
@@ -28,7 +29,7 @@ export const PopupFormTable = (props: FormProps) => {
   const { editItem, addItem, deleteItem } = usePageStore.getState();
   const { action, baseUrl, defaultValues, schema = {}, rowId, open, storeName } = props;
   const { setNotify } = useNotifyStore.getState();
-  const { render, handleCloseForm } = props;
+  const { render, handleSuccess, handleCloseForm } = props;
   const url = baseUrl + (action === HttpMethod.PATCH ? '/update/' + rowId : '/create');
   const methods = useForm({ resolver: yupResolver(Yup.object().shape(schema)) });
   const {
@@ -74,6 +75,10 @@ export const PopupFormTable = (props: FormProps) => {
         setNotify({ title: t(LanguageKey.notify.successUpdate), options: { variant: 'success' } });
         reset();
         handleCloseForm();
+        if (handleSuccess) {
+          handleSuccess();
+          return;
+        }
         if (action === HttpMethod.POST) addItem(storeName, res);
         if (action === HttpMethod.PATCH) {
           editItem(storeName, res);
