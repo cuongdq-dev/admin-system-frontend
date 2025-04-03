@@ -1,10 +1,28 @@
 export const LanguageKey = {
+  nav: {
+    dashboard: 'dashboard_nav',
+    user: 'user_nav',
+    server: 'server_nav',
+    site: 'site_nav',
+    product: 'product_nav',
+    blog: 'blog_nav',
+    blogArchived: 'blog_archived_nav',
+    blogAll: 'blog_all_nav',
+    category: 'category_nav',
+    language: 'language_nav',
+    color: 'color_nav',
+    googleConsole: 'google_console_nav',
+    googleWebsite: 'google_website_nav',
+    googleSitemap: 'google_sitemap_nav',
+    googleIndexing: 'google_indexing_nav',
+    googleLogs: 'google_logs_nav',
+    setting: 'setting_nav',
+  },
+
   dashboard: {
-    nav: 'dashboard_nav',
     pageTitle: 'dashboard_page',
   },
   user: {
-    nav: 'user_nav',
     listPageTitle: 'user_list_page',
     addNewButton: 'user_new_button',
     detailPageTitle: 'user_detail_page',
@@ -14,7 +32,6 @@ export const LanguageKey = {
     tabProfile: 'user_tab_profile',
   },
   server: {
-    nav: 'server_nav',
     addNewButton: 'server_new_button',
     connectServerButton: 'connect_server_button',
     listPageTitle: 'server_list_page',
@@ -64,7 +81,6 @@ export const LanguageKey = {
   },
 
   site: {
-    nav: 'site_nav',
     addNewButton: 'site_new_button',
     listPageTitle: 'site_list_page',
     detailPageTitle: 'site_detail_page',
@@ -90,7 +106,6 @@ export const LanguageKey = {
   },
 
   product: {
-    nav: 'product_nav',
     listPageTitle: 'product_list_page',
     detailPageTitle: 'product_detail_page',
     addNewButton: 'product_new_button',
@@ -98,7 +113,6 @@ export const LanguageKey = {
     detailTitle: 'product_detail_title',
   },
   blog: {
-    nav: 'blog_nav',
     listPageTitle: 'blog_list_page',
     detailPageTitle: 'blog_detail_page',
     addNewButton: 'blog_new_button',
@@ -114,7 +128,6 @@ export const LanguageKey = {
     draftButton: 'blog_draft_button',
   },
   category: {
-    nav: 'category_nav',
     listPageTitle: 'category_list_page',
     addNewButton: 'category_new_button',
     slugItem: 'category_slug_item',
@@ -124,7 +137,6 @@ export const LanguageKey = {
     sitesItem: 'category_sites_item',
   },
   language: {
-    nav: 'language_nav',
     listPageTitle: 'language_list_page',
     tableTitle: 'language_table_title',
     detailTitle: 'language_detail_title',
@@ -296,11 +308,6 @@ export const LanguageKey = {
   },
 
   googleConsole: {
-    nav: 'google_console_nav',
-    nav_website: 'google_website_nav',
-    nav_sitemap: 'google_sitemap_nav',
-    nav_indexing: 'google_indexing_nav',
-    nav_logs: 'google_logs_nav',
     listPageTitle: 'google_console_list_page',
   },
 };
@@ -319,6 +326,7 @@ export const StoreName = {
   SITE_BLOG: 'site_blog_store',
   PROFILE: 'profile_store',
   BLOG: 'blog_store',
+  BLOG_ARCHIVED: 'blog_archived_store',
 
   GOOGLE_INDEXING: 'google_indexing_store',
   GOOGLE_SITEMAP: 'google_sitemap_store',

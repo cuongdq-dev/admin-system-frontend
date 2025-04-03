@@ -1,4 +1,3 @@
-import { t } from 'i18next';
 import { SvgColor } from 'src/components/svg-color';
 import { LanguageKey } from 'src/constants';
 
@@ -10,71 +9,78 @@ const icon = (name: string) => (
 
 export const navData = [
   {
-    title: LanguageKey.dashboard.nav,
+    title: LanguageKey.nav.dashboard,
     path: '/',
     icon: icon('ic-analytics'),
   },
   {
-    title: LanguageKey.blog.nav,
-    path: '/blog',
+    title: LanguageKey.nav.blog,
     icon: icon('ic-blog'),
+    path: '/blog-group',
+    children: [
+      {
+        path: '/blog',
+        icon: icon('ic-blog-active'),
+        title: LanguageKey.nav.blogAll,
+      },
+      {
+        path: '/blog-archived',
+        icon: icon('ic-blog-old'),
+        title: LanguageKey.nav.blogArchived,
+      },
+    ],
   },
 
   {
-    title: LanguageKey.category.nav,
+    title: LanguageKey.nav.category,
     path: '/category',
     icon: icon('ic-category'),
   },
 
-  // {
-  //   title: LanguageKey.server.nav,
-  //   path: '/server',
-  //   icon: icon('ic-server'),
-  // },
-
   {
-    title: LanguageKey.site.nav,
+    title: LanguageKey.nav.site,
     path: '/site',
     icon: icon('ic-site'),
   },
 
   {
-    title: LanguageKey.googleConsole.nav,
+    title: LanguageKey.nav.googleConsole,
     path: '/google-console',
     icon: icon('ic-google-console'),
     children: [
-      // {
-      //   path: '/google-website',
-      //   title: LanguageKey.googleConsole.nav_website,
-      //   icon: icon('ic-google-website'),
-      // },
       {
         path: '/google-sitemap',
-        title: LanguageKey.googleConsole.nav_sitemap,
+        title: LanguageKey.nav.googleSitemap,
         icon: icon('ic-sitemap'),
       },
       {
         path: '/google-index',
-        title: LanguageKey.googleConsole.nav_indexing,
+        title: LanguageKey.nav.googleIndexing,
         icon: icon('ic-google-search'),
       },
 
       {
         path: '/google-logs',
-        title: LanguageKey.googleConsole.nav_logs,
+        title: LanguageKey.nav.googleLogs,
         icon: icon('ic-logs'),
       },
     ],
   },
-  // {
-  //   title: 'Color',
-  //   path: '/color',
-  //   icon: icon('ic-color'),
-  // },
-
-  // {
-  //   title: LanguageKey.language.nav,
-  //   path: '/language',
-  //   icon: icon('ic-language'),
-  // },
+  {
+    title: LanguageKey.nav.setting,
+    path: '/google-console',
+    icon: icon('ic-setting'),
+    children: [
+      {
+        title: LanguageKey.nav.language,
+        path: '/language',
+        icon: icon('ic-language'),
+      },
+      {
+        title: LanguageKey.nav.color,
+        path: '/color',
+        icon: icon('ic-color'),
+      },
+    ],
+  },
 ];

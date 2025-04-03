@@ -1,6 +1,8 @@
 import {
+  Backdrop,
   Box,
   Card,
+  CircularProgress,
   Grid,
   Pagination,
   Table,
@@ -12,9 +14,9 @@ import {
   Typography,
 } from '@mui/material';
 import { t } from 'i18next';
+import queryString from 'query-string';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { invokeRequest } from 'src/api-core';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { usePageStore } from 'src/store/page';
@@ -52,30 +54,13 @@ export const TableComponent = (props: TableComponentProps) => {
   }, [refreshNumber]);
 
   useEffect(() => {
-    metaData && setFetchingList(storeName, true);
+    setFetchingList(storeName, true);
   }, [window.location.search]);
 
-  useEffect(() => {
-    if (isFetching) {
-      invokeRequest({
-        baseURL: url + '/list' + window.location.search,
-        onSuccess: (res) => setList(storeName, { ...res, isFetching: false, isLoading: false }),
-        onHandleError: () => {
-          setLoadingList(storeName, false);
-          setFetchingList(storeName, false);
-        },
-      });
-    }
-  }, [isFetching, url]);
-
   useAPI({
-    clearRequest:
-      !loading &&
-      datasource &&
-      fetchOn &&
-      new Date().getTime() - new Date(fetchOn).getTime() < 5 * 60 * 1000,
     refreshNumber: refreshNumber,
-    baseURL: url + '/list' + window.location.search,
+    baseURL: url + '/list',
+    params: queryString.parse(window.location.search),
     onSuccess: (res) => setList(storeName, { ...res, isFetching: false, isLoading: false }),
     onHandleError: () => {
       setLoadingList(storeName, false);
@@ -176,6 +161,12 @@ export const TableComponent = (props: TableComponentProps) => {
           },
         }}
       >
+        <Backdrop
+          sx={(theme) => ({ position: 'absolute', zIndex: theme.zIndex.drawer + 1 })}
+          open={isFetching!}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
@@ -226,7 +217,11 @@ export const TableComponent = (props: TableComponentProps) => {
                             align="center"
                             width={60}
                             minWidth={60}
-                            value={index + 1}
+                            value={
+                              index +
+                              1 +
+                              (Number(metaData?.currentPage) - 1) * Number(metaData?.itemsPerPage)
+                            }
                             type={'text'}
                             key={'_index' + '_' + index}
                           />

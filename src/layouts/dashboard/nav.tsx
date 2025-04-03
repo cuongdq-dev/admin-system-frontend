@@ -16,16 +16,7 @@ import { varAlpha } from 'src/theme/styles';
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import {
-  Collapse,
-  Divider,
-  IconButton,
-  List,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-} from '@mui/material';
+import { Collapse, Divider, IconButton } from '@mui/material';
 import { t } from 'i18next';
 import { Iconify } from 'src/components/iconify';
 import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
@@ -42,7 +33,11 @@ export type NavContentProps = {
   sx?: SxProps<Theme>;
 };
 
-type NavContent = NavContentProps & { open?: boolean; mode: 'mobile' | 'desktop' };
+type NavContent = NavContentProps & {
+  open?: boolean;
+  mode: 'mobile' | 'desktop';
+  handleOpen?: (open: boolean) => void;
+};
 type NavDesktopProps = NavContentProps & {
   open: boolean;
   layoutQuery: Breakpoint;
@@ -114,7 +109,14 @@ export function NavDesktop(props: NavDesktopProps) {
           />
         </IconButton>
       </Box>
-      <NavContent mode="desktop" open={open} data={data} slots={slots} workspaces={workspaces} />
+      <NavContent
+        mode="desktop"
+        handleOpen={handleOpen}
+        open={open}
+        data={data}
+        slots={slots}
+        workspaces={workspaces}
+      />
     </Box>
   );
 }
@@ -152,8 +154,8 @@ export function NavMobile(props: NavMobileProps) {
 
 export function NavContent(props: NavContent) {
   const pathname = usePathname();
-  const { data, slots, sx, open = true, mode } = props;
-  const [menuSelect, setMenuSelect] = useState<number | undefined>(0);
+  const { data, slots, sx, open = true, mode, handleOpen } = props;
+  const [menuSelect, setMenuSelect] = useState<number | undefined>(undefined);
 
   return (
     <>
@@ -179,10 +181,8 @@ export function NavContent(props: NavContent) {
                       component={Number(item.children?.length) > 0 ? 'span' : RouterLink}
                       href={item.path}
                       sx={{
-                        pl: 2,
-                        py: 1,
+                        p: 1.5,
                         gap: open ? 2 : 0.5,
-                        pr: 1.5,
                         borderRadius: 0.75,
                         typography: 'body2',
                         fontWeight: 'fontWeightMedium',
@@ -237,50 +237,72 @@ export function NavContent(props: NavContent) {
                         {t(item.title)}
                       </Box>
                       {item.info && item.info}
+                      {open && Number(item.children?.length) > 0 && (
+                        <Iconify
+                          icon={
+                            menuSelect == index || !!item.children?.find((c) => c.path == pathname)
+                              ? 'eva:chevron-up-fill'
+                              : 'eva:chevron-down-fill'
+                          }
+                        />
+                      )}
                     </ListItemButton>
                   </ListItem>
                   <Collapse
                     in={menuSelect == index || !!item.children?.find((c) => c.path == pathname)}
                     timeout="auto"
                   >
-                    <List component="div" disablePadding>
-                      {item?.children?.map((childItem) => {
-                        const childrenActived = childItem.path === pathname;
-                        return (
+                    {item?.children?.map((childItem) => {
+                      const childrenActived = childItem.path === pathname;
+                      return (
+                        <ListItem disableGutters disablePadding>
                           <ListItemButton
                             disableGutters
                             component={RouterLink}
                             href={childItem.path}
-                            sx={{
-                              py: 1,
-                              pl: 1,
-                              width: '80%',
-                              float: 'right',
-                              gap: open ? 2 : 0.5,
-                              borderRadius: 0.75,
-                              typography: 'body2',
-                              fontWeight: 'fontWeightMedium',
-                              color: 'var(--layout-nav-item-color)',
+                            sx={(theme) => {
+                              return {
+                                p: 1.5,
+                                bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.025),
+                                mb: 0.5,
+                                width: '80%',
+                                float: 'right',
+                                gap: open ? 2 : 0.5,
+                                borderRadius: 0.75,
+                                typography: 'body2',
+                                fontWeight: 'fontWeightMedium',
+                                color: 'var(--layout-nav-item-color)',
 
-                              ...(!open &&
-                                mode == 'desktop' && {
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  justifyContent: 'center',
-                                  alignContent: 'center',
-                                  justifyItems: 'center',
-                                  alignItems: 'center',
+                                ...(!open &&
+                                  mode == 'desktop' && {
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignContent: 'center',
+                                    justifyItems: 'center',
+                                    alignItems: 'center',
+                                  }),
+                                ...(childrenActived && {
+                                  fontWeight: 'fontWeightSemiBold',
+                                  bgcolor: 'var(--layout-nav-item-active-bg)',
+                                  color: 'var(--layout-nav-item-active-color)',
+                                  '&:hover': {
+                                    bgcolor: 'var(--layout-nav-item-hover-bg)',
+                                  },
                                 }),
-                              ...(childrenActived && {
-                                fontWeight: 'fontWeightSemiBold',
-                                bgcolor: 'var(--layout-nav-item-active-bg)',
-                                color: 'var(--layout-nav-item-active-color)',
-                                '&:hover': {
-                                  bgcolor: 'var(--layout-nav-item-hover-bg)',
-                                },
-                              }),
+                              };
                             }}
                           >
+                            {open && (
+                              <Box
+                                component="span"
+                                sx={{
+                                  width: 24,
+                                  height: 24,
+                                  color: isActived ? 'primary.darker' : '',
+                                }}
+                              ></Box>
+                            )}
                             <Box
                               component="span"
                               sx={{
@@ -310,9 +332,9 @@ export function NavContent(props: NavContent) {
                               {t(childItem.title)}
                             </Box>
                           </ListItemButton>
-                        );
-                      })}
-                    </List>
+                        </ListItem>
+                      );
+                    })}
                   </Collapse>
                 </>
               );

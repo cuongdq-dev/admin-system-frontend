@@ -20,6 +20,8 @@ export const PATH_GOOGLE_LOGS_LIST = '/google/logs';
 export const PATH_CATEGORY = '/category';
 export const PATH_DROPDOWN = '/dropdown';
 export const PATH_BLOG = '/post';
+export const PATH_BLOG_ARCHIVED = '/post/archived';
+
 export const PATH_TRENDINGS_SEARCH = '/post/trendings';
 export const PATH_SERVER = '/server';
 export const PATH_DOCKER = '/docker';
