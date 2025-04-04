@@ -133,6 +133,7 @@ export function ListArchivedView() {
         indexCol={true}
         refreshData={refreshData}
         headLabel={HeadLabel}
+        actions={{ deleteBtn: true }}
         customCard={({ values }: { values: Record<string, any>; index: number }) => {
           const postUrl = `${values.site_domain}/bai-viet/${values.post_slug}`;
           const googleSearchUrl = `https://www.google.com/search?q=site:${postUrl}`;
