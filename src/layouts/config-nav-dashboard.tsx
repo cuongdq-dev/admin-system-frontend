@@ -28,6 +28,11 @@ export const navData = [
         icon: icon('ic-blog-old'),
         title: LanguageKey.nav.blogArchived,
       },
+      {
+        path: '/blog-trending',
+        icon: icon('ic-trending'),
+        title: LanguageKey.nav.blogTrending,
+      },
     ],
   },
 

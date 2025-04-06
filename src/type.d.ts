@@ -272,8 +272,15 @@ declare type TableActionComponentProps = {
 
   handleClickOpenForm?: (row: Record<string, any>, action: HttpMethod) => void;
 };
+
+declare type ChildrenColumn = {
+  name: string;
+  columns: HeadLabelProps[];
+  children?: ChildrenColumn;
+};
 declare type TableComponentProps = {
   component?: 'CARD' | 'TABLE';
+  children?: ChildrenColumn;
   updateUrlEnabled?: boolean;
   customCard?: ({ values, index }: { values: Record<string, any>; index: number }) => JSX.Element;
   url: string;

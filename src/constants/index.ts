@@ -7,6 +7,7 @@ export const LanguageKey = {
     product: 'product_nav',
     blog: 'blog_nav',
     blogArchived: 'blog_archived_nav',
+    blogTrending: 'blog_trending_nav',
     blogAll: 'blog_all_nav',
     category: 'category_nav',
     language: 'language_nav',
@@ -327,6 +328,7 @@ export const StoreName = {
   PROFILE: 'profile_store',
   BLOG: 'blog_store',
   BLOG_ARCHIVED: 'blog_archived_store',
+  BLOG_TRENDING: 'blog_trending_store',
 
   GOOGLE_INDEXING: 'google_indexing_store',
   GOOGLE_SITEMAP: 'google_sitemap_store',

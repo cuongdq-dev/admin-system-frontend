@@ -22,7 +22,7 @@ export const PATH_DROPDOWN = '/dropdown';
 export const PATH_BLOG = '/post';
 export const PATH_BLOG_ARCHIVED = '/post/archived';
 
-export const PATH_TRENDINGS_SEARCH = '/post/trendings';
+export const PATH_TRENDINGS_SEARCH = '/post/trending';
 export const PATH_SERVER = '/server';
 export const PATH_DOCKER = '/docker';
 export const PATH_REPOSITORY = '/repository';

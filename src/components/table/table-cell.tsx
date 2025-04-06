@@ -104,7 +104,7 @@ export function CommonTableCell(props: CommonTableCellProps) {
     case 'datetime':
       return (
         <TableCell width={width} sx={{ minWidth: minWidth }} align={align}>
-          {fDateTime(value?.toString(), formatStr.paramCase.date)}
+          {fDateTime(value?.toString(), formatStr.paramCase.dateTime)}
         </TableCell>
       );
 

@@ -3,12 +3,14 @@ import {
   Box,
   Card,
   CircularProgress,
+  Collapse,
   Grid,
   Pagination,
   Table,
   TableBody,
   TableCell,
   TableContainer,
+  TableHead,
   TablePagination,
   TableRow,
   Typography,
@@ -32,7 +34,7 @@ import { TableNoData } from './table-no-data';
 export const TableComponent = (props: TableComponentProps) => {
   const table = useTable();
 
-  const { headLabel, url, indexCol, selectCol, storeName, component } = props;
+  const { headLabel, url, indexCol, selectCol, storeName, component, children } = props;
   const { refreshData, customCard, handleClickOpenForm } = props;
   const { actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true } } =
     props;
@@ -195,74 +197,88 @@ export const TableComponent = (props: TableComponentProps) => {
                 <TableBody>
                   {datasource?.map((row: Record<string, any>, index: number) => {
                     const keys = Object.keys(row);
-
+                    const collapsed =
+                      children?.name && row[children.name] && table.collapsed == row?.id;
                     return (
-                      <TableRow
-                        key={'table_row_' + index + '_' + row?.id}
-                        hover
-                        tabIndex={-1}
-                        role="checkbox"
-                      >
-                        {selectCol && (
-                          <CommonTableCell
-                            type="checkbox"
-                            checked={table.selected.includes(row.id)}
-                            onChange={() => table.onSelectRow(row.id)}
-                            width={20}
-                            minWidth={20}
-                          />
-                        )}
-                        {indexCol && (
-                          <CommonTableCell
-                            align="center"
-                            width={60}
-                            minWidth={60}
-                            value={
-                              index +
-                              1 +
-                              (Number(metaData?.currentPage) - 1) * Number(metaData?.itemsPerPage)
+                      <>
+                        <TableRow
+                          key={'table_row_' + index + '_' + row?.id}
+                          hover
+                          tabIndex={-1}
+                          role="checkbox"
+                          onClick={() => {
+                            table.onCollapseRow(!collapsed ? row?.id : undefined);
+                          }}
+                          sx={{ cursor: children?.name && row[children.name] && 'pointer' }}
+                        >
+                          {selectCol && (
+                            <CommonTableCell
+                              type="checkbox"
+                              checked={table.selected.includes(row.id)}
+                              onChange={() => table.onSelectRow(row.id)}
+                              width={20}
+                              minWidth={20}
+                            />
+                          )}
+                          {indexCol && (
+                            <CommonTableCell
+                              align="center"
+                              width={60}
+                              minWidth={60}
+                              value={
+                                index +
+                                1 +
+                                (Number(metaData?.currentPage) - 1) * Number(metaData?.itemsPerPage)
+                              }
+                              type={'text'}
+                              key={'_index' + '_' + index}
+                            />
+                          )}
+                          {headLabel.map((column) => {
+                            if (column.type == 'custom' && !!column?.render) {
+                              return (
+                                <TableCell
+                                  key={column.id + '_head_label'}
+                                  align={column.align}
+                                  width={column.width}
+                                  sx={{ minWidth: column.width }}
+                                >
+                                  {column?.render &&
+                                    column?.render({ row, refreshData, updateRowData })}
+                                </TableCell>
+                              );
                             }
-                            type={'text'}
-                            key={'_index' + '_' + index}
+                            if (keys.includes(column.id)) {
+                              return (
+                                <CommonTableCell
+                                  value={row[column.id]}
+                                  type={column.type!}
+                                  key={column.id}
+                                  align={column.align}
+                                  minWidth={column.minWidth}
+                                  width={column.width}
+                                />
+                              );
+                            }
+                            return null;
+                          })}
+                          <TableActionComponent
+                            {...actions}
+                            baseUrl={url}
+                            row={row}
+                            updateRowData={updateRowData}
+                            refreshData={refreshData}
+                            handleClickOpenForm={handleClickOpenForm}
+                          />
+                        </TableRow>
+                        {children?.name && row[children.name] && (
+                          <TableChildren
+                            parent={children}
+                            data={row[children.name]}
+                            open={table.collapsed == row?.id}
                           />
                         )}
-                        {headLabel.map((column) => {
-                          if (column.type == 'custom' && !!column?.render) {
-                            return (
-                              <TableCell
-                                key={column.id + '_head_label'}
-                                align={column.align}
-                                width={column.width}
-                                sx={{ minWidth: column.width }}
-                              >
-                                {column?.render &&
-                                  column?.render({ row, refreshData, updateRowData })}
-                              </TableCell>
-                            );
-                          }
-                          if (keys.includes(column.id)) {
-                            return (
-                              <CommonTableCell
-                                value={row[column.id]}
-                                type={column.type!}
-                                key={column.id}
-                                align={column.align}
-                                minWidth={column.minWidth}
-                                width={column.width}
-                              />
-                            );
-                          }
-                          return null;
-                        })}
-                        <TableActionComponent
-                          {...actions}
-                          baseUrl={url}
-                          row={row}
-                          updateRowData={updateRowData}
-                          refreshData={refreshData}
-                          handleClickOpenForm={handleClickOpenForm}
-                        />
-                      </TableRow>
+                      </>
                     );
                   })}
 
@@ -302,6 +318,7 @@ export function useTable() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selected, setSelected] = useState<string[]>([]);
+  const [collapsed, setCollapsed] = useState<string | undefined>();
   const [orderBy, setOrderBy] = useState<string | undefined>();
   const [order, setOrder] = useState<'asc' | 'desc' | undefined>();
 
@@ -363,6 +380,13 @@ export function useTable() {
     [selected]
   );
 
+  const onCollapseRow = useCallback(
+    (inputValue: string) => {
+      setCollapsed(inputValue);
+    },
+    [collapsed]
+  );
+
   const onResetPage = useCallback(() => {
     setPage(0);
     updateUrl({});
@@ -388,12 +412,129 @@ export function useTable() {
     order,
     orderBy,
     selected,
+    collapsed,
     onSort,
     rowsPerPage,
     onSelectRow,
+    onCollapseRow,
     onResetPage,
     onChangePage,
     onSelectAllRows,
     onChangeRowsPerPage,
   };
 }
+
+const TableChildren = ({
+  data,
+  parent,
+  open = true,
+}: {
+  open?: boolean;
+  parent: ChildrenColumn;
+  data: Record<string, any>;
+}) => {
+  const { columns, children } = parent;
+  return (
+    <TableRow>
+      <TableCell
+        sx={(theme) => {
+          return {
+            borderBottom: open ? `1px solid ${theme.vars.palette.divider}` : 'none',
+            padding: open ? 1.6 : 0,
+            transition: 'padding 0.3s ease',
+          };
+        }}
+        colSpan={12}
+      >
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <Box
+            sx={(theme) => {
+              return {
+                border: `1px solid ${theme.vars.palette.divider}`,
+                borderRadius: 1,
+              };
+            }}
+          >
+            <Table aria-label="purchases">
+              <TableHead sx={{ height: 40 }}>
+                <TableRow>
+                  <TableCell width={50} align="center">
+                    STT
+                  </TableCell>
+                  {columns.map((headCell) => {
+                    return (
+                      <>
+                        <TableCell
+                          key={headCell.id}
+                          align={headCell.align || 'left'}
+                          sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+                        >
+                          {headCell.label}
+                        </TableCell>
+                      </>
+                    );
+                  })}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.map((row: Record<string, any>, index: number) => {
+                  const keys = Object.keys(row);
+
+                  return (
+                    <>
+                      <TableRow
+                        key={'table_children_row_' + index + '_' + row?.id}
+                        hover
+                        tabIndex={-1}
+                        role="checkbox"
+                      >
+                        <CommonTableCell
+                          align="center"
+                          width={60}
+                          minWidth={60}
+                          value={index + 1}
+                          type={'text'}
+                          key={'_index' + '_' + index}
+                        />
+                        {columns.map((column) => {
+                          if (column.type == 'custom' && !!column?.render) {
+                            return (
+                              <TableCell
+                                key={column.id + '_head_label'}
+                                align={column.align}
+                                width={column.width}
+                                sx={{ minWidth: column.width }}
+                              >
+                                {column?.render && column?.render({ row })}
+                              </TableCell>
+                            );
+                          }
+                          if (keys.includes(column.id)) {
+                            return (
+                              <CommonTableCell
+                                value={row[column.id]}
+                                type={column.type!}
+                                key={column.id}
+                                align={column.align}
+                                minWidth={column.minWidth}
+                                width={column.width}
+                              />
+                            );
+                          }
+                          return null;
+                        })}
+                      </TableRow>
+                      {children?.name && row[children.name] && (
+                        <TableChildren data={row[children.name]} parent={children} />
+                      )}
+                    </>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </Box>
+        </Collapse>
+      </TableCell>
+    </TableRow>
+  );
+};

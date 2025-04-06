@@ -16,6 +16,7 @@ export const HomePage = lazy(() => import('src/pages/home'));
 //
 export const BlogsPage = lazy(() => import('src/pages/blog/list'));
 export const BlogsArchivedPage = lazy(() => import('src/pages/blog/listArchived'));
+export const BlogsTrendingPage = lazy(() => import('src/pages/blog/listTrending'));
 export const BlogDetailPage = lazy(() => import('src/pages/blog/detail'));
 
 export const CategoryPage = lazy(() => import('src/pages/category/list'));
@@ -157,25 +158,37 @@ export const RouterConfig = [
           </PrivateRoute>
         ),
       },
+
+      {
+        path: '/blog-archived',
+        element: (
+          <PrivateRoute>
+            <BlogsArchivedPage />
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: '/blog-trending',
+        element: (
+          <PrivateRoute>
+            <BlogsTrendingPage />
+          </PrivateRoute>
+        ),
+      },
       {
         name: LanguageKey.blog.listPageTitle,
+        path: '/blog',
         children: [
           {
-            path: 'blog',
+            path: '',
             element: (
               <PrivateRoute>
                 <BlogsPage />
               </PrivateRoute>
             ),
           },
-          {
-            path: '/blog-archived',
-            element: (
-              <PrivateRoute>
-                <BlogsArchivedPage />
-              </PrivateRoute>
-            ),
-          },
+
           {
             path: ':id',
             element: (

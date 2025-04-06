@@ -38,9 +38,10 @@ export function AnalyticsNews({ title, subheader, ...other }: Props) {
 
   const getProfile = () => {
     invokeRequest({
-      baseURL: PATH_TRENDINGS_SEARCH,
+      baseURL: PATH_TRENDINGS_SEARCH + '/list',
       onSuccess: (res) => {
-        setTrendings(res);
+        const data = res.data;
+        setTrendings(data);
       },
       onHandleError: (error) => {},
     });
