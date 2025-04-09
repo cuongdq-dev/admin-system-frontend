@@ -133,76 +133,13 @@ export function ListArchivedView() {
       <GuideList text={t(LanguageKey.blog.blogArchivedDescription)} />
 
       <TableComponent
-        component={isMobile ? 'CARD' : 'TABLE'}
+        component={'TABLE'}
         storeName={storeName}
         url={PATH_BLOG_ARCHIVED}
         indexCol={true}
         refreshData={refreshData}
         headLabel={HeadLabel}
         actions={{ deleteBtn: true }}
-        customCard={({ values }: { values: Record<string, any>; index: number }) => {
-          const postUrl = `${values.site_domain}/bai-viet/${values.post_slug}`;
-          const googleSearchUrl = `https://www.google.com/search?q=site:${postUrl}`;
-          return (
-            <Card sx={{ width: '100%', mb: 2 }}>
-              <CardHeader
-                avatar={<Avatar aria-label="recipe">{values.site_name?.slice(0, 1)}</Avatar>}
-                title={values.site_name}
-                subheader={fDate(values.created_at, formatStr.dateTime)}
-              />
-
-              <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Box>
-                  <Typography variant="body2">{values.site_domain}</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2">{values.post_title}</Typography>
-                </Box>
-              </CardContent>
-              <CardActions>
-                <AutocompleteComponent
-                  size="small"
-                  defaultValue={{ title: values.indexStatus, id: values.indexStatus }}
-                  options={[
-                    { title: 'NEW', id: 'NEW' },
-                    { title: 'INDEXING', id: 'INDEXING' },
-                    { title: 'DELETED', id: 'DELETED' },
-                    { title: 'VERDICT_UNSPECIFIED', id: 'VERDICT_UNSPECIFIED' },
-                    { title: 'PASS', id: 'PASS' },
-                    { title: 'PARTIAL', id: 'PARTIAL' },
-                    { title: 'FAIL', id: 'FAIL' },
-                    { title: 'NEUTRAL', id: 'NEUTRAL' },
-                  ]}
-                  renderInput={(params) => {
-                    return <TextField {...params} margin="normal" />;
-                  }}
-                />
-              </CardActions>
-              <CardActions>
-                <Button
-                  color="error"
-                  size="medium"
-                  sx={{ textWrap: 'nowrap' }}
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => window.open(postUrl, '_blank')}
-                >
-                  View Site
-                </Button>
-                <Button
-                  color="warning"
-                  size="medium"
-                  sx={{ textWrap: 'nowrap' }}
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => window.open(googleSearchUrl, '_blank')}
-                >
-                  Google Search
-                </Button>
-              </CardActions>
-            </Card>
-          );
-        }}
       />
     </DashboardContent>
   );

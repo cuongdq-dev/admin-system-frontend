@@ -149,21 +149,23 @@ export const TableComponent = (props: TableComponentProps) => {
     <Box sx={{ position: 'relative' }}>
       <PageLoading isLoading={loading} />
       <Card
-        sx={{
-          opacity: loading ? 0.1 : 1,
-          pointerEvents: loading ? 'none' : 'auto',
-          animation: loading ? 'none' : 'fadeIn 1s ease-in-out', // Apply fadeIn animation when not loading
-
-          '@keyframes fadeIn': {
-            '0%': {
-              opacity: 0,
-              transform: 'translateY(-15px)',
+        sx={(theme) => {
+          return {
+            opacity: loading ? 0.1 : 1,
+            pointerEvents: loading ? 'none' : 'auto',
+            animation: loading ? 'none' : 'fadeIn 1s ease-in-out', // Apply fadeIn animation when not loading
+            border: `0.1px solid ${theme.vars.palette.divider}`,
+            '@keyframes fadeIn': {
+              '0%': {
+                opacity: 0,
+                transform: 'translateY(-15px)',
+              },
+              '100%': {
+                opacity: 1,
+                transform: 'translateY(0)',
+              },
             },
-            '100%': {
-              opacity: 1,
-              transform: 'translateY(0)',
-            },
-          },
+          };
         }}
       >
         <Backdrop
@@ -250,7 +252,8 @@ export const TableComponent = (props: TableComponentProps) => {
                               value={
                                 index +
                                 1 +
-                                (Number(metaData?.currentPage) - 1) * Number(metaData?.itemsPerPage)
+                                (Number(metaData?.currentPage || 1) - 1) *
+                                  Number(metaData?.itemsPerPage || datasource?.length)
                               }
                               type={'text'}
                               key={'_index' + '_' + index}
