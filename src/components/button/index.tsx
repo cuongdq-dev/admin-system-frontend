@@ -131,7 +131,12 @@ export const ButtonDelete = (props: ButtonDeleteProps & LoadingButtonProps) => {
           {title}
         </LoadingButton>
       ) : (
-        <IconButton onClick={() => setOpen(true)} {...other}>
+        <IconButton
+          onClick={() => {
+            setOpen(true);
+          }}
+          {...other}
+        >
           <Iconify icon="solar:trash-bin-trash-bold" />
         </IconButton>
       )}

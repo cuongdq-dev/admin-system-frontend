@@ -295,6 +295,7 @@ declare type TableComponentProps = {
 };
 
 declare type TableHeadProps = {
+  tableChildren?: ChildrenColumn;
   rowCount: number;
   numSelected: number;
   indexCol?: boolean;

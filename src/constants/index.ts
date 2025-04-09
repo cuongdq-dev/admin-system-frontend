@@ -6,6 +6,7 @@ export const LanguageKey = {
     site: 'site_nav',
     product: 'product_nav',
     blog: 'blog_nav',
+    blogNew: 'blog_unused_nav',
     blogArchived: 'blog_archived_nav',
     blogTrending: 'blog_trending_nav',
     blogAll: 'blog_all_nav',
@@ -23,6 +24,7 @@ export const LanguageKey = {
   dashboard: {
     pageTitle: 'dashboard_page',
   },
+
   user: {
     listPageTitle: 'user_list_page',
     addNewButton: 'user_new_button',
@@ -113,6 +115,7 @@ export const LanguageKey = {
     tableTitle: 'product_table_title',
     detailTitle: 'product_detail_title',
   },
+
   blog: {
     listPageTitle: 'blog_list_page',
     detailPageTitle: 'blog_detail_page',
@@ -127,7 +130,12 @@ export const LanguageKey = {
     contentItem: 'blog_content_item',
     publicButton: 'blog_public_button',
     draftButton: 'blog_draft_button',
+    // description
+    blogUnusedDescription: 'blog_unsed_description',
+    blogArchivedDescription: 'blog_archived_description',
+    blogTrendingDescription: 'blog_trending_description',
   },
+
   category: {
     listPageTitle: 'category_list_page',
     addNewButton: 'category_new_button',
@@ -328,6 +336,7 @@ export const StoreName = {
   PROFILE: 'profile_store',
   BLOG: 'blog_store',
   BLOG_ARCHIVED: 'blog_archived_store',
+  BLOG_UNUSED: 'blog_unused_store',
   BLOG_TRENDING: 'blog_trending_store',
 
   GOOGLE_INDEXING: 'google_indexing_store',

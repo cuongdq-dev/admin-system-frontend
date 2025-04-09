@@ -16,6 +16,7 @@ const MuiBackdrop: Components<Theme>['MuiBackdrop'] = {
     },
   },
 };
+
 const MuiTooltip: Components<Theme>['MuiTooltip'] = {
   defaultProps: {
     arrow: true,

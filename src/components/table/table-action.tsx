@@ -28,46 +28,40 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
     setOpenPopover(null);
   }, []);
 
-  if (!deleteBtn && !editBtn && !popupEdit) return <></>;
   return (
     <>
-      <TableCell align="right">
-        <Box display="flex">
-          {popupEdit && (
-            <IconButton
-              onClick={() => {
-                handleClickOpenForm && handleClickOpenForm(row!, HttpMethod.PATCH);
-              }}
-            >
-              <Iconify icon="solar:pen-bold" />
-            </IconButton>
-          )}
-          {!deleteBtn && editBtn && (
-            <IconButton
-              onClick={() => {
-                handleClosePopover();
-                navigate(row?.id, { replace: false });
-              }}
-            >
-              <Iconify icon="icon-park-twotone:doc-search" />
-            </IconButton>
-          )}
-          {deleteBtn && !editBtn && (
-            <IconButtonDelete
-              handleDelete={updateRowData}
-              rowId={row?.id}
-              baseUrl={baseUrl + '/delete/' + row?.id}
-            />
-          )}
+      <Box display="flex">
+        {popupEdit && (
+          <IconButton
+            onClick={() => handleClickOpenForm && handleClickOpenForm(row!, HttpMethod.PATCH)}
+          >
+            <Iconify icon="solar:pen-bold" />
+          </IconButton>
+        )}
+        {!deleteBtn && editBtn && (
+          <IconButton
+            onClick={() => {
+              handleClosePopover();
+              navigate(row?.id, { replace: false });
+            }}
+          >
+            <Iconify icon="icon-park-twotone:doc-search" />
+          </IconButton>
+        )}
+        {deleteBtn && !editBtn && (
+          <IconButtonDelete
+            handleDelete={updateRowData}
+            rowId={row?.id}
+            baseUrl={baseUrl + '/delete/' + row?.id}
+          />
+        )}
 
-          {deleteBtn && editBtn && (
-            <IconButton onClick={handleOpenPopover}>
-              <Iconify icon="eva:more-vertical-fill" />
-            </IconButton>
-          )}
-        </Box>
-      </TableCell>
-
+        {deleteBtn && editBtn && (
+          <IconButton onClick={handleOpenPopover}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
+        )}
+      </Box>
       <Popover
         open={!!openPopover}
         anchorEl={openPopover}

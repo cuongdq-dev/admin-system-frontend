@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Collapse,
   Grid,
+  IconButton,
   Pagination,
   Table,
   TableBody,
@@ -23,6 +24,7 @@ import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
+import { Iconify } from '../iconify';
 import { TimeAgo } from '../label';
 import { PageLoading } from '../loading';
 import { Scrollbar } from '../scrollbar';
@@ -173,6 +175,7 @@ export const TableComponent = (props: TableComponentProps) => {
           <TableContainer sx={{ overflow: 'unset' }}>
             <Table sx={{ minWidth: 800 }}>
               <TableHeadComponent
+                tableChildren={children}
                 order={getSortBy()?.order as 'asc' | 'desc'}
                 orderBy={getSortBy()?.orderBy}
                 rowCount={datasource?.length}
@@ -206,11 +209,27 @@ export const TableComponent = (props: TableComponentProps) => {
                           hover
                           tabIndex={-1}
                           role="checkbox"
-                          onClick={() => {
-                            table.onCollapseRow(!collapsed ? row?.id : undefined);
-                          }}
                           sx={{ cursor: children?.name && row[children.name] && 'pointer' }}
                         >
+                          {children?.name && row[children.name] && (
+                            <TableCell width={'5%'}>
+                              <IconButton
+                                onClick={() => {
+                                  table.onCollapseRow(!collapsed ? row?.id : undefined);
+                                }}
+                                size="small"
+                              >
+                                <Iconify
+                                  sx={{ fontSize: '10px' }}
+                                  icon={
+                                    collapsed
+                                      ? 'icon-park-solid:up-one'
+                                      : 'icon-park-solid:down-one'
+                                  }
+                                />
+                              </IconButton>
+                            </TableCell>
+                          )}
                           {selectCol && (
                             <CommonTableCell
                               type="checkbox"
@@ -262,14 +281,18 @@ export const TableComponent = (props: TableComponentProps) => {
                             }
                             return null;
                           })}
-                          <TableActionComponent
-                            {...actions}
-                            baseUrl={url}
-                            row={row}
-                            updateRowData={updateRowData}
-                            refreshData={refreshData}
-                            handleClickOpenForm={handleClickOpenForm}
-                          />
+                          {(actions?.deleteBtn || actions?.editBtn || actions?.popupEdit) && (
+                            <TableCell align="right">
+                              <TableActionComponent
+                                {...actions}
+                                baseUrl={url}
+                                row={row}
+                                updateRowData={updateRowData}
+                                refreshData={refreshData}
+                                handleClickOpenForm={handleClickOpenForm}
+                              />
+                            </TableCell>
+                          )}
                         </TableRow>
                         {children?.name && row[children.name] && (
                           <TableChildren
@@ -318,7 +341,7 @@ export function useTable() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selected, setSelected] = useState<string[]>([]);
-  const [collapsed, setCollapsed] = useState<string | undefined>();
+  const [collapsed, setCollapsed] = useState<string | null>(null);
   const [orderBy, setOrderBy] = useState<string | undefined>();
   const [order, setOrder] = useState<'asc' | 'desc' | undefined>();
 
@@ -381,7 +404,7 @@ export function useTable() {
   );
 
   const onCollapseRow = useCallback(
-    (inputValue: string) => {
+    (inputValue: string | null) => {
       setCollapsed(inputValue);
     },
     [collapsed]
@@ -439,8 +462,10 @@ const TableChildren = ({
       <TableCell
         sx={(theme) => {
           return {
+            boxShadow: theme.customShadows?.z16,
             borderBottom: open ? `1px solid ${theme.vars.palette.divider}` : 'none',
-            padding: open ? 1.6 : 0,
+            p: open ? 4 : 0,
+            pl: open ? 8 : 0,
             transition: 'padding 0.3s ease',
           };
         }}
@@ -455,8 +480,8 @@ const TableChildren = ({
               };
             }}
           >
-            <Table aria-label="purchases">
-              <TableHead sx={{ height: 40 }}>
+            <Table>
+              <TableHead>
                 <TableRow>
                   <TableCell width={50} align="center">
                     STT
@@ -484,7 +509,6 @@ const TableChildren = ({
                     <>
                       <TableRow
                         key={'table_children_row_' + index + '_' + row?.id}
-                        hover
                         tabIndex={-1}
                         role="checkbox"
                       >

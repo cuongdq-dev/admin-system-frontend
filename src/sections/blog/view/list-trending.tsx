@@ -1,8 +1,9 @@
-import { Link, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import { PATH_TRENDINGS_SEARCH } from 'src/api-core/path';
-import { TableComponent } from 'src/components/table';
+import { GuideList } from 'src/components/guide';
+import { TableActionComponent, TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
@@ -60,12 +61,40 @@ export function ListTrendingView() {
       align: 'center',
       width: '15%',
     },
+
+    {
+      id: 'delete',
+      label: ' ',
+      type: 'custom',
+      width: '5%',
+      render: ({ row, updateRowData }) => {
+        const totalSiteCount = row?.articles?.reduce((total: number, article: any) => {
+          const siteCountInArticle = article?.posts?.reduce((count: number, post: any) => {
+            return count + (Number(post?.siteCount) || 0);
+          }, 0);
+          return total + siteCountInArticle;
+        }, 0);
+
+        if (!totalSiteCount)
+          return (
+            <TableActionComponent
+              baseUrl={PATH_TRENDINGS_SEARCH}
+              deleteBtn
+              row={row}
+              updateRowData={updateRowData}
+            />
+          );
+        return <></>;
+      },
+    },
   ];
 
   return (
     <DashboardContent
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
     >
+      <GuideList text={t(LanguageKey.blog.blogTrendingDescription)} />
+
       <TableComponent
         component="TABLE"
         storeName={storeName}
@@ -73,7 +102,6 @@ export function ListTrendingView() {
         indexCol={true}
         refreshData={refreshData}
         headLabel={HeadLabel}
-        actions={{ refreshBtn: true }}
         children={{
           name: 'articles',
           children: {
@@ -101,6 +129,38 @@ export function ListTrendingView() {
                     >
                       {row?.title}
                     </Link>
+                  );
+                },
+              },
+
+              {
+                id: 'site',
+                label: 'Site',
+                sort: false,
+                align: 'center',
+                type: 'custom',
+                render: ({ row }) => {
+                  if (row.sitePosts <= 0) return <></>;
+                  return (
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                      {row?.sitePosts?.map((st: any) => {
+                        return (
+                          <Typography
+                            sx={(theme) => {
+                              return {
+                                border: `1px solid ${theme.palette.grey[400]}`,
+                                py: 0.5,
+                                px: 1,
+                                borderRadius: 2,
+                              };
+                            }}
+                            variant="caption"
+                          >
+                            {st.site.name}
+                          </Typography>
+                        );
+                      })}
+                    </Box>
                   );
                 },
               },

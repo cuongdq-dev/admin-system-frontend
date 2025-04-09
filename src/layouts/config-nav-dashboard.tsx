@@ -24,6 +24,11 @@ export const navData = [
         title: LanguageKey.nav.blogAll,
       },
       {
+        path: '/blog-unused',
+        icon: icon('ic-blog-new'),
+        title: LanguageKey.nav.blogNew,
+      },
+      {
         path: '/blog-archived',
         icon: icon('ic-blog-old'),
         title: LanguageKey.nav.blogArchived,

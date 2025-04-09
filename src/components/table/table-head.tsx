@@ -15,6 +15,7 @@ import { visuallyHidden } from './utils';
 export function TableHeadComponent(props: TableHeadProps) {
   const {
     order,
+    tableChildren,
     orderBy,
     rowCount,
     headLabel,
@@ -65,6 +66,9 @@ export function TableHeadComponent(props: TableHeadProps) {
           </TableCell>
         ) : (
           <>
+            {!!tableChildren && tableChildren?.name && (
+              <TableCell width={50} align="center"></TableCell>
+            )}
             {indexCol && (
               <TableCell width={50} align="center">
                 STT

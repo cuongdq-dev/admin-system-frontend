@@ -16,6 +16,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PATH_BLOG_ARCHIVED } from 'src/api-core/path';
 import { AutocompleteComponent } from 'src/components/autocomplete';
+import { GuideList } from 'src/components/guide';
 import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -126,6 +127,8 @@ export function ListArchivedView() {
     <DashboardContent
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
     >
+      <GuideList text={t(LanguageKey.blog.blogArchivedDescription)} />
+
       <TableComponent
         component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}

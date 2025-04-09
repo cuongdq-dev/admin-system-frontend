@@ -16,6 +16,7 @@ export const HomePage = lazy(() => import('src/pages/home'));
 //
 export const BlogsPage = lazy(() => import('src/pages/blog/list'));
 export const BlogsArchivedPage = lazy(() => import('src/pages/blog/listArchived'));
+export const BlogsUnusedPage = lazy(() => import('src/pages/blog/listUnused'));
 export const BlogsTrendingPage = lazy(() => import('src/pages/blog/listTrending'));
 export const BlogDetailPage = lazy(() => import('src/pages/blog/detail'));
 
@@ -164,6 +165,15 @@ export const RouterConfig = [
         element: (
           <PrivateRoute>
             <BlogsArchivedPage />
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: '/blog-unused',
+        element: (
+          <PrivateRoute>
+            <BlogsUnusedPage />
           </PrivateRoute>
         ),
       },
