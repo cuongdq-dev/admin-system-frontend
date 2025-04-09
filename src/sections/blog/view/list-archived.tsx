@@ -7,12 +7,12 @@ import {
   CardContent,
   CardHeader,
   Chip,
+  Link,
   TextField,
   Typography,
   useMediaQuery,
 } from '@mui/material';
 import { t } from 'i18next';
-import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PATH_BLOG_ARCHIVED } from 'src/api-core/path';
 import { AutocompleteComponent } from 'src/components/autocomplete';
@@ -37,19 +37,6 @@ export function ListArchivedView() {
   const refreshData = () => {
     setRefreshList(storeName, refreshNumber + 1);
   };
-
-  const updateUrl = useCallback(
-    (newParams: Record<string, string | undefined>) => {
-      const queryParams = new URLSearchParams(location.search);
-
-      Object.entries(newParams).forEach(([key, value]) => {
-        if (value) queryParams.set(key, value);
-        else queryParams.delete(key);
-      });
-      navigate(`?${queryParams.toString()}`, { replace: true });
-    },
-    [location.search, navigate]
-  );
 
   const HeadLabel: HeadLabelProps[] = [
     {
@@ -90,7 +77,23 @@ export function ListArchivedView() {
       sort: false,
       type: 'custom',
       render: ({ row }) => {
-        return <Typography>{row.post_title}</Typography>;
+        return (
+          <Link
+            href={'/blog/' + row?.post_slug}
+            color="inherit"
+            variant="subtitle2"
+            underline="hover"
+            sx={{
+              cursor: 'pointer',
+              overflow: 'hidden',
+              WebkitLineClamp: 2,
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+            {row?.post_title}
+          </Link>
+        );
       },
     },
 

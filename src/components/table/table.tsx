@@ -32,6 +32,7 @@ import { TableActionComponent } from './table-action';
 import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
+import { varAlpha } from 'src/theme/styles';
 
 export const TableComponent = (props: TableComponentProps) => {
   const table = useTable();
@@ -209,7 +210,9 @@ export const TableComponent = (props: TableComponentProps) => {
                           hover
                           tabIndex={-1}
                           role="checkbox"
-                          sx={{ cursor: children?.name && row[children.name] && 'pointer' }}
+                          sx={{
+                            cursor: children?.name && row[children.name] && 'pointer',
+                          }}
                         >
                           {children?.name && row[children.name] && (
                             <TableCell width={'5%'}>
@@ -296,6 +299,7 @@ export const TableComponent = (props: TableComponentProps) => {
                         </TableRow>
                         {children?.name && row[children.name] && (
                           <TableChildren
+                            index={0}
                             parent={children}
                             data={row[children.name]}
                             open={table.collapsed == row?.id}
@@ -448,21 +452,31 @@ export function useTable() {
 }
 
 const TableChildren = ({
+  index = 0,
   data,
   parent,
   open = true,
 }: {
   open?: boolean;
+  index?: number;
   parent: ChildrenColumn;
   data: Record<string, any>;
 }) => {
   const { columns, children } = parent;
   return (
-    <TableRow>
+    <TableRow
+      sx={(theme) => {
+        return {
+          backgroundColor:
+            index % 2 == 0
+              ? theme.vars.palette.background.default
+              : theme.vars.palette.background.paper,
+        };
+      }}
+    >
       <TableCell
         sx={(theme) => {
           return {
-            boxShadow: theme.customShadows?.z16,
             borderBottom: open ? `1px solid ${theme.vars.palette.divider}` : 'none',
             p: open ? 4 : 0,
             pl: open ? 8 : 0,
@@ -483,7 +497,18 @@ const TableChildren = ({
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell width={50} align="center">
+                  <TableCell
+                    width={50}
+                    align="center"
+                    sx={(theme) => {
+                      return {
+                        backgroundColor:
+                          index % 2 == 0
+                            ? varAlpha(theme.vars.palette.info.mainChannel, 0.1)
+                            : varAlpha(theme.vars.palette.info.mainChannel, 0.05),
+                      };
+                    }}
+                  >
                     STT
                   </TableCell>
                   {columns.map((headCell) => {
@@ -492,7 +517,16 @@ const TableChildren = ({
                         <TableCell
                           key={headCell.id}
                           align={headCell.align || 'left'}
-                          sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+                          sx={(theme) => {
+                            return {
+                              width: headCell.width,
+                              minWidth: headCell.minWidth,
+                              backgroundColor:
+                                index % 2 == 0
+                                  ? varAlpha(theme.vars.palette.info.mainChannel, 0.1)
+                                  : varAlpha(theme.vars.palette.info.mainChannel, 0.05),
+                            };
+                          }}
                         >
                           {headCell.label}
                         </TableCell>
@@ -511,6 +545,14 @@ const TableChildren = ({
                         key={'table_children_row_' + index + '_' + row?.id}
                         tabIndex={-1}
                         role="checkbox"
+                        sx={(theme) => {
+                          return {
+                            backgroundColor:
+                              index % 2 == 0
+                                ? theme.vars.palette.background.paper
+                                : theme.vars.palette.background.neutral,
+                          };
+                        }}
                       >
                         <CommonTableCell
                           align="center"
@@ -549,7 +591,11 @@ const TableChildren = ({
                         })}
                       </TableRow>
                       {children?.name && row[children.name] && (
-                        <TableChildren data={row[children.name]} parent={children} />
+                        <TableChildren
+                          data={row[children.name]}
+                          parent={children}
+                          index={index + 1}
+                        />
                       )}
                     </>
                   );

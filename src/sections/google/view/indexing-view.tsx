@@ -7,6 +7,7 @@ import {
   CardContent,
   CardHeader,
   Chip,
+  Link,
   TextField,
   Typography,
   useMediaQuery,
@@ -68,7 +69,7 @@ export function IndexingListView() {
   const HeadLabel: HeadLabelProps[] = [
     {
       id: 'site_name',
-      label: t(LanguageKey.site.nameItem),
+      label: 'Link',
       sort: false,
       type: 'custom',
       align: 'center',
@@ -104,7 +105,23 @@ export function IndexingListView() {
       sort: false,
       type: 'custom',
       render: ({ row }) => {
-        return <Typography>{row.post_title}</Typography>;
+        return (
+          <Link
+            href={'/blog/' + row?.post_slug}
+            color="inherit"
+            variant="subtitle2"
+            underline="hover"
+            sx={{
+              cursor: 'pointer',
+              overflow: 'hidden',
+              WebkitLineClamp: 2,
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+            {row?.post_title}
+          </Link>
+        );
       },
     },
 

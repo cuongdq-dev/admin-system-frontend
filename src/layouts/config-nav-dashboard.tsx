@@ -42,18 +42,6 @@ export const navData = [
   },
 
   {
-    title: LanguageKey.nav.category,
-    path: '/category',
-    icon: icon('ic-category'),
-  },
-
-  {
-    title: LanguageKey.nav.site,
-    path: '/site',
-    icon: icon('ic-site'),
-  },
-
-  {
     title: LanguageKey.nav.googleConsole,
     path: '/google-console',
     icon: icon('ic-google-console'),
@@ -76,6 +64,19 @@ export const navData = [
       },
     ],
   },
+
+  {
+    title: LanguageKey.nav.category,
+    path: '/category',
+    icon: icon('ic-category'),
+  },
+
+  {
+    title: LanguageKey.nav.site,
+    path: '/site',
+    icon: icon('ic-site'),
+  },
+
   {
     title: LanguageKey.nav.setting,
     path: '/google-console',

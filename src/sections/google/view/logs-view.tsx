@@ -1,4 +1,4 @@
-import { Chip, TextField, Tooltip, Typography } from '@mui/material';
+import { Chip, Link, TextField, Tooltip, Typography } from '@mui/material';
 import { t } from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -72,7 +72,23 @@ export function GoogleLogsListView() {
       sort: false,
       type: 'custom',
       render: ({ row }) => {
-        return <Typography>{row.post_slug}</Typography>;
+        return (
+          <Link
+            href={'/blog/' + row?.post_slug}
+            color="inherit"
+            variant="subtitle2"
+            underline="hover"
+            sx={{
+              cursor: 'pointer',
+              overflow: 'hidden',
+              WebkitLineClamp: 2,
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+            {row?.post_slug}
+          </Link>
+        );
       },
     },
 
