@@ -1,21 +1,41 @@
-import { Box, Link, Typography } from '@mui/material';
+import {
+  Timeline,
+  TimelineItem,
+  TimelineSeparator,
+  TimelineDot,
+  TimelineConnector,
+  TimelineContent,
+  timelineItemClasses,
+} from '@mui/lab';
+import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Button,
+  Link,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { t } from 'i18next';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { PATH_TRENDINGS_SEARCH } from 'src/api-core/path';
+import { IconButtonDelete } from 'src/components/button';
 import { GuideList } from 'src/components/guide';
+import { Iconify } from 'src/components/iconify';
 import { TableActionComponent, TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
+import { formatStr, fRelativeTime } from 'src/utils/format-time';
 import { useShallow } from 'zustand/react/shallow';
 
 export function ListTrendingView() {
-  const navigate = useNavigate();
-
   const storeName = StoreName.BLOG_TRENDING;
 
   const { setRefreshList } = usePageStore();
-  const { refreshNumber = 0 } = usePageStore(
+  const { refreshNumber = 0, meta } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.list }))
   );
 
@@ -89,6 +109,8 @@ export function ListTrendingView() {
     },
   ];
 
+  const isMobile = useMediaQuery('(max-width:600px)');
+
   return (
     <DashboardContent
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
@@ -96,7 +118,7 @@ export function ListTrendingView() {
       <GuideList text={t(LanguageKey.blog.blogTrendingDescription)} />
 
       <TableComponent
-        component="TABLE"
+        component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}
         url={PATH_TRENDINGS_SEARCH}
         indexCol={true}
@@ -198,7 +220,159 @@ export function ListTrendingView() {
             },
           ],
         }}
+        customCard={({ index, values, updateRowData }) => {
+          return (
+            <TrendingCard
+              index={
+                Number(index) +
+                1 +
+                (Number(meta?.currentPage || 1) - 1) *
+                  Number(meta?.itemsPerPage || meta?.totalItems)
+              }
+              values={values}
+              updateRowData={updateRowData}
+            />
+          );
+        }}
       />
     </DashboardContent>
   );
 }
+
+const TrendingCard = ({
+  values,
+  updateRowData,
+}: {
+  index: number;
+  values?: Record<string, any>;
+  updateRowData?:
+    | ((rowId: string, values: Record<string, any>, action: 'ADD' | 'REMOVE' | 'UPDATE') => void)
+    | undefined;
+}) => {
+  const [expanded, setExpanded] = React.useState<string | false>(false);
+
+  const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+  const postCount = values?.articles?.reduce((count: number, articles: any) => {
+    return count + (Number(articles?.postCount) || 0);
+  }, 0);
+
+  const totalSiteCount = values?.articles?.reduce((total: number, article: any) => {
+    const siteCountInArticle = article?.posts?.reduce((count: number, post: any) => {
+      return count + (Number(post?.siteCount) || 0);
+    }, 0);
+    return total + siteCountInArticle;
+  }, 0);
+
+  return (
+    <Box sx={{ mb: 2, width: '100%' }}>
+      <Accordion
+        disabled={!values?.articles?.length}
+        expanded={expanded === values?.id}
+        onChange={handleChange(values?.id)}
+      >
+        <AccordionSummary
+          expandIcon={<Iconify icon="ic:outline-expand-more" />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography
+            sx={{
+              width: '90%',
+              flexShrink: 0,
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              lineHeight: 0,
+            }}
+          >
+            <Typography>{values?.titleQuery}</Typography>
+            <Typography mr={1} color="grey" variant="caption">
+              {fRelativeTime(values?.created_at, formatStr.paramCase.date)}
+            </Typography>
+            <Typography mr={1} color="grey" variant="caption">
+              Articles: {values?.articleCount}
+            </Typography>
+            <Typography mr={1} color="grey" variant="caption">
+              Posts: {postCount}
+            </Typography>
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Timeline
+            sx={{
+              [`& .${timelineItemClasses.root}:before`]: { flex: 0, padding: 0 },
+            }}
+          >
+            {values?.articles?.map((article: any) => {
+              return (
+                <TimelineItem>
+                  <TimelineSeparator sx={{ mt: 1 }}>
+                    <Iconify icon="ic:round-article" />
+                  </TimelineSeparator>
+                  <TimelineContent>
+                    <Typography>{article?.title}</Typography>
+                    <Typography color="grey" variant="caption">
+                      {fRelativeTime(article?.created_at)} | {article.source}
+                    </Typography>
+                    {article?.posts?.map((post: any) => {
+                      return (
+                        <TimelineItem>
+                          <TimelineSeparator sx={{ mt: 1 }}>
+                            <Iconify icon="fluent:news-16-regular" />
+                          </TimelineSeparator>
+                          <TimelineContent>
+                            <Typography>{post.title}</Typography>
+                            <Typography
+                              noWrap
+                              color="grey"
+                              variant="caption"
+                              sx={{
+                                flexShrink: 0,
+                                overflow: 'hidden',
+                                WebkitLineClamp: 1,
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                              }}
+                            >
+                              {fRelativeTime(article?.created_at)}
+                            </Typography>
+                            <Typography color="grey" variant="caption">
+                              {post?.sitePosts?.map((sp: any) => sp.site.name).join(', ')}
+                            </Typography>
+                          </TimelineContent>
+                        </TimelineItem>
+                      );
+                    })}
+                  </TimelineContent>
+                </TimelineItem>
+              );
+            })}
+          </Timeline>
+        </AccordionDetails>
+
+        <AccordionActions
+          sx={(theme) => {
+            return {
+              li: {
+                width: '100%',
+                backgroundColor: theme.palette.error.main,
+                color: theme.palette.common.white,
+                justifyContent: 'center',
+                borderRadius: 1,
+              },
+            };
+          }}
+        >
+          <IconButtonDelete
+            handleDelete={updateRowData}
+            rowId={values?.id}
+            baseUrl={PATH_TRENDINGS_SEARCH + '/delete/' + values?.id}
+          />
+        </AccordionActions>
+      </Accordion>
+    </Box>
+  );
+};

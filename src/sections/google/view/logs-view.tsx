@@ -1,28 +1,30 @@
-import { Chip, Link, TextField, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  Grid,
+  GridSize,
+  Link,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { t } from 'i18next';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PATH_DROPDOWN, PATH_GOOGLE_LOGS_LIST } from 'src/api-core/path';
-import { AutocompleteComponent, AutocompleteComponentWithUrl } from 'src/components/autocomplete';
+import { PATH_GOOGLE_LOGS_LIST } from 'src/api-core/path';
+import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
-import { fDate, formatStr } from 'src/utils/format-time';
+import { fDate, formatStr, fRelativeTime } from 'src/utils/format-time';
 import { useShallow } from 'zustand/react/shallow';
+import { LogsFilters } from '../components/logs-filters';
+import { Iconify } from 'src/components/iconify';
+import { IndexStatus } from '../components/index-status';
 
 export function GoogleLogsListView() {
-  const navigate = useNavigate();
-
   const storeName = StoreName.GOOGLE_LOGS;
-  const [siteSelect, setSiteSelect] = useState<{ id: string; title?: string } | undefined | null>(
-    new URLSearchParams(location.search).get('site_id')
-      ? {
-          id: new URLSearchParams(location.search).get('site_id')!,
-          title: new URLSearchParams(location.search).get('site_name')!,
-        }
-      : undefined
-  );
 
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0 } = usePageStore(
@@ -32,26 +34,6 @@ export function GoogleLogsListView() {
   const refreshData = () => {
     setRefreshList(storeName, refreshNumber + 1);
   };
-
-  const updateUrl = useCallback(
-    (newParams: Record<string, string | undefined>) => {
-      const queryParams = new URLSearchParams(location.search);
-
-      Object.entries(newParams).forEach(([key, value]) => {
-        if (value) queryParams.set(key, value);
-        else queryParams.delete(key);
-      });
-      navigate(`?${queryParams.toString()}`, { replace: true });
-    },
-    [location.search, navigate]
-  );
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const siteIdParam = queryParams.get('site_id');
-    const siteNameParam = queryParams.get('site_name');
-    setSiteSelect({ id: siteIdParam!, title: siteNameParam! });
-  }, [window.location.search]);
 
   const HeadLabel: HeadLabelProps[] = [
     {
@@ -68,7 +50,7 @@ export function GoogleLogsListView() {
     },
     {
       id: 'post_title',
-      label: 'Post Title',
+      label: 'Post Slug',
       sort: false,
       type: 'custom',
       render: ({ row }) => {
@@ -172,103 +154,137 @@ export function GoogleLogsListView() {
     },
   ];
 
-  const logType = new URLSearchParams(location.search).get('type')!;
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
     <DashboardContent
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
     >
-      <AutocompleteComponentWithUrl
-        baseUrl={PATH_DROPDOWN + '/sites'}
-        name="site_index"
-        multiple={false}
-        options={[]}
-        defaultValue={siteSelect}
-        onChange={(_, value) => {
-          if (!value) {
-            setSiteSelect(undefined);
-            updateUrl({
-              site_id: undefined,
-              site_name: undefined,
-            });
-          } else {
-            setSiteSelect(value);
-            updateUrl({
-              site_id: value?.id,
-              site_name: value?.title,
-              indexStatus: undefined,
-              limit: undefined,
-              page: undefined,
-            });
-          }
-        }}
-        renderInput={(params) => {
-          return <TextField {...params} margin="normal" label={t(LanguageKey.site.domainItem)} />;
-        }}
-      />
-
-      <AutocompleteComponent
-        sx={{ my: 2 }}
-        multiple
-        disableCloseOnSelect
-        defaultValue={logType?.split(',').map((i) => {
-          return { id: i, title: i };
-        })}
-        onChange={(event, values) => {
-          const typeValues = values.map((value: { id: string; title: string }) => {
-            return value.id;
-          });
-
-          updateUrl({ type: typeValues.toString(), limit: undefined, page: undefined });
-        }}
-        clearIcon
-        options={[
-          { title: 'URL_UPDATED', id: 'URL_UPDATED' },
-          { title: 'URL_METADATA', id: 'URL_METADATA' },
-        ]}
-        renderInput={(params) => {
-          return <TextField {...params} label="Filter Status" />;
-        }}
-      />
+      <HeadComponent title={'Google Logs '} />
+      <LogsFilters storeName={storeName} />
 
       <TableComponent
-        component={'TABLE'}
+        component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}
         url={PATH_GOOGLE_LOGS_LIST}
         indexCol={true}
         refreshData={refreshData}
         headLabel={HeadLabel}
+        customCard={({ values, index }: { values: Record<string, any>; index: number }) => {
+          return (
+            <Card sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
+              <Box
+                sx={{
+                  mb: 4,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Box
+                  sx={(theme) => {
+                    return {
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      borderRadius: 1,
+                      px: 1,
+                      py: 0.5,
+                      color: theme.palette.grey.A200,
+                    };
+                  }}
+                >
+                  {values?.response?.inspectionResult?.indexStatusResult?.verdict ? (
+                    <Tooltip title={JSON.stringify(values?.response)}>
+                      <Typography>
+                        <IndexStatus
+                          status={values?.response?.inspectionResult?.indexStatusResult?.verdict}
+                        />
+                      </Typography>
+                    </Tooltip>
+                  ) : (
+                    <>
+                      {values?.response?.urlNotificationMetadata?.url ? (
+                        <Tooltip title={JSON.stringify(values?.response)}>
+                          <Typography>
+                            <IndexStatus status={'REQUESTED'} />
+                          </Typography>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title={JSON.stringify(values?.response)}>
+                          <Typography>
+                            <IndexStatus status={'MAX_QUOTA'} />
+                          </Typography>
+                        </Tooltip>
+                      )}
+                    </>
+                  )}
+                </Box>
+                <Box
+                  sx={{
+                    display: 'inline-flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Iconify icon="mdi-light:clock"></Iconify>
+
+                  <Typography variant="body1" color="text.secondary" sx={{ ml: 1 }}>
+                    {fRelativeTime(values.requested_at, formatStr.date)}
+                  </Typography>
+                </Box>
+              </Box>
+              <CardContent sx={{ p: 0, mb: 0 }}>
+                <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                  {new URL(values?.site_domain).hostname}
+                </Typography>
+                <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+                  {values?.type} - {values.response}
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 3 }}>
+                  {values.post_slug}
+                </Typography>
+              </CardContent>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Link
+                  target="_blank"
+                  href={'/blog/' + values?.post_slug}
+                  underline="always"
+                  variant="body2"
+                  color="text.primary"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  {t(LanguageKey.common.detailTitle)}
+                </Link>
+
+                <Link
+                  target="_blank"
+                  href={
+                    values?.response?.inspectionResult?.inspectionResultLink ||
+                    `${values.site_domain}/bai-viet/${values.post_slug}`
+                  }
+                  underline="always"
+                  variant="body2"
+                  color="text.primary"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  {values?.response?.inspectionResult?.inspectionResultLink
+                    ? 'GOOGLE URL'
+                    : 'SITE URL'}
+                </Link>
+              </Box>
+            </Card>
+          );
+        }}
       />
     </DashboardContent>
   );
 }
-
-const IndexStatus = ({ status }: { status?: string }) => {
-  switch (status) {
-    case 'NEW':
-      return <Chip size="small" variant="outlined" label={status} color="primary" />; // Xanh dương - mới
-
-    case 'INDEXING':
-    case 'REQUESTED':
-      return <Chip size="small" variant="outlined" label={status} color="info" />; // Xanh nhạt - đang index
-
-    case 'DELETED':
-      return <Chip size="small" variant="outlined" label={status} color="default" />; // Xám - đã xóa
-    case 'PASS':
-      return <Chip size="small" variant="outlined" label={status} color="success" />; // Xanh lá - index thành công
-    case 'FAIL':
-      return <Chip size="small" variant="outlined" label={status} color="error" />; // Đỏ - lỗi
-
-    case 'PARTIAL':
-    case 'MAX_QUOTA':
-      return <Chip size="small" variant="outlined" label={status} color="warning" />; // Vàng - chưa hoàn chỉnh
-
-    case 'NEUTRAL':
-      return <Chip size="small" variant="outlined" label={status} color="secondary" />; // Tím - bị loại trừ
-    case 'VERDICT_UNSPECIFIED':
-      return <Chip size="small" variant="outlined" label={status} color="default" />; // Xám - không rõ trạng thái
-
-    default:
-      return <Chip size="small" variant="outlined" label={status} color="warning" />; // Mặc định vàng - không xác định
-  }
-};

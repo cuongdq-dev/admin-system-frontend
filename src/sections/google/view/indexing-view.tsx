@@ -1,41 +1,25 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Chip,
-  Link,
-  TextField,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, Card, CardContent, Chip, Link, Typography, useMediaQuery } from '@mui/material';
 import { t } from 'i18next';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PATH_DROPDOWN, PATH_GOOGLE_INDEXING_LIST } from 'src/api-core/path';
-import { AutocompleteComponent, AutocompleteComponentWithUrl } from 'src/components/autocomplete';
+import { PATH_GOOGLE_INDEXING_LIST } from 'src/api-core/path';
+import { Iconify } from 'src/components/iconify';
+import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
-import { fDate, formatStr } from 'src/utils/format-time';
+import { fDate, formatStr, fRelativeTime } from 'src/utils/format-time';
 import { useShallow } from 'zustand/react/shallow';
+import { IndexingFilters } from '../components/indexing-filters';
+import { IndexStatus } from '../components/index-status';
 
 export function IndexingListView() {
-  const navigate = useNavigate();
-
   const storeName = StoreName.GOOGLE_INDEXING;
-  const [siteSelect, setSiteSelect] = useState<{ id: string; title?: string } | undefined | null>(
-    new URLSearchParams(location.search).get('site_id')
-      ? {
-          id: new URLSearchParams(location.search).get('site_id')!,
-          title: new URLSearchParams(location.search).get('site_name')!,
-        }
-      : undefined
-  );
+  new URLSearchParams(location.search).get('site_id')
+    ? {
+        id: new URLSearchParams(location.search).get('site_id')!,
+        title: new URLSearchParams(location.search).get('site_name')!,
+      }
+    : undefined;
 
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0 } = usePageStore(
@@ -45,26 +29,6 @@ export function IndexingListView() {
   const refreshData = () => {
     setRefreshList(storeName, refreshNumber + 1);
   };
-
-  const updateUrl = useCallback(
-    (newParams: Record<string, string | undefined>) => {
-      const queryParams = new URLSearchParams(location.search);
-
-      Object.entries(newParams).forEach(([key, value]) => {
-        if (value) queryParams.set(key, value);
-        else queryParams.delete(key);
-      });
-      navigate(`?${queryParams.toString()}`, { replace: true });
-    },
-    [location.search, navigate]
-  );
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const siteIdParam = queryParams.get('site_id');
-    const siteNameParam = queryParams.get('site_name');
-    setSiteSelect({ id: siteIdParam!, title: siteNameParam! });
-  }, [window.location.search]);
 
   const HeadLabel: HeadLabelProps[] = [
     {
@@ -152,72 +116,12 @@ export function IndexingListView() {
   ];
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  const indexS = new URLSearchParams(location.search).get('indexStatus')!;
-
   return (
     <DashboardContent
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
     >
-      <AutocompleteComponentWithUrl
-        baseUrl={PATH_DROPDOWN + '/sites'}
-        name="site_index"
-        multiple={false}
-        options={[]}
-        defaultValue={siteSelect || undefined}
-        onChange={(_, value) => {
-          if (!value) {
-            setSiteSelect(undefined);
-            updateUrl({
-              site_id: undefined,
-              site_name: undefined,
-            });
-          } else {
-            setSiteSelect(value);
-            updateUrl({
-              site_id: value?.id,
-              site_name: value?.title,
-              indexStatus: undefined,
-              limit: undefined,
-              page: undefined,
-            });
-          }
-        }}
-        renderInput={(params) => {
-          return <TextField {...params} margin="normal" label={t(LanguageKey.site.indexingItem)} />;
-        }}
-      />
-
-      <Box>
-        <AutocompleteComponent
-          sx={{ my: 2 }}
-          multiple
-          disableCloseOnSelect
-          defaultValue={indexS?.split(',').map((i) => {
-            return { id: i, title: i };
-          })}
-          onChange={(event, values) => {
-            const statuValues = values.map((value: { id: string; title: string }) => {
-              return value.id;
-            });
-
-            updateUrl({ indexStatus: statuValues.toString(), limit: undefined, page: undefined });
-          }}
-          clearIcon
-          options={[
-            { title: 'NEW', id: 'NEW' },
-            { title: 'INDEXING', id: 'INDEXING' },
-            { title: 'DELETED', id: 'DELETED' },
-            { title: 'VERDICT_UNSPECIFIED', id: 'VERDICT_UNSPECIFIED' },
-            { title: 'PASS', id: 'PASS' },
-            { title: 'PARTIAL', id: 'PARTIAL' },
-            { title: 'FAIL', id: 'FAIL' },
-            { title: 'NEUTRAL', id: 'NEUTRAL' },
-          ]}
-          renderInput={(params) => {
-            return <TextField {...params} label="Filter Status" />;
-          }}
-        />
-      </Box>
+      <HeadComponent title={'Google Index '} />
+      <IndexingFilters storeName={storeName} />
 
       <TableComponent
         component={isMobile ? 'CARD' : 'TABLE'}
@@ -230,62 +134,86 @@ export function IndexingListView() {
           const postUrl = `${values.site_domain}/bai-viet/${values.post_slug}`;
           const googleSearchUrl = `https://www.google.com/search?q=site:${postUrl}`;
           return (
-            <Card sx={{ width: '100%', mb: 2 }}>
-              <CardHeader
-                avatar={<Avatar aria-label="recipe">{values.site_name?.slice(0, 1)}</Avatar>}
-                title={values.site_name}
-                subheader={fDate(values.created_at, formatStr.dateTime)}
-              />
-
-              <CardContent sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Box>
-                  <Typography variant="body2">{values.site_domain}</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2">{values.post_title}</Typography>
-                </Box>
-              </CardContent>
-              <CardActions>
-                <AutocompleteComponent
-                  size="small"
-                  defaultValue={{ title: values.indexStatus, id: values.indexStatus }}
-                  options={[
-                    { title: 'NEW', id: 'NEW' },
-                    { title: 'INDEXING', id: 'INDEXING' },
-                    { title: 'DELETED', id: 'DELETED' },
-                    { title: 'VERDICT_UNSPECIFIED', id: 'VERDICT_UNSPECIFIED' },
-                    { title: 'PASS', id: 'PASS' },
-                    { title: 'PARTIAL', id: 'PARTIAL' },
-                    { title: 'FAIL', id: 'FAIL' },
-                    { title: 'NEUTRAL', id: 'NEUTRAL' },
-                  ]}
-                  renderInput={(params) => {
-                    return <TextField {...params} margin="normal" />;
+            <Card sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
+              <Box
+                sx={{
+                  mb: 4,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Box
+                  sx={(theme) => {
+                    return {
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      borderRadius: 1,
+                      px: 1,
+                      py: 0.5,
+                      color: theme.palette.grey.A200,
+                    };
                   }}
-                />
-              </CardActions>
-              <CardActions>
-                <Button
-                  color="error"
-                  size="medium"
-                  sx={{ textWrap: 'nowrap' }}
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => window.open(postUrl, '_blank')}
                 >
-                  View Site
-                </Button>
-                <Button
-                  color="warning"
-                  size="medium"
-                  sx={{ textWrap: 'nowrap' }}
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => window.open(googleSearchUrl, '_blank')}
+                  <IndexStatus status={values?.indexStatus} />
+                </Box>
+                <Box
+                  sx={{
+                    display: 'inline-flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
                 >
-                  Google Search
-                </Button>
-              </CardActions>
+                  <Iconify icon="mdi-light:clock"></Iconify>
+
+                  <Typography variant="body1" color="text.secondary" sx={{ ml: 1 }}>
+                    {fRelativeTime(values.created_at, formatStr.date)}
+                  </Typography>
+                </Box>
+              </Box>
+              <CardContent sx={{ p: 0, mb: 0 }}>
+                <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                  {new URL(values?.site_domain).hostname}
+                </Typography>
+                <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+                  {values?.site_domain}
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 3 }}>
+                  {values.post_title}s
+                </Typography>
+              </CardContent>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Link
+                  target="_blank"
+                  href={postUrl}
+                  underline="always"
+                  variant="body2"
+                  color="text.primary"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Post Url
+                </Link>
+
+                <Link
+                  target="_blank"
+                  href={googleSearchUrl}
+                  underline="always"
+                  variant="body2"
+                  color="text.primary"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Google Console
+                </Link>
+              </Box>
             </Card>
           );
         }}
@@ -293,26 +221,3 @@ export function IndexingListView() {
     </DashboardContent>
   );
 }
-
-const IndexStatus = ({ status }: { status?: string }) => {
-  switch (status) {
-    case 'NEW':
-      return <Chip size="small" variant="outlined" label={status} color="primary" />; // Xanh dương - mới
-    case 'INDEXING':
-      return <Chip size="small" variant="outlined" label={status} color="info" />; // Xanh nhạt - đang index
-    case 'DELETED':
-      return <Chip size="small" variant="outlined" label={status} color="default" />; // Xám - đã xóa
-    case 'PASS':
-      return <Chip size="small" variant="outlined" label={status} color="success" />; // Xanh lá - index thành công
-    case 'FAIL':
-      return <Chip size="small" variant="outlined" label={status} color="error" />; // Đỏ - lỗi
-    case 'PARTIAL':
-      return <Chip size="small" variant="outlined" label={status} color="warning" />; // Vàng - chưa hoàn chỉnh
-    case 'NEUTRAL':
-      return <Chip size="small" variant="outlined" label={status} color="secondary" />; // Tím - bị loại trừ
-    case 'VERDICT_UNSPECIFIED':
-      return <Chip size="small" variant="outlined" label={status} color="default" />; // Xám - không rõ trạng thái
-    default:
-      return <Chip size="small" variant="outlined" label={status} color="warning" />; // Mặc định vàng - không xác định
-  }
-};

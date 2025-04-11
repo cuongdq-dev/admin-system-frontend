@@ -1,6 +1,6 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
@@ -93,13 +93,8 @@ export function NotificationsPopover({ sx, ...other }: NotificationsPopoverProps
   const isMobile = useMediaQuery('(max-width:600px)');
 
   const { notifications, notifyNew = 0 } = useSettingStore(useShallow((state) => state));
-  const {
-    setNotifyNew,
-    setNotifications,
-    setNotificationsAll,
-    setNotificationsNew,
-    setNotificationsArchived,
-  } = useSettingStore.getState();
+  const { setNotifications, setNotificationsAll, setNotificationsNew, setNotificationsArchived } =
+    useSettingStore.getState();
   const [tabValue, setTabValue] = useState<StatusEnum | ''>('');
   const [openPopover, setOpenPopover] = useState(false);
   const [loading, setLoading] = useState(false);

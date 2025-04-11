@@ -38,7 +38,7 @@ export const RHFCheckbox = ({ name, ...other }: RHFCheckboxProps & FormControlLa
 
 interface RHFMultiCheckboxProps {
   name: string;
-  options: any[];
+  options: { value: string; label: string }[];
 }
 
 export const RHFMultiCheckbox = ({
@@ -47,16 +47,13 @@ export const RHFMultiCheckbox = ({
   ...other
 }: RHFMultiCheckboxProps & FormControlLabelProps) => {
   const { control } = useFormContext();
-
   return (
     <Controller
       name={name}
       control={control}
+      defaultValue={other.defaultValue} // Luôn đảm bảo đây là array
       render={({ field }) => {
-        const onSelected = (option: any) =>
-          field.value.includes(option)
-            ? field.value.filter((value: any) => value !== option)
-            : [...field.value, option];
+        const currentValue: string[] = field.value || [];
 
         return (
           <FormGroup>
@@ -66,8 +63,13 @@ export const RHFMultiCheckbox = ({
                 key={option.value}
                 control={
                   <Checkbox
-                    checked={field.value.includes(option.value)}
-                    onChange={() => field.onChange(onSelected(option.value))}
+                    checked={currentValue?.includes(option.value)}
+                    onChange={(event, checked) => {
+                      const updatedValues = checked
+                        ? [...currentValue, option.value]
+                        : currentValue?.filter((value) => value !== option.value);
+                      field.onChange(updatedValues);
+                    }}
                   />
                 }
                 label={option.label}

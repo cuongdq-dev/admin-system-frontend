@@ -167,22 +167,18 @@ export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocomp
     <Controller
       name={name}
       control={control}
-      render={({ field: { onChange, onBlur } }) => {
+      render={({ field: { onBlur } }) => {
         return (
           <Autocomplete
             sx={{ width: '100%', border: 'none', boxShadow: 'none' }}
-            multiple
             id={name}
-            disableClearable
-            disableCloseOnSelect
             disabled={loading}
+            multiple
             onBlur={(event) => {
               onBlur();
               clearErrors(name);
             }}
-            onChange={(event, newValue) => {
-              setValue(name, newValue, { shouldDirty: true });
-            }}
+            onChange={(_, newValue) => setValue(name, newValue, { shouldDirty: true })}
             getOptionLabel={(option) => option.title}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             renderTags={(tagValue, getTagProps) => {
@@ -231,20 +227,19 @@ export const RHFAutocompleteWithApi = ({
   const [options, setOptions] = useState<any[] | undefined>([]);
   const [isLoading, setLoading] = useState(loading);
   const [showAll, setShowAll] = useState(false);
-
   return (
     <Controller
       name={name}
       control={control}
+      defaultValue={other.defaultValue}
       render={({ field: { onBlur } }) => {
         return (
           <Autocomplete
             sx={{ width: '100%', border: 'none', boxShadow: 'none' }}
-            multiple
             id={name}
-            disableClearable
-            disableCloseOnSelect
             loading={isLoading}
+            multiple
+            disablePortal
             onFocus={() => {
               setLoading(true);
               (!options || options?.length == 0) &&
@@ -268,7 +263,9 @@ export const RHFAutocompleteWithApi = ({
               onBlur();
               clearErrors(name);
             }}
-            onChange={(_, newValue) => setValue(name, newValue, { shouldDirty: true })}
+            onChange={(_, newValue) => {
+              setValue(name, newValue, { shouldDirty: true });
+            }}
             getOptionLabel={(option) => option.title}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             loadingText="Loading options..."

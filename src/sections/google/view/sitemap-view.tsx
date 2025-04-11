@@ -2,6 +2,8 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   Chip,
   Dialog,
   DialogActions,
@@ -9,15 +11,14 @@ import {
   DialogContentText,
   DialogTitle,
   MenuItem,
-  TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import { t } from 'i18next';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
-import { PATH_DROPDOWN, PATH_GOOGLE_SITEMAP_LIST } from 'src/api-core/path';
-import { AutocompleteComponentWithUrl } from 'src/components/autocomplete';
+import { PATH_GOOGLE_SITEMAP_LIST } from 'src/api-core/path';
 import { Transition } from 'src/components/dialog';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { RHFTextField } from 'src/components/hook-form';
@@ -27,9 +28,10 @@ import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
-import { fDate, formatStr } from 'src/utils/format-time';
+import { fDate, formatStr, fRelativeTime } from 'src/utils/format-time';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
+import { SitemapFilters } from '../components/sitemap-filters';
 
 type FormConfigState = {
   open: boolean;
@@ -214,13 +216,16 @@ export function SiteMapListView() {
       },
     },
   ];
+
+  const isMobile = useMediaQuery('(max-width:600px)');
+
   return (
     <DashboardContent
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent
         title={'Sitemap XML'}
-        buttonTitle={'Submit Sitemap'}
+        buttonTitle={t(LanguageKey.button.create)}
         onClickButton={() =>
           setFormConfig({
             open: true,
@@ -229,43 +234,118 @@ export function SiteMapListView() {
           })
         }
       />
-      <AutocompleteComponentWithUrl
-        baseUrl={PATH_DROPDOWN + '/sites'}
-        name="site_index"
-        multiple={false}
-        sx={{ mb: 2 }}
-        options={[]}
-        defaultValue={siteSelect}
-        onChange={(_, value) => {
-          if (!value) {
-            setSiteSelect(undefined);
-            updateUrl({
-              site_id: undefined,
-              site_name: undefined,
-            });
-          } else {
-            setSiteSelect(value);
-            updateUrl({
-              site_id: value?.id,
-              site_name: value?.title,
-              indexStatus: undefined,
-              limit: undefined,
-              page: undefined,
-            });
-          }
-        }}
-        renderInput={(params) => {
-          return <TextField {...params} margin="normal" label={t(LanguageKey.site.indexingItem)} />;
-        }}
-      />
-
+      <SitemapFilters storeName={storeName} />
       <TableComponent
-        component="TABLE"
+        component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}
         url={PATH_GOOGLE_SITEMAP_LIST}
         indexCol={true}
         refreshData={refreshData}
         headLabel={[...HeadLabel, ...ActionLabel]}
+        customCard={({ values, index }: { values: Record<string, any>; index: number }) => {
+          return (
+            <Card sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
+              <Box
+                sx={{
+                  mb: 4,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Box
+                  sx={(theme) => {
+                    return {
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      borderRadius: 1,
+                      px: 1,
+                      py: 0.5,
+                      backgroundColor: values.isSitemapsIndex
+                        ? theme.palette.success.main
+                        : theme.palette.warning.main,
+                      color: theme.palette.grey.A200,
+                    };
+                  }}
+                >
+                  <Iconify icon="hugeicons:folder-edit" />
+                  <Typography fontSize={12} ml={1}>
+                    {values.isSitemapsIndex ? 'INDEXED' : 'PENDING'}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'inline-flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Iconify icon="mdi-light:clock"></Iconify>
+
+                  <Typography variant="body1" color="text.secondary" sx={{ ml: 1 }}>
+                    {fRelativeTime(values.lastSubmitted, formatStr.date)}
+                  </Typography>
+                </Box>
+              </Box>
+              <CardContent sx={{ p: 0, mb: 0 }}>
+                <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                  {new URL(values?.path).pathname.replace('/', '')}
+                </Typography>
+                <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+                  {new URL(values?.path).hostname}
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 3 }}>
+                  {values.path}
+                </Typography>
+              </CardContent>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <IconButtonConfirm
+                  icon="iconoir:submit-document"
+                  btnText="Re-Submit"
+                  title="Re-submit Sitemap?"
+                  description={values?.path}
+                  handleAction={(setOpen) => {
+                    invokeRequest({
+                      baseURL: PATH_GOOGLE_SITEMAP_LIST + '/create',
+                      method: HttpMethod.POST,
+                      onSuccess: () => {
+                        refreshData();
+                        setOpen && setOpen(false);
+                      },
+                      params: { sitemapUrl: values.path, siteUrl: new URL(values.path).origin },
+                    });
+                  }}
+                />
+                <IconButtonConfirm
+                  btnText="Delete"
+                  title="Delete Sitemap?"
+                  icon="mingcute:delete-fill"
+                  description={values?.path}
+                  handleAction={(setOpen) => {
+                    invokeRequest({
+                      baseURL: PATH_GOOGLE_SITEMAP_LIST + '/delete',
+                      method: HttpMethod.DELETE,
+                      onSuccess: () => {
+                        refreshData();
+                        setOpen && setOpen(false);
+                      },
+                      params: { sitemapUrl: values.path, siteUrl: new URL(values.path).origin },
+                    });
+                  }}
+                />
+              </Box>
+            </Card>
+          );
+        }}
       />
 
       <PopupFormTable
@@ -348,10 +428,15 @@ export const IconButtonConfirm = (props: IconButtonConfirmProps) => {
 
   return (
     <>
-      <MenuItem sx={{ color: 'error.main' }} onClick={() => setOpen(true)}>
-        <Box display="flex" justifyContent="center" alignItems="center" position="relative">
-          {icon && <Iconify icon={icon} />}
-        </Box>
+      <MenuItem
+        sx={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
+        }}
+        onClick={() => setOpen(true)}
+      >
+        <Box display="flex">{icon && <Iconify icon={icon} />}</Box>
       </MenuItem>
       <Dialog
         PaperProps={{ sx: { borderRadius: 3 } }}

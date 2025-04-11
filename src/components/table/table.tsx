@@ -33,6 +33,7 @@ import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
 import { varAlpha } from 'src/theme/styles';
+import { NotFoundDataComponent } from '../no-found-data';
 
 export const TableComponent = (props: TableComponentProps) => {
   const table = useTable();
@@ -117,20 +118,11 @@ export const TableComponent = (props: TableComponentProps) => {
 
         <Grid container>
           {datasource?.map((data: Record<string, any>, index: number) => {
-            return customCard && customCard({ values: data, index: index });
+            return customCard && customCard({ values: data, index: index, updateRowData });
           })}
         </Grid>
-        {metaData?.totalItems == 0 && (
-          <Box sx={{ py: 2, width: '100%', textAlign: 'center' }}>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              Not found
-            </Typography>
 
-            <Typography variant="body2">
-              <br /> Try checking for typos or using complete words.
-            </Typography>
-          </Box>
-        )}
+        {metaData?.totalItems == 0 && <NotFoundDataComponent />}
         {metaData && metaData.totalItems > 0 && (
           <Pagination
             page={metaData?.currentPage}
@@ -139,7 +131,7 @@ export const TableComponent = (props: TableComponentProps) => {
               table.onChangePage(event, page - 1);
             }}
             color="primary"
-            sx={{ mt: 8, mx: 'auto' }}
+            sx={{ mt: 2, mx: 'auto' }}
           />
         )}
       </>

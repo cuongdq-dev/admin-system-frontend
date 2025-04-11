@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import { t } from 'i18next';
 import { useState } from 'react';
 import { Iconify } from 'src/components/iconify';
-import { NotFoundComponent } from 'src/components/no-found-data';
 import { FetchingComponent } from 'src/components/progress';
 import { LanguageKey } from 'src/constants';
 import { usePageStore } from 'src/store/page';

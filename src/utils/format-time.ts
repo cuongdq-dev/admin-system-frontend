@@ -57,7 +57,7 @@ export function fDateTime(date: DatePickerFormat, format?: string) {
  * - Nếu < 3 ngày → "2 ngày trước"
  * - Nếu >= 3 ngày → Hiển thị theo fDate()
  */
-export function fRelativeTime(date: DatePickerFormat) {
+export function fRelativeTime(date: DatePickerFormat, format?: string) {
   if (!date) {
     return null;
   }
@@ -78,7 +78,7 @@ export function fRelativeTime(date: DatePickerFormat) {
   } else if (diffDays < 3) {
     return `${diffDays} ngày trước`;
   } else {
-    return fDate(date, formatStr.dateTime); // Hiển thị dạng ngày nếu > 3 ngày
+    return fDate(date, format || formatStr.dateTime); // Hiển thị dạng ngày nếu > 3 ngày
   }
 }
 

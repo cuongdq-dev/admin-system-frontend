@@ -99,7 +99,6 @@ export function ListView() {
   ];
 
   const isMobile = useMediaQuery('(max-width:600px)');
-  const { deleteItem } = usePageStore.getState();
 
   return (
     <DashboardContent

@@ -10,16 +10,16 @@ import { Stack } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-export function NotFoundComponent() {
+export function NotFoundDataComponent() {
   return (
     <Stack>
       <Container>
         <Typography variant="h3" sx={{ mb: 2 }}>
-          Sorry, page not found!
+          Sorry, data not found!
         </Typography>
 
         <Typography sx={{ color: 'text.secondary' }}>
-          Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be
+          Sorry, we couldn’t find the data you’re looking for. Perhaps you’ve mistyped the URL? Be
           sure to check your spelling.
         </Typography>
 

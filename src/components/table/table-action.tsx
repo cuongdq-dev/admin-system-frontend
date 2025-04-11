@@ -40,7 +40,7 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
         )}
         {!deleteBtn && editBtn && (
           <IconButton
-            onClick={() => {
+            onClick={(event) => {
               handleClosePopover();
               navigate(row?.id, { replace: false });
             }}

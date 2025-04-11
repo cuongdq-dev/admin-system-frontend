@@ -282,7 +282,18 @@ declare type TableComponentProps = {
   component?: 'CARD' | 'TABLE';
   children?: ChildrenColumn;
   updateUrlEnabled?: boolean;
-  customCard?: ({ values, index }: { values: Record<string, any>; index: number }) => JSX.Element;
+  customCard?: ({
+    values,
+    index,
+  }: {
+    values: Record<string, any>;
+    index: number;
+    updateRowData?: (
+      rowId: string,
+      values: Record<string, any>,
+      action: 'ADD' | 'REMOVE' | 'UPDATE'
+    ) => void;
+  }) => JSX.Element;
   url: string;
   storeName: string;
   headLabel: HeadLabelProps[];
