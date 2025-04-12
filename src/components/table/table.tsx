@@ -202,7 +202,7 @@ export const TableComponent = (props: TableComponentProps) => {
                     const collapsed =
                       children?.name && row[children.name] && table.collapsed == row?.id;
                     return (
-                      <Fragment key={'table_container_' + index + '_' + row?.id}>
+                      <Fragment key={storeName + '_' + index + '_' + row?.id}>
                         <TableRow
                           key={'table_row_' + index + '_' + row?.id}
                           hover
@@ -512,34 +512,32 @@ const TableChildren = ({
                   </TableCell>
                   {columns.map((headCell) => {
                     return (
-                      <>
-                        <TableCell
-                          key={headCell.id}
-                          align={headCell.align || 'left'}
-                          sx={(theme) => {
-                            return {
-                              width: headCell.width,
-                              minWidth: headCell.minWidth,
-                              backgroundColor:
-                                index % 2 == 0
-                                  ? varAlpha(theme.vars.palette.info.mainChannel, 0.1)
-                                  : varAlpha(theme.vars.palette.info.mainChannel, 0.05),
-                            };
-                          }}
-                        >
-                          {headCell.label}
-                        </TableCell>
-                      </>
+                      <TableCell
+                        key={headCell.id}
+                        align={headCell.align || 'left'}
+                        sx={(theme) => {
+                          return {
+                            width: headCell.width,
+                            minWidth: headCell.minWidth,
+                            backgroundColor:
+                              index % 2 == 0
+                                ? varAlpha(theme.vars.palette.info.mainChannel, 0.1)
+                                : varAlpha(theme.vars.palette.info.mainChannel, 0.05),
+                          };
+                        }}
+                      >
+                        {headCell.label}
+                      </TableCell>
                     );
                   })}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((row: Record<string, any>, index: number) => {
+                {data?.map((row: Record<string, any>, index: number) => {
                   const keys = Object.keys(row);
 
                   return (
-                    <>
+                    <Fragment key={'table_children_' + index}>
                       <TableRow
                         key={'table_children_row_' + index + '_' + row?.id}
                         tabIndex={-1}
@@ -596,7 +594,7 @@ const TableChildren = ({
                           index={index + 1}
                         />
                       )}
-                    </>
+                    </Fragment>
                   );
                 })}
               </TableBody>
