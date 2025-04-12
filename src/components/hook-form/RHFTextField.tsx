@@ -185,7 +185,12 @@ export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocomp
               return (
                 <>
                   {tagValue.map((option, index) => (
-                    <Chip label={option.title} {...getTagProps({ index })} deleteIcon={<></>} />
+                    <Chip
+                      label={option.title}
+                      {...getTagProps({ index })}
+                      key={option?.title + '_' + index}
+                      deleteIcon={<></>}
+                    />
                   ))}
                 </>
               );
@@ -275,7 +280,12 @@ export const RHFAutocompleteWithApi = ({
               return (
                 <>
                   {displayedOptions.map((option, index) => (
-                    <Chip label={option.title} {...getTagProps({ index })} deleteIcon={<></>} />
+                    <Chip
+                      label={option.title}
+                      {...getTagProps({ index })}
+                      key={option?.title + '_' + index}
+                      deleteIcon={<></>}
+                    />
                   ))}
 
                   {tagValue?.length > 3 && !showAll && (

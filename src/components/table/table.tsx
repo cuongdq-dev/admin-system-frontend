@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { t } from 'i18next';
 import queryString from 'query-string';
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
@@ -118,7 +118,11 @@ export const TableComponent = (props: TableComponentProps) => {
 
         <Grid container>
           {datasource?.map((data: Record<string, any>, index: number) => {
-            return customCard && customCard({ values: data, index: index, updateRowData });
+            return (
+              <Fragment key={'card_' + index}>
+                {customCard && customCard({ values: data, index: index, updateRowData })}
+              </Fragment>
+            );
           })}
         </Grid>
 
@@ -162,7 +166,7 @@ export const TableComponent = (props: TableComponentProps) => {
       >
         <Backdrop
           sx={(theme) => ({ position: 'absolute', zIndex: theme.zIndex.drawer + 1 })}
-          open={isFetching!}
+          open={!!isFetching}
         >
           <CircularProgress color="inherit" />
         </Backdrop>
@@ -198,7 +202,7 @@ export const TableComponent = (props: TableComponentProps) => {
                     const collapsed =
                       children?.name && row[children.name] && table.collapsed == row?.id;
                     return (
-                      <>
+                      <Fragment key={'table_container_' + index + '_' + row?.id}>
                         <TableRow
                           key={'table_row_' + index + '_' + row?.id}
                           hover
@@ -300,7 +304,7 @@ export const TableComponent = (props: TableComponentProps) => {
                             open={table.collapsed == row?.id}
                           />
                         )}
-                      </>
+                      </Fragment>
                     );
                   })}
 

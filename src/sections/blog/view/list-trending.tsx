@@ -306,9 +306,9 @@ const TrendingCard = ({
               [`& .${timelineItemClasses.root}:before`]: { flex: 0, padding: 0 },
             }}
           >
-            {values?.articles?.map((article: any) => {
+            {values?.articles?.map((article: any, index: number) => {
               return (
-                <TimelineItem>
+                <TimelineItem key={article?.id + '_' + index}>
                   <TimelineSeparator sx={{ mt: 1 }}>
                     <Iconify icon="ic:round-article" />
                   </TimelineSeparator>
@@ -317,9 +317,9 @@ const TrendingCard = ({
                     <Typography color="grey" variant="caption">
                       {fRelativeTime(article?.created_at)} | {article.source}
                     </Typography>
-                    {article?.posts?.map((post: any) => {
+                    {article?.posts?.map((post: any, index: number) => {
                       return (
-                        <TimelineItem>
+                        <TimelineItem key={post.id + '_' + index}>
                           <TimelineSeparator sx={{ mt: 1 }}>
                             <Iconify icon="fluent:news-16-regular" />
                           </TimelineSeparator>

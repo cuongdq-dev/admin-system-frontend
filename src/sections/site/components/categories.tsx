@@ -198,6 +198,7 @@ export const AddNewCategory = ({ siteId, ...other }: AddNewCategoryProps) => {
                 size="small"
                 label={option.title}
                 {...getTagProps({ index })}
+                key={option + '_' + index}
                 deleteIcon={<></>}
               />
             ))}

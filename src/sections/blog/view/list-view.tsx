@@ -10,6 +10,7 @@ import { LanguageKey, StoreName } from 'src/constants';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { PostItem } from '../post-item';
+import { BlogFilter } from '../components/blog-filter';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +30,7 @@ export function ListView() {
       breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent title={t(LanguageKey.blog.tableTitle)} />
+      <BlogFilter storeName={storeName} />
       <Grid container spacing={3}>
         <TableComponent
           storeName={storeName}

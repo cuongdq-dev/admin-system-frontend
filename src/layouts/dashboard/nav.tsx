@@ -1,6 +1,6 @@
 import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
@@ -167,12 +167,17 @@ export function NavContent(props: NavContent) {
       <Scrollbar fillContent>
         <Box component="nav" display="flex" flex="1 1 auto" flexDirection="column" sx={sx}>
           <Box component="ul" gap={0.5} display="flex" flexDirection="column">
-            {data.map((item, index) => {
+            {data?.map((item, index) => {
               const isActived = item.path === pathname;
 
               return (
-                <>
-                  <ListItem onClick={() => {}} disableGutters disablePadding key={item.title}>
+                <Fragment key={item.title + '_' + index}>
+                  <ListItem
+                    onClick={() => {}}
+                    disableGutters
+                    disablePadding
+                    key={item.title + '_' + index}
+                  >
                     <ListItemButton
                       disableGutters
                       onClick={() => {
@@ -252,10 +257,10 @@ export function NavContent(props: NavContent) {
                     in={menuSelect == index || !!item.children?.find((c) => c.path == pathname)}
                     timeout="auto"
                   >
-                    {item?.children?.map((childItem) => {
+                    {item?.children?.map((childItem, index) => {
                       const childrenActived = childItem.path === pathname;
                       return (
-                        <ListItem disableGutters disablePadding>
+                        <ListItem key={childItem.title + '_' + index} disableGutters disablePadding>
                           <ListItemButton
                             disableGutters
                             component={RouterLink}
@@ -336,7 +341,7 @@ export function NavContent(props: NavContent) {
                       );
                     })}
                   </Collapse>
-                </>
+                </Fragment>
               );
             })}
           </Box>

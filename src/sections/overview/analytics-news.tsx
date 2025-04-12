@@ -189,8 +189,8 @@ export function AnalyticsNews({ title, subheader, ...other }: Props) {
                   secondaryTypographyProps={{ mt: 0.5, noWrap: true, component: 'span' }}
                 />
 
-                {drawer.values?.articles?.map((article) => {
-                  return <ArticleItem item={article} />;
+                {drawer.values?.articles?.map((article, index) => {
+                  return <ArticleItem key={article?.id + '_' + index} item={article} />;
                 })}
               </Box>
             </Paper>

@@ -15,8 +15,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { t } from 'i18next';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_GOOGLE_SITEMAP_LIST } from 'src/api-core/path';
 import { Transition } from 'src/components/dialog';
@@ -115,17 +114,13 @@ const FormTableSchema = {
   sitemapUrl: Yup.string().required('Sitemap XML is required'),
 };
 export function SiteMapListView() {
-  const navigate = useNavigate();
-
   const storeName = StoreName.GOOGLE_SITEMAP;
-  const [siteSelect, setSiteSelect] = useState<{ id: string; title?: string } | undefined | null>(
-    new URLSearchParams(location.search).get('site_id')
-      ? {
-          id: new URLSearchParams(location.search).get('site_id')!,
-          title: new URLSearchParams(location.search).get('site_name')!,
-        }
-      : undefined
-  );
+  new URLSearchParams(location.search).get('site_id')
+    ? {
+        id: new URLSearchParams(location.search).get('site_id')!,
+        title: new URLSearchParams(location.search).get('site_name')!,
+      }
+    : undefined;
 
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0 } = usePageStore(
@@ -135,26 +130,6 @@ export function SiteMapListView() {
   const refreshData = () => {
     setRefreshList(storeName, refreshNumber + 1);
   };
-
-  const updateUrl = useCallback(
-    (newParams: Record<string, string | undefined>) => {
-      const queryParams = new URLSearchParams(location.search);
-
-      Object.entries(newParams).forEach(([key, value]) => {
-        if (value) queryParams.set(key, value);
-        else queryParams.delete(key);
-      });
-      navigate(`?${queryParams.toString()}`, { replace: true });
-    },
-    [location.search, navigate]
-  );
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const siteIdParam = queryParams.get('site_id');
-    const siteNameParam = queryParams.get('site_name');
-    setSiteSelect({ id: siteIdParam!, title: siteNameParam! });
-  }, [window.location.search]);
 
   const [formConfig, setFormConfig] = useState<FormConfigState>({
     open: false,
