@@ -56,7 +56,6 @@ export function IndexingFilters(props: Props) {
             limit: values?.limit?.id,
             page: values?.page?.id,
             site_id: values?.site?.id,
-            site_name: values?.site?.title,
             indexStatus: values?.indexStatus?.toString() || undefined,
           };
         }}
@@ -67,11 +66,7 @@ export function IndexingFilters(props: Props) {
               multiple={false}
               name="site"
               baseUrl={PATH_DROPDOWN + '/sites'}
-              defaultValue={
-                defaultValues?.site_id
-                  ? { id: defaultValues?.site_id, title: defaultValues?.site_name }
-                  : undefined
-              }
+              defaultValue={defaultValues?.site_id ? { id: defaultValues?.site_id } : undefined}
               options={[]}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Site'} />;

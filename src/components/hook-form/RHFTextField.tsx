@@ -221,57 +221,86 @@ interface RHFAutocompleteWithApiProps extends AutocompleteProps<any, boolean, bo
   name: string;
   baseUrl: string;
   loading?: boolean;
+  dataSource?: any[];
 }
 export const RHFAutocompleteWithApi = ({
   name,
   baseUrl,
   loading = false,
+  dataSource,
+  multiple = true,
+  defaultValue,
   ...other
 }: RHFAutocompleteWithApiProps) => {
   const { control, setValue, clearErrors } = useFormContext();
-  const [options, setOptions] = useState<any[] | undefined>([]);
+  const [options, setOptions] = useState<any[] | undefined>(dataSource || []);
+  const [defaultValues, setDefaultValues] = useState<any[] | undefined>(
+    multiple
+      ? options?.filter((o) => defaultValue?.some((val: any) => val?.id === o.id || val === o.id))
+      : options?.find((o) => o.id == defaultValue?.id)
+  );
+
   const [isLoading, setLoading] = useState(loading);
   const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    if (!options || Number(options?.length) == 0) {
+      setLoading(true);
+      invokeRequest({
+        baseURL: baseUrl,
+        method: HttpMethod.GET,
+        onSuccess: (res) => {
+          setOptions(res);
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
+        },
+        onHandleError: () => {
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
+        },
+      });
+    }
+  }, [baseUrl]);
+
+  useEffect(() => {
+    if (Number(options?.length) > 0) {
+      if (multiple) {
+        setDefaultValues(
+          options?.filter((o) => defaultValue?.some((val: any) => val?.id === o.id || val === o.id))
+        );
+      } else {
+        setDefaultValues(options?.find((o) => o.id == defaultValue?.id));
+      }
+    }
+  }, [options, defaultValue]);
   return (
     <Controller
       name={name}
       control={control}
-      defaultValue={other.defaultValue}
+      defaultValue={defaultValues}
       render={({ field: { onBlur } }) => {
         return (
           <Autocomplete
+            defaultValue={defaultValues || {}}
+            value={defaultValues || {}}
             sx={{ width: '100%', border: 'none', boxShadow: 'none' }}
             id={name}
             loading={isLoading}
-            multiple
+            multiple={multiple}
             disablePortal
-            onFocus={() => {
-              setLoading(true);
-              (!options || options?.length == 0) &&
-                invokeRequest({
-                  baseURL: baseUrl,
-                  method: HttpMethod.GET,
-                  onSuccess: (res) => {
-                    setOptions(res);
-                    setTimeout(() => {
-                      setLoading(false);
-                    }, 2000);
-                  },
-                  onHandleError: () => {
-                    setTimeout(() => {
-                      setLoading(false);
-                    }, 2000);
-                  },
-                });
-            }}
             onBlur={() => {
               onBlur();
               clearErrors(name);
             }}
             onChange={(_, newValue) => {
+              setDefaultValues(newValue);
               setValue(name, newValue, { shouldDirty: true });
             }}
-            getOptionLabel={(option) => option.title}
+            getOptionLabel={(option) => {
+              return option.title || '';
+            }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             loadingText="Loading options..."
             noOptionsText="No options available"

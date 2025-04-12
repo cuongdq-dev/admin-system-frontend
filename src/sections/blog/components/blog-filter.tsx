@@ -17,6 +17,7 @@ type Props = { storeName: string };
 export function BlogFilter(props: Props) {
   const { storeName } = props;
   const { meta } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
+
   return (
     <Box
       display="flex"
@@ -51,8 +52,7 @@ export function BlogFilter(props: Props) {
             limit: values?.limit?.id,
             page: values?.page?.id,
             site_id: values?.site?.id,
-            site_name: values?.site?.title,
-            type: values?.type?.toString() || undefined,
+            categories_id: values?.categories?.map((cate?: Record<string, any>) => cate?.id),
           };
         }}
         render={({ isSubmitting, defaultValues }) => (
@@ -62,11 +62,7 @@ export function BlogFilter(props: Props) {
               multiple={false}
               name="site"
               baseUrl={PATH_DROPDOWN + '/sites'}
-              defaultValue={
-                defaultValues?.site_id
-                  ? { id: defaultValues?.site_id, title: defaultValues?.site_name }
-                  : undefined
-              }
+              defaultValue={defaultValues?.site_id ? { id: defaultValues?.site_id } : undefined}
               options={[]}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Site'} />;
@@ -78,12 +74,10 @@ export function BlogFilter(props: Props) {
               disableCloseOnSelect
               name="categories"
               baseUrl={PATH_DROPDOWN + '/categories'}
-              defaultValue={
-                defaultValues?.site_id
-                  ? { id: defaultValues?.site_id, title: defaultValues?.site_name }
-                  : undefined
-              }
               options={[]}
+              defaultValue={defaultValues?.categories_id?.split(',').map((cate: string) => {
+                return { id: cate };
+              })}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Categories'} />;
               }}
