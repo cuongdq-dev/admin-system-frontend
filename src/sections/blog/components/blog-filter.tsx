@@ -52,7 +52,10 @@ export function BlogFilter(props: Props) {
             limit: values?.limit?.id,
             page: values?.page?.id,
             site_id: values?.site?.id,
-            categories_id: values?.categories?.map((cate?: Record<string, any>) => cate?.id),
+            categories_id:
+              values?.categories.length > 0
+                ? values?.categories?.map((cate?: Record<string, any>) => cate?.id)
+                : undefined,
           };
         }}
         render={({ isSubmitting, defaultValues }) => (
