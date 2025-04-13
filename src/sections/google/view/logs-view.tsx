@@ -197,7 +197,7 @@ export function GoogleLogsListView() {
                 >
                   {values?.response?.inspectionResult?.indexStatusResult?.verdict ? (
                     <Tooltip title={JSON.stringify(values?.response)}>
-                      <Typography>
+                      <Typography component={'div'}>
                         <IndexStatus
                           status={values?.response?.inspectionResult?.indexStatusResult?.verdict}
                         />
@@ -207,13 +207,13 @@ export function GoogleLogsListView() {
                     <>
                       {values?.response?.urlNotificationMetadata?.url ? (
                         <Tooltip title={JSON.stringify(values?.response)}>
-                          <Typography>
+                          <Typography component={'div'}>
                             <IndexStatus status={'REQUESTED'} />
                           </Typography>
                         </Tooltip>
                       ) : (
                         <Tooltip title={JSON.stringify(values?.response)}>
-                          <Typography>
+                          <Typography component={'div'}>
                             <IndexStatus status={'MAX_QUOTA'} />
                           </Typography>
                         </Tooltip>
