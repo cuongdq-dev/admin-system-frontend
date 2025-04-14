@@ -65,7 +65,6 @@ const ServiceItem = (props: { connectionId?: string }) => {
   } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
 
   const refreshData = () => setRefreshList(storeName, refreshNumber + 1);
-  console.log(data);
 
   useAPI({
     clearRequest:

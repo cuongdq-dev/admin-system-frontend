@@ -17,7 +17,6 @@ import { FormProvider } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey } from 'src/constants';
-import { GetValuesFormChange } from 'src/utils/validation/form';
 
 type TableFilterProps = {
   convertValue?: (values?: Record<string, any>) => Record<string, any>;
@@ -35,13 +34,11 @@ export function TableFilter(props: TableFilterProps) {
 
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  const methods = useForm({
-    resolver: yupResolver(Yup.object().shape({})),
-  });
+  const methods = useForm({});
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, defaultValues },
   } = methods;
 
   const [isLoading, setLoading] = useState(isSubmitting);
@@ -76,18 +73,8 @@ export function TableFilter(props: TableFilterProps) {
     setLoading(true);
 
     const values = (convertValue && convertValue(data)) || data;
-
-    const valuesChange = GetValuesFormChange(defaultFilters as typeof values, values);
-    if (Object.keys(valuesChange).length == 0) {
-      reset();
-      onCloseFilter();
-      setLoading(false);
-      return;
-    }
-
     const queryParams = new URLSearchParams(window.location.search);
-
-    Object.entries(valuesChange).forEach(([key, value]) => {
+    Object.entries(values).forEach(([key, value]) => {
       if (value) queryParams.set(key, value?.toString());
       else queryParams.delete(key);
     });

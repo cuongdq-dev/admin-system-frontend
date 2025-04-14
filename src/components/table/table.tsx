@@ -115,7 +115,12 @@ export const TableComponent = (props: TableComponentProps) => {
     return (
       <>
         <PageLoading isLoading={loading} />
-
+        <Backdrop
+          sx={(theme) => ({ position: 'absolute', zIndex: theme.zIndex.drawer + 1 })}
+          open={!!isFetching}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <Grid container>
           {datasource?.map((data: Record<string, any>, index: number) => {
             return (

@@ -1,13 +1,12 @@
-import { Grid, TextField, Typography, useColorScheme } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { t } from 'i18next';
-
-import { LoadingButton } from '@mui/lab';
-import { PATH_DROPDOWN } from 'src/api-core/path';
-import { RHFAutocomplete, RHFAutocompleteWithApi } from 'src/components/hook-form/RHFTextField';
+import { RHFAutocomplete } from 'src/components/hook-form/RHFTextField';
 import { TableFilter } from 'src/components/table';
 import { LanguageKey } from 'src/constants';
 import { usePageStore } from 'src/store/page';
+import { useSettingStore } from 'src/store/setting';
 import { useShallow } from 'zustand/react/shallow';
 
 // ----------------------------------------------------------------------
@@ -17,6 +16,7 @@ type Props = { storeName: string };
 export function BlogFilter(props: Props) {
   const { storeName } = props;
   const { meta } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
+  const { categories, sites } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
 
   return (
     <Box
@@ -47,39 +47,37 @@ export function BlogFilter(props: Props) {
       </Box>
       <TableFilter
         convertValue={(values) => {
-          console.log(values);
           return {
             limit: values?.limit?.id,
             page: values?.page?.id,
             site_id: values?.site?.id,
             categories_id:
-              values?.categories.length > 0
+              values?.categories?.length > 0
                 ? values?.categories?.map((cate?: Record<string, any>) => cate?.id)
                 : undefined,
           };
         }}
         render={({ isSubmitting, defaultValues }) => (
           <>
-            <RHFAutocompleteWithApi
+            <RHFAutocomplete
               id="site"
               multiple={false}
               name="site"
-              baseUrl={PATH_DROPDOWN + '/sites'}
-              defaultValue={defaultValues?.site_id ? { id: defaultValues?.site_id } : undefined}
-              options={[]}
+              defaultValue={sites?.find((site) => site.id == defaultValues?.site_id)}
+              options={sites!}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Site'} />;
               }}
             />
 
-            <RHFAutocompleteWithApi
+            <RHFAutocomplete
               id="categories"
               disableCloseOnSelect
               name="categories"
-              baseUrl={PATH_DROPDOWN + '/categories'}
-              options={[]}
+              options={categories!}
               defaultValue={defaultValues?.categories_id?.split(',').map((cate: string) => {
-                return { id: cate };
+                const value = categories?.find((c) => c.id == cate);
+                return value;
               })}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Categories'} />;

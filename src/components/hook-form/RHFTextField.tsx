@@ -163,10 +163,15 @@ interface RHFAutocompleteProps extends AutocompleteProps<any, boolean, boolean, 
 export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocompleteProps) => {
   const { control, setValue, clearErrors } = useFormContext();
 
+  useEffect(() => {
+    setValue(name, other.defaultValue);
+  }, [other.defaultValue]);
+
   return (
     <Controller
       name={name}
       control={control}
+      defaultValue={other.defaultValue}
       render={({ field: { onBlur } }) => {
         return (
           <Autocomplete
@@ -242,6 +247,10 @@ export const RHFAutocompleteWithApi = ({
 
   const [isLoading, setLoading] = useState(loading);
   const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    setValue(name, defaultValue);
+  }, [defaultValue]);
 
   useEffect(() => {
     if (!options || Number(options?.length) == 0) {

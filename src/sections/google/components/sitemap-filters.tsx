@@ -4,11 +4,13 @@ import { t } from 'i18next';
 
 import { LoadingButton } from '@mui/lab';
 import { PATH_DROPDOWN } from 'src/api-core/path';
-import { RHFAutocompleteWithApi } from 'src/components/hook-form/RHFTextField';
+import { RHFAutocomplete, RHFAutocompleteWithApi } from 'src/components/hook-form/RHFTextField';
 import { TableFilter } from 'src/components/table';
 import { LanguageKey } from 'src/constants';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
+import sites from 'src/pages/sites';
+import { useSettingStore } from 'src/store/setting';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +19,8 @@ type Props = { storeName: string };
 export function SitemapFilters(props: Props) {
   const { storeName } = props;
   const { meta } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
+  const { sites } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
+
   return (
     <Box
       display="flex"
@@ -55,13 +59,12 @@ export function SitemapFilters(props: Props) {
         }}
         render={({ isSubmitting, defaultValues }) => (
           <>
-            <RHFAutocompleteWithApi
+            <RHFAutocomplete
               id="site"
               multiple={false}
               name="site"
-              baseUrl={PATH_DROPDOWN + '/sites'}
-              defaultValue={defaultValues?.site_id ? { id: defaultValues?.site_id } : undefined}
-              options={[]}
+              defaultValue={sites?.find((site) => site.id == defaultValues?.site_id)}
+              options={sites!}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Site'} />;
               }}

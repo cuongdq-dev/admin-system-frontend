@@ -12,6 +12,7 @@ import { LanguageKey } from 'src/constants';
 import { usePageStore } from 'src/store/page';
 import { varAlpha } from 'src/theme/styles';
 import { useShallow } from 'zustand/react/shallow';
+import { useSettingStore } from 'src/store/setting';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +22,7 @@ export function LogsFilters(props: LogsFiltersProps) {
   const { storeName } = props;
   const { meta } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
   const { mode } = useColorScheme();
+  const { sites } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
 
   return (
     <Box
@@ -60,13 +62,12 @@ export function LogsFilters(props: LogsFiltersProps) {
         }}
         render={({ isSubmitting, defaultValues }) => (
           <>
-            <RHFAutocompleteWithApi
+            <RHFAutocomplete
               id="site"
               multiple={false}
               name="site"
-              baseUrl={PATH_DROPDOWN + '/sites'}
-              defaultValue={defaultValues?.site_id ? { id: defaultValues?.site_id } : undefined}
-              options={[]}
+              defaultValue={sites?.find((site) => site.id == defaultValues?.site_id)}
+              options={sites!}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Site'} />;
               }}

@@ -86,19 +86,6 @@ export const SiteForm = (props: Props) => {
               <TextField {...params} margin="normal" label={t(LanguageKey.site.categoriesItem)} />
             )}
           />
-          {/* <RHFAutocompleteWithApi
-            baseUrl="/dropdown/posts"
-            defaultValue={defaultValues?.posts?.map((post) => {
-              console.log(post);
-              return { id: post?.id, title: post.title };
-            })}
-            options={[]}
-            name="posts"
-            title={t(LanguageKey.site.postsItem)}
-            renderInput={(params) => (
-              <TextField {...params} margin="normal" label={t(LanguageKey.site.postsItem)} />
-            )}
-          /> */}
         </Box>
       </DialogContent>
       <DialogActions style={{ padding: 20 }}>

@@ -3,7 +3,7 @@ import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { t } from 'i18next';
 import { useState } from 'react';
-import { PATH_APP_SETTING } from 'src/api-core/path';
+import { PATH_APP_SETTING, PATH_DROPDOWN } from 'src/api-core/path';
 import CommonBreadcrumbs from 'src/components/breadcrumbs';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
@@ -33,12 +33,34 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
-  const { setSetting } = useSettingStore.getState();
+  const { setSetting, setDropdown } = useSettingStore.getState();
 
   useAPI({
     baseURL: PATH_APP_SETTING,
     onSuccess: (res) => {
       setSetting(res);
+    },
+  });
+
+  useAPI({
+    baseURL: PATH_DROPDOWN + '/sites',
+    onSuccess: (res) => {
+      setDropdown({ sites: res });
+    },
+  });
+
+  useAPI({
+    baseURL: PATH_DROPDOWN + '/categories',
+
+    onSuccess: (res) => {
+      setDropdown({ categories: res });
+    },
+  });
+
+  useAPI({
+    baseURL: PATH_DROPDOWN + '/posts',
+    onSuccess: (res) => {
+      setDropdown({ posts: res });
     },
   });
 

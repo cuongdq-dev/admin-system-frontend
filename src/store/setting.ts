@@ -19,13 +19,31 @@ export interface ISetting {
   breadcrumb?: IBreadcrumb;
 }
 
+export interface IDropdown {
+  id?: string;
+  title?: string;
+  slug?: string;
+}
+export interface IDropdowns {
+  sites?: IDropdown[];
+  posts?: IDropdown[];
+  categories?: IDropdown[];
+}
 interface ISettingStore {
   lang?: { code: string; name: string }[];
   user?: Record<string, any>;
   notifyNew?: number;
   notifications?: INotifications;
+
+  dropdown?: {
+    sites?: IDropdown[];
+    posts?: IDropdown[];
+    categories?: IDropdown[];
+  };
+
   breadcrumb?: IBreadcrumb;
   setSetting: (values: ISetting) => void;
+  setDropdown: (values: IDropdowns) => void;
   setBreadcrumb: (breadcrumb?: IBreadcrumb) => void;
   setNotifyNew: (value: number) => void;
   setNotifications: (notifications: INotifications) => void;
@@ -40,6 +58,9 @@ interface ISettingStore {
 
 export const useSettingStore = create<ISettingStore>((set) => ({
   notifyNew: 0,
+  setDropdown: (dropdown: IDropdowns) =>
+    set((state) => ({ ...state, dropdown: { ...state.dropdown, ...dropdown } })),
+
   setSetting: (settings: ISetting) => set((state) => ({ ...state, ...settings })),
   setBreadcrumb: (breadcrumb?: IBreadcrumb) =>
     set((state) => ({ ...state, breadcrumb: breadcrumb })),

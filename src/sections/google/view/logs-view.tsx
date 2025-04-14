@@ -1,9 +1,15 @@
 import {
+  Avatar,
   Box,
+  Button,
   Card,
+  CardActions,
   CardContent,
+  CardHeader,
+  CardMedia,
   Chip,
   Link,
+  TextField,
   Tooltip,
   Typography,
   useMediaQuery,
@@ -20,6 +26,7 @@ import { fDate, formatStr, fRelativeTime } from 'src/utils/format-time';
 import { useShallow } from 'zustand/react/shallow';
 import { IndexStatus } from '../components/index-status';
 import { LogsFilters } from '../components/logs-filters';
+import { AutocompleteComponent } from 'src/components/autocomplete';
 
 export function GoogleLogsListView() {
   const storeName = StoreName.GOOGLE_LOGS;
@@ -169,8 +176,10 @@ export function GoogleLogsListView() {
         refreshData={refreshData}
         headLabel={HeadLabel}
         customCard={({ values, index }: { values: Record<string, any>; index: number }) => {
+          const postUrl = `${values.site_domain}/bai-viet/${values.post_slug}`;
+          const googleSearchUrl = `https://www.google.com/search?q=site:${postUrl}`;
           return (
-            <Card key={index + '_logs_card'} sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
+            <Card sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
               <Box
                 sx={{
                   mb: 2,
@@ -181,29 +190,13 @@ export function GoogleLogsListView() {
                 }}
               >
                 <Box
-                  sx={(theme) => {
-                    return {
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderRadius: 1,
-                      color: theme.palette.grey.A200,
-                    };
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}
                 >
-                  {values?.response?.inspectionResult?.indexStatusResult?.verdict ? (
-                    <IndexStatus
-                      status={values?.response?.inspectionResult?.indexStatusResult?.verdict}
-                    />
-                  ) : (
-                    <>
-                      {values?.response?.urlNotificationMetadata?.url ? (
-                        <IndexStatus status={'REQUESTED'} />
-                      ) : (
-                        <IndexStatus status={'MAX_QUOTA'} />
-                      )}
-                    </>
-                  )}
+                  <IndexStatus status={values.indexStatus} />
                 </Box>
                 <Box
                   sx={{
@@ -214,54 +207,46 @@ export function GoogleLogsListView() {
                 >
                   <Iconify icon="mdi-light:clock"></Iconify>
 
-                  <Typography variant="body1" color="text.secondary" sx={{ ml: 1 }}>
-                    {fRelativeTime(values.requested_at, formatStr.date)}
+                  <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                    {fRelativeTime(values.created_at)}
                   </Typography>
                 </Box>
               </Box>
-              <CardContent sx={{ p: 0, mb: 0 }}>
-                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                  {new URL(values?.site_domain).hostname}
+              <Box sx={{ mb: 2 }}>
+                <Link href={postUrl} variant="caption" color="text.secondary">
+                  {values.site_name}
+                </Link>
+                <Typography variant="h6" sx={{ fontWeight: '600', lineHeight: 1.5 }}>
+                  {values.post_title}
                 </Typography>
-                <Typography variant="body1">{values.post_slug}</Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
-                  {values?.type} - {values.response}
+                <Typography variant="caption" color="text.secondary">
+                  {values?.post_categories
+                    ?.map((cate?: { name?: string }) => cate?.name)
+                    .join(', ')}
                 </Typography>
+                <CardMedia
+                  sx={{ borderRadius: 1, mt: 1 }}
+                  component="img"
+                  height="140"
+                  image={values?.post_thumbnail?.url}
+                  alt={values?.post_thumbnail?.slug}
+                />
+              </Box>
+              <CardContent sx={{ p: 0 }}>
+                <Typography variant="caption">{values.post_meta_description}</Typography>
               </CardContent>
               <Box
                 sx={{
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'flex-end',
+                  mt: 2,
                 }}
               >
-                <Link
-                  target="_blank"
-                  href={'/blog/' + values?.post_slug}
-                  underline="always"
-                  variant="body2"
-                  color="text.primary"
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  {t(LanguageKey.common.detailTitle).toLocaleUpperCase()}
-                </Link>
-
-                <Link
-                  target="_blank"
-                  href={
-                    values?.response?.inspectionResult?.inspectionResultLink ||
-                    `${values.site_domain}/bai-viet/${values.post_slug}`
-                  }
-                  underline="always"
-                  variant="body2"
-                  color="text.primary"
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  {values?.response?.inspectionResult?.inspectionResultLink
-                    ? 'GOOGLE URL'
-                    : 'SITE URL'}
-                </Link>
+                <Button variant="contained" LinkComponent={'a'} href={googleSearchUrl}>
+                  G-Search
+                </Button>
               </Box>
             </Card>
           );
