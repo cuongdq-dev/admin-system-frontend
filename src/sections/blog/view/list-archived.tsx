@@ -1,24 +1,16 @@
 import {
-  Avatar,
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
-  CardHeader,
   CardMedia,
-  Chip,
-  Grid,
-  IconButton,
   Link,
-  TextField,
   Typography,
   useMediaQuery,
 } from '@mui/material';
 import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import { PATH_BLOG_ARCHIVED } from 'src/api-core/path';
-import { AutocompleteComponent } from 'src/components/autocomplete';
 import { IconButtonDelete } from 'src/components/button';
 import { GuideList } from 'src/components/guide';
 import { Iconify } from 'src/components/iconify';
@@ -151,7 +143,7 @@ export function ListArchivedView() {
             <Card sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
               <Box
                 sx={{
-                  mb: 4,
+                  mb: 2,
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -181,62 +173,47 @@ export function ListArchivedView() {
                   </Typography>
                 </Box>
               </Box>
-              <Box sx={{ position: 'relative', mb: 2 }}>
-                <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+              <Box sx={{ mb: 2 }}>
+                <Link href={postUrl} variant="caption" color="text.secondary">
+                  {values.site_name}
+                </Link>
+                <Typography variant="h6" sx={{ fontWeight: '600', lineHeight: 1.5 }}>
                   {values.post_title}
                 </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {values?.categories?.map((cate?: { name?: string }) => cate?.name).join(', ')}
+                </Typography>
                 <CardMedia
-                  sx={{ borderRadius: 3 }}
+                  sx={{ borderRadius: 1, mt: 1 }}
                   component="img"
                   height="140"
                   image={values?.thumbnail?.url}
                   alt={values?.thumbnail?.slug}
                 />
               </Box>
-              <CardContent sx={{ p: 0, mb: 0 }}>
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
-                  {values?.categories?.map((cate?: { name?: string }) => cate?.name).join(', ')}
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>
-                  {values.post_meta_description}
-                </Typography>
+              <CardContent sx={{ p: 0 }}>
+                <Typography variant="caption">{values.post_meta_description}</Typography>
               </CardContent>
               <Box
                 sx={{
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'flex-end',
+                  mt: 2,
                 }}
               >
-                <Grid display="flex" flexDirection="row">
-                  <Link
-                    href={postUrl}
-                    underline="always"
-                    variant="body1"
-                    color="text.primary"
-                    sx={{ fontWeight: 'bold', mr: 1 }}
-                  >
-                    {values.site_name}
-                  </Link>
-                  |
-                  <Link
-                    href={googleSearchUrl}
-                    underline="always"
-                    variant="body1"
-                    color="text.primary"
-                    sx={{ fontWeight: 'bold', ml: 1 }}
-                  >
-                    G-Search
-                  </Link>
-                </Grid>
-                <IconButton aria-label="delete">
+                <Button variant="contained" LinkComponent={'a'} href={googleSearchUrl}>
+                  G-Search
+                </Button>
+
+                <Button variant="outlined" color="error" sx={{ height: '35px', p: 0, ml: 1 }}>
                   <IconButtonDelete
                     handleDelete={updateRowData}
                     rowId={values?.id}
                     baseUrl={PATH_BLOG_ARCHIVED + '/delete/' + values?.id}
                   />
-                </IconButton>
+                </Button>
               </Box>
             </Card>
           );

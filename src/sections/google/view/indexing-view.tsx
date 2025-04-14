@@ -1,6 +1,15 @@
-import { Box, Card, CardContent, Chip, Link, Typography, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Link,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { t } from 'i18next';
-import { PATH_GOOGLE_INDEXING_LIST } from 'src/api-core/path';
+import { PATH_BLOG_ARCHIVED, PATH_GOOGLE_INDEXING_LIST } from 'src/api-core/path';
 import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
@@ -9,8 +18,9 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { fDate, formatStr, fRelativeTime } from 'src/utils/format-time';
 import { useShallow } from 'zustand/react/shallow';
-import { IndexingFilters } from '../components/indexing-filters';
 import { IndexStatus } from '../components/index-status';
+import { IndexingFilters } from '../components/indexing-filters';
+import { IconButtonDelete } from 'src/components/button';
 
 export function IndexingListView() {
   const storeName = StoreName.GOOGLE_INDEXING;
@@ -130,14 +140,14 @@ export function IndexingListView() {
         indexCol={true}
         refreshData={refreshData}
         headLabel={HeadLabel}
-        customCard={({ values }: { values: Record<string, any>; index: number }) => {
+        customCard={({ values, updateRowData, index }) => {
           const postUrl = `${values.site_domain}/bai-viet/${values.post_slug}`;
           const googleSearchUrl = `https://www.google.com/search?q=site:${postUrl}`;
           return (
             <Card sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
               <Box
                 sx={{
-                  mb: 4,
+                  mb: 2,
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -145,19 +155,13 @@ export function IndexingListView() {
                 }}
               >
                 <Box
-                  sx={(theme) => {
-                    return {
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderRadius: 1,
-                      px: 1,
-                      py: 0.5,
-                      color: theme.palette.grey.A200,
-                    };
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}
                 >
-                  <IndexStatus status={values?.indexStatus} />
+                  <IndexStatus status={values.indexStatus} />
                 </Box>
                 <Box
                   sx={{
@@ -168,51 +172,46 @@ export function IndexingListView() {
                 >
                   <Iconify icon="mdi-light:clock"></Iconify>
 
-                  <Typography variant="body1" color="text.secondary" sx={{ ml: 1 }}>
-                    {fRelativeTime(values.created_at, formatStr.date)}
+                  <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                    {fRelativeTime(values.created_at)}
                   </Typography>
                 </Box>
               </Box>
-              <CardContent sx={{ p: 0, mb: 0 }}>
-                <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
-                  {new URL(values?.site_domain).hostname}
+              <Box sx={{ mb: 2 }}>
+                <Link href={postUrl} variant="caption" color="text.secondary">
+                  {values.site_name}
+                </Link>
+                <Typography variant="h6" sx={{ fontWeight: '600', lineHeight: 1.5 }}>
+                  {values.post_title}
                 </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
-                  {values?.site_domain}
+                <Typography variant="caption" color="text.secondary">
+                  {values?.post_categories
+                    ?.map((cate?: { name?: string }) => cate?.name)
+                    .join(', ')}
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>
-                  {values.post_title}s
-                </Typography>
+                <CardMedia
+                  sx={{ borderRadius: 1, mt: 1 }}
+                  component="img"
+                  height="140"
+                  image={values?.post_thumbnail?.url}
+                  alt={values?.post_thumbnail?.slug}
+                />
+              </Box>
+              <CardContent sx={{ p: 0 }}>
+                <Typography variant="caption">{values.post_meta_description}</Typography>
               </CardContent>
               <Box
                 sx={{
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'flex-end',
+                  mt: 2,
                 }}
               >
-                <Link
-                  target="_blank"
-                  href={postUrl}
-                  underline="always"
-                  variant="body2"
-                  color="text.primary"
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Post Url
-                </Link>
-
-                <Link
-                  target="_blank"
-                  href={googleSearchUrl}
-                  underline="always"
-                  variant="body2"
-                  color="text.primary"
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Google Console
-                </Link>
+                <Button variant="contained" LinkComponent={'a'} href={googleSearchUrl}>
+                  G-Search
+                </Button>
               </Box>
             </Card>
           );

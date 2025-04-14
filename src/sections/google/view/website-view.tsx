@@ -165,9 +165,7 @@ export function WebsiteListView() {
             });
           }
         }}
-        renderInput={(params) => {
-          return <TextField {...params} margin="normal" label={t(LanguageKey.site.indexingItem)} />;
-        }}
+        renderInput={() => <></>}
       />
 
       <Box>
@@ -196,9 +194,7 @@ export function WebsiteListView() {
             { title: 'FAIL', id: 'FAIL' },
             { title: 'NEUTRAL', id: 'NEUTRAL' },
           ]}
-          renderInput={(params) => {
-            return <TextField {...params} label="Filter Status" />;
-          }}
+          renderInput={() => <></>}
         />
       </Box>
 
@@ -242,9 +238,7 @@ export function WebsiteListView() {
                     { title: 'FAIL', id: 'FAIL' },
                     { title: 'NEUTRAL', id: 'NEUTRAL' },
                   ]}
-                  renderInput={(params) => {
-                    return <TextField {...params} margin="normal" />;
-                  }}
+                  renderInput={() => <></>}
                 />
               </CardActions>
               <CardActions>

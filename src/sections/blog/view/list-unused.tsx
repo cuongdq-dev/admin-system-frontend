@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -20,6 +21,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { fRelativeTime } from 'src/utils/format-time';
 import { useShallow } from 'zustand/react/shallow';
+import { BlogFilter } from '../components/blog-filter';
 
 export function ListUnusedView() {
   const storeName = StoreName.BLOG_UNUSED;
@@ -105,6 +107,7 @@ export function ListUnusedView() {
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
     >
       <GuideList text={t(LanguageKey.blog.blogUnusedDescription)} />
+      <BlogFilter storeName={storeName} />
       <TableComponent
         component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}
@@ -151,51 +154,43 @@ export function ListUnusedView() {
                   </Typography>
                 </Box>
               </Box>
-              <Box sx={{ position: 'relative', mb: 2 }}>
-                <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+              <CardMedia
+                sx={{ borderRadius: 2, mb: 1 }}
+                component="img"
+                height="140"
+                image={values?.thumbnail?.url}
+                alt={values?.thumbnail?.slug}
+              />
+
+              <Link variant="body1" color="text.primary">
+                <Typography variant="h5" sx={{ mb: 1 }} fontWeight="600">
                   {values.title}
                 </Typography>
-                <CardMedia
-                  sx={{ borderRadius: 3 }}
-                  component="img"
-                  height="140"
-                  image={values?.thumbnail?.url}
-                  alt={values?.thumbnail?.slug}
-                />
-              </Box>
+              </Link>
               <CardContent sx={{ p: 0, mb: 0 }}>
                 <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
                   {values?.categories?.map((cate?: { name?: string }) => cate?.name).join(', ')}
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>
+                <Typography variant="body1" sx={{ mb: 2 }}>
                   {values.meta_description}
                 </Typography>
               </CardContent>
+
               <Box
                 sx={{
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  justifyContent: 'flex-end',
                 }}
               >
-                <Link
-                  href={'/blog/' + values?.slug}
-                  underline="always"
-                  variant="body1"
-                  color="text.primary"
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Post URL
-                </Link>
-                <IconButton aria-label="delete">
-                  {/* <Icon path={mdiDelete} size={1} color="#222" /> */}
+                <Button variant="outlined" color="error" sx={{ height: '35px', p: 0, ml: 1 }}>
                   <IconButtonDelete
                     handleDelete={updateRowData}
                     rowId={values?.id}
                     baseUrl={PATH_BLOG_UNUSED + '/delete/' + values?.id}
                   />
-                </IconButton>
+                </Button>
               </Box>
             </Card>
           );

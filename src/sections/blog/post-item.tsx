@@ -1,4 +1,13 @@
-import { Autocomplete, AutocompleteProps, Checkbox, Chip, Link, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  AutocompleteProps,
+  Checkbox,
+  Chip,
+  Divider,
+  dividerClasses,
+  Link,
+  TextField,
+} from '@mui/material';
 import Box from '@mui/material/Box';
 import type { CardProps } from '@mui/material/Card';
 import Card from '@mui/material/Card';
@@ -130,7 +139,6 @@ export function PostItem(
       variant="caption"
       component="div"
       sx={{
-        mb: 1,
         color: 'text.disabled',
         ...((latestPostLarge || latestPost) && { opacity: 0.48, color: 'common.white' }),
       }}
@@ -144,7 +152,6 @@ export function PostItem(
       variant="caption"
       component="div"
       sx={{
-        mb: 1,
         color: 'text.disabled',
         ...((latestPostLarge || latestPost) && { opacity: 0.48, color: 'common.white' }),
       }}
@@ -245,12 +252,24 @@ export function PostItem(
         })}
       >
         {siteId && renderCategoriesInput()}
-        {renderDate}
+
         {!siteId && renderCategories}
 
-        {renderSource}
         {renderTitle}
         {renderDescription}
+
+        <Box
+          display="flex"
+          sx={{
+            mt: 0.5,
+            '& svg': { m: 1 },
+            [`& .${dividerClasses.root}`]: { mx: 1 },
+          }}
+        >
+          {renderDate}
+          <Divider orientation="vertical" flexItem variant="fullWidth" />
+          {renderSource}
+        </Box>
       </Box>
     </Card>
   );

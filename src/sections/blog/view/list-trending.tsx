@@ -1,11 +1,9 @@
 import {
   Timeline,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineDot,
-  TimelineConnector,
   TimelineContent,
+  TimelineItem,
   timelineItemClasses,
+  TimelineSeparator,
 } from '@mui/lab';
 import {
   Accordion,
@@ -13,13 +11,14 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Button,
+  Divider,
+  dividerClasses,
   Link,
   Typography,
   useMediaQuery,
 } from '@mui/material';
 import { t } from 'i18next';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { PATH_TRENDINGS_SEARCH } from 'src/api-core/path';
 import { IconButtonDelete } from 'src/components/button';
 import { GuideList } from 'src/components/guide';
@@ -268,110 +267,136 @@ const TrendingCard = ({
 
   return (
     <Box sx={{ mb: 2, width: '100%' }}>
-      <Accordion
-        disabled={!values?.articles?.length}
-        expanded={expanded === values?.id}
-        onChange={handleChange(values?.id)}
-      >
+      <Accordion expanded={expanded === values?.id} onChange={handleChange(values?.id)}>
         <AccordionSummary
           expandIcon={<Iconify icon="ic:outline-expand-more" />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
-          <Typography
+          <Box
             sx={{
-              width: '90%',
-              flexShrink: 0,
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitBoxOrient: 'vertical',
-              lineHeight: 0,
+              color: 'text.primary',
+              '& svg': { m: 1 },
+              [`& .${dividerClasses.root}`]: { mx: 1 },
             }}
           >
             <Typography>{values?.titleQuery}</Typography>
-            <Typography mr={1} color="grey" variant="caption">
-              {fRelativeTime(values?.created_at, formatStr.paramCase.date)}
-            </Typography>
-            <Typography mr={1} color="grey" variant="caption">
-              Articles: {values?.articleCount}
-            </Typography>
-            <Typography mr={1} color="grey" variant="caption">
-              Posts: {postCount}
-            </Typography>
-          </Typography>
+
+            <Box display="flex" flexDirection="row" mt={1}>
+              <Typography color="grey" variant="caption">
+                {fRelativeTime(values?.created_at, formatStr.paramCase.date)}
+              </Typography>
+              <Divider orientation="vertical" flexItem />
+              <Typography color="grey" variant="caption">
+                Articles: {values?.articleCount}
+              </Typography>
+              <Divider orientation="vertical" flexItem />
+              <Typography color="grey" variant="caption">
+                Posts: {postCount}
+              </Typography>
+            </Box>
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Timeline
-            sx={{
-              [`& .${timelineItemClasses.root}:before`]: { flex: 0, padding: 0 },
+            sx={(theme) => {
+              return {
+                padding: 0,
+                [`& .${timelineItemClasses.root}:before`]: { flex: 0, padding: 0 },
+              };
             }}
           >
             {values?.articles?.map((article: any, index: number) => {
               return (
-                <TimelineItem key={article?.id + '_' + index}>
-                  <TimelineSeparator sx={{ mt: 1 }}>
-                    <Iconify icon="ic:round-article" />
-                  </TimelineSeparator>
-                  <TimelineContent>
-                    <Typography>{article?.title}</Typography>
-                    <Typography color="grey" variant="caption">
-                      {fRelativeTime(article?.created_at)} | {article.source}
-                    </Typography>
-                    {article?.posts?.map((post: any, index: number) => {
-                      return (
-                        <TimelineItem key={post.id + '_' + index}>
-                          <TimelineSeparator sx={{ mt: 1 }}>
-                            <Iconify icon="fluent:news-16-regular" />
-                          </TimelineSeparator>
-                          <TimelineContent>
-                            <Typography>{post.title}</Typography>
-                            <Typography
-                              noWrap
-                              color="grey"
-                              variant="caption"
-                              sx={{
-                                flexShrink: 0,
-                                overflow: 'hidden',
-                                WebkitLineClamp: 1,
-                                display: '-webkit-box',
-                                WebkitBoxOrient: 'vertical',
-                              }}
-                            >
-                              {fRelativeTime(article?.created_at)}
-                            </Typography>
-                            <Typography color="grey" variant="caption">
-                              {post?.sitePosts?.map((sp: any) => sp.site.name).join(', ')}
-                            </Typography>
-                          </TimelineContent>
-                        </TimelineItem>
-                      );
-                    })}
-                  </TimelineContent>
-                </TimelineItem>
+                <Fragment key={article?.id + '_' + index}>
+                  <TimelineItem
+                    sx={(theme) => {
+                      return { p: 1, mb: 1, borderRadius: 2 };
+                    }}
+                  >
+                    <TimelineSeparator sx={{ pt: 0.2 }}>
+                      <Iconify icon="ic:round-article" />
+
+                      <Divider variant="fullWidth" orientation="vertical" />
+                    </TimelineSeparator>
+                    <TimelineContent sx={{ pt: 0 }}>
+                      <Typography>{article?.title}</Typography>
+                      <Box
+                        display="flex"
+                        sx={{
+                          [`& .${dividerClasses.root}`]: { mx: 1 },
+                        }}
+                      >
+                        <Typography color="grey" variant="caption">
+                          {fRelativeTime(article?.created_at)}
+                        </Typography>
+
+                        <Divider orientation="vertical" flexItem />
+
+                        <Typography color="grey" variant="caption">
+                          {article.source}
+                        </Typography>
+                      </Box>
+                      {article?.posts?.map((post: any, index: number) => {
+                        return (
+                          <TimelineItem key={post.id + '_' + index} sx={{ mt: 1 }}>
+                            {index !== 0 && <Divider orientation="horizontal" flexItem />}
+
+                            <TimelineSeparator sx={{ pt: 0.2 }}>
+                              <Iconify icon="fluent:news-16-regular" />
+                              <Divider variant="fullWidth" orientation="vertical" />
+                            </TimelineSeparator>
+                            <TimelineContent sx={{ pt: 0 }}>
+                              <Typography>{post.title}</Typography>
+                              <Typography
+                                noWrap
+                                color="grey"
+                                variant="caption"
+                                sx={{
+                                  flexShrink: 0,
+                                  overflow: 'hidden',
+                                  WebkitLineClamp: 1,
+                                  display: '-webkit-box',
+                                  WebkitBoxOrient: 'vertical',
+                                }}
+                              >
+                                {fRelativeTime(article?.created_at)}
+                              </Typography>
+                              <Typography color="grey" variant="caption">
+                                {post?.sitePosts?.map((sp: any) => sp.site.name).join(', ')}
+                              </Typography>
+                            </TimelineContent>
+                          </TimelineItem>
+                        );
+                      })}
+                    </TimelineContent>
+                  </TimelineItem>
+                </Fragment>
               );
             })}
           </Timeline>
         </AccordionDetails>
-
-        <AccordionActions
-          sx={(theme) => {
-            return {
-              li: {
-                width: '100%',
-                backgroundColor: theme.palette.error.main,
-                color: theme.palette.common.white,
-                justifyContent: 'center',
-                borderRadius: 1,
-              },
-            };
-          }}
-        >
-          <IconButtonDelete
-            handleDelete={updateRowData}
-            rowId={values?.id}
-            baseUrl={PATH_TRENDINGS_SEARCH + '/delete/' + values?.id}
-          />
-        </AccordionActions>
+        {Number(totalSiteCount) == 0 && (
+          <AccordionActions
+            sx={(theme) => {
+              return {
+                li: {
+                  width: '100%',
+                  backgroundColor: theme.palette.error.main,
+                  color: theme.palette.common.white,
+                  justifyContent: 'center',
+                  borderRadius: 1,
+                },
+              };
+            }}
+          >
+            <IconButtonDelete
+              handleDelete={updateRowData}
+              rowId={values?.id}
+              baseUrl={PATH_TRENDINGS_SEARCH + '/delete/' + values?.id}
+            />
+          </AccordionActions>
+        )}
       </Accordion>
     </Box>
   );

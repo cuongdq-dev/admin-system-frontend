@@ -3,8 +3,6 @@ import {
   Card,
   CardContent,
   Chip,
-  Grid,
-  GridSize,
   Link,
   Tooltip,
   Typography,
@@ -12,6 +10,7 @@ import {
 } from '@mui/material';
 import { t } from 'i18next';
 import { PATH_GOOGLE_LOGS_LIST } from 'src/api-core/path';
+import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
@@ -19,9 +18,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { fDate, formatStr, fRelativeTime } from 'src/utils/format-time';
 import { useShallow } from 'zustand/react/shallow';
-import { LogsFilters } from '../components/logs-filters';
-import { Iconify } from 'src/components/iconify';
 import { IndexStatus } from '../components/index-status';
+import { LogsFilters } from '../components/logs-filters';
 
 export function GoogleLogsListView() {
   const storeName = StoreName.GOOGLE_LOGS;
@@ -172,10 +170,10 @@ export function GoogleLogsListView() {
         headLabel={HeadLabel}
         customCard={({ values, index }: { values: Record<string, any>; index: number }) => {
           return (
-            <Card sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
+            <Card key={index + '_logs_card'} sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
               <Box
                 sx={{
-                  mb: 4,
+                  mb: 2,
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -189,34 +187,20 @@ export function GoogleLogsListView() {
                       flexDirection: 'row',
                       alignItems: 'center',
                       borderRadius: 1,
-                      px: 1,
-                      py: 0.5,
                       color: theme.palette.grey.A200,
                     };
                   }}
                 >
                   {values?.response?.inspectionResult?.indexStatusResult?.verdict ? (
-                    <Tooltip title={JSON.stringify(values?.response)}>
-                      <Typography component={'div'}>
-                        <IndexStatus
-                          status={values?.response?.inspectionResult?.indexStatusResult?.verdict}
-                        />
-                      </Typography>
-                    </Tooltip>
+                    <IndexStatus
+                      status={values?.response?.inspectionResult?.indexStatusResult?.verdict}
+                    />
                   ) : (
                     <>
                       {values?.response?.urlNotificationMetadata?.url ? (
-                        <Tooltip title={JSON.stringify(values?.response)}>
-                          <Typography component={'div'}>
-                            <IndexStatus status={'REQUESTED'} />
-                          </Typography>
-                        </Tooltip>
+                        <IndexStatus status={'REQUESTED'} />
                       ) : (
-                        <Tooltip title={JSON.stringify(values?.response)}>
-                          <Typography component={'div'}>
-                            <IndexStatus status={'MAX_QUOTA'} />
-                          </Typography>
-                        </Tooltip>
+                        <IndexStatus status={'MAX_QUOTA'} />
                       )}
                     </>
                   )}
@@ -236,14 +220,12 @@ export function GoogleLogsListView() {
                 </Box>
               </Box>
               <CardContent sx={{ p: 0, mb: 0 }}>
-                <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                   {new URL(values?.site_domain).hostname}
                 </Typography>
+                <Typography variant="body1">{values.post_slug}</Typography>
                 <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
                   {values?.type} - {values.response}
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>
-                  {values.post_slug}
                 </Typography>
               </CardContent>
               <Box
