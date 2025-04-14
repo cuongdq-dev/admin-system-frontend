@@ -73,7 +73,7 @@ export function GoogleLogsListView() {
               WebkitBoxOrient: 'vertical',
             }}
           >
-            {row?.post_slug}
+            {row?.post?.title}
           </Link>
         );
       },
@@ -178,6 +178,33 @@ export function GoogleLogsListView() {
         customCard={({ values, index }: { values: Record<string, any>; index: number }) => {
           const postUrl = `${values.site_domain}/bai-viet/${values.post_slug}`;
           const googleSearchUrl = `https://www.google.com/search?q=site:${postUrl}`;
+          const status = () => {
+            if (values?.response?.inspectionResult?.indexStatusResult?.verdict)
+              return (
+                <Tooltip title={JSON.stringify(values?.response)}>
+                  <Typography component="div">
+                    <IndexStatus
+                      status={values?.response?.inspectionResult?.indexStatusResult?.verdict}
+                    />
+                  </Typography>
+                </Tooltip>
+              );
+            if (values?.response?.urlNotificationMetadata?.url)
+              return (
+                <Tooltip title={JSON.stringify(values?.response)}>
+                  <Typography component="div">
+                    <IndexStatus status={'REQUESTED'} />
+                  </Typography>
+                </Tooltip>
+              );
+            return (
+              <Tooltip title={JSON.stringify(values?.response)}>
+                <Typography component="div">
+                  <IndexStatus status={'MAX_QUOTA'} />
+                </Typography>
+              </Tooltip>
+            );
+          };
           return (
             <Card sx={{ borderRadius: 4, p: 3, mb: 2, width: '100%' }}>
               <Box
@@ -196,44 +223,42 @@ export function GoogleLogsListView() {
                     alignItems: 'center',
                   }}
                 >
-                  <IndexStatus status={values.indexStatus} />
+                  {status()}
                 </Box>
                 <Box
                   sx={{
                     display: 'inline-flex',
                     flexDirection: 'row',
                     alignItems: 'center',
+                    textWrap: 'nowrap',
                   }}
                 >
                   <Iconify icon="mdi-light:clock"></Iconify>
 
                   <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                    {fRelativeTime(values.created_at)}
+                    {fRelativeTime(values.requested_at)}
                   </Typography>
                 </Box>
               </Box>
-              <Box sx={{ mb: 2 }}>
+              <Box>
                 <Link href={postUrl} variant="caption" color="text.secondary">
-                  {values.site_name}
+                  {new URL(values?.site_domain).hostname}
                 </Link>
+
                 <Typography variant="h6" sx={{ fontWeight: '600', lineHeight: 1.5 }}>
-                  {values.post_title}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {values?.post_categories
-                    ?.map((cate?: { name?: string }) => cate?.name)
-                    .join(', ')}
+                  {values?.post?.title}
                 </Typography>
                 <CardMedia
                   sx={{ borderRadius: 1, mt: 1 }}
                   component="img"
                   height="140"
-                  image={values?.post_thumbnail?.url}
-                  alt={values?.post_thumbnail?.slug}
+                  image={values?.post?.thumbnail?.url}
+                  alt={values?.post?.thumbnail?.slug}
                 />
+                <Chip size="small" variant="filled" label={values.type} color="default" />
               </Box>
               <CardContent sx={{ p: 0 }}>
-                <Typography variant="caption">{values.post_meta_description}</Typography>
+                <Typography variant="caption">{values?.post.meta_description}</Typography>
               </CardContent>
               <Box
                 sx={{
