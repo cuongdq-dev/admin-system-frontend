@@ -18,11 +18,13 @@ import { usePathname, useRouter } from 'src/routes/hooks';
 import { removeCookie } from 'src/utils/cookies';
 
 import { t } from 'i18next';
-import { _myAccount } from 'src/_mock';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SIGN_OUT } from 'src/api-core/path';
 import { LanguageKey } from 'src/constants';
 import { useNotifyStore } from 'src/store/notify';
+import { useSettingStore } from 'src/store/setting';
+import { _myAccount } from 'src/_mock';
+import { useShallow } from 'zustand/react/shallow';
 
 export type AccountPopoverProps = IconButtonProps & {
   data?: {
@@ -36,9 +38,9 @@ export type AccountPopoverProps = IconButtonProps & {
 export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps) {
   const navigate = useNavigate();
   const { setNotify } = useNotifyStore.getState();
+  const { user } = useSettingStore(useShallow((state) => state));
 
   const router = useRouter();
-
   const pathname = usePathname();
 
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
@@ -73,8 +75,8 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         }}
         {...other}
       >
-        <Avatar src={_myAccount.photoURL} alt={_myAccount.displayName} sx={{ width: 1, height: 1 }}>
-          {_myAccount.displayName.charAt(0).toUpperCase()}
+        <Avatar src={user?.avatar?.url} alt={user?.avatar?.slug} sx={{ width: 1, height: 1 }}>
+          {user?.name?.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -92,11 +94,11 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
       >
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {_myAccount?.displayName}
+            {user?.name}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {_myAccount?.email}
+            {user?.email}
           </Typography>
         </Box>
 

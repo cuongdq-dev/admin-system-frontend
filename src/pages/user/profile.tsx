@@ -8,6 +8,7 @@ import { CONFIG } from 'src/config-global';
 import { Breadcrumbs, LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
+import { useSettingStore } from 'src/store/setting';
 import { useShallow } from 'zustand/react/shallow';
 // ----------------------------------------------------------------------
 
@@ -28,6 +29,7 @@ function tabStyle(theme: Theme) {
 export default function Page() {
   const storeName = StoreName.PROFILE;
   const { setDetail } = usePageStore.getState();
+  const { user } = useSettingStore(useShallow((state) => state));
   const { data } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
   );
@@ -96,8 +98,8 @@ export default function Page() {
                 <Avatar
                   variant="circular"
                   sx={{ width: '128px', height: '128px' }}
-                  alt={data?.name}
-                  src={data?.avatar}
+                  alt={user?.name}
+                  src={user?.avatar.url}
                 />
                 <ListItemText
                   sx={(theme) => {
@@ -114,8 +116,8 @@ export default function Page() {
                     },
                   }}
                   secondaryTypographyProps={{ sx: { opacity: 0.8 } }}
-                  primary="Vacation"
-                  secondary="July 20, 2014"
+                  primary={user?.name}
+                  secondary={user?.email}
                 />
               </Box>
             </Box>
