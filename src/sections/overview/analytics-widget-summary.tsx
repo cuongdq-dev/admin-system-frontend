@@ -1,6 +1,6 @@
 import type { CardProps } from '@mui/material/Card';
-import type { ColorType } from 'src/theme/core/palette';
 import type { ChartOptions } from 'src/components/chart';
+import type { ColorType } from 'src/theme/core/palette';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -8,37 +8,67 @@ import { useTheme } from '@mui/material/styles';
 
 import { fNumber, fPercent, fShortenNumber } from 'src/utils/format-number';
 
-import { varAlpha, bgGradient } from 'src/theme/styles';
+import { bgGradient, varAlpha } from 'src/theme/styles';
 
+import { Backdrop, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { invokeRequest } from 'src/api-core';
+import { Chart, useChart } from 'src/components/chart';
 import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
-import { Chart, useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
+type ChartProps = {
+  series: number[];
+  categories: string[];
+  options?: ChartOptions;
+};
+
 type Props = CardProps & {
   title: string;
-  total: number;
-  percent: number;
   color?: ColorType;
   icon: React.ReactNode;
-  chart: {
-    series: number[];
-    categories: string[];
-    options?: ChartOptions;
-  };
+  baseUrl?: string;
 };
 
 export function AnalyticsWidgetSummary({
   icon,
   title,
-  total,
-  chart,
-  percent,
   color = 'primary',
+  baseUrl,
   sx,
   ...other
 }: Props) {
+  const [{ total, chart, loading, percent, previousCount, recentCount }, setState] = useState<{
+    loading?: boolean;
+    percent?: number;
+    total?: number;
+    recentCount?: number;
+    previousCount?: number;
+    chart?: ChartProps;
+  }>({
+    loading: true,
+    percent: 0,
+    total: 0,
+    previousCount: 0,
+    recentCount: 0,
+    chart: undefined,
+  });
+
+  useEffect(() => {
+    baseUrl &&
+      invokeRequest({
+        baseURL: baseUrl!,
+        onHandleError: () => {
+          setState({ loading: false, chart: undefined });
+        },
+        onSuccess: (res) => {
+          setState({ ...res, loading: false });
+        },
+      });
+  }, [baseUrl]);
+
   const theme = useTheme();
 
   const chartColors = [theme.palette[color].dark];
@@ -46,19 +76,12 @@ export function AnalyticsWidgetSummary({
   const chartOptions = useChart({
     chart: { sparkline: { enabled: true } },
     colors: chartColors,
-    xaxis: { categories: chart.categories },
-    grid: {
-      padding: {
-        top: 6,
-        left: 6,
-        right: 6,
-        bottom: 6,
-      },
-    },
+    xaxis: { categories: chart?.categories },
+    grid: { padding: { top: 6, left: 6, right: 6, bottom: 6 } },
     tooltip: {
       y: { formatter: (value: number) => fNumber(value), title: { formatter: () => '' } },
     },
-    ...chart.options,
+    ...chart?.options,
   });
 
   const renderTrending = (
@@ -72,14 +95,46 @@ export function AnalyticsWidgetSummary({
         alignItems: 'center',
       }}
     >
-      <Iconify width={20} icon={percent < 0 ? 'eva:trending-down-fill' : 'eva:trending-up-fill'} />
+      <Iconify
+        width={20}
+        icon={Number(percent) < 0 ? 'eva:trending-down-fill' : 'eva:trending-up-fill'}
+      />
       <Box component="span" sx={{ typography: 'subtitle2' }}>
-        {percent > 0 && '+'}
+        {Number(percent) > 0 && '+'}
         {fPercent(percent)}
       </Box>
     </Box>
   );
 
+  if (!loading && !chart) {
+    return (
+      <Card
+        sx={{
+          ...bgGradient({
+            color: `135deg, ${varAlpha(theme.vars.palette[color].lighterChannel, 0.48)}, ${varAlpha(theme.vars.palette[color].lightChannel, 0.48)}`,
+          }),
+          p: 3,
+          boxShadow: 'none',
+          position: 'relative',
+          color: `${color}.darker`,
+          backgroundColor: 'common.white',
+          ...sx,
+        }}
+        {...other}
+      >
+        <Backdrop
+          sx={(theme) => ({
+            position: 'absolute',
+            color: theme.vars.palette.text.secondary,
+            zIndex: theme.zIndex.drawer + 1,
+          })}
+          open={!loading && !chart}
+        >
+          <Iconify width={40} icon="fluent:shield-error-20-regular" />
+        </Backdrop>
+      </Card>
+    );
+  }
   return (
     <Card
       sx={{
@@ -97,7 +152,7 @@ export function AnalyticsWidgetSummary({
     >
       <Box sx={{ width: 48, height: 48, mb: 3 }}>{icon}</Box>
 
-      {renderTrending}
+      {!!percent && renderTrending}
 
       <Box
         sx={{
@@ -109,12 +164,19 @@ export function AnalyticsWidgetSummary({
       >
         <Box sx={{ flexGrow: 1, minWidth: 112 }}>
           <Box sx={{ mb: 1, typography: 'subtitle2' }}>{title}</Box>
-          <Box sx={{ typography: 'h4' }}>{fShortenNumber(total)}</Box>
+          <Box sx={{ typography: 'h4', display: 'flex' }}>
+            {fShortenNumber(total)}
+            {!!recentCount && (
+              <Typography color="common.error" variant="caption" fontWeight={500} ml={1}>
+                (+{recentCount})
+              </Typography>
+            )}
+          </Box>
         </Box>
 
         <Chart
           type="line"
-          series={[{ data: chart.series }]}
+          series={[{ data: chart?.series! }]}
           options={chartOptions}
           width={84}
           height={56}

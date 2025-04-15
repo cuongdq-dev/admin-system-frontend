@@ -37,31 +37,12 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
 
   useAPI({
     baseURL: PATH_APP_SETTING,
-    onSuccess: (res) => {
-      setSetting(res);
-    },
+    onSuccess: (res) => setSetting(res),
   });
 
   useAPI({
-    baseURL: PATH_DROPDOWN + '/sites',
-    onSuccess: (res) => {
-      setDropdown({ sites: res });
-    },
-  });
-
-  useAPI({
-    baseURL: PATH_DROPDOWN + '/categories',
-
-    onSuccess: (res) => {
-      setDropdown({ categories: res });
-    },
-  });
-
-  useAPI({
-    baseURL: PATH_DROPDOWN + '/posts',
-    onSuccess: (res) => {
-      setDropdown({ posts: res });
-    },
+    baseURL: PATH_DROPDOWN,
+    onSuccess: (res) => setDropdown(res),
   });
 
   const [navOpen, setNavOpen] = useState(false);

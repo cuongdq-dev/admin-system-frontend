@@ -2,35 +2,56 @@ import type { CardProps } from '@mui/material/Card';
 import type { ChartOptions } from 'src/components/chart';
 
 import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
-import CardHeader from '@mui/material/CardHeader';
 
 import { fNumber } from 'src/utils/format-number';
 
-import { Chart, useChart, ChartLegends } from 'src/components/chart';
+import { useEffect, useState } from 'react';
+import { Chart, ChartLegends, useChart } from 'src/components/chart';
+import { invokeRequest } from 'src/api-core';
+import { Backdrop } from '@mui/material';
+import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
+type ChartProps = {
+  colors?: string[];
+  series: {
+    label: string;
+    value: number;
+  }[];
+  options?: ChartOptions;
+};
 type Props = CardProps & {
+  baseUrl?: string;
   title?: string;
   subheader?: string;
-  chart: {
-    colors?: string[];
-    series: {
-      label: string;
-      value: number;
-    }[];
-    options?: ChartOptions;
-  };
 };
 
-export function AnalyticsCurrentVisits({ title, subheader, chart, ...other }: Props) {
+export function AnalyticsCurrentVisits({ title, subheader, baseUrl, ...other }: Props) {
   const theme = useTheme();
+  const [{ loading, chart }, setState] = useState<{ loading?: boolean; chart?: ChartProps }>({
+    loading: false,
+    chart: undefined,
+  });
+  useEffect(() => {
+    baseUrl &&
+      invokeRequest({
+        baseURL: baseUrl!,
+        onHandleError: () => {
+          setState({ loading: false, chart: undefined });
+        },
+        onSuccess: (res) => {
+          setState({ ...res, loading: false });
+        },
+      });
+  }, [baseUrl]);
 
-  const chartSeries = chart.series.map((item) => item.value);
+  const chartSeries = chart?.series.map((item) => item.value);
 
-  const chartColors = chart.colors ?? [
+  const chartColors = chart?.colors ?? [
     theme.palette.primary.main,
     theme.palette.warning.main,
     theme.palette.secondary.dark,
@@ -40,7 +61,7 @@ export function AnalyticsCurrentVisits({ title, subheader, chart, ...other }: Pr
   const chartOptions = useChart({
     chart: { sparkline: { enabled: true } },
     colors: chartColors,
-    labels: chart.series.map((item) => item.label),
+    labels: chart?.series.map((item) => item.label),
     stroke: { width: 0 },
     dataLabels: { enabled: true, dropShadow: { enabled: false } },
     tooltip: {
@@ -50,9 +71,24 @@ export function AnalyticsCurrentVisits({ title, subheader, chart, ...other }: Pr
       },
     },
     plotOptions: { pie: { donut: { labels: { show: false } } } },
-    ...chart.options,
+    ...chart?.options,
   });
 
+  if (!loading && !chart)
+    return (
+      <Card {...other}>
+        <Backdrop
+          sx={(theme) => ({
+            position: 'absolute',
+            color: theme.vars.palette.text.secondary,
+            zIndex: theme.zIndex.drawer + 1,
+          })}
+          open={!loading && !chart}
+        >
+          <Iconify width={40} icon="fluent:shield-error-20-regular" />
+        </Backdrop>
+      </Card>
+    );
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />

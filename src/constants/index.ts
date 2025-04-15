@@ -1,4 +1,14 @@
 export const LanguageKey = {
+  home: {
+    postSummary: 'post_summary',
+    siteSummary: 'site_summary',
+    googleConsoleSummary: 'google_console_summary',
+    trendingSummary: 'trending_summary',
+    categorySummary: 'category_summary',
+    sourceSummary: 'source_summary',
+    keywordSummary: 'keyword_summary',
+    googleSearchStatusChart: 'google_Search_status_chart',
+  },
   nav: {
     dashboard: 'dashboard_nav',
     user: 'user_nav',

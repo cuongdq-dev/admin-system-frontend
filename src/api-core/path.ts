@@ -28,3 +28,13 @@ export const PATH_SERVER = '/server';
 export const PATH_DOCKER = '/docker';
 export const PATH_REPOSITORY = '/repository';
 export const PATH_CRAWLER = '/post/crawler';
+
+// analytic
+export const PATH_ANALYTICS_POST = '/analytics/post';
+export const PATH_ANALYTICS_GOOGLE_INDEXED = '/analytics/google-indexed';
+export const PATH_ANALYTICS_TRENDING = '/analytics/trending';
+export const PATH_ANALYTICS_SITE = '/analytics/site';
+export const PATH_ANALYTICS_CATEGORY = '/analytics/category';
+export const PATH_ANALYTICS_KEYWORD = '/analytics/keyword';
+export const PATH_ANALYTICS_SOURCE = '/analytics/source';
+export const PATH_ANALYTICS_GOOGLE_SEARCH_STATUS = '/analytics/google-search-status';
