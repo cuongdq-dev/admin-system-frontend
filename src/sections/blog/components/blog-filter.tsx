@@ -1,12 +1,14 @@
 import { LoadingButton } from '@mui/lab';
-import { Grid, TextField, Typography } from '@mui/material';
+import { Grid, TextField, Typography, useColorScheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import { t } from 'i18next';
+import { RHFMultiCheckbox } from 'src/components/hook-form';
 import { RHFAutocomplete } from 'src/components/hook-form/RHFTextField';
 import { TableFilter } from 'src/components/table';
 import { LanguageKey } from 'src/constants';
 import { usePageStore } from 'src/store/page';
 import { useSettingStore } from 'src/store/setting';
+import { varAlpha } from 'src/theme/styles';
 import { useShallow } from 'zustand/react/shallow';
 
 // ----------------------------------------------------------------------
@@ -17,6 +19,7 @@ export function BlogFilter(props: Props) {
   const { storeName } = props;
   const { meta } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
   const { categories, sites } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
+  const { mode } = useColorScheme();
 
   return (
     <Box
@@ -51,6 +54,7 @@ export function BlogFilter(props: Props) {
             limit: values?.limit?.id,
             page: values?.page?.id,
             site_id: values?.site?.id,
+            status: values?.status?.toString(),
             categories_id:
               values?.categories?.length > 0
                 ? values?.categories?.map((cate?: Record<string, any>) => cate?.id)
@@ -83,6 +87,60 @@ export function BlogFilter(props: Props) {
                 return <TextField {...params} margin="normal" label={'Categories'} />;
               }}
             />
+
+            <Box
+              sx={(theme) => {
+                return {
+                  my: 2,
+                  border: 1,
+                  borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
+                  borderRadius: theme.spacing(2),
+                  display: 'flex',
+                  position: 'relative',
+                  padding: theme.spacing(4),
+                };
+              }}
+            >
+              <Typography
+                sx={(theme) => {
+                  return {
+                    position: 'absolute',
+                    top: -12,
+                    left: 20,
+                    alignItems: 'center',
+                    fontSize: 14,
+                    borderRadius: theme.vars.shape.borderRadius,
+                    paddingX: 1,
+                    fontWeight: theme.typography.fontWeightBold,
+                    color:
+                      mode === 'dark'
+                        ? theme.vars.palette.grey[800]
+                        : theme.vars.palette.common.white,
+                    backgroundColor: theme.vars.palette.text.primary,
+                  };
+                }}
+              >
+                Status
+              </Typography>
+              <Box component={'div'} sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                <RHFMultiCheckbox
+                  name="status"
+                  control={<></>}
+                  defaultValue={
+                    Array.isArray(defaultValues?.status)
+                      ? defaultValues?.status
+                      : defaultValues?.status?.split(',') || []
+                  }
+                  options={[
+                    { value: 'NEW', label: 'NEW' },
+                    { value: 'DRAFT', label: 'DRAFT' },
+                    { value: 'PUBLISHED', label: 'PUBLISHED' },
+                    { value: 'DELETED', label: 'DELETED' },
+                  ]}
+                  label="Status"
+                />
+              </Box>
+            </Box>
 
             <Grid sx={{ width: '100%' }} container columns={2} spacing={1}>
               <Grid item md={1} sx={{ width: '100%' }}>

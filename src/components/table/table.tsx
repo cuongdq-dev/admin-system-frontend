@@ -116,7 +116,12 @@ export const TableComponent = (props: TableComponentProps) => {
       <>
         <PageLoading isLoading={loading} />
         <Backdrop
-          sx={(theme) => ({ position: 'absolute', zIndex: theme.zIndex.drawer + 1 })}
+          sx={(theme) => ({
+            position: 'absolute',
+            zIndex: theme.zIndex.drawer + 1,
+            backgroundColor: varAlpha(theme.palette.background.paperChannel, 0.7),
+            color: theme.palette.text.primary,
+          })}
           open={!!isFetching}
         >
           <CircularProgress color="inherit" />
@@ -170,7 +175,12 @@ export const TableComponent = (props: TableComponentProps) => {
         }}
       >
         <Backdrop
-          sx={(theme) => ({ position: 'absolute', zIndex: theme.zIndex.drawer + 1 })}
+          sx={(theme) => ({
+            position: 'absolute',
+            zIndex: theme.zIndex.drawer + 1,
+            backgroundColor: varAlpha(theme.palette.background.paperChannel, 0.7),
+            color: theme.palette.text.primary,
+          })}
           open={!!isFetching}
         >
           <CircularProgress color="inherit" />
