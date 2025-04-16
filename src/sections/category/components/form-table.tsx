@@ -3,11 +3,10 @@ import { Box, Button, DialogActions, DialogContent, TextField } from '@mui/mater
 import { t } from 'i18next';
 import { HttpMethod } from 'src/api-core';
 import { RHFTextField } from 'src/components/hook-form';
-import {
-  RHFAutocompleteWithApi,
-  RHFTextFieldWithSlug,
-} from 'src/components/hook-form/RHFTextField';
+import { RHFAutocomplete, RHFTextFieldWithSlug } from 'src/components/hook-form/RHFTextField';
 import { LanguageKey } from 'src/constants';
+import { useSettingStore } from 'src/store/setting';
+import { useShallow } from 'zustand/react/shallow';
 
 type Props = {
   defaultValues?: IPostCategory;
@@ -17,6 +16,7 @@ type Props = {
 };
 export const CategoryForm = (props: Props) => {
   const { defaultValues, action = HttpMethod.PATCH, isSubmitting, handleCloseForm } = props;
+  const { posts, sites } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
 
   return (
     <>
@@ -58,9 +58,8 @@ export const CategoryForm = (props: Props) => {
             variant="outlined"
           />
 
-          <RHFAutocompleteWithApi
-            baseUrl="/dropdown/posts"
-            options={[]}
+          <RHFAutocomplete
+            options={posts || []}
             defaultValue={defaultValues?.posts?.map((post) => {
               return { id: post?.id, title: post.title };
             })}
@@ -71,12 +70,11 @@ export const CategoryForm = (props: Props) => {
             )}
           />
 
-          <RHFAutocompleteWithApi
-            baseUrl="/dropdown/sites"
+          <RHFAutocomplete
             defaultValue={defaultValues?.sites?.map((site) => {
               return { id: site?.id, title: site.domain };
             })}
-            options={[]}
+            options={sites || []}
             name="sites"
             title={t(LanguageKey.category.sitesItem)}
             renderInput={(params) => (

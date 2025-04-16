@@ -4,7 +4,6 @@ import {
   Avatar,
   Box,
   Card,
-  CircularProgress,
   Link,
   TextField,
   Theme,
@@ -21,22 +20,21 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_BLOG } from 'src/api-core/path';
 import { ButtonDelete } from 'src/components/button';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
-import {
-  RHFAutocomplete,
-  RHFAutocompleteWithApi,
-  RHFEditor,
-} from 'src/components/hook-form/RHFTextField';
+import { RHFAutocomplete, RHFEditor } from 'src/components/hook-form/RHFTextField';
 import { PageLoading } from 'src/components/loading';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/page';
+import { useSettingStore } from 'src/store/setting';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
 
 // ----------------------------------------------------------------------
 export function DetailView() {
   const { setNotify } = useNotifyStore.getState();
+  const { sites, categories } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
+
   const storeName = StoreName.BLOG;
   const { id } = useParams();
   const navigate = useNavigate();
@@ -240,7 +238,6 @@ export function DetailView() {
                   label={t(LanguageKey.blog.titleItem)}
                   defaultValue={data?.title}
                 />
-
                 <RHFTextField
                   name="meta_description"
                   margin="normal"
@@ -260,7 +257,7 @@ export function DetailView() {
                   options={
                     drawerKeyword?.map((query) => {
                       return { title: query?.query, id: query?.query };
-                    })!
+                    }) || []
                   }
                   title={t(LanguageKey.blog.keywordsItem)}
                   renderInput={(params) => (
@@ -271,14 +268,12 @@ export function DetailView() {
                     />
                   )}
                 />
-
-                <RHFAutocompleteWithApi
-                  baseUrl="/dropdown/categories"
-                  options={[]}
+                <RHFAutocomplete
+                  name="categories"
+                  options={categories || []}
                   defaultValue={data?.categories?.map((category) => {
                     return { id: category?.id, title: category.name };
                   })}
-                  name="categories"
                   title={t(LanguageKey.site.categoriesItem)}
                   renderInput={(params) => (
                     <TextField
@@ -288,19 +283,17 @@ export function DetailView() {
                     />
                   )}
                 />
-                <RHFAutocompleteWithApi
-                  baseUrl="/dropdown/sites"
+                <RHFAutocomplete
                   defaultValue={data?.sites?.map((site) => {
                     return { id: site?.id, title: site.name };
                   })}
-                  options={[]}
+                  options={sites || []}
                   name="sites"
                   title={t(LanguageKey.blog.siteItem)}
                   renderInput={(params) => (
                     <TextField {...params} margin="normal" label={t(LanguageKey.blog.siteItem)} />
                   )}
                 />
-
                 <Box
                   display={'flex'}
                   gap={1}

@@ -7,6 +7,7 @@ import {
   Grid,
   IconButton,
   Pagination,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -23,17 +24,16 @@ import { useNavigate } from 'react-router-dom';
 import { LanguageKey } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
 import { usePageStore } from 'src/store/page';
+import { varAlpha } from 'src/theme/styles';
 import { useShallow } from 'zustand/react/shallow';
 import { Iconify } from '../iconify';
 import { TimeAgo } from '../label';
-import { PageLoading } from '../loading';
-import { Scrollbar } from '../scrollbar';
+import { NotFoundDataComponent } from '../no-found-data';
 import { TableActionComponent } from './table-action';
 import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
-import { varAlpha } from 'src/theme/styles';
-import { NotFoundDataComponent } from '../no-found-data';
+import { PageLoading } from '../loading';
 
 export const TableComponent = (props: TableComponentProps) => {
   const table = useTable();
@@ -112,20 +112,14 @@ export const TableComponent = (props: TableComponentProps) => {
   };
 
   if (component == 'CARD') {
+    if (loading || isFetching)
+      return (
+        <Box sx={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+          <CircularProgress color="inherit" sx={{ mt: 5 }} />
+        </Box>
+      );
     return (
       <>
-        <PageLoading isLoading={loading} />
-        <Backdrop
-          sx={(theme) => ({
-            position: 'absolute',
-            zIndex: theme.zIndex.drawer + 1,
-            backgroundColor: varAlpha(theme.palette.background.paperChannel, 0.7),
-            color: theme.palette.text.primary,
-          })}
-          open={!!isFetching}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
         <Grid container>
           {datasource?.map((data: Record<string, any>, index: number) => {
             return (
@@ -134,82 +128,71 @@ export const TableComponent = (props: TableComponentProps) => {
               </Fragment>
             );
           })}
+          {metaData?.totalItems == 0 && <NotFoundDataComponent />}
         </Grid>
-
-        {metaData?.totalItems == 0 && <NotFoundDataComponent />}
         {metaData && metaData.totalItems > 0 && (
           <Pagination
-            page={metaData?.currentPage}
+            variant="outlined"
+            shape="rounded"
+            page={Number(metaData?.currentPage)}
+            siblingCount={1}
             count={metaData?.totalPages}
-            onChange={(event, page) => {
-              table.onChangePage(event, page - 1);
-            }}
+            onChange={(event, page) => table.onChangePage(event, page - 1)}
             color="primary"
-            sx={{ mt: 2, mx: 'auto' }}
+            sx={{ mx: 'auto', mt: 2 }}
           />
         )}
       </>
     );
   }
   return (
-    <Box sx={{ position: 'relative' }}>
-      <PageLoading isLoading={loading} />
-      <Card
-        sx={(theme) => {
-          return {
-            opacity: loading ? 0.1 : 1,
-            pointerEvents: loading ? 'none' : 'auto',
-            animation: loading ? 'none' : 'fadeIn 1s ease-in-out', // Apply fadeIn animation when not loading
-            border: `0.1px solid ${theme.vars.palette.divider}`,
-            '@keyframes fadeIn': {
-              '0%': {
-                opacity: 0,
-                transform: 'translateY(-15px)',
-              },
-              '100%': {
-                opacity: 1,
-                transform: 'translateY(0)',
-              },
+    <Card
+      sx={(theme) => {
+        return {
+          opacity: loading ? 0.1 : 1,
+          pointerEvents: loading ? 'none' : 'auto',
+          animation: loading ? 'none' : 'fadeIn 1s ease-in-out',
+          border: `0.1px solid ${theme.vars.palette.divider}`,
+          '@keyframes fadeIn': {
+            '0%': {
+              opacity: 0,
+              transform: 'translateY(-15px)',
             },
-          };
-        }}
+            '100%': {
+              opacity: 1,
+              transform: 'translateY(0)',
+            },
+          },
+        };
+      }}
+    >
+      <TableContainer
+        sx={{ overflow: 'scroll', maxHeight: metaData ? 'calc(100% - 52px)' : '100%' }}
       >
-        <Backdrop
-          sx={(theme) => ({
-            position: 'absolute',
-            zIndex: theme.zIndex.drawer + 1,
-            backgroundColor: varAlpha(theme.palette.background.paperChannel, 0.7),
-            color: theme.palette.text.primary,
-          })}
-          open={!!isFetching}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <TableHeadComponent
-                tableChildren={children}
-                order={getSortBy()?.order as 'asc' | 'desc'}
-                orderBy={getSortBy()?.orderBy}
-                rowCount={datasource?.length}
-                numSelected={table.selected.length}
-                indexCol={indexCol}
-                selectCol={selectCol}
-                actionCol={actions?.deleteBtn || actions?.editBtn || actions.popupEdit}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    datasource?.map((row: Record<string, any>) => row?.id)
-                  )
-                }
-                headLabel={headLabel}
-              />
+        <Table stickyHeader>
+          <TableHeadComponent
+            tableChildren={children}
+            order={getSortBy()?.order as 'asc' | 'desc'}
+            orderBy={getSortBy()?.orderBy}
+            rowCount={datasource?.length}
+            numSelected={table.selected.length}
+            indexCol={indexCol}
+            selectCol={selectCol}
+            actionCol={actions?.deleteBtn || actions?.editBtn || actions.popupEdit}
+            onSort={table.onSort}
+            onSelectAllRows={(checked) =>
+              table.onSelectAllRows(
+                checked,
+                datasource?.map((row: Record<string, any>) => row?.id)
+              )
+            }
+            headLabel={headLabel}
+          />
+
+          {!loading && !isFetching ? (
+            <>
               {notFound ? (
-                <TableBody>
-                  <TableNoData colSpan={headLabel.length + 2} />
-                </TableBody>
+                <TableNoData colSpan={headLabel.length + 2} />
               ) : (
                 <TableBody>
                   {datasource?.map((row: Record<string, any>, index: number) => {
@@ -326,29 +309,41 @@ export const TableComponent = (props: TableComponentProps) => {
                   {notFound && <TableNoData />}
                 </TableBody>
               )}
-            </Table>
-          </TableContainer>
-        </Scrollbar>
-        {metaData && Object.keys(metaData).length > 0 && (
-          <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Typography marginLeft={2} variant="caption" color="grey">
-              <TimeAgo isFetching={isFetching} timestamp={fetchOn!} />
-            </Typography>
+            </>
+          ) : (
+            <Backdrop
+              sx={(theme) => ({
+                position: 'absolute',
+                zIndex: theme.zIndex.drawer + 1,
+                backgroundColor: varAlpha(theme.palette.background.paperChannel, 0.7),
+                color: theme.palette.text.primary,
+              })}
+              open={!!loading || !!isFetching}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
+          )}
+        </Table>
+      </TableContainer>
+      {metaData && Object.keys(metaData).length > 0 && (
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Typography marginLeft={2} variant="caption" color="grey">
+            <TimeAgo isFetching={isFetching} timestamp={fetchOn!} />
+          </Typography>
 
-            <TablePagination
-              component="div"
-              labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
-              page={metaData?.currentPage - 1}
-              count={metaData?.totalItems}
-              rowsPerPage={metaData?.itemsPerPage}
-              onPageChange={table.onChangePage}
-              rowsPerPageOptions={[10, 20, 30, 50, 100, 200, 500]}
-              onRowsPerPageChange={table.onChangeRowsPerPage}
-            />
-          </Box>
-        )}
-      </Card>
-    </Box>
+          <TablePagination
+            component="div"
+            labelRowsPerPage={t(LanguageKey.table.paginationPerPage) + ':'}
+            page={metaData?.currentPage - 1}
+            count={metaData?.totalItems}
+            rowsPerPage={metaData?.itemsPerPage}
+            onPageChange={table.onChangePage}
+            rowsPerPageOptions={[10, 20, 30, 50, 100, 200, 500]}
+            onRowsPerPageChange={table.onChangeRowsPerPage}
+          />
+        </Box>
+      )}
+    </Card>
   );
 };
 

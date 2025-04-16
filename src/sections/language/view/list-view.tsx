@@ -92,31 +92,28 @@ export function ListView() {
       breadcrumb={{ items: [{ href: '/language', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent title={t(LanguageKey.language.tableTitle)} />
-      <Card>
-        <TabContext value={queryParams.get('lang') || ''}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', marginBottom: 2 }}>
-            <TabList
-              onChange={(_, value) => navigate(value ? '?lang=' + value : '')}
-              aria-label="lab API tabs example"
-            >
-              <Tab label={t(LanguageKey.language.tabAll)} value={''} />
-              {state?.map((s) => {
-                return <Tab key={s.name + '_' + s.code} label={s.name} value={s.code} />;
-              })}
-            </TabList>
-          </Box>
-          <TableComponent
-            storeName={storeName}
-            url={PATH_LANGUAGE}
-            indexCol={true}
-            selectCol={true}
-            refreshData={refreshData}
-            handleClickOpenForm={handleClickOpenForm}
-            actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
-            headLabel={HeadLabel}
-          />
-        </TabContext>
-      </Card>
+      <TabContext value={queryParams.get('lang') || ''}>
+        <TabList
+          sx={{ mb: 2 }}
+          onChange={(_, value) => navigate(value ? '?lang=' + value : '')}
+          aria-label="lab API tabs example"
+        >
+          <Tab label={t(LanguageKey.language.tabAll)} value={''} />
+          {state?.map((s) => {
+            return <Tab key={s.name + '_' + s.code} label={s.name} value={s.code} />;
+          })}
+        </TabList>
+      </TabContext>
+      <TableComponent
+        storeName={storeName}
+        url={PATH_LANGUAGE}
+        indexCol={true}
+        selectCol={true}
+        refreshData={refreshData}
+        handleClickOpenForm={handleClickOpenForm}
+        actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
+        headLabel={HeadLabel}
+      />
 
       <PopupFormTable
         storeName={storeName}

@@ -68,7 +68,7 @@ export function BlogFilter(props: Props) {
               multiple={false}
               name="site"
               defaultValue={sites?.find((site) => site.id == defaultValues?.site_id)}
-              options={sites!}
+              options={sites || []}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Site'} />;
               }}
@@ -78,7 +78,7 @@ export function BlogFilter(props: Props) {
               id="categories"
               disableCloseOnSelect
               name="categories"
-              options={categories!}
+              options={categories || []}
               defaultValue={defaultValues?.categories_id?.split(',').map((cate: string) => {
                 const value = categories?.find((c) => c.id == cate);
                 return value;

@@ -1,16 +1,14 @@
-import { TextField, Typography, useColorScheme } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { t } from 'i18next';
 
 import { LoadingButton } from '@mui/lab';
-import { PATH_DROPDOWN } from 'src/api-core/path';
-import { RHFAutocomplete, RHFAutocompleteWithApi } from 'src/components/hook-form/RHFTextField';
+import { RHFAutocomplete } from 'src/components/hook-form/RHFTextField';
 import { TableFilter } from 'src/components/table';
 import { LanguageKey } from 'src/constants';
 import { usePageStore } from 'src/store/page';
-import { useShallow } from 'zustand/react/shallow';
-import sites from 'src/pages/sites';
 import { useSettingStore } from 'src/store/setting';
+import { useShallow } from 'zustand/react/shallow';
 
 // ----------------------------------------------------------------------
 
@@ -64,7 +62,7 @@ export function SitemapFilters(props: Props) {
               multiple={false}
               name="site"
               defaultValue={sites?.find((site) => site.id == defaultValues?.site_id)}
-              options={sites!}
+              options={sites || []}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Site'} />;
               }}

@@ -3,11 +3,10 @@ import { Box, Button, DialogActions, DialogContent, TextField } from '@mui/mater
 import { t } from 'i18next';
 import { HttpMethod } from 'src/api-core';
 import { RHFCheckbox, RHFTextField } from 'src/components/hook-form';
-import {
-  RHFAutocompleteWithApi,
-  RHFTextFieldWithSlug,
-} from 'src/components/hook-form/RHFTextField';
+import { RHFAutocomplete } from 'src/components/hook-form/RHFTextField';
 import { LanguageKey } from 'src/constants';
+import { useSettingStore } from 'src/store/setting';
+import { useShallow } from 'zustand/react/shallow';
 
 type Props = {
   defaultValues?: ISite;
@@ -17,6 +16,8 @@ type Props = {
 };
 export const SiteForm = (props: Props) => {
   const { defaultValues, action = HttpMethod.PATCH, isSubmitting, handleCloseForm } = props;
+  const { categories } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
+
   return (
     <>
       <DialogContent>
@@ -74,9 +75,8 @@ export const SiteForm = (props: Props) => {
               copy
             />
           )}
-          <RHFAutocompleteWithApi
-            baseUrl="/dropdown/categories"
-            options={[]}
+          <RHFAutocomplete
+            options={categories || []}
             defaultValue={defaultValues?.categories?.map((category) => {
               return { id: category?.id, title: category.name };
             })}

@@ -4,15 +4,14 @@ import Typography from '@mui/material/Typography';
 import { t } from 'i18next';
 
 import { LoadingButton } from '@mui/lab';
-import { PATH_DROPDOWN } from 'src/api-core/path';
 import { RHFMultiCheckbox } from 'src/components/hook-form';
-import { RHFAutocomplete, RHFAutocompleteWithApi } from 'src/components/hook-form/RHFTextField';
+import { RHFAutocomplete } from 'src/components/hook-form/RHFTextField';
 import { TableFilter } from 'src/components/table';
 import { LanguageKey } from 'src/constants';
 import { usePageStore } from 'src/store/page';
+import { useSettingStore } from 'src/store/setting';
 import { varAlpha } from 'src/theme/styles';
 import { useShallow } from 'zustand/react/shallow';
-import { useSettingStore } from 'src/store/setting';
 
 // ----------------------------------------------------------------------
 
@@ -67,7 +66,7 @@ export function LogsFilters(props: LogsFiltersProps) {
               multiple={false}
               name="site"
               defaultValue={sites?.find((site) => site.id == defaultValues?.site_id)}
-              options={sites!}
+              options={sites || []}
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Site'} />;
               }}

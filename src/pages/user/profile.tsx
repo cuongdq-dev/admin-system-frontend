@@ -115,7 +115,7 @@ export default function Page() {
                       };
                     },
                   }}
-                  secondaryTypographyProps={{ sx: { opacity: 0.8 } }}
+                  secondaryTypographyProps={{ sx: { opacity: 0.8, color: 'text.white' } }}
                   primary={user?.name}
                   secondary={user?.email}
                 />
@@ -150,8 +150,8 @@ export default function Page() {
                 aria-label="profile-tab"
               >
                 <Tab sx={tabStyle} label={t(LanguageKey.user.tabProfile)} {...a11yProps(0)} />
-                {/* <Tab sx={tabStyle} label="Item Two" {...a11yProps(1)} /> */}
-                {/* <Tab sx={tabStyle} label="Item Three" {...a11yProps(2)} /> */}
+                {/* <Tab sx={tabStyle} label="Item Two" {...a11yProps(1)} />
+                <Tab sx={tabStyle} label="Item Three" {...a11yProps(2)} /> */}
               </Tabs>
             </Box>
           </Card>
