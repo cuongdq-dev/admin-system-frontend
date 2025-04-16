@@ -3,7 +3,7 @@ import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { t } from 'i18next';
 import { useState } from 'react';
-import { PATH_APP_SETTING, PATH_DROPDOWN } from 'src/api-core/path';
+import { PATH_APP_SETTING } from 'src/api-core/path';
 import CommonBreadcrumbs from 'src/components/breadcrumbs';
 import { Iconify } from 'src/components/iconify';
 import { LanguageKey } from 'src/constants';
@@ -13,7 +13,6 @@ import { layoutClasses } from '../classes';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
 import { MenuButton } from '../components/menu-button';
-import { NotificationsPopover } from '../components/notifications-popover';
 import { SettingPopover } from '../components/setting-popover';
 import { navData } from '../config-nav-dashboard';
 import { _workspaces } from '../config-nav-workspace';
@@ -33,16 +32,11 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
-  const { setSetting, setDropdown } = useSettingStore.getState();
+  const { setSetting } = useSettingStore.getState();
 
   useAPI({
     baseURL: PATH_APP_SETTING,
     onSuccess: (res) => setSetting(res),
-  });
-
-  useAPI({
-    baseURL: PATH_DROPDOWN,
-    onSuccess: (res) => setDropdown(res),
   });
 
   const [navOpen, setNavOpen] = useState(false);

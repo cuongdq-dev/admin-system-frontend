@@ -13,10 +13,13 @@ export interface INotifications {
 
 export interface ISetting {
   lang?: { code: string; name: string }[];
+
   user?: Record<string, any>;
   notifyNew?: number;
   notifications?: INotifications;
   breadcrumb?: IBreadcrumb;
+
+  dropdown?: { sites?: IDropdown[]; posts?: IDropdown[]; categories?: IDropdown[] };
 }
 
 export interface IDropdown {
@@ -34,14 +37,9 @@ interface ISettingStore {
   user?: Record<string, any>;
   notifyNew?: number;
   notifications?: INotifications;
-
-  dropdown?: {
-    sites?: IDropdown[];
-    posts?: IDropdown[];
-    categories?: IDropdown[];
-  };
-
   breadcrumb?: IBreadcrumb;
+  dropdown?: { sites?: IDropdown[]; posts?: IDropdown[]; categories?: IDropdown[] };
+
   setSetting: (values: ISetting) => void;
   setDropdown: (values: IDropdowns) => void;
   setBreadcrumb: (breadcrumb?: IBreadcrumb) => void;
