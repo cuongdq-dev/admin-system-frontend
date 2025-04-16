@@ -27,6 +27,7 @@ import { usePageStore } from 'src/store/page';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
 import { Categories } from '../components/categories';
+import { Scrollbar } from 'src/components/scrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -104,159 +105,161 @@ export function DetailView() {
   };
 
   return (
-    <DashboardContent
-      breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.detailTitle) }] }}
-    >
-      <PageLoading isLoading={isLoading} />
-      <Grid container spacing={3}>
-        <Grid key={data?.id} xs={12} sm={12} md={4}>
-          <Card sx={{ position: 'sticky', top: '80px' }}>
-            <Box
-              sx={(theme) => {
-                return {
-                  p: theme.spacing(2, 2, 2, 2),
-                  maxHeight: isSmallScreen ? 'none' : 'calc(100vh - 100px)',
-                  overflow: isSmallScreen ? 'visible' : 'auto',
-                };
-              }}
-            >
-              <Card
+    <Scrollbar sx={{ height: '100%', overflowX: 'hidden' }}>
+      <DashboardContent
+        breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.detailTitle) }] }}
+      >
+        <PageLoading isLoading={isLoading} />
+        <Grid container spacing={3}>
+          <Grid key={data?.id} xs={12} sm={12} md={4}>
+            <Card sx={{ position: 'sticky', top: '0' }}>
+              <Box
                 sx={(theme) => {
                   return {
-                    mt: 2,
-                    boxShadow: 'none',
-                    border: `1px solid ${theme.vars.palette.divider}`,
+                    p: theme.spacing(2, 2, 2, 2),
+                    maxHeight: isSmallScreen ? 'none' : 'calc(100vh - 100px)',
+                    overflow: isSmallScreen ? 'visible' : 'auto',
                   };
                 }}
               >
-                <Categories
-                  selected={selectCategory}
-                  handleClick={(category: IPostCategory) => {
-                    setCategory(category);
+                <Card
+                  sx={(theme) => {
+                    return {
+                      mt: 2,
+                      boxShadow: 'none',
+                      border: `1px solid ${theme.vars.palette.divider}`,
+                    };
+                  }}
+                >
+                  <Categories
+                    selected={selectCategory}
+                    handleClick={(category: IPostCategory) => {
+                      setCategory(category);
+                      setFetchingList(StoreName.SITE_BLOG, true);
+                      setLoadingList(StoreName.SITE_BLOG, true);
+                    }}
+                  />
+                </Card>
+
+                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                  <RHFTextField
+                    name="name"
+                    margin="normal"
+                    label={t(LanguageKey.site.nameItem)}
+                    defaultValue={data?.name}
+                  />
+
+                  <RHFTextField
+                    name="domain"
+                    margin="normal"
+                    label={t(LanguageKey.site.domainItem)}
+                    defaultValue={data?.domain}
+                  />
+
+                  <RHFTextField
+                    name="description"
+                    margin="normal"
+                    multiline
+                    maxRows={10}
+                    label={t(LanguageKey.site.descriptionItem)}
+                    defaultValue={data?.description || ''}
+                  />
+                  <RHFCheckbox
+                    name="autoPost"
+                    control={<></>}
+                    label={t(LanguageKey.site.autoPostItem)}
+                    defaultChecked={data?.autoPost}
+                  />
+
+                  <LoadingButton
+                    type="submit"
+                    variant={isDirty ? 'contained' : 'outlined'}
+                    fullWidth
+                    sx={{ mt: 1, mb: 2 }}
+                    loading={isSubmitting}
+                    disabled={!isDirty}
+                  >
+                    {t(LanguageKey.button.update)}
+                  </LoadingButton>
+
+                  <RHFTextField
+                    multiline
+                    disabled
+                    defaultValue={data?.token}
+                    margin="normal"
+                    id="token"
+                    name="token"
+                    label="API Token"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    copy
+                  />
+                </FormProvider>
+
+                <TelegramTokenInput
+                  siteId={id}
+                  defaultToken={data?.teleToken!}
+                  defaultValues={{
+                    botId: data?.teleChatId,
+                    botName: data?.teleChatName,
+                    botUsername: data?.teleBotName,
+                    chatId: data?.teleChatId,
+                  }}
+                />
+              </Box>
+            </Card>
+          </Grid>
+          <Grid xs={12} sm={12} md={8} sx={{ position: 'relative' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%',
+                mb: 2,
+                alignItems: 'center',
+              }}
+            >
+              <Typography variant="h4">{selectCategory.name}</Typography>
+              {selectCategory.id != 'all' && (
+                <Typography
+                  onClick={() => {
+                    setCategory({ id: 'all', slug: 'all', name: 'All Post' });
                     setFetchingList(StoreName.SITE_BLOG, true);
                     setLoadingList(StoreName.SITE_BLOG, true);
                   }}
-                />
-              </Card>
-
-              <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <RHFTextField
-                  name="name"
-                  margin="normal"
-                  label={t(LanguageKey.site.nameItem)}
-                  defaultValue={data?.name}
-                />
-
-                <RHFTextField
-                  name="domain"
-                  margin="normal"
-                  label={t(LanguageKey.site.domainItem)}
-                  defaultValue={data?.domain}
-                />
-
-                <RHFTextField
-                  name="description"
-                  margin="normal"
-                  multiline
-                  maxRows={10}
-                  label={t(LanguageKey.site.descriptionItem)}
-                  defaultValue={data?.description || ''}
-                />
-                <RHFCheckbox
-                  name="autoPost"
-                  control={<></>}
-                  label={t(LanguageKey.site.autoPostItem)}
-                  defaultChecked={data?.autoPost}
-                />
-
-                <LoadingButton
-                  type="submit"
-                  variant={isDirty ? 'contained' : 'outlined'}
-                  fullWidth
-                  sx={{ mt: 1, mb: 2 }}
-                  loading={isSubmitting}
-                  disabled={!isDirty}
+                  sx={{ textDecoration: 'underline', cursor: 'pointer' }}
+                  variant="caption"
                 >
-                  {t(LanguageKey.button.update)}
-                </LoadingButton>
-
-                <RHFTextField
-                  multiline
-                  disabled
-                  defaultValue={data?.token}
-                  margin="normal"
-                  id="token"
-                  name="token"
-                  label="API Token"
-                  type="text"
-                  fullWidth
-                  variant="outlined"
-                  copy
-                />
-              </FormProvider>
-
-              <TelegramTokenInput
-                siteId={id}
-                defaultToken={data?.teleToken!}
-                defaultValues={{
-                  botId: data?.teleChatId,
-                  botName: data?.teleChatName,
-                  botUsername: data?.teleBotName,
-                  chatId: data?.teleChatId,
+                  View All
+                </Typography>
+              )}
+            </Box>
+            <Grid container spacing={3}>
+              <TableComponent
+                updateUrlEnabled={false}
+                storeName={StoreName.SITE_BLOG}
+                component={'CARD'}
+                url={`${PATH_SITE}/${id}/${selectCategory.slug || selectCategory.id}/posts`}
+                headLabel={[]}
+                customCard={({ values }: { values: Record<string, any>; index: number }) => {
+                  return (
+                    <Grid key={values?.id} xs={12} sm={4} md={4}>
+                      <PostItem
+                        post={values as any}
+                        latestPost={false}
+                        latestPostLarge={false}
+                        siteId={id}
+                      />
+                    </Grid>
+                  );
                 }}
               />
-            </Box>
-          </Card>
-        </Grid>
-        <Grid xs={12} sm={12} md={8} sx={{ position: 'relative' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-              mb: 2,
-              alignItems: 'center',
-            }}
-          >
-            <Typography variant="h4">{selectCategory.name}</Typography>
-            {selectCategory.id != 'all' && (
-              <Typography
-                onClick={() => {
-                  setCategory({ id: 'all', slug: 'all', name: 'All Post' });
-                  setFetchingList(StoreName.SITE_BLOG, true);
-                  setLoadingList(StoreName.SITE_BLOG, true);
-                }}
-                sx={{ textDecoration: 'underline', cursor: 'pointer' }}
-                variant="caption"
-              >
-                View All
-              </Typography>
-            )}
-          </Box>
-          <Grid container spacing={3}>
-            <TableComponent
-              updateUrlEnabled={false}
-              storeName={StoreName.SITE_BLOG}
-              component={'CARD'}
-              url={`${PATH_SITE}/${id}/${selectCategory.slug || selectCategory.id}/posts`}
-              headLabel={[]}
-              customCard={({ values }: { values: Record<string, any>; index: number }) => {
-                return (
-                  <Grid key={values?.id} xs={12} sm={4} md={4}>
-                    <PostItem
-                      post={values as any}
-                      latestPost={false}
-                      latestPostLarge={false}
-                      siteId={id}
-                    />
-                  </Grid>
-                );
-              }}
-            />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </DashboardContent>
+      </DashboardContent>
+    </Scrollbar>
   );
 }
 

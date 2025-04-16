@@ -22,6 +22,7 @@ import { ButtonDelete } from 'src/components/button';
 import { FormProvider, RHFTextField } from 'src/components/hook-form';
 import { RHFAutocomplete, RHFEditor } from 'src/components/hook-form/RHFTextField';
 import { PageLoading } from 'src/components/loading';
+import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useNotifyStore } from 'src/store/notify';
@@ -164,176 +165,178 @@ export function DetailView() {
     });
   };
   return (
-    <DashboardContent
-      breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.detailTitle) }] }}
-    >
-      <PageLoading isLoading={isLoading} />
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={3}>
-          <Grid key={data?.id} xs={12} sm={12} md={4}>
-            <Card sx={{ position: 'sticky', top: '80px' }}>
-              <Box sx={{ position: 'relative', pt: 'calc(100% * 3 / 6)' }}>
-                <Avatar
-                  alt={data?.thumbnail?.slug}
-                  src={data?.thumbnail?.url}
-                  sx={{ left: 24, zIndex: 9, bottom: -24, position: 'absolute' }}
-                />
+    <Scrollbar sx={{ height: '100%', overflowX: 'hidden' }}>
+      <DashboardContent
+        breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.detailTitle) }] }}
+      >
+        <PageLoading isLoading={isLoading} />
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={3}>
+            <Grid key={data?.id} xs={12} sm={12} md={4}>
+              <Card sx={{ position: 'sticky', top: '0' }}>
+                <Box sx={{ position: 'relative', pt: 'calc(100% * 3 / 6)' }}>
+                  <Avatar
+                    alt={data?.thumbnail?.slug}
+                    src={data?.thumbnail?.url}
+                    sx={{ left: 24, zIndex: 9, bottom: -24, position: 'absolute' }}
+                  />
 
-                <Box
-                  component="img"
-                  alt={data?.title}
-                  src={`${data?.thumbnail?.url}`}
-                  sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
-                />
-              </Box>
-              <Box
-                sx={(theme) => {
-                  return {
-                    p: theme.spacing(5, 3, 3, 3),
-                    maxHeight: isSmallScreen ? 'none' : 'calc(100vh - 280px)',
-                    overflow: isSmallScreen ? 'visible' : 'auto',
-                  };
-                }}
-              >
-                <Box display="flex" gap={1} justifyContent="space-between">
-                  <Box display="flex" gap={1}>
-                    <LoadingButton
-                      variant="contained"
-                      disabled={data?.status == 'DRAFT'}
-                      onClick={() => updateStatus({ status: 'DRAFT' })}
-                      color="warning"
-                      loading={isSubmitting}
-                    >
-                      {t(LanguageKey.blog.draftButton)}
-                    </LoadingButton>
-
-                    <LoadingButton
-                      variant="contained"
-                      disabled={data?.status == 'PUBLISHED'}
-                      onClick={() => updateStatus({ status: 'PUBLISHED' })}
-                      color="primary"
-                      loading={isSubmitting}
-                    >
-                      {t(LanguageKey.blog.publicButton)}
-                    </LoadingButton>
-                  </Box>
-
-                  <Box display="flex" gap={1}>
-                    <LoadingButton
-                      type="submit"
-                      variant="contained"
-                      color="inherit"
-                      loading={isSubmitting}
-                      disabled={!isDirty}
-                    >
-                      {t(LanguageKey.button.update)}
-                    </LoadingButton>
-                  </Box>
+                  <Box
+                    component="img"
+                    alt={data?.title}
+                    src={`${data?.thumbnail?.url}`}
+                    sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
+                  />
                 </Box>
-                <RHFTextField
-                  name="title"
-                  margin="normal"
-                  multiline
-                  maxRows={5}
-                  label={t(LanguageKey.blog.titleItem)}
-                  defaultValue={data?.title}
-                />
-                <RHFTextField
-                  name="meta_description"
-                  margin="normal"
-                  multiline
-                  maxRows={10}
-                  label={t(LanguageKey.blog.descriptionItem)}
-                  defaultValue={data?.meta_description}
-                />
-                <RHFAutocomplete
-                  id={data?.id!}
-                  name="relatedQueries"
-                  defaultValue={
-                    data?.relatedQueries?.map((query) => {
-                      return { title: query?.query, id: query?.query };
-                    })!
-                  }
-                  options={
-                    drawerKeyword?.map((query) => {
-                      return { title: query?.query, id: query?.query };
-                    }) || []
-                  }
-                  title={t(LanguageKey.blog.keywordsItem)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      margin="normal"
-                      label={t(LanguageKey.blog.keywordsItem)}
-                    />
-                  )}
-                />
-                <RHFAutocomplete
-                  name="categories"
-                  options={categories || []}
-                  defaultValue={data?.categories?.map((category) => {
-                    return { id: category?.id, title: category.name };
-                  })}
-                  title={t(LanguageKey.site.categoriesItem)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      margin="normal"
-                      label={t(LanguageKey.blog.categoryItem)}
-                    />
-                  )}
-                />
-                <RHFAutocomplete
-                  defaultValue={data?.sites?.map((site) => {
-                    return { id: site?.id, title: site.name };
-                  })}
-                  options={sites || []}
-                  name="sites"
-                  title={t(LanguageKey.blog.siteItem)}
-                  renderInput={(params) => (
-                    <TextField {...params} margin="normal" label={t(LanguageKey.blog.siteItem)} />
-                  )}
-                />
                 <Box
-                  display={'flex'}
-                  gap={1}
-                  marginTop={1}
-                  justifyContent="space-between"
-                  alignItems={'center'}
+                  sx={(theme) => {
+                    return {
+                      p: theme.spacing(5, 3, 3, 3),
+                      maxHeight: isSmallScreen ? 'none' : 'calc(100vh - 280px)',
+                      overflow: isSmallScreen ? 'visible' : 'auto',
+                    };
+                  }}
                 >
-                  <Link
-                    target="_blank"
-                    href={data?.article?.url}
-                    color="inherit"
-                    underline="always"
+                  <Box display="flex" gap={1} justifyContent="space-between">
+                    <Box display="flex" gap={1}>
+                      <LoadingButton
+                        variant="contained"
+                        disabled={data?.status == 'DRAFT'}
+                        onClick={() => updateStatus({ status: 'DRAFT' })}
+                        color="warning"
+                        loading={isSubmitting}
+                      >
+                        {t(LanguageKey.blog.draftButton)}
+                      </LoadingButton>
+
+                      <LoadingButton
+                        variant="contained"
+                        disabled={data?.status == 'PUBLISHED'}
+                        onClick={() => updateStatus({ status: 'PUBLISHED' })}
+                        color="primary"
+                        loading={isSubmitting}
+                      >
+                        {t(LanguageKey.blog.publicButton)}
+                      </LoadingButton>
+                    </Box>
+
+                    <Box display="flex" gap={1}>
+                      <LoadingButton
+                        type="submit"
+                        variant="contained"
+                        color="inherit"
+                        loading={isSubmitting}
+                        disabled={!isDirty}
+                      >
+                        {t(LanguageKey.button.update)}
+                      </LoadingButton>
+                    </Box>
+                  </Box>
+                  <RHFTextField
+                    name="title"
+                    margin="normal"
+                    multiline
+                    maxRows={5}
+                    label={t(LanguageKey.blog.titleItem)}
+                    defaultValue={data?.title}
+                  />
+                  <RHFTextField
+                    name="meta_description"
+                    margin="normal"
+                    multiline
+                    maxRows={10}
+                    label={t(LanguageKey.blog.descriptionItem)}
+                    defaultValue={data?.meta_description}
+                  />
+                  <RHFAutocomplete
+                    id={data?.id!}
+                    name="relatedQueries"
+                    defaultValue={
+                      data?.relatedQueries?.map((query) => {
+                        return { title: query?.query, id: query?.query };
+                      })!
+                    }
+                    options={
+                      drawerKeyword?.map((query) => {
+                        return { title: query?.query, id: query?.query };
+                      }) || []
+                    }
+                    title={t(LanguageKey.blog.keywordsItem)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        margin="normal"
+                        label={t(LanguageKey.blog.keywordsItem)}
+                      />
+                    )}
+                  />
+                  <RHFAutocomplete
+                    name="categories"
+                    options={categories || []}
+                    defaultValue={data?.categories?.map((category) => {
+                      return { id: category?.id, title: category.name };
+                    })}
+                    title={t(LanguageKey.site.categoriesItem)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        margin="normal"
+                        label={t(LanguageKey.blog.categoryItem)}
+                      />
+                    )}
+                  />
+                  <RHFAutocomplete
+                    defaultValue={data?.sites?.map((site) => {
+                      return { id: site?.id, title: site.name };
+                    })}
+                    options={sites || []}
+                    name="sites"
+                    title={t(LanguageKey.blog.siteItem)}
+                    renderInput={(params) => (
+                      <TextField {...params} margin="normal" label={t(LanguageKey.blog.siteItem)} />
+                    )}
+                  />
+                  <Box
+                    display={'flex'}
+                    gap={1}
+                    marginTop={1}
+                    justifyContent="space-between"
+                    alignItems={'center'}
                   >
-                    <Typography
-                      variant="caption"
-                      sx={(theme) => {
-                        return { color: theme.vars.palette.text.primary };
-                      }}
+                    <Link
+                      target="_blank"
+                      href={data?.article?.url}
+                      color="inherit"
+                      underline="always"
                     >
-                      {data?.article?.source}
-                    </Typography>
-                  </Link>
-                  {data?.status != 'DELETED' && (
-                    <ButtonDelete
-                      title={t(LanguageKey.button.delete)}
-                      size="small"
-                      handleDelete={() => updateStatus({ status: 'DELETED' })}
-                      variant="text"
-                      color="error"
-                    />
-                  )}
+                      <Typography
+                        variant="caption"
+                        sx={(theme) => {
+                          return { color: theme.vars.palette.text.primary };
+                        }}
+                      >
+                        {data?.article?.source}
+                      </Typography>
+                    </Link>
+                    {data?.status != 'DELETED' && (
+                      <ButtonDelete
+                        title={t(LanguageKey.button.delete)}
+                        size="small"
+                        handleDelete={() => updateStatus({ status: 'DELETED' })}
+                        variant="text"
+                        color="error"
+                      />
+                    )}
+                  </Box>
                 </Box>
-              </Box>
-            </Card>
+              </Card>
+            </Grid>
+            <Grid xs={12} sm={12} md={8} sx={{ position: 'relative' }}>
+              <RHFEditor name="content" defaultValue={data?.content} />
+            </Grid>
           </Grid>
-          <Grid xs={12} sm={12} md={8} sx={{ position: 'relative' }}>
-            <RHFEditor name="content" defaultValue={data?.content} />
-          </Grid>
-        </Grid>
-      </FormProvider>
-    </DashboardContent>
+        </FormProvider>
+      </DashboardContent>
+    </Scrollbar>
   );
 }
