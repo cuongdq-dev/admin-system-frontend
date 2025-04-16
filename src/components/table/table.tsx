@@ -189,18 +189,7 @@ export const TableComponent = (props: TableComponentProps) => {
             headLabel={headLabel}
           />
 
-          <Backdrop
-            sx={(theme) => ({
-              position: 'absolute',
-              zIndex: theme.zIndex.drawer + 1,
-              backgroundColor: varAlpha(theme.palette.background.paperChannel, 0.7),
-              color: theme.palette.text.primary,
-            })}
-            open={!!loading || !!isFetching}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
-          {!loading && !isFetching && (
+          {!loading && !isFetching ? (
             <>
               {notFound ? (
                 <TableNoData colSpan={headLabel.length + 2} />
@@ -321,6 +310,18 @@ export const TableComponent = (props: TableComponentProps) => {
                 </TableBody>
               )}
             </>
+          ) : (
+            <Backdrop
+              sx={(theme) => ({
+                position: 'absolute',
+                zIndex: theme.zIndex.drawer + 1,
+                backgroundColor: varAlpha(theme.palette.background.paperChannel, 0.7),
+                color: theme.palette.text.primary,
+              })}
+              open={!!loading || !!isFetching}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
           )}
         </Table>
       </TableContainer>
