@@ -13,6 +13,7 @@ import { varAlpha } from 'src/theme/styles';
 import { default as colors } from '../theme/core/colors.json';
 import { Breadcrumbs, LanguageKey } from 'src/constants';
 import { t } from 'i18next';
+import { Scrollbar } from 'src/components/scrollbar';
 
 // Kiểu màu cho từng color
 type ColorKey =
@@ -112,39 +113,41 @@ const renderColor = (color: any, colorKey: string): any => {
 
 export default function Page() {
   return (
-    <DashboardContent breadcrumb={Breadcrumbs.COLOR}>
-      <Box>
-        {Object.keys(colors).map((key: string, index: number) => {
-          const colorSystem = colors[key as ColorKey] || {};
-          return (
-            <Accordion key={key + index} defaultExpanded={index == 0} sx={{ marginBottom: 2 }}>
-              <AccordionSummary
-                sx={(theme) => {
-                  return {
-                    backgroundColor: theme.vars.palette.background.paper,
-                  };
-                }}
-                expandIcon={<Iconify icon={'flat-color-icons:expand'} />}
-                id={key}
-              >
-                {key.replaceAll('_', ' ').toLocaleUpperCase()}
-              </AccordionSummary>
-              <AccordionDetails sx={{ padding: 2 }}>
-                <Grid container spacing={2} columns={12}>
-                  {Object.keys(colorSystem).map((colorKey) => {
-                    const color = colorSystem[colorKey as keyof typeof colorSystem];
-                    return (
-                      <Grid item xs={6} sm={6} md={4} key={colorKey}>
-                        {renderColor(color, colorKey)}
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              </AccordionDetails>
-            </Accordion>
-          );
-        })}
-      </Box>
-    </DashboardContent>
+    <Scrollbar sx={{ height: '100%' }}>
+      <DashboardContent breadcrumb={Breadcrumbs.COLOR}>
+        <Box>
+          {Object.keys(colors).map((key: string, index: number) => {
+            const colorSystem = colors[key as ColorKey] || {};
+            return (
+              <Accordion key={key + index} defaultExpanded={index == 0} sx={{ marginBottom: 2 }}>
+                <AccordionSummary
+                  sx={(theme) => {
+                    return {
+                      backgroundColor: theme.vars.palette.background.paper,
+                    };
+                  }}
+                  expandIcon={<Iconify icon={'flat-color-icons:expand'} />}
+                  id={key}
+                >
+                  {key.replaceAll('_', ' ').toLocaleUpperCase()}
+                </AccordionSummary>
+                <AccordionDetails sx={{ padding: 2 }}>
+                  <Grid container spacing={2} columns={12}>
+                    {Object.keys(colorSystem).map((colorKey) => {
+                      const color = colorSystem[colorKey as keyof typeof colorSystem];
+                      return (
+                        <Grid item xs={6} sm={6} md={4} key={colorKey}>
+                          {renderColor(color, colorKey)}
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
+        </Box>
+      </DashboardContent>
+    </Scrollbar>
   );
 }

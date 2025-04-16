@@ -27,7 +27,7 @@ export function TableHeadComponent(props: TableHeadProps) {
     onSelectAllRows,
   } = props;
   return (
-    <TableHead sx={{ height: 80 }}>
+    <TableHead sx={{ height: 80, flex: '0 0 auto' }}>
       <TableRow>
         {selectCol && (
           <TableCell

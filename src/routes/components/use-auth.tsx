@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
@@ -8,7 +9,7 @@ export const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   if (!isAuthenticated) {
     return <Navigate to="/sign-in" />;
   }
-  return <>{children}</>;
+  return <Box sx={{ height: '100%' }}>{children}</Box>;
 };
 
 export const PublicRoute = ({ children }: { children: React.ReactNode }) => {
