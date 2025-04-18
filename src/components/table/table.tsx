@@ -34,6 +34,7 @@ import { CommonTableCell } from './table-cell';
 import { TableHeadComponent } from './table-head';
 import { TableNoData } from './table-no-data';
 import { PageLoading } from '../loading';
+import { Scrollbar } from '../scrollbar';
 
 export const TableComponent = (props: TableComponentProps) => {
   const table = useTable();
@@ -166,165 +167,165 @@ export const TableComponent = (props: TableComponentProps) => {
         };
       }}
     >
-      <TableContainer
-        sx={{ overflow: 'scroll', maxHeight: metaData ? 'calc(100% - 52px)' : '100%' }}
-      >
-        <Table stickyHeader>
-          <TableHeadComponent
-            tableChildren={children}
-            order={getSortBy()?.order as 'asc' | 'desc'}
-            orderBy={getSortBy()?.orderBy}
-            rowCount={datasource?.length}
-            numSelected={table.selected.length}
-            indexCol={indexCol}
-            selectCol={selectCol}
-            actionCol={actions?.deleteBtn || actions?.editBtn || actions.popupEdit}
-            onSort={table.onSort}
-            onSelectAllRows={(checked) =>
-              table.onSelectAllRows(
-                checked,
-                datasource?.map((row: Record<string, any>) => row?.id)
-              )
-            }
-            headLabel={headLabel}
-          />
+      <Scrollbar sx={{ maxHeight: metaData ? 'calc(100% - 52px)' : '100%' }}>
+        <TableContainer>
+          <Table stickyHeader>
+            <TableHeadComponent
+              tableChildren={children}
+              order={getSortBy()?.order as 'asc' | 'desc'}
+              orderBy={getSortBy()?.orderBy}
+              rowCount={datasource?.length}
+              numSelected={table.selected.length}
+              indexCol={indexCol}
+              selectCol={selectCol}
+              actionCol={actions?.deleteBtn || actions?.editBtn || actions.popupEdit}
+              onSort={table.onSort}
+              onSelectAllRows={(checked) =>
+                table.onSelectAllRows(
+                  checked,
+                  datasource?.map((row: Record<string, any>) => row?.id)
+                )
+              }
+              headLabel={headLabel}
+            />
 
-          {!loading && !isFetching ? (
-            <>
-              {notFound ? (
-                <TableNoData colSpan={headLabel.length + 2} />
-              ) : (
-                <TableBody>
-                  {datasource?.map((row: Record<string, any>, index: number) => {
-                    const keys = Object.keys(row);
-                    const collapsed =
-                      children?.name && row[children.name] && table.collapsed == row?.id;
-                    return (
-                      <Fragment key={storeName + '_' + index + '_' + row?.id}>
-                        <TableRow
-                          key={'table_row_' + index + '_' + row?.id}
-                          hover
-                          tabIndex={-1}
-                          role="checkbox"
-                          sx={{
-                            cursor: children?.name && row[children.name] && 'pointer',
-                          }}
-                        >
-                          {children?.name && row[children.name] && (
-                            <TableCell width={'5%'}>
-                              <IconButton
-                                onClick={() => {
-                                  table.onCollapseRow(!collapsed ? row?.id : undefined);
-                                }}
-                                size="small"
-                              >
-                                <Iconify
-                                  sx={{ fontSize: '10px' }}
-                                  icon={
-                                    collapsed
-                                      ? 'icon-park-solid:up-one'
-                                      : 'icon-park-solid:down-one'
-                                  }
-                                />
-                              </IconButton>
-                            </TableCell>
-                          )}
-                          {selectCol && (
-                            <CommonTableCell
-                              type="checkbox"
-                              checked={table.selected.includes(row.id)}
-                              onChange={() => table.onSelectRow(row.id)}
-                              width={20}
-                              minWidth={20}
-                            />
-                          )}
-                          {indexCol && (
-                            <CommonTableCell
-                              align="center"
-                              width={60}
-                              minWidth={60}
-                              value={
-                                index +
-                                1 +
-                                (Number(metaData?.currentPage || 1) - 1) *
-                                  Number(metaData?.itemsPerPage || datasource?.length)
-                              }
-                              type={'text'}
-                              key={'_index' + '_' + index}
-                            />
-                          )}
-                          {headLabel.map((column) => {
-                            if (column.type == 'custom' && !!column?.render) {
-                              return (
-                                <TableCell
-                                  key={column.id + '_head_label'}
-                                  align={column.align}
-                                  width={column.width}
-                                  sx={{ minWidth: column.width }}
+            {!loading && !isFetching ? (
+              <>
+                {notFound ? (
+                  <TableNoData colSpan={headLabel.length + 2} />
+                ) : (
+                  <TableBody>
+                    {datasource?.map((row: Record<string, any>, index: number) => {
+                      const keys = Object.keys(row);
+                      const collapsed =
+                        children?.name && row[children.name] && table.collapsed == row?.id;
+                      return (
+                        <Fragment key={storeName + '_' + index + '_' + row?.id}>
+                          <TableRow
+                            key={'table_row_' + index + '_' + row?.id}
+                            hover
+                            tabIndex={-1}
+                            role="checkbox"
+                            sx={{
+                              cursor: children?.name && row[children.name] && 'pointer',
+                            }}
+                          >
+                            {children?.name && row[children.name] && (
+                              <TableCell width={'5%'}>
+                                <IconButton
+                                  onClick={() => {
+                                    table.onCollapseRow(!collapsed ? row?.id : undefined);
+                                  }}
+                                  size="small"
                                 >
-                                  {column?.render &&
-                                    column?.render({ row, refreshData, updateRowData })}
-                                </TableCell>
-                              );
-                            }
-                            if (keys.includes(column.id)) {
-                              return (
-                                <CommonTableCell
-                                  value={row[column.id]}
-                                  type={column.type!}
-                                  key={column.id}
-                                  align={column.align}
-                                  minWidth={column.minWidth}
-                                  width={column.width}
-                                />
-                              );
-                            }
-                            return null;
-                          })}
-                          {(actions?.deleteBtn || actions?.editBtn || actions?.popupEdit) && (
-                            <TableCell align="right">
-                              <TableActionComponent
-                                {...actions}
-                                baseUrl={url}
-                                row={row}
-                                updateRowData={updateRowData}
-                                refreshData={refreshData}
-                                handleClickOpenForm={handleClickOpenForm}
+                                  <Iconify
+                                    sx={{ fontSize: '10px' }}
+                                    icon={
+                                      collapsed
+                                        ? 'icon-park-solid:up-one'
+                                        : 'icon-park-solid:down-one'
+                                    }
+                                  />
+                                </IconButton>
+                              </TableCell>
+                            )}
+                            {selectCol && (
+                              <CommonTableCell
+                                type="checkbox"
+                                checked={table.selected.includes(row.id)}
+                                onChange={() => table.onSelectRow(row.id)}
+                                width={20}
+                                minWidth={20}
                               />
-                            </TableCell>
+                            )}
+                            {indexCol && (
+                              <CommonTableCell
+                                align="center"
+                                width={60}
+                                minWidth={60}
+                                value={
+                                  index +
+                                  1 +
+                                  (Number(metaData?.currentPage || 1) - 1) *
+                                    Number(metaData?.itemsPerPage || datasource?.length)
+                                }
+                                type={'text'}
+                                key={'_index' + '_' + index}
+                              />
+                            )}
+                            {headLabel.map((column) => {
+                              if (column.type == 'custom' && !!column?.render) {
+                                return (
+                                  <TableCell
+                                    key={column.id + '_head_label'}
+                                    align={column.align}
+                                    width={column.width}
+                                    sx={{ minWidth: column.width }}
+                                  >
+                                    {column?.render &&
+                                      column?.render({ row, refreshData, updateRowData })}
+                                  </TableCell>
+                                );
+                              }
+                              if (keys.includes(column.id)) {
+                                return (
+                                  <CommonTableCell
+                                    value={row[column.id]}
+                                    type={column.type!}
+                                    key={column.id}
+                                    align={column.align}
+                                    minWidth={column.minWidth}
+                                    width={column.width}
+                                  />
+                                );
+                              }
+                              return null;
+                            })}
+                            {(actions?.deleteBtn || actions?.editBtn || actions?.popupEdit) && (
+                              <TableCell align="right">
+                                <TableActionComponent
+                                  {...actions}
+                                  baseUrl={url}
+                                  row={row}
+                                  updateRowData={updateRowData}
+                                  refreshData={refreshData}
+                                  handleClickOpenForm={handleClickOpenForm}
+                                />
+                              </TableCell>
+                            )}
+                          </TableRow>
+                          {children?.name && row[children.name] && (
+                            <TableChildren
+                              index={0}
+                              parent={children}
+                              data={row[children.name]}
+                              open={table.collapsed == row?.id}
+                            />
                           )}
-                        </TableRow>
-                        {children?.name && row[children.name] && (
-                          <TableChildren
-                            index={0}
-                            parent={children}
-                            data={row[children.name]}
-                            open={table.collapsed == row?.id}
-                          />
-                        )}
-                      </Fragment>
-                    );
-                  })}
+                        </Fragment>
+                      );
+                    })}
 
-                  {notFound && <TableNoData />}
-                </TableBody>
-              )}
-            </>
-          ) : (
-            <Backdrop
-              sx={(theme) => ({
-                position: 'absolute',
-                zIndex: theme.zIndex.drawer + 1,
-                backgroundColor: varAlpha(theme.palette.background.paperChannel, 0.7),
-                color: theme.palette.text.primary,
-              })}
-              open={!!loading || !!isFetching}
-            >
-              <CircularProgress color="inherit" />
-            </Backdrop>
-          )}
-        </Table>
-      </TableContainer>
+                    {notFound && <TableNoData />}
+                  </TableBody>
+                )}
+              </>
+            ) : (
+              <Backdrop
+                sx={(theme) => ({
+                  position: 'absolute',
+                  zIndex: theme.zIndex.drawer + 1,
+                  backgroundColor: varAlpha(theme.palette.background.paperChannel, 0.7),
+                  color: theme.palette.text.primary,
+                })}
+                open={!!loading || !!isFetching}
+              >
+                <CircularProgress color="inherit" />
+              </Backdrop>
+            )}
+          </Table>
+        </TableContainer>
+      </Scrollbar>
       {metaData && Object.keys(metaData).length > 0 && (
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography marginLeft={2} variant="caption" color="grey">

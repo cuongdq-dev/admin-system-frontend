@@ -43,6 +43,15 @@ export const LanguageKey = {
     detailTitle: 'user_detail_title',
     profileTitle: 'user_profile_title',
     tabProfile: 'user_tab_profile',
+
+    emailItem: 'user_email_item',
+    nameItem: 'user_name_item',
+    usernameItem: 'user_username_item',
+    passwordItem: 'user_password_item',
+    avatarItem: 'user_avatar_item',
+    bannerItem: 'user_banner_item',
+    siteItem: 'user_site_item',
+    createdItem: 'user_created_item',
   },
   server: {
     addNewButton: 'server_new_button',
