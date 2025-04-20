@@ -25,11 +25,7 @@ export function NotFoundView() {
         <Box
           component="img"
           src="/assets/illustrations/illustration-404.svg"
-          sx={{
-            width: 320,
-            height: 'auto',
-            my: { xs: 5, sm: 10 },
-          }}
+          sx={{ width: 320, height: 'auto', my: { xs: 5, sm: 10 } }}
         />
 
         <Button component={RouterLink} href="/" size="large" variant="contained" color="inherit">

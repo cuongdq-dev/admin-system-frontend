@@ -43,6 +43,9 @@ export const LanguageKey = {
     detailTitle: 'user_detail_title',
     profileTitle: 'user_profile_title',
     tabProfile: 'user_tab_profile',
+    myPostTitle: 'user_my_post_title',
+    userManagePost: 'user_manage_post',
+    inputPostTitle: 'user_input_post_title',
 
     emailItem: 'user_email_item',
     nameItem: 'user_name_item',
@@ -270,6 +273,7 @@ export const LanguageKey = {
     presetTitle: 'preset_title',
     detailTitle: 'detail_title',
     listTitle: 'list_title',
+    viewAll: 'view_all',
   },
 
   repository: {
@@ -352,7 +356,6 @@ export const StoreName = {
   SITE: 'site_store',
   SITE_CATEGORIES: 'site_categories_store',
   SITE_BLOG: 'site_blog_store',
-  PROFILE: 'profile_store',
   BLOG: 'blog_store',
   BLOG_ARCHIVED: 'blog_archived_store',
   BLOG_UNUSED: 'blog_unused_store',
@@ -362,6 +365,12 @@ export const StoreName = {
   GOOGLE_SITEMAP: 'google_sitemap_store',
   GOOGLE_WEBSITE: 'google_website_store',
   GOOGLE_LOGS: 'google_logs_store',
+
+  // USER
+  USER_DETAIL: 'user_detail_store',
+  USER_LIST_CATEGORY: 'user_list_category_store',
+  USER_LIST_POST: 'user_list_post_store',
+  USER_LIST_SITE: 'user_list_site_store',
 };
 
 export const Breadcrumbs = {

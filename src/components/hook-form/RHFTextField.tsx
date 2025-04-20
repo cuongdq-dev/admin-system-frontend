@@ -8,10 +8,9 @@ import { Autocomplete, Checkbox, Chip, IconButton, InputAdornment, TextField } f
 import { useEffect, useRef, useState } from 'react';
 import slugify from 'slugify';
 import { HttpMethod, invokeRequest } from 'src/api-core';
+import 'suneditor/dist/css/suneditor.min.css';
 import { Iconify } from '../iconify';
 import Editor from '../rich-editor/editor';
-
-// ----------------------------------------------------------------------
 
 interface RHFTextFieldProps {
   name: string;
@@ -175,7 +174,6 @@ export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocomp
       render={({ field: { onBlur } }) => {
         return (
           <Autocomplete
-            sx={{ width: '100%', border: 'none', boxShadow: 'none' }}
             id={name}
             disabled={loading}
             multiple
@@ -373,6 +371,7 @@ interface RHFEditorProps {
 }
 export const RHFEditor = ({ name, loading = false, defaultValue, ...other }: RHFEditorProps) => {
   const editorRef = useRef<any>();
+
   const { control, setValue, resetField } = useFormContext();
   useEffect(() => {
     if (defaultValue) {

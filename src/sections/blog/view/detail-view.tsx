@@ -70,7 +70,7 @@ export function DetailView() {
     )
   ).map((item) => JSON.parse(item));
 
-  const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm')); // Check if screen size is small
+  const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md')); // Check if screen size is small
 
   const DetailSchema = Yup.object().shape({
     title: Yup.string().optional(),
@@ -164,16 +164,45 @@ export function DetailView() {
       },
     });
   };
+
+  const deletePost = () => {
+    closeSnackbar(`update_status_${data?.status}_${data?.id}`);
+    setLoadingDetail(storeName, true);
+    invokeRequest({
+      method: HttpMethod.DELETE,
+      baseURL: PATH_BLOG + '/' + data?.id,
+      onHandleError() {
+        setTimeout(() => {
+          setLoadingDetail(storeName, false);
+        }, 1000);
+      },
+      onSuccess(res) {
+        setTimeout(() => {
+          setLoadingDetail(storeName, false);
+          if (window.history.length > 1) navigate(-1);
+          else navigate('/blog');
+          reset();
+          setNotify({
+            title: 'Deleted',
+            key: `update_status_${res?.status}_${data?.id}`,
+            options: { variant: 'success' },
+          });
+        }, 1000);
+      },
+    });
+  };
+
   return (
-    <Scrollbar sx={{ height: '100%', overflowX: 'hidden' }}>
+    <Scrollbar sx={{ maxHeight: '100%', overflowX: 'hidden' }}>
       <DashboardContent
+        sx={{ p: 0, maxHeight: '100%' }}
         breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.detailTitle) }] }}
       >
         <PageLoading isLoading={isLoading} />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={3}>
+          <Grid container spacing={2} m={0} height={'100%'}>
             <Grid key={data?.id} xs={12} sm={12} md={4}>
-              <Card sx={{ position: 'sticky', top: '0' }}>
+              <Card sx={{ position: 'sticky', top: '0', padding: 0 }}>
                 <Box sx={{ position: 'relative', pt: 'calc(100% * 3 / 6)' }}>
                   <Avatar
                     alt={data?.thumbnail?.slug}
@@ -318,20 +347,18 @@ export function DetailView() {
                         {data?.article?.source}
                       </Typography>
                     </Link>
-                    {data?.status != 'DELETED' && (
-                      <ButtonDelete
-                        title={t(LanguageKey.button.delete)}
-                        size="small"
-                        handleDelete={() => updateStatus({ status: 'DELETED' })}
-                        variant="text"
-                        color="error"
-                      />
-                    )}
+                    <ButtonDelete
+                      title={t(LanguageKey.button.delete)}
+                      size="small"
+                      handleDelete={() => deletePost()}
+                      variant="text"
+                      color="error"
+                    />
                   </Box>
                 </Box>
               </Card>
             </Grid>
-            <Grid xs={12} sm={12} md={8} sx={{ position: 'relative' }}>
+            <Grid xs={12} sm={12} md={8} sx={{ position: 'relative', height: '100%' }}>
               <RHFEditor name="content" defaultValue={data?.content} />
             </Grid>
           </Grid>

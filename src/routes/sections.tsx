@@ -15,6 +15,7 @@ import { PrivateRoute, PublicRoute } from './components';
 export const HomePage = lazy(() => import('src/pages/home'));
 //
 export const BlogsPage = lazy(() => import('src/pages/blog/list'));
+export const BlogCreatePage = lazy(() => import('src/pages/blog/create'));
 export const BlogsArchivedPage = lazy(() => import('src/pages/blog/listArchived'));
 export const BlogsUnusedPage = lazy(() => import('src/pages/blog/listUnused'));
 export const BlogsTrendingPage = lazy(() => import('src/pages/blog/listTrending'));
@@ -190,6 +191,14 @@ export const RouterConfig = [
         name: LanguageKey.blog.listPageTitle,
         path: '/blog',
         children: [
+          {
+            path: 'create',
+            element: (
+              <PrivateRoute>
+                <BlogCreatePage />
+              </PrivateRoute>
+            ),
+          },
           {
             path: '',
             element: (

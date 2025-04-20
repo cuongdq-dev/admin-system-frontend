@@ -1,17 +1,19 @@
-import { t } from 'i18next';
 import { Helmet } from 'react-helmet-async';
+
 import { CONFIG } from 'src/config-global';
-import { LanguageKey } from 'src/constants';
-import ProfileView from 'src/sections/user/view/profile-view';
+
+import { CreateView } from 'src/sections/blog/view/create-view';
+
 // ----------------------------------------------------------------------
 
 export default function Page() {
   return (
     <>
       <Helmet>
-        <title> {`${t(LanguageKey.user.profileTitle)} - ${CONFIG.appName}`}</title>
+        <title> {`Blog - ${CONFIG.appName}`}</title>
       </Helmet>
-      <ProfileView />
+
+      <CreateView />
     </>
   );
 }

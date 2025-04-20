@@ -128,8 +128,8 @@ export function PostItem(
   const renderCover = (
     <Box
       component="img"
-      alt={post.title}
-      src={`${post.thumbnail?.url}`}
+      alt={post?.thumbnail?.slug}
+      src={post.thumbnail?.url}
       sx={{ top: 0, width: 1, height: 1, objectFit: 'cover', position: 'absolute' }}
     />
   );

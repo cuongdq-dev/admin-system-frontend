@@ -1,8 +1,34 @@
-.sun-editor .se-dialog .se-dialog-inner .se-dialog-content {
-  margin: 100px auto !important;
+/* Prevent zoom on mobile devices */
+.sun-editor,
+.sun-editor-editable {
+  font-size: 16px !important;
+  touch-action: manipulation;
 }
-.sun-editor .se-wrapper .se-wrapper-wysiwyg {
-  padding-bottom: 200px !important;
+
+.sun-editor,
+.se-toolbar {
+  border: none !important;
+}
+
+/* Ensure input fields have adequate size */
+.sun-editor input,
+.sun-editor textarea {
+  font-size: 16px !important;
+  touch-action: manipulation;
+}
+
+.se-container {
+  border-radius: 12px !important;
+}
+
+@media screen and (max-width: 768px) {
+  .se-wrapper-inner {
+    height: 100% !important;
+  }
+}
+
+.se-resizing-bar {
+  display: none !important;
 }
 
 .sun-editor-editable .se-component.__se__float-left {
@@ -81,7 +107,7 @@
 }
 
 .component-list .files-input {
-  position: absolute;
+  // position: absolute;
   width: 86px;
   left: 26px;
   top: 27px;
@@ -242,4 +268,9 @@
 }
 .component-list .component-file-list ul li a {
   color: #333;
+}
+
+/* Prevent zoom on focus */
+.sun-editor * {
+  touch-action: manipulation;
 }

@@ -51,6 +51,16 @@ body,
 
 }
 
+@media (max-height:600px) {
+  html {
+    overflow: auto;
+  }
+
+  main {
+    height: fit-content;
+  }
+}
+
 img {
   max-width: 100%;
   vertical-align: middle;
