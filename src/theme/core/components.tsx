@@ -22,6 +22,16 @@ const MuiTooltip: Components<Theme>['MuiTooltip'] = {
     arrow: true,
   },
 };
+const MuiAutocomplete: Components<Theme>['MuiAutocomplete'] = {
+  styleOverrides: {
+    paper: ({ theme }) => ({
+      backgroundColor: theme.vars.palette.background.neutral,
+      border: `1px solid ${theme.vars.palette.divider}`,
+      boxShadow: theme.customShadows?.z1,
+      borderRadius: 5,
+    }),
+  },
+};
 
 const MuiPopover: Components<Theme>['MuiPopover'] = {
   styleOverrides: {
@@ -362,4 +372,5 @@ export const components = {
   MuiDialogActions,
   MuiDialogContent,
   MuiTooltip,
+  MuiAutocomplete,
 };
