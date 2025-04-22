@@ -72,7 +72,7 @@ export default function ProfileView() {
   return (
     <Scrollbar sx={{ maxHeight: '100%', overflowX: 'hidden' }}>
       <DashboardContent
-        sx={{ p: 'unset', mb: 4 }}
+        sx={{ p: 'unset!important', mb: 4 }}
         breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.listTitle) }] }}
       >
         <Box sx={{ position: 'relative', mb: { xs: 4, md: 4 } }}>

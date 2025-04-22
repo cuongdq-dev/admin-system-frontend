@@ -109,6 +109,7 @@ export function DetailView() {
     status?: IPostStatus;
   }) => {
     setLoadingDetail(storeName, true);
+    console.log(values);
     invokeRequest({
       method: HttpMethod.PATCH,
       baseURL: PATH_BLOG + '/' + data?.id,

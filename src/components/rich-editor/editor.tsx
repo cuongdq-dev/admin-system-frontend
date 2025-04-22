@@ -38,13 +38,12 @@ class Editor extends Component<Props, State> {
       stickyToolbar: '73px',
       fullScreenOffset: 73,
       width: '100%',
-      height: 'calc(100vh - 180px)',
+      height: 'calc(100vh - 275px)',
       value: this.props.contents,
       imageMultipleFile: true,
       defaultStyle:
         'color: var(--palette-text-primary); background-color: var(--palette-background-paper);',
 
-      textStyles: [{ _class: 'ss', name: '', style: 'color: red', tag: '' }],
       previewTemplate: `
                 <div style="width:auto; max-width:1136px; min-height:400px; margin:auto;">
                 {{contents}}

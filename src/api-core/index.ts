@@ -71,9 +71,11 @@ export const invokeRequest = async (options: RequestProps) => {
   const { onSuccess, onHandleError } = options;
   const endpointRequest = baseURL;
   const { setNotify } = useNotifyStore.getState();
+
   try {
     let response: AxiosResponse;
     const signal = method === HttpMethod.GET ? createAbortController(endpointRequest) : undefined;
+
     if (method === HttpMethod.DELETE)
       response = await ApiCore.delete(endpointRequest, { data: body, timeout: 120000 });
     else if (method === HttpMethod.PATCH)

@@ -141,6 +141,7 @@ export const LanguageKey = {
   blog: {
     listPageTitle: 'blog_list_page',
     detailPageTitle: 'blog_detail_page',
+    slugItem: 'blog_detail_slug',
     addNewButton: 'blog_new_button',
     tableTitle: 'blog_table_title',
     detailTitle: 'blog_detail_title',

@@ -163,7 +163,7 @@ export function NavContent(props: NavContent) {
         <Logo />
       </Box>
       {slots?.topArea}
-      <Divider sx={{ marginTop: 2, marginBottom: 5 }} />
+      <Divider variant="fullWidth" sx={{ marginTop: 1.5, marginBottom: 3 }} />
       <Scrollbar fillContent>
         <Box component="nav" display="flex" flex="1 1 auto" flexDirection="column" sx={sx}>
           <Box component="ul" gap={0.5} display="flex" flexDirection="column">

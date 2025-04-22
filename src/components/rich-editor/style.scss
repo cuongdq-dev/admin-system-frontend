@@ -6,8 +6,11 @@
 }
 
 .sun-editor,
-.se-toolbar {
+.se-toolbar,
+.se-toolbar-more-layer {
   border: none !important;
+  border-radius: 8px !important;
+  background-color: transparent;
 }
 
 /* Ensure input fields have adequate size */
@@ -18,7 +21,8 @@
 }
 
 .se-container {
-  border-radius: 12px !important;
+  border-radius: 8px !important;
+  background-color: transparent;
 }
 
 @media screen and (max-width: 768px) {

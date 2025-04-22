@@ -12,6 +12,7 @@ import Toolbar from '@mui/material/Toolbar';
 import { bgBlur } from 'src/theme/styles';
 
 import { layoutClasses } from '../classes';
+import { Divider } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -97,6 +98,7 @@ export function HeaderSection({
           {slots?.rightArea}
         </Container>
       </Toolbar>
+      <Divider variant="fullWidth" />
 
       {slots?.bottomArea}
     </AppBar>
