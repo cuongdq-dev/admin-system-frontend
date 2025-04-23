@@ -265,10 +265,6 @@ class Editor extends Component<Props, State> {
     editor.onBlur = () => {
       if (typeof this.props.onBlur === 'function') this.props.onBlur(editor.getContents());
     };
-
-    editor.onChange = (contents?: string) => {
-      if (typeof this.props.onChange === 'function') this.props.onChange(contents);
-    };
   }
 
   componentDidUpdate(prevProps: Props) {

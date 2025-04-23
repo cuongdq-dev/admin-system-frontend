@@ -153,6 +153,7 @@ export const LanguageKey = {
     contentItem: 'blog_content_item',
     publicButton: 'blog_public_button',
     draftButton: 'blog_draft_button',
+    statusItem: 'blog_status_item',
     // description
     blogUnusedDescription: 'blog_unsed_description',
     blogArchivedDescription: 'blog_archived_description',

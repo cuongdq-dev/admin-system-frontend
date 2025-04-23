@@ -22,8 +22,7 @@ export const RHFTextField = ({
   copy = false,
   ...other
 }: RHFTextFieldProps & TextFieldProps) => {
-  const { control, setValue, clearErrors, getValues } = useFormContext();
-
+  const { control, formState, setValue, clearErrors, getValues } = useFormContext();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -162,44 +161,56 @@ interface RHFAutocompleteProps extends AutocompleteProps<any, boolean, boolean, 
 export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocompleteProps) => {
   const { control, setValue, clearErrors } = useFormContext();
 
-  useEffect(() => {
-    setValue(name, other.defaultValue);
-  }, [other.defaultValue]);
-
   return (
     <Controller
       name={name}
       control={control}
-      defaultValue={other.defaultValue}
-      render={({ field: { onBlur } }) => {
+      defaultValue={other.defaultValue ?? []}
+      render={({ field }) => {
+        const { onBlur, value } = field;
+
         return (
           <Autocomplete
+            {...field}
             id={name}
-            disabled={loading}
             multiple
+            freeSolo
+            disabled={loading}
+            options={other.options}
+            value={value ?? []}
             onBlur={(event) => {
               onBlur();
               clearErrors(name);
             }}
-            onChange={(_, newValue) => setValue(name, newValue, { shouldDirty: true })}
-            getOptionLabel={(option) => option.title}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            renderTags={(tagValue, getTagProps) => {
-              return (
-                <>
-                  {tagValue.map((option, index) => (
-                    <Chip
-                      label={option.title}
-                      {...getTagProps({ index })}
-                      key={option?.title + '_' + index}
-                      deleteIcon={<></>}
-                    />
-                  ))}
-                </>
+            onChange={(_, newValue) => {
+              // Normalize string-only input
+              const formattedValue = newValue.map((val: any) =>
+                typeof val === 'string' ? { title: val } : val
               );
+              setValue(name, formattedValue, { shouldDirty: true });
             }}
+            getOptionLabel={(option) => (typeof option === 'string' ? option : option.title)}
+            isOptionEqualToValue={(option, value) =>
+              (option?.id && value?.id && option.id === value.id) ||
+              (typeof option === 'string' && typeof value === 'string' && option === value) ||
+              (typeof option === 'string' && typeof value === 'object' && option === value.title) ||
+              (typeof option === 'object' && typeof value === 'string' && option.title === value)
+            }
+            renderTags={(tagValue, getTagProps) => (
+              <>
+                {tagValue.map((option, index) => (
+                  <Chip
+                    label={typeof option === 'string' ? option : option.title}
+                    {...getTagProps({ index })}
+                    key={(typeof option === 'string' ? option : option.title) + '_' + index}
+                  />
+                ))}
+              </>
+            )}
             renderOption={(props, option, { selected }) => {
               const { key, ...optionProps } = props;
+              const label = typeof option === 'string' ? option : option.title;
+
               return (
                 <li key={key} {...optionProps}>
                   <Checkbox
@@ -208,11 +219,11 @@ export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocomp
                     style={{ marginRight: 8 }}
                     checked={selected}
                   />
-                  {option.title}
+                  {label}
                 </li>
               );
             }}
-            {...other}
+            renderInput={(params) => <TextField {...params} label={other?.title} />}
           />
         );
       }}
@@ -369,15 +380,10 @@ interface RHFEditorProps {
   name: string;
   defaultValue?: string;
 }
-export const RHFEditor = ({ name, loading = false, defaultValue, ...other }: RHFEditorProps) => {
+export const RHFEditor = ({ name, loading = false, defaultValue }: RHFEditorProps) => {
   const editorRef = useRef<any>();
 
-  const { control, setValue, resetField } = useFormContext();
-  useEffect(() => {
-    if (defaultValue) {
-      resetField(name);
-    }
-  }, [defaultValue, name, setValue]);
+  const { control, setValue } = useFormContext();
 
   return (
     <Controller
@@ -388,12 +394,12 @@ export const RHFEditor = ({ name, loading = false, defaultValue, ...other }: RHF
         return (
           <Editor
             ref={editorRef}
-            contents={defaultValue}
+            contents={value}
             onSave={() => {
               const content = editorRef.current.editor.getContents();
               setValue(name, content, { shouldDirty: true });
             }}
-            onChange={(contents: string) => {
+            onBlur={(contents: string) => {
               setValue(name, contents, { shouldDirty: true });
             }}
           />

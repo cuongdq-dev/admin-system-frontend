@@ -1,8 +1,8 @@
+import CameraAltRounded from '@mui/icons-material/CameraAltRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import type { FormControlLabelProps } from '@mui/material';
 import { Box, ButtonBase, CircularProgress, IconButton, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import CameraAltRounded from '@mui/icons-material/CameraAltRounded';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -67,13 +67,10 @@ const RemoveButton = styled(IconButton)(({ theme }) => ({
 
 interface RHFUploadProps {
   name: string;
-  label: React.ReactNode;
 }
 
-export const RHFUpload = ({ name, label, ...other }: RHFUploadProps & FormControlLabelProps) => {
-  const { control, setValue, watch } = useFormContext();
-  const file = watch(name);
-  const fileUrl = file instanceof File ? URL.createObjectURL(file) : null;
+export const RHFUpload = ({ name, defaultValue }: RHFUploadProps & FormControlLabelProps) => {
+  const { control, setValue } = useFormContext();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const [isUploading, setIsUploading] = React.useState(false);
@@ -89,72 +86,77 @@ export const RHFUpload = ({ name, label, ...other }: RHFUploadProps & FormContro
 
       // Giả lập upload bằng setTimeout
       setTimeout(() => {
-        setValue(name, selectedFile);
+        setValue(name, selectedFile, { shouldDirty: true });
         setIsUploading(false);
       }, 1500); // Hoặc gọi API thực tế tại đây
     }
   };
-
   const handleRemove = () => {
-    setValue(name, null);
+    setValue(name, defaultValue, { shouldDirty: true });
   };
 
   return (
     <Controller
       name={name}
       control={control}
-      render={() => (
-        <Box>
-          <input ref={inputRef} type="file" hidden onChange={handleUpload} accept="image/*" />
+      render={({ field: { value: file } }) => {
+        const fileUrl = file instanceof File ? URL.createObjectURL(file) : file;
 
-          <ImageButton onClick={handleClickUpload}>
-            <ImageSrc style={{ backgroundImage: `url(${fileUrl || '/static/placeholder.jpg'})` }} />
-            <ImageBackdrop className="MuiImageBackdrop-root" />
-            <Image>
-              {isUploading ? (
-                <CircularProgress size={32} color="inherit" />
-              ) : (
-                <Typography
-                  component="span"
-                  variant="subtitle1"
-                  color="inherit"
-                  sx={(theme) => ({ position: 'relative', p: 2, borderRadius: 1 })}
+        return (
+          <Box>
+            <input ref={inputRef} type="file" hidden onChange={handleUpload} accept="image/*" />
+
+            <ImageButton onClick={handleClickUpload}>
+              <ImageSrc
+                style={{ backgroundImage: `url(${fileUrl || '/static/placeholder.jpg'})` }}
+              />
+              <ImageBackdrop className="MuiImageBackdrop-root" />
+              <Image>
+                {isUploading ? (
+                  <CircularProgress size={32} color="inherit" />
+                ) : (
+                  <Typography
+                    component="span"
+                    variant="subtitle1"
+                    color="inherit"
+                    sx={(theme) => ({ position: 'relative', p: 2, borderRadius: 1 })}
+                  >
+                    <CameraAltRounded />
+                  </Typography>
+                )}
+              </Image>
+
+              {file != defaultValue && (
+                <RemoveButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemove();
+                  }}
                 >
-                  <CameraAltRounded />
-                </Typography>
+                  <DeleteIcon fontSize="small" />
+                </RemoveButton>
               )}
-            </Image>
+            </ImageButton>
 
             {file && (
-              <RemoveButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemove();
-                }}
-              >
-                <DeleteIcon fontSize="small" />
-              </RemoveButton>
+              <Box mt={1}>
+                <Typography
+                  sx={{
+                    width: '100%',
+                    textWrap: 'wrap',
+                    wordBreak: 'break-all', // tự động xuống dòng khi dài quá
+                    whiteSpace: 'normal',
+                  }}
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  {(file as File).name}
+                </Typography>
+              </Box>
             )}
-          </ImageButton>
-
-          {file && (
-            <Box mt={1}>
-              <Typography
-                sx={{
-                  width: '100%',
-                  textWrap: 'wrap',
-                  wordBreak: 'break-all', // tự động xuống dòng khi dài quá
-                  whiteSpace: 'normal',
-                }}
-                variant="caption"
-                color="text.secondary"
-              >
-                {(file as File).name}
-              </Typography>
-            </Box>
-          )}
-        </Box>
-      )}
+          </Box>
+        );
+      }}
     />
   );
 };
