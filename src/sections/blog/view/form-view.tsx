@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_BLOG } from 'src/api-core/path';
+import { ButtonDelete } from 'src/components/button';
 import { FormProvider, RHFTextField, RHFUpload } from 'src/components/hook-form';
 import {
   RHFAutocomplete,
@@ -146,8 +147,8 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
     setLoadingDetail(storeName, true);
     invokeRequest({
       method: HttpMethod.POST,
-      baseURL: `${PATH_BLOG}${data?.id ? `/create/${data?.id}` : ''}`,
-      config: { headers: { 'Content-Type': 'multipart/form-data' } },
+      baseURL: `${PATH_BLOG}${data?.id ? `/update/${data?.id}` : ''}`,
+      config: valuesChange.thumbnail && { headers: { 'Content-Type': 'multipart/form-data' } },
       params: valuesChange,
       onHandleError() {
         setTimeout(() => {
@@ -183,8 +184,8 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
     closeSnackbar(`update_status_${data?.status}_${data?.id}`);
     setLoadingDetail(storeName, true);
     invokeRequest({
-      method: HttpMethod.PATCH,
-      baseURL: PATH_BLOG + '/' + data?.id,
+      method: HttpMethod.POST,
+      baseURL: PATH_BLOG + '/update/' + data?.id,
       params: values,
       onHandleError() {
         setTimeout(() => {
@@ -396,6 +397,19 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                           name="thumbnail"
                           label="Thubmnail"
                           control={<></>}
+                        />
+                      </Grid>
+                      <Grid
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                      >
+                        <ButtonDelete
+                          title={t(LanguageKey.button.delete)}
+                          size="medium"
+                          handleDelete={() => deletePost()}
+                          color="error"
                         />
                       </Grid>
                     </Grid>
