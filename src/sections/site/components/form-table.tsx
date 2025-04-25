@@ -23,19 +23,15 @@ export const SiteForm = (props: Props) => {
       <DialogContent>
         <Box marginTop={1} gap={2} component={'div'} display={'flex'} flexDirection={'column'}>
           <RHFTextField
-            margin="dense"
-            id="name"
             name="name"
             label={t(LanguageKey.site.nameItem)}
             type="text"
             fullWidth
             defaultValue={defaultValues?.name}
-            variant="outlined"
           />
 
           <RHFTextField
             name="description"
-            margin="normal"
             multiline
             maxRows={10}
             label={t(LanguageKey.site.descriptionItem)}
@@ -51,13 +47,11 @@ export const SiteForm = (props: Props) => {
 
           <RHFTextField
             defaultValue={defaultValues?.domain}
-            margin="dense"
             id="domain"
             name="domain"
             label={t(LanguageKey.site.domainItem)}
             type="text"
             fullWidth
-            variant="outlined"
           />
 
           {action != HttpMethod.POST && (
@@ -65,13 +59,11 @@ export const SiteForm = (props: Props) => {
               multiline
               disabled
               defaultValue={defaultValues?.token}
-              margin="dense"
               id="token"
               name="token"
               label="API Token"
               type="text"
               fullWidth
-              variant="outlined"
               copy
             />
           )}

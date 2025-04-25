@@ -41,7 +41,7 @@ export function Main({ sx, children, layoutQuery, ...other }: MainProps) {
         flex: '1 1 auto',
         alignItems: 'center',
         flexDirection: 'column',
-        p: theme.spacing(3, 2, 10, 2),
+        p: theme.spacing(2, 2, 2, 2),
         [theme.breakpoints.up(layoutQuery)]: {
           justifyContent: 'center',
           p: theme.spacing(10, 0, 10, 0),
