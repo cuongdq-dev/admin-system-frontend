@@ -46,7 +46,9 @@ export const LanguageKey = {
     myPostTitle: 'user_my_post_title',
     userManagePost: 'user_manage_post',
     inputPostTitle: 'user_input_post_title',
-
+    uploadAvatar: 'user_upload_avatar',
+    uploadBanner: 'user_upload_banner',
+    editProfileTitle: 'user_edit_profile_title',
     emailItem: 'user_email_item',
     nameItem: 'user_name_item',
     usernameItem: 'user_username_item',
@@ -55,6 +57,8 @@ export const LanguageKey = {
     bannerItem: 'user_banner_item',
     siteItem: 'user_site_item',
     createdItem: 'user_created_item',
+    addressItem: 'user_address_item',
+    phoneItem: 'user_phone_item',
   },
   server: {
     addNewButton: 'server_new_button',

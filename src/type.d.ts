@@ -442,3 +442,18 @@ interface ISite extends TableBase {
   teleChatName?: string;
   teleChatId?: string;
 }
+
+interface IUser extends TableBase {
+  name?: string;
+  email?: string;
+  address?: string;
+  phoneNumber?: string;
+  is_active?: boolean;
+  avatar?: IMedia;
+  avatar_id?: string;
+  banner?: IMedia;
+  banner_id?: string;
+  posts?: IPost[];
+  sites?: ISite[];
+  servers?: IServer[];
+}

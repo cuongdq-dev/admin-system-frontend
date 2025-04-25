@@ -33,7 +33,7 @@ export function ListView() {
       >
         <HeadComponent title={t(LanguageKey.blog.tableTitle)} />
         <BlogFilter storeName={storeName} />
-        <Grid container spacing={3}>
+        <Grid container spacing={3} mb={2}>
           <TableComponent
             storeName={storeName}
             component={'CARD'}

@@ -10,11 +10,11 @@ export default function ProfilePosts({ data }: { data?: Record<string, any> }) {
       {articles?.map((article: IPost) => (
         <Card
           key={article.id}
-          sx={{ mb: 1, borderRadius: 0, boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
+          sx={{ mb: 1, borderRadius: { xs: 0, sm: 1 }, boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}
         >
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Avatar src={user?.avatar.url} sx={{ width: 40, height: 40, mr: 1.5 }} />
+              <Avatar src={user?.avatar?.url} sx={{ width: 40, height: 40, mr: 1.5 }} />
               <Box>
                 <Typography variant="body1" fontWeight="medium">
                   {user?.name}

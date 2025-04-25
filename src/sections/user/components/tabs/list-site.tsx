@@ -12,7 +12,7 @@ export default function ListSiteTab({ data }: { data?: Record<string, any> }) {
         <Grid item xs={12} md={5} lg={4}>
           <Card sx={{ mb: 3, borderRadius: 2, boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
             <CardContent sx={{ pb: 1 }}>
-              <ProfileInfoCard data={data} />
+              <ProfileInfoCard />
             </CardContent>
           </Card>
 

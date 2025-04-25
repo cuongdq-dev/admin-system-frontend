@@ -15,6 +15,7 @@ import {
   RHFEditor,
   RHFTextFieldWithSlug,
 } from 'src/components/hook-form/RHFTextField';
+import { Iconify } from 'src/components/iconify';
 import { PageLoading } from 'src/components/loading';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey, StoreName } from 'src/constants';
@@ -26,6 +27,23 @@ import { varAlpha } from 'src/theme/styles';
 import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
+
+const DetailSchema = Yup.object().shape({
+  thumbnail: Yup.mixed<File | string>().optional(),
+  title: Yup.string().optional(),
+  slug: Yup.string().optional(),
+  meta_description: Yup.string().optional(),
+  content: Yup.string().optional(),
+  relatedQueries: Yup.array()
+    .of(Yup.object().shape({ id: Yup.string(), title: Yup.string() }))
+    .optional(),
+  categories: Yup.array()
+    .of(Yup.object().shape({ id: Yup.string(), title: Yup.string() }))
+    .optional(),
+  sites: Yup.array()
+    .of(Yup.object().shape({ id: Yup.string(), title: Yup.string() }))
+    .optional(),
+});
 
 // ----------------------------------------------------------------------
 export const FormView = React.memo(({ slug }: { slug?: string }) => {
@@ -73,23 +91,6 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
     if (!!slug) fetchPost();
     else setLoadingDetail(storeName, false);
   }, [slug]);
-
-  const DetailSchema = Yup.object().shape({
-    thumbnail: Yup.mixed<File | string>().optional(),
-    title: Yup.string().optional(),
-    slug: Yup.string().optional(),
-    meta_description: Yup.string().optional(),
-    content: Yup.string().optional(),
-    relatedQueries: Yup.array()
-      .of(Yup.object().shape({ id: Yup.string(), title: Yup.string() }))
-      .optional(),
-    categories: Yup.array()
-      .of(Yup.object().shape({ id: Yup.string(), title: Yup.string() }))
-      .optional(),
-    sites: Yup.array()
-      .of(Yup.object().shape({ id: Yup.string(), title: Yup.string() }))
-      .optional(),
-  });
 
   const methods = useForm({
     resolver: yupResolver(DetailSchema),
@@ -146,7 +147,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
     const valuesChange = GetValuesFormChange(defaultValues, values);
     setLoadingDetail(storeName, true);
     invokeRequest({
-      method: HttpMethod.POST,
+      method: HttpMethod.PATCH,
       baseURL: `${PATH_BLOG}${data?.id ? `/update/${data?.id}` : ''}`,
       config: valuesChange.thumbnail && { headers: { 'Content-Type': 'multipart/form-data' } },
       params: valuesChange,
@@ -173,6 +174,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
             title: res?.title,
             slug: res.slug,
           });
+          navigate(`/blog/${res?.slug}`);
           setLoadingDetail(storeName, false);
           setDetail(storeName, { data: res, isFetching: false, isLoading: false });
         }, 1000);
@@ -249,9 +251,9 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
               <Card
                 sx={(theme) => {
                   return {
-                    height: 'calc(100vh - 110px)',
-                    boxShadow: theme.shadows['1'],
-                    border: theme.palette.divider,
+                    height: { xs: '100%', sm: 'calc(100vh - 110px)' },
+                    // boxShadow: theme.shadows['1'],
+                    border: `1px solid ${theme.palette.divider}`,
                   };
                 }}
               >
@@ -355,6 +357,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                           label={t(LanguageKey.blog.descriptionItem)}
                         />
                       </Grid>
+
                       <Grid xs={12} sm={12} md={12}>
                         <RHFAutocomplete
                           name="relatedQueries"
@@ -391,7 +394,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                           )}
                         />
                       </Grid>
-                      <Grid xs={12} sm={12} md={12}>
+                      <Grid xs={12} sm={12} md={12} height={200}>
                         <RHFUpload
                           defaultValue={data?.thumbnail?.url}
                           name="thumbnail"
@@ -399,19 +402,25 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                           control={<></>}
                         />
                       </Grid>
-                      <Grid
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                      >
-                        <ButtonDelete
-                          title={t(LanguageKey.button.delete)}
-                          size="medium"
-                          handleDelete={() => deletePost()}
-                          color="error"
-                        />
-                      </Grid>
+                      {slug && (
+                        <Grid
+                          xs={12}
+                          sm={12}
+                          md={12}
+                          sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                        >
+                          <ButtonDelete
+                            withLoading
+                            variant="outlined"
+                            startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                            title={t(LanguageKey.button.delete)}
+                            size="small"
+                            handleDelete={() => deletePost()}
+                            color="error"
+                            fullWidth
+                          />
+                        </Grid>
+                      )}
                     </Grid>
                   </CardContent>
                 </Scrollbar>
@@ -422,8 +431,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                 sx={(theme) => {
                   return {
                     height: '100%',
-                    boxShadow: theme.shadows['1'],
-                    border: theme.palette.divider,
+                    border: `1px solid ${theme.palette.divider}`,
                   };
                 }}
               >
@@ -434,8 +442,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       <Card
                         sx={(theme) => {
                           return {
-                            p: 2,
-                            boxShadow: theme.shadows[1],
+                            borderRadius: 1.1,
                             border: `1px solid ${theme.palette.divider}`,
                           };
                         }}

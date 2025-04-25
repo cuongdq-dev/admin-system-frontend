@@ -28,28 +28,56 @@ export default function ProfileMainTab({
   if (!data) return <NotFoundDataComponent />;
   return (
     <Container maxWidth="lg" sx={{ mb: 2, padding: 0 }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={5} lg={4}>
-          <Card sx={{ mb: 1, borderRadius: 2, boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+      <Grid container columnSpacing={3}>
+        <Grid sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} item xs={12} md={5} lg={4}>
+          <Card
+            sx={{
+              mb: 1,
+              display: { xs: 'none', sm: 'none', md: 'block' },
+              borderRadius: { xs: 0, sm: 0, md: 1 },
+              boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+            }}
+          >
             <CardContent sx={{ pb: 1 }}>
-              <ProfileInfoCard data={data} />
+              <ProfileInfoCard />
             </CardContent>
           </Card>
 
-          <Card sx={{ mb: 1, borderRadius: 2, boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+          <Card
+            sx={{
+              display: { xs: 'none', sm: 'none', md: 'block' },
+              mb: 1,
+              borderRadius: { xs: 0, sm: 0, md: 1 },
+              boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+            }}
+          >
             <CardContent>
               <ProfileWebsites data={data} />
             </CardContent>
           </Card>
 
-          <Card sx={{ mb: 1, borderRadius: 2, boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+          <Card
+            sx={{
+              display: { xs: 'none', sm: 'none', md: 'block' },
+              mb: 1,
+              borderRadius: { xs: 0, sm: 0, md: 1 },
+              boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+            }}
+          >
             <CardContent>
               <ProfileCategories data={data} />
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12} md={7} lg={8}>
-          <Card sx={{ borderRadius: 0, boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+          <Card
+            sx={{
+              backgroundColor: { xs: 'transparent', sm: 'background.paper' },
+              borderRadius: { xs: 0, sm: 1 },
+              boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+              mb: { xs: 0, sm: 1 },
+            }}
+          >
             <CardContent>
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
                 {t(LanguageKey.user.myPostTitle)}
@@ -59,34 +87,24 @@ export default function ProfileMainTab({
                 href="/blog/create"
                 sx={{ display: 'flex', alignItems: 'center', color: 'text.primary' }}
               >
-                <Avatar src={data?.avatar.url} sx={{ width: 40, height: 40, mr: 1.5 }} />
+                <Avatar src={data?.avatar?.url} sx={{ width: 40, height: 40, mr: 1.5 }} />
                 <Box>
                   <Typography variant="body2" fontWeight="medium">
                     {t(LanguageKey.user.inputPostTitle, { name: data?.name })}
                   </Typography>
                 </Box>
               </Box>
+              <Button
+                fullWidth
+                onClick={() => handleChangeTab && handleChangeTab(1)}
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                {t(LanguageKey.user.userManagePost)}
+              </Button>
             </CardContent>
           </Card>
 
-          <Paper
-            variant="outlined"
-            component={'div'}
-            onClick={() => handleChangeTab && handleChangeTab(1)}
-            sx={(theme) => {
-              return {
-                m: 1,
-
-                p: 2,
-                borderRadius: 2,
-                textAlign: 'center',
-                fontWeight: 'bold',
-                border: `1px solid ${theme.palette.divider}`,
-              };
-            }}
-          >
-            {t(LanguageKey.user.userManagePost)}
-          </Paper>
           <ProfilePosts data={data} />
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
             <Button onClick={() => handleChangeTab && handleChangeTab(1)} variant="outlined">

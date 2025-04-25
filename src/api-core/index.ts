@@ -79,7 +79,7 @@ export const invokeRequest = async (options: RequestProps) => {
     if (method === HttpMethod.DELETE)
       response = await ApiCore.delete(endpointRequest, { data: body, timeout: 120000 });
     else if (method === HttpMethod.PATCH)
-      response = await ApiCore.patch(endpointRequest, body, { timeout: 120000 });
+      response = await ApiCore.patch(endpointRequest, body, { ...config, timeout: 120000 });
     else if (method === HttpMethod.POST)
       response = await ApiCore.post(endpointRequest, body, { ...config, timeout: 120000 });
     else response = await ApiCore.get(endpointRequest, { params: body, signal });

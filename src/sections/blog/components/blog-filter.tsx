@@ -62,9 +62,10 @@ export function BlogFilter(props: Props) {
           };
         }}
         render={({ isSubmitting, defaultValues }) => (
-          <>
+          <Box display="flex" flexDirection="column" gap={1}>
             <RHFAutocomplete
               id="site"
+              title={t(LanguageKey.blog.siteItem)}
               multiple={false}
               name="site"
               defaultValue={sites?.find((site) => site.id == defaultValues?.site_id)}
@@ -77,6 +78,7 @@ export function BlogFilter(props: Props) {
             <RHFAutocomplete
               id="categories"
               disableCloseOnSelect
+              title={t(LanguageKey.blog.categoryItem)}
               name="categories"
               options={categories || []}
               defaultValue={defaultValues?.categories_id?.split(',').map((cate: string) => {
@@ -91,7 +93,7 @@ export function BlogFilter(props: Props) {
             <Box
               sx={(theme) => {
                 return {
-                  my: 2,
+                  mt: 1,
                   border: 1,
                   borderColor: varAlpha(theme.vars.palette.grey['500Channel'], 0.16),
                   borderRadius: theme.spacing(2),
@@ -149,10 +151,7 @@ export function BlogFilter(props: Props) {
                   fullWidth
                   multiple={false}
                   name="limit"
-                  defaultValue={{
-                    id: meta?.itemsPerPage?.toString(),
-                    title: meta?.itemsPerPage?.toString(),
-                  }}
+                  title="Page Size"
                   options={[
                     { id: '10', title: '10' },
                     { id: '20', title: '20' },
@@ -172,11 +171,8 @@ export function BlogFilter(props: Props) {
                   id="page"
                   fullWidth
                   multiple={false}
+                  title="Page Number"
                   name="page"
-                  defaultValue={{
-                    id: meta?.currentPage?.toString(),
-                    title: `Page ${meta?.currentPage}`,
-                  }}
                   options={Array.from({ length: meta?.totalPages || 0 }, (_, index) => ({
                     id: (index + 1).toString(), // hoặc để là số cũng được
                     title: `Page ${index + 1}`,
@@ -193,7 +189,7 @@ export function BlogFilter(props: Props) {
                 {t(LanguageKey.button.submit)}
               </LoadingButton>
             </Box>
-          </>
+          </Box>
         )}
       ></TableFilter>
     </Box>

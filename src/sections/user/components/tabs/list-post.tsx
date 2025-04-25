@@ -34,10 +34,10 @@ export default function ListPostTab() {
           refreshData={refreshData}
           actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
           headLabel={[]}
-          customCard={({ values }: { values: Record<string, any> }) => {
+          customCard={({ values }) => {
             return (
               <Grid key={values?.id} xs={12} sm={12} md={4}>
-                <PostItem post={values as any} latestPost={false} latestPostLarge={false} />
+                <PostItem post={values as IPost} latestPost={false} latestPostLarge={false} />
               </Grid>
             );
           }}

@@ -14,7 +14,7 @@ export interface INotifications {
 export interface ISetting {
   lang?: { code: string; name: string }[];
 
-  user?: Record<string, any>;
+  user?: IUser;
   notifyNew?: number;
   notifications?: INotifications;
   breadcrumb?: IBreadcrumb;
@@ -34,7 +34,7 @@ export interface IDropdowns {
 }
 interface ISettingStore {
   lang?: { code: string; name: string }[];
-  user?: Record<string, any>;
+  user?: IUser;
   notifyNew?: number;
   notifications?: INotifications;
   breadcrumb?: IBreadcrumb;
