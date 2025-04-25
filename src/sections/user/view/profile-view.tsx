@@ -299,7 +299,7 @@ const CustomUploadBanner = ({
         }}
       >
         {!banner && (
-          <Box sx={{ position: 'absolute', right: 20, bottom: 20 }}>
+          <Box sx={{ position: 'absolute', right: 20, bottom: 20, zIndex: 1 }}>
             <ButtonUpload
               upload={(file) => {
                 setBanner(file);
