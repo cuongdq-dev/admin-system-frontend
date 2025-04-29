@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Outlet, useRoutes } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useRoutes } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
@@ -58,6 +58,9 @@ export const GoogleSitemapList = lazy(() => import('src/pages/google/sitemap/lis
 
 export const GoogleIndexingDetail = lazy(() => import('src/pages/google/indexing/detail'));
 export const GoogleIndexingList = lazy(() => import('src/pages/google/indexing/list'));
+
+// IMAGE PAGE
+export const ImagePage = lazy(() => import('src/pages/google/indexing/list'));
 
 // ----------------------------------------------------------------------
 
@@ -313,6 +316,16 @@ export const RouterConfig = [
           </PrivateRoute>
         ),
       },
+
+      {
+        path: '/image',
+        element: (
+          <PrivateRoute>
+            <ImagePage />
+          </PrivateRoute>
+        ),
+      },
+
       {
         path: '/language',
         name: LanguageKey.language.listPageTitle,
@@ -373,5 +386,12 @@ export const RouterConfig = [
 ];
 
 export function Router() {
+  const { pathname } = useLocation();
+
+  // Nếu đường dẫn bắt đầu bằng /api thì không render router
+  if (pathname.startsWith('/api')) {
+    return null;
+  }
+
   return useRoutes(RouterConfig);
 }
