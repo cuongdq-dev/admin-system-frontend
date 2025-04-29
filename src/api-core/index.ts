@@ -14,7 +14,7 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${getCookie('token')}`;
 
 axios.interceptors.request.use(function (config) {
   const token = getCookie('token');
-  config.baseURL = import.meta.env.VITE_API_URL || '';
+  config.baseURL = '/api';
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }

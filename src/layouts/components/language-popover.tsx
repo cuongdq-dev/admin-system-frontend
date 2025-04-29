@@ -39,7 +39,7 @@ export function LanguagePopover({ sx, ...other }: LanguagePopoverProps) {
         fallbackLng: code,
         lng: code,
         backend: {
-          loadPath: import.meta.env.VITE_API_URL + `/i18n/${code}/lang.json`,
+          loadPath: `api/i18n/${code}/lang.json`,
           reloadInterval: false,
         },
         interpolation: { escapeValue: false },

@@ -12,6 +12,7 @@ export const LanguageKey = {
   nav: {
     dashboard: 'dashboard_nav',
     user: 'user_nav',
+    image: 'image_nav',
     server: 'server_nav',
     site: 'site_nav',
     product: 'product_nav',
