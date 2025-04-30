@@ -32,11 +32,11 @@ import { useShallow } from 'zustand/react/shallow';
 import { t } from 'i18next';
 import React from 'react';
 import { ButtonUpload } from 'src/components/image/upload-thumbnail';
+import ProfileInfoCard from '../components/profile-info';
 import ListCategoryTab from '../components/tabs/list-category';
 import ListPostTab from '../components/tabs/list-post';
 import ListSiteTab from '../components/tabs/list-site';
 import ProfileMainTab from '../components/tabs/main';
-import ProfileInfoCard from '../components/profile-info';
 
 // ----------------------------------------------------------------------
 
@@ -261,15 +261,16 @@ const CustomUploadBanner = ({
     <>
       {banner && (
         <Box
-          sx={{
-            position: 'absolute',
-            zIndex: 100,
-            padding: 2,
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'flex-end',
-            backgroundColor: 'background.default',
-            gap: 2,
+          sx={(theme) => {
+            return {
+              zIndex: 100,
+              padding: 2,
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              backgroundColor: theme.palette.background.default,
+              gap: 2,
+            };
           }}
         >
           <Button

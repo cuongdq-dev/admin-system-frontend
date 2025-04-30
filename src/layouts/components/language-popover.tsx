@@ -33,25 +33,12 @@ export function LanguagePopover({ sx, ...other }: LanguagePopoverProps) {
 
   const handleChangeLang = async ({ code, name }: { code: string; name: string }) => {
     closeSnackbar('change-language-' + i18n?.language);
-    await i18n
-      .init({
-        detection: { caches: ['localStorage'], lookupLocalStorage: 'i18nextLng' },
-        fallbackLng: code,
-        lng: code,
-        backend: {
-          loadPath: `${window.location.origin}/api/i18n/${code}/lang.json`,
-          reloadInterval: false,
-        },
-        interpolation: { escapeValue: false },
-        react: { useSuspense: true },
-      })
-      .finally(() => {
-        setNotify({
-          key: 'change-language-' + code,
-          title: t(LanguageKey.notify.changedLanguage) + ': ' + name,
-          options: { variant: 'success' },
-        });
-      });
+    await i18n.changeLanguage(code);
+    setNotify({
+      key: 'change-language-' + code,
+      title: t(LanguageKey.notify.changedLanguage) + ': ' + name,
+      options: { variant: 'success' },
+    });
   };
 
   return (

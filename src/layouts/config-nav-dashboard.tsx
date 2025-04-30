@@ -66,6 +66,12 @@ export const navData = [
   },
 
   {
+    title: LanguageKey.nav.image,
+    path: '/image',
+    icon: icon('ic-image'),
+  },
+
+  {
     title: LanguageKey.nav.category,
     path: '/category',
     icon: icon('ic-category'),
@@ -82,11 +88,6 @@ export const navData = [
     path: '/google-console',
     icon: icon('ic-setting'),
     children: [
-      {
-        title: LanguageKey.nav.language,
-        path: '/language',
-        icon: icon('ic-language'),
-      },
       {
         title: LanguageKey.nav.color,
         path: '/color',

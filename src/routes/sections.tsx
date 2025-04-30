@@ -387,7 +387,6 @@ export const RouterConfig = [
 
 export function Router() {
   const { pathname } = useLocation();
-
   // Nếu đường dẫn bắt đầu bằng /api thì không render router
   if (pathname.startsWith('/api')) {
     return null;
