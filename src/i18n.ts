@@ -12,7 +12,7 @@ i18n
     fallbackLng: localStorage.getItem('i18nextLng') || 'en',
     lng: localStorage.getItem('i18nextLng') || 'en',
     backend: {
-      loadPath: `api/i18n/${localStorage.getItem('i18nextLng') || navigator.language}/lang.json`,
+      loadPath: `${window.location.origin}/api/i18n/${localStorage.getItem('i18nextLng') || navigator.language}/lang.json`,
       reloadInterval: false,
     },
     interpolation: { escapeValue: false },
