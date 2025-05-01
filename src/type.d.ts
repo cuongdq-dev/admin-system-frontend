@@ -359,8 +359,15 @@ interface IMedia extends TableBase {
   slug?: string;
   data?: string;
   minetype?: string;
-  starage_type?: 'LOCAL' | 'S3' | 'BASE64';
+  storage_type?: 'LOCAL' | 'S3' | 'BASE64';
   size?: number;
+
+  avatars?: Record<string, any>;
+  banners?: Record<string, any>;
+  trendings?: Record<string, any>;
+  articles?: Record<string, any>;
+  posts?: Record<string, any>;
+  variants?: Record<string, any>;
 }
 
 interface IPostCategory extends TableBase {

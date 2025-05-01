@@ -31,6 +31,8 @@ export const PATH_DOCKER = '/docker';
 export const PATH_REPOSITORY = '/repository';
 export const PATH_CRAWLER = '/post/crawler';
 
+// IMAGE
+export const PATH_IMAGE_LIST = '/media';
 // analytic
 export const PATH_ANALYTICS_POST = '/analytics/post';
 export const PATH_ANALYTICS_GOOGLE_INDEXED = '/analytics/google-indexed';

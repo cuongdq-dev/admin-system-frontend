@@ -360,6 +360,7 @@ export const StoreName = {
   SERVER_NGINX: 'server_nginx_store',
   LANGUAGE: 'language_store',
   CATEGORY: 'category_store',
+  MEDIA: 'media_store',
   SITE: 'site_store',
   SITE_CATEGORIES: 'site_categories_store',
   SITE_BLOG: 'site_blog_store',
