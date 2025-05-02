@@ -27,7 +27,7 @@ import { PATH_IMAGE_LIST } from 'src/api-core/path';
 import { useAPI } from 'src/hooks/use-api';
 import { fDate } from 'src/utils/format-time';
 
-export function DetailMedia({ image }: { image: { url: string; name: string } }) {
+export function DetailMedia({ image }: { image: { url: string; filename: string } }) {
   const [loading, setLoading] = useState(true);
   const [value, setValue] = useState<IMedia | undefined>();
   const [expandedSections, setExpandedSections] = useState({
@@ -51,8 +51,8 @@ export function DetailMedia({ image }: { image: { url: string; name: string } })
   };
 
   useAPI({
-    clearRequest: !loading,
-    baseURL: PATH_IMAGE_LIST + '/' + image?.name.split('.')[0],
+    clearRequest: !image,
+    baseURL: PATH_IMAGE_LIST + '/' + image?.filename.split('.')[0],
     onSuccess: (res) => {
       setValue(res);
       setLoading(false);
@@ -87,7 +87,7 @@ export function DetailMedia({ image }: { image: { url: string; name: string } })
         <Collapse in={expandedSections[section]} timeout="auto" unmountOnExit>
           <List component="div" disablePadding dense>
             {items.map((item: Record<string, any>, index: number) => (
-              <Box key={index} sx={{ pl: 4 }}>
+              <Box key={index} sx={{ pl: 4, py: 1 }}>
                 {renderItem(item)}
               </Box>
             ))}
@@ -105,7 +105,7 @@ export function DetailMedia({ image }: { image: { url: string; name: string } })
     );
 
   return (
-    <Box sx={{ overflowX: 'hidden' }}>
+    <Box sx={{ overflowX: 'hidden', p: 2 }}>
       <Typography
         variant="h6"
         gutterBottom

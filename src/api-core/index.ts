@@ -15,7 +15,7 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${getCookie('token')}`;
 axios.interceptors.request.use(function (config) {
   const token = getCookie('token');
   config.baseURL = `${window.location.origin}/api`;
-  config.baseURL = `http://localhost:3003/v1/`;
+  // config.baseURL = `http://localhost:3003/v1/`;
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
