@@ -31,6 +31,7 @@ import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { DetailMedia } from '../components/detail';
 import { useNavigate } from 'react-router';
+import { NotFoundDataComponent } from 'src/components/no-found-data';
 
 export function ListView({ imagesPerPage = 40 }: { imagesPerPage?: number }) {
   const storeName = StoreName.MEDIA;
@@ -271,6 +272,7 @@ export function ListView({ imagesPerPage = 40 }: { imagesPerPage?: number }) {
                 </Box>
               ))}
             </Box>
+            {currentImages.length == 0 && <NotFoundDataComponent />}
           </Scrollbar>
 
           {/* Pagination */}

@@ -108,12 +108,25 @@ export const TableComponent = (props: TableComponentProps) => {
         break;
     }
   };
-
   if (component == 'CARD') {
     if (loading || isFetching)
       return (
         <Box sx={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
           <CircularProgress color="inherit" sx={{ mt: 5 }} />
+        </Box>
+      );
+    if (notFound)
+      return (
+        <Box
+          sx={{
+            width: '100%',
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            mt: 2,
+          }}
+        >
+          <NotFoundDataComponent />
         </Box>
       );
     return (
@@ -126,7 +139,6 @@ export const TableComponent = (props: TableComponentProps) => {
               </Fragment>
             );
           })}
-          {metaData?.totalItems == 0 && <NotFoundDataComponent />}
         </Grid>
         {metaData && metaData.totalItems > 0 && (
           <Pagination
@@ -192,7 +204,7 @@ export const TableComponent = (props: TableComponentProps) => {
           {!loading && !isFetching ? (
             <>
               {notFound ? (
-                <TableNoData colSpan={headLabel.length + 2} />
+                <TableNoData />
               ) : (
                 <TableBody>
                   {datasource?.map((row: Record<string, any>, index: number) => {
@@ -305,8 +317,6 @@ export const TableComponent = (props: TableComponentProps) => {
                       </Fragment>
                     );
                   })}
-
-                  {notFound && <TableNoData />}
                 </TableBody>
               )}
             </>
