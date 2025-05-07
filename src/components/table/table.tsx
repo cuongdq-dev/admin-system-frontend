@@ -204,7 +204,7 @@ export const TableComponent = (props: TableComponentProps) => {
           {!loading && !isFetching ? (
             <>
               {notFound ? (
-                <TableNoData />
+                <TableNoData colSpan={Number(headLabel.length) + 2} />
               ) : (
                 <TableBody>
                   {datasource?.map((row: Record<string, any>, index: number) => {
