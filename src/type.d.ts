@@ -223,6 +223,7 @@ declare type CellType =
   | 'action'
   | 'datetime'
   | 'string-array'
+  | 'number'
   | 'custom';
 declare type Align = 'left' | 'right' | 'center' | 'inherit' | 'justify';
 declare type HeadLabelProps = {
@@ -381,6 +382,7 @@ interface IPostCategory extends TableBase {
 }
 
 declare type IPostStatus = 'NEW' | 'DRAFT' | 'PUBLISHED' | 'DELETED';
+declare type IBookStatus = 'NEW' | 'DRAFT' | 'PUBLISHED' | 'DELETED';
 interface IPost extends TableBase {
   id: string;
   is_published?: string;
@@ -399,6 +401,40 @@ interface IPost extends TableBase {
   //
   article_id?: string;
   article?: ITrendingArticle;
+}
+
+interface IChapter extends TableBase {
+  id: string;
+  slug?: string;
+  title?: string;
+  chapter_number?: number;
+  content?: string;
+  is_published?: boolean;
+  book?: IBook;
+}
+interface IBook extends TableBase {
+  id: string;
+  is_published?: string;
+  slug?: string;
+  title?: string;
+  content?: string;
+  meta_description?: string;
+  description?: string;
+  is_new?: boolean;
+  is_hot?: boolean;
+  is_full?: boolean;
+  source_url?: string;
+  total_chapters?: number;
+  keywords: { query?: string; slug?: string }[];
+  chapters?: IChapter[];
+  status?: BookStatus;
+  //
+  categories?: IPostCategory[];
+  sites?: ISite[];
+  //
+  thumbnail_id?: string;
+  thumbnail?: IMedia;
+  //
 }
 
 interface ITrendingArticle extends TableBase {

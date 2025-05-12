@@ -40,6 +40,11 @@ export const navData = [
       },
     ],
   },
+  {
+    title: LanguageKey.nav.book,
+    icon: icon('ic-book'),
+    path: '/book',
+  },
 
   {
     title: LanguageKey.nav.googleConsole,

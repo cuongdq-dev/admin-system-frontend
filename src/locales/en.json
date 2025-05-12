@@ -1,4 +1,6 @@
 {
+  "created_at_item": "Created At",
+  "created_by_item": "Created By",
   "post_summary": "New Posts",
   "site_summary": "New Sites",
   "trending_summary": "New Trendings",
@@ -102,8 +104,8 @@
   "blog_new_button": "New Blog",
   "blog_table_title": "Blogs",
   "blog_detail_title": "Blog Detail",
-  "blog_public_button": "Public",
-  "blog_draft_button": "Draft",
+  "public_button": "Public",
+  "draft_button": "Draft",
   "blog_site_item": "Sites",
   "blog_category_item": "Categories",
   "blog_detail_slug": "Slug",
@@ -276,5 +278,24 @@
   "user_site_item": "Sites",
   "user_address_item": "Address",
   "user_phone_item": "Phone",
-  "user_created_item": "Created At"
+  "user_created_item": "Created At",
+
+  "book_nav": "Books",
+  "book_list_page": "Books",
+  "book_detail_page": "Book",
+
+  "book_title_item": "Title",
+  "book_slug_item": "Slug",
+  "book_content_item": "Content",
+  "book_meta_description_item": "Description",
+  "book_keywords_item": "Keywords",
+  "book_new_status": "New",
+  "book_hot_status": "Hot",
+  "book_full_status": "Full",
+  "book_total_chapter_item": "Total Chapter",
+  "book_chapter_item": "Chapter",
+  "book_status_item": "Status",
+  "book_thumbnail_item": "Thumbnail",
+  "book_category_item": "Category",
+  "book_site_item": "Site"
 }

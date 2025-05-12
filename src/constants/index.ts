@@ -30,6 +30,7 @@ export const LanguageKey = {
     googleIndexing: 'google_indexing_nav',
     googleLogs: 'google_logs_nav',
     setting: 'setting_nav',
+    book: 'book_nav',
   },
 
   dashboard: {
@@ -143,6 +144,28 @@ export const LanguageKey = {
     detailTitle: 'product_detail_title',
   },
 
+  book: {
+    listPageTitle: 'book_list_page',
+    detailPageTitle: 'book_detail_page',
+    titleItem: 'book_title_item',
+    slugItem: 'book_slug_item',
+    contentItem: 'book_content_item',
+    metaDescriptionItem: 'book_meta_description_item',
+    keywordItem: 'book_keywords_item',
+    newStatus: 'book_new_status',
+    hotStatus: 'book_hot_status',
+    fullStatus: 'book_full_status',
+    totalChapterItem: 'book_total_chapter_item',
+    chapterItem: 'book_chapter_item',
+    statusItem: 'book_status_item',
+    thumbnailItem: 'book_thumbnail_item',
+    categoryItem: 'book_category_item',
+    sourceUrlItem: 'book_source_url_item',
+    publicButton: 'public_button',
+    draftButton: 'draft_button',
+    siteItem: 'book_site_item',
+  },
+
   blog: {
     listPageTitle: 'blog_list_page',
     detailPageTitle: 'blog_detail_page',
@@ -156,8 +179,8 @@ export const LanguageKey = {
     descriptionItem: 'blog_description_item',
     keywordsItem: 'blog_keywords_item',
     contentItem: 'blog_content_item',
-    publicButton: 'blog_public_button',
-    draftButton: 'blog_draft_button',
+    publicButton: 'public_button',
+    draftButton: 'draft_button',
     statusItem: 'blog_status_item',
     // description
     blogUnusedDescription: 'blog_unsed_description',
@@ -281,6 +304,9 @@ export const LanguageKey = {
     detailTitle: 'detail_title',
     listTitle: 'list_title',
     viewAll: 'view_all',
+
+    createdAtItem: 'created_at_item',
+    createdByItem: 'created_by_item',
   },
 
   repository: {
@@ -364,6 +390,7 @@ export const StoreName = {
   SITE: 'site_store',
   SITE_CATEGORIES: 'site_categories_store',
   SITE_BLOG: 'site_blog_store',
+  BOOK: 'book_store',
   BLOG: 'blog_store',
   BLOG_ARCHIVED: 'blog_archived_store',
   BLOG_UNUSED: 'blog_unused_store',

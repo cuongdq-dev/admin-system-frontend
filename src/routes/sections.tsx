@@ -15,12 +15,19 @@ import { PrivateRoute, PublicRoute } from './components';
 export const HomePage = lazy(() => import('src/pages/home'));
 //
 export const BlogsPage = lazy(() => import('src/pages/blog/list'));
+export const BlogDetailPage = lazy(() => import('src/pages/blog/detail'));
 export const BlogCreatePage = lazy(() => import('src/pages/blog/create'));
 export const BlogsArchivedPage = lazy(() => import('src/pages/blog/listArchived'));
 export const BlogsUnusedPage = lazy(() => import('src/pages/blog/listUnused'));
 export const BlogsTrendingPage = lazy(() => import('src/pages/blog/listTrending'));
-export const BlogDetailPage = lazy(() => import('src/pages/blog/detail'));
 
+//
+
+export const BooksPage = lazy(() => import('src/pages/book/list'));
+export const BookDetailPage = lazy(() => import('src/pages/book/detail'));
+export const BookCreatePage = lazy(() => import('src/pages/book/create'));
+
+//
 export const CategoryPage = lazy(() => import('src/pages/category/list'));
 // export const CategoryDetailPage = lazy(() => import('src/pages/category/detail'));
 //
@@ -190,6 +197,39 @@ export const RouterConfig = [
           </PrivateRoute>
         ),
       },
+
+      {
+        name: LanguageKey.book.listPageTitle,
+        path: '/book',
+        children: [
+          {
+            path: 'create',
+            element: (
+              <PrivateRoute>
+                <BookCreatePage />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: '',
+            element: (
+              <PrivateRoute>
+                <BooksPage />
+              </PrivateRoute>
+            ),
+          },
+
+          {
+            path: ':id',
+            element: (
+              <PrivateRoute>
+                <BookDetailPage />
+              </PrivateRoute>
+            ),
+          },
+        ],
+      },
+
       {
         name: LanguageKey.blog.listPageTitle,
         path: '/blog',

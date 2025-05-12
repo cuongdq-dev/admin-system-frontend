@@ -276,5 +276,22 @@
   "user_site_item": "Sites",
   "user_created_item": "Cập nhất mới nhất",
   "user_address_item": "Address",
-  "user_phone_item": "Phone"
+  "user_phone_item": "Phone",
+  "book_nav": "Books",
+  "book_list_page": "Books",
+  "book_detail_page": "Book",
+
+  "book_title_item": "Tiêu Đề",
+  "book_slug_item": "Slug",
+  "book_content_item": "Nội Dung",
+  "book_meta_description_item": "Mô Tả",
+  "book_keywords_item": "Từ khoá",
+  "book_new_status": "Mới",
+  "book_hot_status": "Nổi bật",
+  "book_full_status": "Hoàn thành",
+  "book_total_chapter_item": "Tổng số chương",
+  "book_chapter_item": "Chương",
+  "book_status_item": "Trạng Thái",
+  "book_thumbnail_item": "Ảnh bìa",
+  "book_category_item": "Danh mục"
 }

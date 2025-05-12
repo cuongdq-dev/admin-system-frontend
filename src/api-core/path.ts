@@ -21,6 +21,11 @@ export const PATH_GOOGLE_LOGS_LIST = '/google/logs';
 
 export const PATH_CATEGORY = '/category';
 export const PATH_DROPDOWN = '/dropdown';
+
+// BOOK
+export const PATH_BOOK = '/book';
+
+//BLOG
 export const PATH_BLOG = '/post';
 export const PATH_BLOG_UNUSED = '/post/unused';
 export const PATH_BLOG_ARCHIVED = '/post/archived';

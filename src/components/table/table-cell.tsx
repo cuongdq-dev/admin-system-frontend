@@ -6,6 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import { ReactNode } from 'react';
 import { Iconify } from 'src/components/iconify';
 import { Label } from 'src/components/label';
+import { fNumber } from 'src/utils/format-number';
 import { fDateTime, formatStr } from 'src/utils/format-time';
 
 interface CommonTableCellProps {
@@ -32,6 +33,20 @@ export function CommonTableCell(props: CommonTableCellProps) {
       return (
         <TableCell width={width} sx={{ minWidth: minWidth }} padding="checkbox">
           <Checkbox disableRipple checked={checked} onChange={onChange} />
+        </TableCell>
+      );
+
+    case 'number':
+      return (
+        <TableCell
+          width={width}
+          sx={{
+            minWidth: minWidth,
+            textWrap: 'nowrap',
+          }}
+          align={align}
+        >
+          {fNumber(Number(value))}
         </TableCell>
       );
 
