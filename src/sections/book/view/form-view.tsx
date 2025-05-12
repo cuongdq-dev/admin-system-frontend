@@ -393,7 +393,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
 
                       <Grid xs={12} sm={12} md={12}>
                         <RHFAutocomplete
-                          name="relatedQueries"
+                          name="keywords"
                           freeSolo
                           options={
                             data?.keywords?.map((query) => {
@@ -410,6 +410,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       <Grid xs={12} sm={12} md={12}>
                         <RHFAutocomplete
                           name="categories"
+                          disabled
                           options={categories || []}
                           title={t(LanguageKey.book.categoryItem)}
                           renderInput={(params) => (

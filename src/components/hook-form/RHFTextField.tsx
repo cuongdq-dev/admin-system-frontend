@@ -175,7 +175,7 @@ export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocomp
             id={name}
             multiple
             freeSolo
-            disabled={loading}
+            disabled={loading || other.disabled}
             options={other.options}
             value={value ?? []}
             onBlur={(event) => {
