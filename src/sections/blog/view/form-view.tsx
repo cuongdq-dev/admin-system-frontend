@@ -116,7 +116,6 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
   });
 
   const { handleSubmit, reset } = methods;
-
   const onSubmit = async (values: {
     title?: string;
     meta_description?: string;

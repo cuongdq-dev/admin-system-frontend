@@ -46,8 +46,6 @@ const DetailSchema = Yup.object().shape({
   title: Yup.string().optional(),
   slug: Yup.string().optional(),
   meta_description: Yup.string().optional(),
-  description: Yup.string().optional(),
-  content: Yup.string().optional(),
   keywords: Yup.array()
     .of(Yup.object().shape({ id: Yup.string(), title: Yup.string() }))
     .optional(),
@@ -78,8 +76,6 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
       baseURL: PATH_BOOK + '/' + slug,
       onSuccess: (res: IBook) => {
         reset({
-          content: res?.content,
-          description: res?.description,
           meta_description: res?.meta_description,
           thumbnail: res?.thumbnail?.url,
           keywords: res?.keywords?.map((query) => {
@@ -130,7 +126,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
     },
   });
 
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit, reset, formState } = methods;
 
   const onSubmit = async (values: {
     title?: string;
@@ -173,7 +169,6 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
       onSuccess(res: IBook) {
         setTimeout(() => {
           reset({
-            content: res?.content,
             meta_description: res?.meta_description,
             thumbnail: res?.thumbnail?.url,
             keywords: res?.keywords?.map((query) => {
@@ -495,10 +490,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
               )}
               <Card
                 sx={(theme) => {
-                  return {
-                    // height: '100%',
-                    border: `1px solid ${theme.palette.divider}`,
-                  };
+                  return { border: `1px solid ${theme.palette.divider}` };
                 }}
               >
                 <CardHeader title={t(LanguageKey.book.chapterItem)} />
