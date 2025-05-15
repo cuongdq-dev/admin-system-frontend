@@ -39,7 +39,7 @@ export function ListView() {
             />
             <Box display="flex" gap={0.4} flexDirection="column">
               <Link
-                href={`book/${row.id}`}
+                href={`book/${row?.id}`}
                 target="_blank"
                 variant="subtitle2"
                 sx={{ cursor: 'pointer' }}
@@ -61,7 +61,7 @@ export function ListView() {
                   fontSize: 12,
                 }}
               >
-                <span dangerouslySetInnerHTML={{ __html: row.description }}></span>
+                <span dangerouslySetInnerHTML={{ __html: row?.description }}></span>
               </Typography>
               <Box display="flex" gap={1}>
                 {row?.is_new && (
@@ -94,11 +94,11 @@ export function ListView() {
                     variant="filled"
                     size="small"
                     color="default"
-                    label={`${t(LanguageKey.book.chapterItem)} ${row.chapter_count}/${row?.total_chapter}`}
+                    label={`${t(LanguageKey.book.chapterItem)} ${row?.chapter_count}/${row?.total_chapter}`}
                   ></Chip>
                 )}
 
-                {row?.author.name && (
+                {row?.author?.name && (
                   <Chip
                     variant="outlined"
                     size="small"
