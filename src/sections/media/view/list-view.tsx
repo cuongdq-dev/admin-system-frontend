@@ -272,7 +272,7 @@ export function ListView({ imagesPerPage = 40 }: { imagesPerPage?: number }) {
                 </Box>
               ))}
             </Box>
-            {currentImages.length == 0 && <NotFoundDataComponent />}
+            {currentImages?.length == 0 && <NotFoundDataComponent />}
           </Scrollbar>
 
           {/* Pagination */}

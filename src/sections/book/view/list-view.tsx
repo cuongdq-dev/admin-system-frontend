@@ -97,6 +97,15 @@ export function ListView() {
                     label={`${t(LanguageKey.book.chapterItem)} ${row.chapter_count}/${row?.total_chapter}`}
                   ></Chip>
                 )}
+
+                {row?.author.name && (
+                  <Chip
+                    variant="outlined"
+                    size="small"
+                    color="success"
+                    label={row?.author?.name}
+                  ></Chip>
+                )}
               </Box>
             </Box>
           </Box>
