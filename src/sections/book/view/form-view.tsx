@@ -37,6 +37,7 @@ import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/page';
 import { useSettingStore } from 'src/store/setting';
 import { varAlpha } from 'src/theme/styles';
+import { fNumber } from 'src/utils/format-number';
 import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
@@ -502,7 +503,10 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                         .map((chapter: IChapter) => {
                           return (
                             <Box onClick={() => setOpenChapter(chapter)} sx={{ mb: 1 }}>
-                              <Typography>{chapter.title}</Typography>
+                              <Typography>
+                                {chapter.title}
+                                {chapter.word_count && ` - (${fNumber(chapter?.word_count)})`}
+                              </Typography>
                             </Box>
                           );
                         })}
@@ -513,7 +517,10 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                         .map((chapter: IChapter) => {
                           return (
                             <Box onClick={() => setOpenChapter(chapter)} sx={{ mb: 1 }}>
-                              <Typography>{chapter.title}</Typography>
+                              <Typography>
+                                {chapter.title}
+                                {chapter.word_count && ` - (${fNumber(chapter?.word_count)})`}
+                              </Typography>
                             </Box>
                           );
                         })}

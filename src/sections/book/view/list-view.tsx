@@ -114,6 +114,13 @@ export function ListView() {
     },
 
     {
+      id: 'word_count',
+      label: 'Word',
+      type: 'number',
+      align: 'center',
+      sort: true,
+    },
+    {
       id: 'created_at',
       label: t(LanguageKey.common.createdAtItem),
       type: 'datetime',

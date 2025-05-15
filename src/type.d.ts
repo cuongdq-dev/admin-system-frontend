@@ -411,6 +411,7 @@ interface IChapter extends TableBase {
   content?: string;
   is_published?: boolean;
   book?: IBook;
+  word_count?: number;
 }
 interface IBook extends TableBase {
   id: string;
