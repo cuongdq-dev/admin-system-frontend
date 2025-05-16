@@ -277,8 +277,12 @@
   "user_created_item": "Cập nhất mới nhất",
   "user_address_item": "Address",
   "user_phone_item": "Phone",
-  "book_nav": "Books",
   "book_list_page": "Books",
+
+  "book_nav": "Truyện",
+  "book_group_nav": "Danh Sách",
+  "book_audio_nav": "Truyện Nói",
+
   "book_detail_page": "Book",
 
   "book_title_item": "Tiêu Đề",

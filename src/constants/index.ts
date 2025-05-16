@@ -30,7 +30,9 @@ export const LanguageKey = {
     googleIndexing: 'google_indexing_nav',
     googleLogs: 'google_logs_nav',
     setting: 'setting_nav',
-    book: 'book_nav',
+    bookGroup: 'book_group_nav',
+    bookList: 'book_nav',
+    bookAudio: 'book_audio_nav',
   },
 
   dashboard: {

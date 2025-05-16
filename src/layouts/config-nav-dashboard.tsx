@@ -41,9 +41,21 @@ export const navData = [
     ],
   },
   {
-    title: LanguageKey.nav.book,
+    title: LanguageKey.nav.bookGroup,
     icon: icon('ic-book'),
-    path: '/book',
+    path: '/book-group',
+    children: [
+      {
+        path: '/book',
+        icon: icon('ic-book'),
+        title: LanguageKey.nav.bookList,
+      },
+      {
+        path: '/voice',
+        icon: icon('ic-audio'),
+        title: LanguageKey.nav.bookAudio,
+      },
+    ],
   },
 
   {

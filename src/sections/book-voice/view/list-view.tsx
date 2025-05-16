@@ -40,7 +40,7 @@ export function ListView() {
             />
             <Box display="flex" gap={0.4} flexDirection="column">
               <Link
-                href={`book/${row?.id}`}
+                href={`voice/${row?.id}`}
                 target="_blank"
                 variant="subtitle2"
                 sx={{ cursor: 'pointer' }}
@@ -149,7 +149,10 @@ export function ListView() {
         headLabel={HeadLabel}
         customCard={({ values, index }: { values: Record<string, any>; index: number }) => {
           return (
-            <Card sx={{ borderRadius: 1, p: 1, mb: 2, width: '100%' }}>
+            <Card
+              key={index + '_' + (values?.id || values?.slug)}
+              sx={{ borderRadius: 1, p: 1, mb: 2, width: '100%' }}
+            >
               <Box width="100%" display="flex" gap={1}>
                 <Avatar
                   sx={{ width: '60px', height: '100%' }}
@@ -158,7 +161,7 @@ export function ListView() {
                 />
                 <Box display="flex" gap={0.4} flexDirection="column" width={'100%'}>
                   <Link
-                    href={`book/${values?.id}`}
+                    href={`voice/${values?.id}`}
                     target="_blank"
                     variant="subtitle2"
                     sx={{ cursor: 'pointer' }}

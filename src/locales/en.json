@@ -280,7 +280,10 @@
   "user_phone_item": "Phone",
   "user_created_item": "Created At",
 
-  "book_nav": "Books",
+  "book_nav": "All Books",
+  "book_group_nav": "Books",
+  "book_audio_nav": "Audio",
+
   "book_list_page": "Books",
   "book_detail_page": "Book",
 

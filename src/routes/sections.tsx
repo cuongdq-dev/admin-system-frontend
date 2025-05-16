@@ -27,6 +27,10 @@ export const BooksPage = lazy(() => import('src/pages/book/list'));
 export const BookDetailPage = lazy(() => import('src/pages/book/detail'));
 export const BookCreatePage = lazy(() => import('src/pages/book/create'));
 
+export const VoicePage = lazy(() => import('src/pages/voice/list'));
+export const VoiceDetailPage = lazy(() => import('src/pages/voice/detail'));
+export const VoiceCreatePage = lazy(() => import('src/pages/voice/create'));
+
 //
 export const CategoryPage = lazy(() => import('src/pages/category/list'));
 // export const CategoryDetailPage = lazy(() => import('src/pages/category/detail'));
@@ -224,6 +228,37 @@ export const RouterConfig = [
             element: (
               <PrivateRoute>
                 <BookDetailPage />
+              </PrivateRoute>
+            ),
+          },
+        ],
+      },
+      {
+        name: LanguageKey.book.listPageTitle,
+        path: '/voice',
+        children: [
+          {
+            path: 'create',
+            element: (
+              <PrivateRoute>
+                <VoiceCreatePage />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: '',
+            element: (
+              <PrivateRoute>
+                <VoicePage />
+              </PrivateRoute>
+            ),
+          },
+
+          {
+            path: ':id',
+            element: (
+              <PrivateRoute>
+                <VoiceDetailPage />
               </PrivateRoute>
             ),
           },
