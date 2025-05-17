@@ -1,13 +1,13 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   Accordion,
-  AccordionActions,
   AccordionDetails,
   AccordionSummary,
   Button,
   Card,
   CardContent,
   CardHeader,
+  Chip,
   Typography,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -16,6 +16,7 @@ import React, { useEffect } from 'react';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_BOOK } from 'src/api-core/path';
 import { Iconify } from 'src/components/iconify';
+import { CollapsibleText } from 'src/components/label/collapsible-text';
 import { PageLoading } from 'src/components/loading';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey, StoreName } from 'src/constants';
@@ -29,14 +30,15 @@ import { useShallow } from 'zustand/react/shallow';
 // ----------------------------------------------------------------------
 export const DetailView = React.memo(({ slug }: { slug?: string }) => {
   const storeName = StoreName.BOOK;
+  const [copiedChapterSlug, setCopiedChapterSlug] = React.useState<string | null>(null);
 
   const { setDetail, setLoadingDetail } = usePageStore();
   const { data, isLoading = true } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
   ) as { data?: IBook; refreshNumber?: number; isLoading?: boolean };
 
-  const fetchPost = () => {
-    invokeRequest({
+  const fetchPost = async () => {
+    await invokeRequest({
       method: HttpMethod.GET,
       baseURL: PATH_BOOK + '/' + slug,
       onSuccess: (res: IBook) => {
@@ -52,6 +54,21 @@ export const DetailView = React.memo(({ slug }: { slug?: string }) => {
     if (!!slug) fetchPost();
     else setLoadingDetail(storeName, false);
   }, [slug]);
+
+  function coppyToClipboard(html: string, chapterSlug: string) {
+    const tmpEl = typeof window !== 'undefined' ? document.createElement('div') : null;
+    const plainText = tmpEl
+      ? ((tmpEl.innerHTML = html), tmpEl.textContent || '')
+      : html.replace(/<[^>]*>/g, '');
+
+    navigator.clipboard.writeText(plainText!).then(() => {
+      setCopiedChapterSlug(chapterSlug);
+
+      setTimeout(() => {
+        setCopiedChapterSlug(null);
+      }, 2000);
+    });
+  }
 
   return (
     <Scrollbar sx={{ maxHeight: '100%', overflowX: 'hidden' }}>
@@ -87,16 +104,23 @@ export const DetailView = React.memo(({ slug }: { slug?: string }) => {
                       </Typography>
                     </Grid>
 
-                    <Grid xs={12} sm={12} md={12}>
-                      <Typography variant="subtitle2">Giới Thiệu: </Typography>
-                      <span dangerouslySetInnerHTML={{ __html: data?.description! }}></span>
+                    <Grid
+                      xs={12}
+                      sm={12}
+                      md={!slug ? 6 : 12}
+                      display={'flex'}
+                      flexWrap={'wrap'}
+                      gap={1}
+                    >
+                      {data?.categories?.map((category) => (
+                        <Chip key={category.id} label={category?.name}></Chip>
+                      ))}
                     </Grid>
 
                     <Grid xs={12} sm={12} md={12}>
-                      {/* TODO CATEGORIES */}
-                    </Grid>
-                    <Grid xs={12} sm={12} md={12} height={200}>
-                      {/* TODO THUMBNAIL */}
+                      <Typography variant="subtitle2">Giới Thiệu: </Typography>
+
+                      <CollapsibleText text={data?.description!} />
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -105,7 +129,6 @@ export const DetailView = React.memo(({ slug }: { slug?: string }) => {
           </Grid>
           <Grid xs={12} sm={12} md={8}>
             {data?.chapters?.map((chapter, index) => {
-              const contentArr = splitHtmlIntoChunks(chapter.content || '', 2000);
               return (
                 <Accordion key={index + '_' + chapter.slug}>
                   <AccordionSummary
@@ -118,41 +141,49 @@ export const DetailView = React.memo(({ slug }: { slug?: string }) => {
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    {contentArr.map((content, index) => {
-                      return (
-                        <Card
-                          key={index + '_' + chapter.slug}
+                    <Card
+                      key={index + '_' + chapter.slug}
+                      sx={{
+                        mb: 2,
+                        backgroundColor: index % 2 ? 'background.default' : 'background.neutral',
+                      }}
+                    >
+                      <CardContent
+                        sx={{ cursor: 'copy' }}
+                        onClick={() => {
+                          coppyToClipboard(chapter.content!, chapter?.slug!);
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          size="small"
+                          color={copiedChapterSlug == chapter?.slug ? 'primary' : 'inherit'}
+                          onClick={() => {
+                            coppyToClipboard(chapter.content!, chapter?.slug!);
+                          }}
                           sx={{
-                            mb: 2,
-                            backgroundColor:
-                              index % 2 ? 'background.default' : 'background.neutral',
+                            gap: 1,
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            fontSize: 10,
+                            p: 0,
+                            color: copiedChapterSlug == chapter?.slug ? 'grey' : 'unset',
                           }}
                         >
-                          <CardHeader
-                            title={`${index + 1} - Word: ${content?.length}`}
-                            action={
-                              <Button
-                                onClick={() => {
-                                  navigator.clipboard.writeText(content!);
-                                }}
-                                sx={{ gap: 1 }}
-                              >
-                                <Iconify icon="si:copy-duotone" />
-                                Copy
-                              </Button>
+                          <Iconify
+                            sx={{ width: 10, height: 10 }}
+                            icon={
+                              copiedChapterSlug == chapter.slug
+                                ? 'lets-icons:done-all-round-duotone-line'
+                                : 'si:copy-duotone'
                             }
                           />
-                          <CardContent
-                            sx={{ cursor: 'copy' }}
-                            onClick={() => {
-                              navigator.clipboard.writeText(content!);
-                            }}
-                          >
-                            {content}
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
+                          Copy
+                        </Button>
+                        <span dangerouslySetInnerHTML={{ __html: chapter?.content! }}></span>
+                      </CardContent>
+                    </Card>
                   </AccordionDetails>
                 </Accordion>
               );
@@ -163,6 +194,7 @@ export const DetailView = React.memo(({ slug }: { slug?: string }) => {
     </Scrollbar>
   );
 });
+
 function splitHtmlIntoChunks(html: string, maxLength = 2000) {
   // 1. Chuyển HTML thành text thuần
   const tmpEl = typeof window !== 'undefined' ? document.createElement('div') : null;

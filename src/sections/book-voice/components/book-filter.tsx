@@ -63,7 +63,7 @@ export function BookFilter(props: Props) {
         }}
         render={({ isSubmitting, defaultValues }) => (
           <Box display="flex" flexDirection="column" gap={1}>
-            {/* <RHFAutocomplete
+            <RHFAutocomplete
               id="site"
               title={t(LanguageKey.blog.siteItem)}
               multiple={false}
@@ -88,7 +88,7 @@ export function BookFilter(props: Props) {
               renderInput={(params) => {
                 return <TextField {...params} margin="normal" label={'Categories'} />;
               }}
-            /> */}
+            />
 
             <Box
               sx={(theme) => {

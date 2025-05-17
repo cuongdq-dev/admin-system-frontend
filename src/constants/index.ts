@@ -159,12 +159,14 @@ export const LanguageKey = {
     fullStatus: 'book_full_status',
     totalChapterItem: 'book_total_chapter_item',
     chapterItem: 'book_chapter_item',
+    voiceItem: 'book_voice_item',
     statusItem: 'book_status_item',
     thumbnailItem: 'book_thumbnail_item',
     categoryItem: 'book_category_item',
     sourceUrlItem: 'book_source_url_item',
     publicButton: 'public_button',
     draftButton: 'draft_button',
+    generateGeminiButton: 'book_generate_gemini_button',
     siteItem: 'book_site_item',
   },
 
@@ -224,6 +226,7 @@ export const LanguageKey = {
     needHelp: 'need_help_button',
     clone: 'clone_button',
     pull: 'pull_button',
+    accept: 'accept_button',
   },
 
   menu: {

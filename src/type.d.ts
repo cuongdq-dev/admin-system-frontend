@@ -412,6 +412,10 @@ interface IChapter extends TableBase {
   is_published?: boolean;
   book?: IBook;
   word_count?: number;
+  voice_count?: number;
+  voice_content?: string;
+  // only FE
+  type: 'voice' | 'book';
 }
 interface IBook extends TableBase {
   id: string;

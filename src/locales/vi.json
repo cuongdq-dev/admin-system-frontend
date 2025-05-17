@@ -126,6 +126,8 @@
   "logout_button": "Đăng xuất",
   "submit_button": "Gửi",
   "cancel_button": "Hủy",
+  "accept_button": "OK",
+
   "save_button": "Lưu",
   "delete_button": "Xóa",
   "update_button": "Cập nhật",
@@ -294,7 +296,9 @@
   "book_hot_status": "Nổi bật",
   "book_full_status": "Hoàn thành",
   "book_total_chapter_item": "Tổng số chương",
+  "book_generate_gemini_button": "GEMINI GENERATE",
   "book_chapter_item": "Chương",
+  "book_voice_item": "Voice",
   "book_status_item": "Trạng Thái",
   "book_thumbnail_item": "Ảnh bìa",
   "book_category_item": "Danh mục"
