@@ -636,7 +636,7 @@ const ChapterList = ({
     <Grid container padding={1}>
       <Grid md={6} sm={6} xs={12}>
         {chapters?.slice(0, Number(chapters.length / 2 + 1)).map((chapter: IChapter) => {
-          const word = type == 'voice' ? chapter.voice_count : chapter.word_count;
+          const word = type == 'voice' ? chapter?.voice_count : chapter?.word_count;
           return (
             <Box display="flex" gap={2}>
               <Box
@@ -654,7 +654,12 @@ const ChapterList = ({
               <Tooltip title={copied == chapter.slug ? 'Copied!' : 'Copy to clipboard'} arrow>
                 <IconButton
                   size="small"
-                  onClick={() => copyToClipboard(chapter.content!, chapter.slug!)}
+                  onClick={() =>
+                    copyToClipboard(
+                      type == 'voice' ? chapter?.voice_content! : chapter?.content!,
+                      chapter.slug!
+                    )
+                  }
                 >
                   <Iconify icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'} />
                 </IconButton>
@@ -682,7 +687,12 @@ const ChapterList = ({
                 <Tooltip title={copied == chapter.slug ? 'Copied!' : 'Copy to clipboard'} arrow>
                   <IconButton
                     size="small"
-                    onClick={() => copyToClipboard(chapter.content!, chapter.slug!)}
+                    onClick={() =>
+                      copyToClipboard(
+                        type == 'voice' ? chapter?.voice_content! : chapter?.content!,
+                        chapter.slug!
+                      )
+                    }
                   >
                     <Iconify icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'} />
                   </IconButton>
