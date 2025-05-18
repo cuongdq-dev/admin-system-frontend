@@ -619,20 +619,46 @@ const ChapterList = ({
 }) => {
   if (!chapters || Number(chapters?.length) == 0) return <></>;
 
+  const [copied, setCopied] = useState<string | undefined>(undefined);
+
+  function copyToClipboard(html: string, slug: string) {
+    const tmpEl = typeof window !== 'undefined' ? document.createElement('div') : null;
+    const plainText = tmpEl
+      ? ((tmpEl.innerHTML = html), tmpEl.textContent || '')
+      : html.replace(/<[^>]*>/g, '');
+
+    navigator.clipboard.writeText(plainText!).then(() => {
+      setCopied(slug);
+    });
+  }
+
   return (
     <Grid container padding={1}>
       <Grid md={6} sm={6} xs={12}>
         {chapters?.slice(0, Number(chapters.length / 2 + 1)).map((chapter: IChapter) => {
           const word = type == 'voice' ? chapter.voice_count : chapter.word_count;
           return (
-            <Box
-              onClick={() => openChapter({ ...chapter, type: type })}
-              sx={{ mb: 1, color: !word ? 'grey' : 'unset', cursor: 'pointer' }}
-            >
-              <Typography>
-                {chapter.title}
-                {word ? ` - (${fNumber(word)})` : ''}
-              </Typography>
+            <Box display="flex" gap={2}>
+              <Box
+                onClick={() => {
+                  openChapter({ ...chapter, type: type });
+                  setCopied(undefined);
+                }}
+                sx={{ color: !word ? 'grey' : 'unset', cursor: 'pointer' }}
+              >
+                <Typography>
+                  {chapter.title}
+                  {word ? ` - (${fNumber(word)})` : ''}
+                </Typography>
+              </Box>
+              <Tooltip title={copied == chapter.slug ? 'Copied!' : 'Copy to clipboard'} arrow>
+                <IconButton
+                  size="small"
+                  onClick={() => copyToClipboard(chapter.content!, chapter.slug!)}
+                >
+                  <Iconify icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'} />
+                </IconButton>
+              </Tooltip>
             </Box>
           );
         })}
@@ -643,14 +669,24 @@ const ChapterList = ({
           .map((chapter: IChapter) => {
             const word = type == 'voice' ? chapter.voice_count : chapter.word_count;
             return (
-              <Box
-                onClick={() => openChapter({ ...chapter, type: type })}
-                sx={{ mb: 1, color: !word ? 'grey' : 'unset', cursor: 'pointer' }}
-              >
-                <Typography>
-                  {chapter.title}
-                  {word ? ` - (${fNumber(word)})` : ''}
-                </Typography>
+              <Box display="flex" gap={2}>
+                <Box
+                  onClick={() => openChapter({ ...chapter, type: type })}
+                  sx={{ mb: 1, color: !word ? 'grey' : 'unset', cursor: 'pointer' }}
+                >
+                  <Typography>
+                    {chapter.title}
+                    {word ? ` - (${fNumber(word)})` : ''}
+                  </Typography>
+                </Box>
+                <Tooltip title={copied == chapter.slug ? 'Copied!' : 'Copy to clipboard'} arrow>
+                  <IconButton
+                    size="small"
+                    onClick={() => copyToClipboard(chapter.content!, chapter.slug!)}
+                  >
+                    <Iconify icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'} />
+                  </IconButton>
+                </Tooltip>
               </Box>
             );
           })}
