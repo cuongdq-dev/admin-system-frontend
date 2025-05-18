@@ -1,12 +1,12 @@
 import { Avatar, Box, Card, Chip, Link, Typography, useMediaQuery } from '@mui/material';
 import { t } from 'i18next';
 import { PATH_BOOK } from 'src/api-core/path';
+import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent, timeAgo } from 'src/components/table';
 import { LanguageKey, StoreName } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
-import { fNumber } from 'src/utils/format-number';
 import { useShallow } from 'zustand/react/shallow';
 import { BookFilter } from '../components/book-filter';
 
@@ -107,6 +107,10 @@ export function ListView() {
                     label={row?.author?.name}
                   ></Chip>
                 )}
+
+                {row?.word_count > 0 && (
+                  <Chip variant="outlined" size="small" color="info" label={'AI rendered'}></Chip>
+                )}
               </Box>
             </Box>
           </Box>
@@ -150,6 +154,18 @@ export function ListView() {
         customCard={({ values, index }: { values: Record<string, any>; index: number }) => {
           return (
             <Card sx={{ borderRadius: 1, p: 1, mb: 2, width: '100%' }}>
+              {values?.word_count > 0 && (
+                <Iconify
+                  sx={{
+                    color: 'primary.main',
+                    position: 'absolute',
+                    top: 8,
+                    right: 8,
+                    width: 14,
+                  }}
+                  icon="carbon:ai-generate"
+                />
+              )}
               <Box width="100%" display="flex" gap={1}>
                 <Avatar
                   sx={{ width: '60px', height: '100%' }}
@@ -233,7 +249,6 @@ export function ListView() {
                   </Box>
                   <Box display="flex" gap={1} justifyContent="flex-end">
                     <Typography sx={{ fontSize: 12, padding: 0, margin: 0 }} color="grey">
-                      {Number(values?.chapter_count!) / Number(values?.total_chapter!)} |{' '}
                       {timeAgo(values.created_at)}
                     </Typography>
                   </Box>
