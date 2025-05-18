@@ -9,6 +9,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { BookFilter } from '../components/book-filter';
+import { fNumber } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -108,7 +109,7 @@ export function ListView() {
                   ></Chip>
                 )}
 
-                {row?.word_count > 0 && (
+                {row?.voice_count > 0 && (
                   <Chip variant="outlined" size="small" color="info" label={'AI rendered'}></Chip>
                 )}
               </Box>
@@ -119,11 +120,17 @@ export function ListView() {
     },
 
     {
-      id: 'word_count',
+      id: 'count',
       label: 'Word',
-      type: 'number',
+      type: 'custom',
       align: 'center',
-      sort: true,
+      render: ({ row }) => {
+        return (
+          <Typography>
+            {fNumber(row?.voice_count > 0 ? row?.voice_count : row?.word_count)}
+          </Typography>
+        );
+      },
     },
     {
       id: 'created_at',
@@ -151,10 +158,10 @@ export function ListView() {
         refreshData={refreshData}
         actions={{ editBtn: true, deleteBtn: true }}
         headLabel={HeadLabel}
-        customCard={({ values, index }: { values: Record<string, any>; index: number }) => {
+        customCard={({ values }: { values: Record<string, any>; index: number }) => {
           return (
             <Card sx={{ borderRadius: 1, p: 1, mb: 2, width: '100%' }}>
-              {values?.word_count > 0 && (
+              {values?.voice_count > 0 && (
                 <Iconify
                   sx={{
                     color: 'primary.main',
@@ -168,7 +175,7 @@ export function ListView() {
               )}
               <Box width="100%" display="flex" gap={1}>
                 <Avatar
-                  sx={{ width: '60px', height: '100%' }}
+                  sx={{ width: '80px', height: '100%' }}
                   src={values?.thumbnail?.url}
                   variant="rounded"
                 />
@@ -177,7 +184,17 @@ export function ListView() {
                     href={`book/${values?.id}`}
                     target="_blank"
                     variant="subtitle2"
-                    sx={{ cursor: 'pointer' }}
+                    sx={{
+                      cursor: 'pointer',
+                      width: '80%',
+                      display: '-webkit-box',
+                      WebkitBoxOrient: 'vertical',
+                      WebkitLineClamp: 1, // số dòng muốn hiển thị
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      height: 'auto',
+                      fontSize: 12,
+                    }}
                   >
                     {values?.title}
                   </Link>
@@ -189,7 +206,7 @@ export function ListView() {
                       margin: 0,
                       display: '-webkit-box',
                       WebkitBoxOrient: 'vertical',
-                      WebkitLineClamp: 1, // số dòng muốn hiển thị
+                      WebkitLineClamp: 2, // số dòng muốn hiển thị
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       height: 'auto',
@@ -249,7 +266,7 @@ export function ListView() {
                   </Box>
                   <Box display="flex" gap={1} justifyContent="flex-end">
                     <Typography sx={{ fontSize: 12, padding: 0, margin: 0 }} color="grey">
-                      {timeAgo(values.created_at)}
+                      {`${fNumber(values.voice_count > 0 ? values.voice_count : values.word_count)} | ${timeAgo(values.created_at)}`}
                     </Typography>
                   </Box>
                 </Box>
