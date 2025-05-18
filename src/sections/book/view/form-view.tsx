@@ -508,7 +508,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                 </Card>
               )}
 
-              <Accordion key="voices" sx={{ mb: 2 }}>
+              <Accordion defaultExpanded={true} key="voices" sx={{ mb: 2 }}>
                 <AccordionSummary
                   expandIcon={
                     data?.status === 'AI_GENERATE' ? (
@@ -539,7 +539,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                 </AccordionDetails>
               </Accordion>
 
-              <Accordion key="chapters">
+              <Accordion key="chapters" defaultExpanded={true}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`chapters-content`}
@@ -554,13 +554,11 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                     }}
                   >
                     <CardContent>
-                      <Grid container padding={1}>
-                        <ChapterList
-                          type="book"
-                          chapters={data?.chapters!}
-                          openChapter={setOpenChapter}
-                        />
-                      </Grid>
+                      <ChapterList
+                        type="book"
+                        chapters={data?.chapters!}
+                        openChapter={setOpenChapter}
+                      />
                     </CardContent>
                   </Card>
                 </AccordionDetails>
@@ -708,7 +706,9 @@ const ChapterDetail = ({
       {type == 'voice' ? (
         <Box sx={{ whiteSpace: 'pre-line' }}>{content}</Box>
       ) : (
-        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+        <Box sx={{ whiteSpace: 'pre-line' }}>
+          <div dangerouslySetInnerHTML={{ __html: content }}></div>
+        </Box>
       )}
 
       <Tooltip title={copied ? 'Copied!' : 'Copy to clipboard'} arrow>
