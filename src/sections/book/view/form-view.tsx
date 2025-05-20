@@ -11,6 +11,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -488,6 +489,17 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                             color="error"
                             fullWidth
                           />
+                        </Grid>
+                      )}
+
+                      {data?.source_url && (
+                        <Grid
+                          xs={12}
+                          sm={12}
+                          md={12}
+                          sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                        >
+                          <Chip label={new URL(data.source_url).hostname} />
                         </Grid>
                       )}
                     </Grid>

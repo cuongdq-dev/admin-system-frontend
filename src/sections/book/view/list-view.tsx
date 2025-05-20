@@ -112,6 +112,15 @@ export function ListView() {
                 {row?.voice_count > 0 && (
                   <Chip variant="outlined" size="small" color="info" label={'AI rendered'}></Chip>
                 )}
+
+                {row?.source_url && (
+                  <Chip
+                    variant="outlined"
+                    size="small"
+                    color="info"
+                    label={new URL(row?.source_url).host}
+                  ></Chip>
+                )}
               </Box>
             </Box>
           </Box>
