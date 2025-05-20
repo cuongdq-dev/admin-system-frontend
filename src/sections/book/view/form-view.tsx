@@ -2,12 +2,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { LoadingButton } from '@mui/lab';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
-  // Button,
   Card,
   CardContent,
   CardHeader,
@@ -51,8 +52,6 @@ import { fNumber } from 'src/utils/format-number';
 import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
-import { LoadingButton } from '@mui/lab';
-
 const DetailSchema = Yup.object().shape({
   thumbnail: Yup.mixed<File | string>().optional(),
   title: Yup.string().optional(),
@@ -516,6 +515,111 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                 >
                   <CardContent>
                     <CollapsibleText text={data.description} maxLines={20} />
+                  </CardContent>
+                </Card>
+              )}
+
+              {data?.social_description && (
+                <Card
+                  sx={(theme) => {
+                    return { border: `1px solid ${theme.palette.divider}`, mb: 2 };
+                  }}
+                >
+                  <CardContent>
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      multiline
+                      disabled
+                      margin="normal"
+                      label="Tiêu Đề"
+                      defaultValue={data?.social_description?.title_social}
+                      sx={{
+                        cursor: 'copy',
+                        '& .MuiInputBase-input.Mui-disabled': {
+                          cursor: 'copy',
+                        },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton
+                            edge="end"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigator.clipboard.writeText(
+                                data?.social_description?.title_social!
+                              );
+                            }}
+                            size="small"
+                          >
+                            <ContentCopyIcon />
+                          </IconButton>
+                        ),
+                      }}
+                    />
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      multiline
+                      disabled
+                      margin="normal"
+                      label="Mô Tả"
+                      defaultValue={data?.social_description?.description_social}
+                      sx={{
+                        cursor: 'copy',
+                        '& .MuiInputBase-input.Mui-disabled': {
+                          cursor: 'copy',
+                        },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton
+                            edge="end"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigator.clipboard.writeText(
+                                data?.social_description?.description_social!
+                              );
+                            }}
+                            size="small"
+                          >
+                            <ContentCopyIcon />
+                          </IconButton>
+                        ),
+                      }}
+                    />
+
+                    <TextField
+                      variant="outlined"
+                      fullWidth
+                      multiline
+                      disabled
+                      margin="normal"
+                      label="Từ Khoá"
+                      defaultValue={data?.social_description?.keywords?.join(', ')}
+                      sx={{
+                        cursor: 'copy',
+                        '& .MuiInputBase-input.Mui-disabled': {
+                          cursor: 'copy',
+                        },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton
+                            edge="end"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigator.clipboard.writeText(
+                                data?.social_description?.keywords?.join(', ')!
+                              );
+                            }}
+                            size="small"
+                          >
+                            <ContentCopyIcon />
+                          </IconButton>
+                        ),
+                      }}
+                    />
                   </CardContent>
                 </Card>
               )}

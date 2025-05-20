@@ -424,6 +424,7 @@ interface IBook extends TableBase {
   slug?: string;
   title?: string;
   content?: string;
+  social_description?: { description_social?: string; title_social?: string; keywords?: string[] };
   meta_description?: string;
   description?: string;
   is_new?: boolean;
