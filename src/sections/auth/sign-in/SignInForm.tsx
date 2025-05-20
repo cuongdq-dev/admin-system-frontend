@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_SIGN_IN } from 'src/api-core/path';
 import { LanguageKey } from 'src/constants';
@@ -23,6 +23,7 @@ export type JwtPayload = {
 };
 
 export const SignInForm = () => {
+  const location = useLocation();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -61,10 +62,13 @@ export const SignInForm = () => {
         const { exp, iat, type } = jwtDecode(accessToken) as JwtPayload;
         const expires = values.remember ? { expires: new Date(exp * 1000) } : undefined;
         const loginInfo = { name, email, avatar, exp, type, iat, isActive };
+
+        const from = (location.state as { from?: Location })?.from?.pathname || '/';
+
         Cookies.set('user-info', JSON.stringify(loginInfo), expires);
         Cookies.set('token', accessToken, expires);
         Cookies.set('refresh-token', refreshToken, expires);
-        navigate('/', { replace: true });
+        navigate(from, { replace: true });
       },
     });
   };
