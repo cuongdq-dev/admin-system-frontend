@@ -289,6 +289,7 @@
   "book_detail_page": "Book",
 
   "book_title_item": "Title",
+  "book_source_url_item": "Source",
   "book_slug_item": "Slug",
   "book_content_item": "Content",
   "book_meta_description_item": "Description",

@@ -7,7 +7,6 @@ import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form/RHFTextF
 import { TableFilter } from 'src/components/table';
 import { LanguageKey } from 'src/constants';
 import { usePageStore } from 'src/store/page';
-import { useSettingStore } from 'src/store/setting';
 import { varAlpha } from 'src/theme/styles';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -18,9 +17,7 @@ type Props = { storeName: string };
 export function BookFilter(props: Props) {
   const { storeName } = props;
   const { meta } = usePageStore(useShallow((state) => ({ ...state.dataStore![storeName]?.list })));
-  const { categories, sites } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
   const { mode } = useColorScheme();
-
   return (
     <Box
       display="flex"
@@ -52,6 +49,7 @@ export function BookFilter(props: Props) {
         convertValue={(values) => {
           return {
             search: values?.search,
+            source: values?.source,
             limit: values?.limit?.id,
             page: values?.page?.id,
             site_id: values?.site?.id,
@@ -69,6 +67,14 @@ export function BookFilter(props: Props) {
               defaultValue={meta?.search}
               name="search"
               label={t(LanguageKey.book.titleItem)}
+            />
+
+            <RHFTextField
+              margin="normal"
+              name="source"
+              helperText="truyenfull, daotruyen,... "
+              defaultValue={meta?.filter?.source}
+              label={t(LanguageKey.book.sourceUrlItem)}
             />
 
             <Box
