@@ -158,14 +158,19 @@ interface RHFAutocompleteProps extends AutocompleteProps<any, boolean, boolean, 
   options: any[];
   loading?: boolean;
 }
-export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocompleteProps) => {
+export const RHFAutocomplete = ({
+  name,
+  loading = false,
+  multiple = true,
+  ...other
+}: RHFAutocompleteProps) => {
   const { control, setValue, clearErrors } = useFormContext();
 
   return (
     <Controller
       name={name}
       control={control}
-      defaultValue={other.defaultValue ?? []}
+      defaultValue={other.defaultValue ?? (multiple ? [] : null)} // ✅ xử lý defaultValue cho single select
       render={({ field }) => {
         const { onBlur, value } = field;
 
@@ -173,52 +178,62 @@ export const RHFAutocomplete = ({ name, loading = false, ...other }: RHFAutocomp
           <Autocomplete
             {...field}
             id={name}
-            multiple
-            freeSolo
+            multiple={multiple} // ✅ dùng biến
+            freeSolo={multiple}
+            filterSelectedOptions={multiple}
             disabled={loading || other.disabled}
             options={other.options}
-            value={value ?? []}
+            value={value ?? (multiple ? [] : null)}
             onBlur={(event) => {
               onBlur();
               clearErrors(name);
             }}
             onChange={(_, newValue) => {
-              // Normalize string-only input
-              const formattedValue = newValue.map((val: any) =>
-                typeof val === 'string' ? { title: val } : val
-              );
-              setValue(name, formattedValue, { shouldDirty: true });
+              if (multiple) {
+                const formattedValue = newValue.map((val: any) =>
+                  typeof val === 'string' ? { title: val } : val
+                );
+                setValue(name, formattedValue, { shouldDirty: true });
+              } else {
+                const formattedValue =
+                  typeof newValue === 'string' ? { title: newValue } : newValue;
+                setValue(name, formattedValue, { shouldDirty: true });
+              }
             }}
-            getOptionLabel={(option) => (typeof option === 'string' ? option : option.title)}
+            getOptionLabel={(option) =>
+              typeof option === 'string' ? option : (option?.title ?? '')
+            }
             isOptionEqualToValue={(option, value) =>
               (option?.id && value?.id && option.id === value.id) ||
               (typeof option === 'string' && typeof value === 'string' && option === value) ||
               (typeof option === 'string' && typeof value === 'object' && option === value.title) ||
               (typeof option === 'object' && typeof value === 'string' && option.title === value)
             }
-            renderTags={(tagValue, getTagProps) => (
-              <>
-                {tagValue.map((option, index) => (
-                  <Chip
-                    label={typeof option === 'string' ? option : option.title}
-                    {...getTagProps({ index })}
-                    key={(typeof option === 'string' ? option : option.title) + '_' + index}
-                  />
-                ))}
-              </>
-            )}
+            renderTags={(tagValue, getTagProps) =>
+              multiple
+                ? tagValue.map((option, index) => (
+                    <Chip
+                      label={typeof option === 'string' ? option : option.title}
+                      {...getTagProps({ index })}
+                      key={(typeof option === 'string' ? option : option.title) + '_' + index}
+                    />
+                  ))
+                : null
+            }
             renderOption={(props, option, { selected }) => {
               const { key, ...optionProps } = props;
               const label = typeof option === 'string' ? option : option.title;
 
               return (
                 <li key={key} {...optionProps}>
-                  <Checkbox
-                    icon={<Iconify icon="bx:checkbox" />}
-                    checkedIcon={<Iconify icon="mingcute:checkbox-fill" />}
-                    style={{ marginRight: 8 }}
-                    checked={selected}
-                  />
+                  {multiple && (
+                    <Checkbox
+                      icon={<Iconify icon="bx:checkbox" />}
+                      checkedIcon={<Iconify icon="mingcute:checkbox-fill" />}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                  )}
                   {label}
                 </li>
               );

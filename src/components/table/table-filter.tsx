@@ -1,4 +1,3 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack, useMediaQuery } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
@@ -8,7 +7,6 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { t } from 'i18next';
-import * as Yup from 'yup';
 
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -82,7 +80,7 @@ export function TableFilter(props: TableFilterProps) {
     navigate(`?${queryParams.toString()}`, { replace: true });
 
     setTimeout(() => {
-      onCloseFilter();
+      // onCloseFilter();
       setLoading(false);
     }, 200);
   };

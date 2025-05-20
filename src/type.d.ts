@@ -345,6 +345,7 @@ declare type TableMetaData = {
   itemsPerPage: number;
   totalItems: number;
   totalPages: number;
+  search?: string;
 };
 
 declare type IBreadcrumb = {

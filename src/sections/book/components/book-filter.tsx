@@ -3,7 +3,7 @@ import { Grid, TextField, Typography, useColorScheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import { t } from 'i18next';
 import { RHFMultiCheckbox } from 'src/components/hook-form';
-import { RHFAutocomplete } from 'src/components/hook-form/RHFTextField';
+import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form/RHFTextField';
 import { TableFilter } from 'src/components/table';
 import { LanguageKey } from 'src/constants';
 import { usePageStore } from 'src/store/page';
@@ -51,6 +51,7 @@ export function BookFilter(props: Props) {
       <TableFilter
         convertValue={(values) => {
           return {
+            search: values?.search,
             limit: values?.limit?.id,
             page: values?.page?.id,
             site_id: values?.site?.id,
@@ -63,32 +64,12 @@ export function BookFilter(props: Props) {
         }}
         render={({ isSubmitting, defaultValues }) => (
           <Box display="flex" flexDirection="column" gap={1}>
-            {/* <RHFAutocomplete
-              id="site"
-              title={t(LanguageKey.blog.siteItem)}
-              multiple={false}
-              name="site"
-              defaultValue={sites?.find((site) => site.id == defaultValues?.site_id)}
-              options={sites || []}
-              renderInput={(params) => {
-                return <TextField {...params} margin="normal" label={'Site'} />;
-              }}
+            <RHFTextField
+              margin="normal"
+              defaultValue={meta?.search}
+              name="search"
+              label={t(LanguageKey.book.titleItem)}
             />
-
-            <RHFAutocomplete
-              id="categories"
-              disableCloseOnSelect
-              title={t(LanguageKey.blog.categoryItem)}
-              name="categories"
-              options={categories || []}
-              defaultValue={defaultValues?.categories_id?.split(',').map((cate: string) => {
-                const value = categories?.find((c) => c.id == cate);
-                return value;
-              })}
-              renderInput={(params) => {
-                return <TextField {...params} margin="normal" label={'Categories'} />;
-              }}
-            /> */}
 
             <Box
               sx={(theme) => {
@@ -151,6 +132,10 @@ export function BookFilter(props: Props) {
                   fullWidth
                   multiple={false}
                   name="limit"
+                  defaultValue={{
+                    id: meta?.itemsPerPage?.toString(),
+                    title: meta?.itemsPerPage?.toString(),
+                  }}
                   title="Page Size"
                   options={[
                     { id: '10', title: '10' },
@@ -169,6 +154,10 @@ export function BookFilter(props: Props) {
               <Grid item md={1} sx={{ width: '100%' }}>
                 <RHFAutocomplete
                   id="page"
+                  defaultValue={{
+                    id: meta?.currentPage?.toString(),
+                    title: `Page ${meta?.currentPage}`,
+                  }}
                   fullWidth
                   multiple={false}
                   title="Page Number"
