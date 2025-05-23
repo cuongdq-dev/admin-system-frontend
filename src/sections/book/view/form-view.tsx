@@ -496,8 +496,31 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                           xs={12}
                           sm={12}
                           md={12}
-                          sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                          gap={2}
+                          sx={{ display: 'flex', justifyContent: 'space-between' }}
                         >
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            sx={{ mb: 2, gap: 1 }}
+                            onClick={() => {
+                              let dataCopy = '';
+                              for (const element of data?.chapters!) {
+                                const tmpEl =
+                                  typeof window !== 'undefined'
+                                    ? document.createElement('div')
+                                    : null;
+                                const text = tmpEl
+                                  ? ((tmpEl.innerHTML = element.content!), tmpEl.textContent || '')
+                                  : element.content?.replace(/<[^>]*>/g, '');
+                                dataCopy += text + '\n'; // thêm dòng mới giữa các chapter
+                              }
+                              navigator.clipboard.writeText(dataCopy!);
+                            }}
+                          >
+                            <ContentCopyIcon sx={{ width: 15 }} />
+                            <Typography>{fNumber(data?.voice_count)}</Typography>
+                          </Button>
                           <Chip label={new URL(data.source_url).hostname} />
                         </Grid>
                       )}

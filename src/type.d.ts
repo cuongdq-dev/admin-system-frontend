@@ -442,6 +442,8 @@ interface IBook extends TableBase {
   thumbnail_id?: string;
   thumbnail?: IMedia;
   //
+  voice_count?: number;
+  word_count?: number;
 }
 
 interface ITrendingArticle extends TableBase {

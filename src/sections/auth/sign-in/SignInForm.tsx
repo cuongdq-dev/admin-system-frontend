@@ -40,12 +40,17 @@ export const SignInForm = () => {
     formState: { isSubmitting },
   } = methods;
 
+  const [isLoading, setIsLoading] = useState(isSubmitting);
+
   const onSubmit = async (values: { email?: string; password?: string; remember?: boolean }) => {
+    setIsLoading(true);
     invokeRequest({
       method: HttpMethod.POST,
       baseURL: PATH_SIGN_IN,
       params: values,
       onHandleError: (response) => {
+        setIsLoading(false);
+
         if (response?.errors && typeof response.errors === 'object') {
           Object.keys(response.errors).forEach((key) => {
             methods.setError(key as any, {
@@ -58,13 +63,12 @@ export const SignInForm = () => {
         }
       },
       onSuccess(res) {
+        setIsLoading(false);
         const { accessToken, refreshToken, email, name, isActive, avatar } = res;
         const { exp, iat, type } = jwtDecode(accessToken) as JwtPayload;
         const expires = values.remember ? { expires: new Date(exp * 1000) } : undefined;
         const loginInfo = { name, email, avatar, exp, type, iat, isActive };
-
         const from = (location.state as { from?: Location })?.from?.pathname || '/';
-
         Cookies.set('user-info', JSON.stringify(loginInfo), expires);
         Cookies.set('token', accessToken, expires);
         Cookies.set('refresh-token', refreshToken, expires);
@@ -101,13 +105,7 @@ export const SignInForm = () => {
         </Link>
       </Stack>
 
-      <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-      >
+      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isLoading}>
         {t(LanguageKey.button.login)}
       </LoadingButton>
     </FormProvider>
