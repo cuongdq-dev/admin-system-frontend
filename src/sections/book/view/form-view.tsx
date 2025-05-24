@@ -511,8 +511,9 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                                     ? document.createElement('div')
                                     : null;
                                 const text = tmpEl
-                                  ? ((tmpEl.innerHTML = element.content!), tmpEl.textContent || '')
-                                  : element.content?.replace(/<[^>]*>/g, '');
+                                  ? ((tmpEl.innerHTML = element.voice_content!),
+                                    tmpEl.textContent || '')
+                                  : element.voice_content?.replace(/<[^>]*>/g, '');
                                 dataCopy += text + '\n'; // thêm dòng mới giữa các chapter
                               }
                               navigator.clipboard.writeText(dataCopy!);
