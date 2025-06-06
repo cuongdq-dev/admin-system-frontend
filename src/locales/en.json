@@ -5,6 +5,8 @@
   "site_summary": "New Sites",
   "trending_summary": "New Trendings",
   "category_summary": "Categories",
+  "category_news_summary": "Books",
+  "category_books_summary": "News",
   "google_console_summary": "Google Indexed",
   "keyword_summary": "Keywords",
   "source_summary": "Sources",

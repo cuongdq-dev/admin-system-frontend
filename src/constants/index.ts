@@ -5,6 +5,8 @@ export const LanguageKey = {
     googleConsoleSummary: 'google_console_summary',
     trendingSummary: 'trending_summary',
     categorySummary: 'category_summary',
+    categoryNewsSummary: 'category_news_summary',
+    categoryBooksSummary: 'category_books_summary',
     sourceSummary: 'source_summary',
     keywordSummary: 'keyword_summary',
     googleSearchStatusChart: 'google_Search_status_chart',

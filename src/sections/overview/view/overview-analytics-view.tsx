@@ -3,26 +3,23 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { AnalyticsCurrentVisits } from '../analytics-current-visits';
-import { AnalyticsNews } from '../analytics-news';
-import { AnalyticsWebsiteVisits } from '../analytics-website-visits';
-import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
 import { t } from 'i18next';
-import { LanguageKey } from 'src/constants';
-import { Iconify } from 'src/components/iconify';
 import {
-  PATH_ANALYTICS_CATEGORY,
+  PATH_ANALYTICS_CATEGORY_BOOKS,
+  PATH_ANALYTICS_CATEGORY_NEWS,
   PATH_ANALYTICS_GOOGLE_INDEXED,
   PATH_ANALYTICS_GOOGLE_SEARCH_STATUS,
-  PATH_ANALYTICS_KEYWORD,
   PATH_ANALYTICS_POST,
   PATH_ANALYTICS_SITE,
   PATH_ANALYTICS_SOURCE,
   PATH_ANALYTICS_TRENDING,
 } from 'src/api-core/path';
-import { AnalyticsConversionRates } from '../analytics-conversion-rates';
-import { Box, Paper } from '@mui/material';
+import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+import { LanguageKey } from 'src/constants';
+import { AnalyticsConversionRates } from '../analytics-conversion-rates';
+import { AnalyticsCurrentVisits } from '../analytics-current-visits';
+import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
 
 // ----------------------------------------------------------------------
 
@@ -83,9 +80,15 @@ export function OverviewAnalyticsView() {
             />
           </Grid>
 
-          <Grid xs={12} md={12} lg={12}>
+          <Grid xs={12} md={6} lg={6}>
             <AnalyticsConversionRates
-              baseUrl={PATH_ANALYTICS_CATEGORY}
+              baseUrl={PATH_ANALYTICS_CATEGORY_NEWS}
+              title={t(LanguageKey.home.categorySummary)}
+            />
+          </Grid>
+          <Grid xs={12} md={6} lg={6}>
+            <AnalyticsConversionRates
+              baseUrl={PATH_ANALYTICS_CATEGORY_BOOKS}
               title={t(LanguageKey.home.categorySummary)}
             />
           </Grid>
