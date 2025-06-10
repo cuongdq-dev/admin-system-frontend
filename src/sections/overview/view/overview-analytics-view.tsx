@@ -83,13 +83,13 @@ export function OverviewAnalyticsView() {
           <Grid xs={12} md={6} lg={6}>
             <AnalyticsConversionRates
               baseUrl={PATH_ANALYTICS_CATEGORY_NEWS}
-              title={t(LanguageKey.home.categorySummary)}
+              title={t(LanguageKey.home.categoryNewsSummary)}
             />
           </Grid>
           <Grid xs={12} md={6} lg={6}>
             <AnalyticsConversionRates
               baseUrl={PATH_ANALYTICS_CATEGORY_BOOKS}
-              title={t(LanguageKey.home.categorySummary)}
+              title={t(LanguageKey.home.categoryBooksSummary)}
             />
           </Grid>
         </Grid>
