@@ -19,7 +19,6 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { Collapse, Divider, IconButton } from '@mui/material';
 import { t } from 'i18next';
 import { Iconify } from 'src/components/iconify';
-import type { WorkspacesPopoverProps } from '../components/workspaces-popover';
 export type NavContentProps = {
   data: {
     path: string;
@@ -29,7 +28,6 @@ export type NavContentProps = {
     children?: { path: string; title: string; icon: React.ReactNode }[];
   }[];
   slots?: { topArea?: React.ReactNode; bottomArea?: React.ReactNode };
-  workspaces: WorkspacesPopoverProps['data'];
   sx?: SxProps<Theme>;
 };
 
@@ -47,7 +45,7 @@ type NavMobileProps = NavContentProps & { open: boolean; onClose: () => void };
 
 export function NavDesktop(props: NavDesktopProps) {
   const theme = useTheme();
-  const { sx, data, slots, workspaces, layoutQuery, handleOpen, open = true } = props;
+  const { sx, data, slots, layoutQuery, handleOpen, open = true } = props;
   return (
     <Box
       key={open + '-nav'}
@@ -109,14 +107,7 @@ export function NavDesktop(props: NavDesktopProps) {
           />
         </IconButton>
       </Box>
-      <NavContent
-        mode="desktop"
-        handleOpen={handleOpen}
-        open={open}
-        data={data}
-        slots={slots}
-        workspaces={workspaces}
-      />
+      <NavContent mode="desktop" handleOpen={handleOpen} open={open} data={data} slots={slots} />
     </Box>
   );
 }
@@ -125,7 +116,7 @@ export function NavDesktop(props: NavDesktopProps) {
 
 export function NavMobile(props: NavMobileProps) {
   const pathname = usePathname();
-  const { sx, data, open, slots, onClose, workspaces } = props;
+  const { sx, data, open, slots, onClose } = props;
   useEffect(() => {
     if (open) onClose();
   }, [pathname]);
@@ -145,7 +136,7 @@ export function NavMobile(props: NavMobileProps) {
         },
       }}
     >
-      <NavContent mode="mobile" data={data} slots={slots} workspaces={workspaces} />
+      <NavContent mode="mobile" data={data} slots={slots} />
     </Drawer>
   );
 }

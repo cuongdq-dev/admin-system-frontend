@@ -15,7 +15,6 @@ import { LanguagePopover } from '../components/language-popover';
 import { MenuButton } from '../components/menu-button';
 import { SettingPopover } from '../components/setting-popover';
 import { navData } from '../config-nav-dashboard';
-import { _workspaces } from '../config-nav-workspace';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { Main } from './main';
@@ -66,12 +65,7 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
                   }}
                 />
                 <CommonBreadcrumbs />
-                <NavMobile
-                  data={navData}
-                  open={navOpen}
-                  onClose={() => setNavOpen(false)}
-                  workspaces={_workspaces}
-                />
+                <NavMobile data={navData} open={navOpen} onClose={() => setNavOpen(false)} />
               </>
             ),
             rightArea: (
@@ -107,13 +101,7 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
        * Sidebar
        *************************************** */
       sidebarSection={
-        <NavDesktop
-          open={open}
-          data={navData}
-          layoutQuery={layoutQuery}
-          workspaces={_workspaces}
-          handleOpen={setOpen}
-        />
+        <NavDesktop open={open} data={navData} layoutQuery={layoutQuery} handleOpen={setOpen} />
       }
       /** **************************************
        * Footer

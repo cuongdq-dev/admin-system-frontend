@@ -35,7 +35,6 @@ export const VoiceCreatePage = lazy(() => import('src/pages/voice/create'));
 export const CategoryPage = lazy(() => import('src/pages/category/list'));
 // export const CategoryDetailPage = lazy(() => import('src/pages/category/detail'));
 //
-export const UserPage = lazy(() => import('src/pages/user/list'));
 export const ProfilePage = lazy(() => import('src/pages/user/profile'));
 //SERVER PAGE
 export const ServersPage = lazy(() => import('src/pages/server/list'));
@@ -49,7 +48,6 @@ export const SiteIndexingPage = lazy(() => import('src/pages/site/indexing'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const RegisterPage = lazy(() => import('src/pages/register'));
 //
-export const ProductsPage = lazy(() => import('src/pages/products'));
 //LANGUAGE PAGE
 export const LanguagePage = lazy(() => import('src/pages/language/list'));
 
@@ -110,20 +108,7 @@ export const RouterConfig = [
         index: true,
         name: LanguageKey.dashboard.pageTitle,
       },
-      {
-        path: '/user',
-        children: [
-          {
-            path: '',
-            name: LanguageKey.server.listPageTitle,
-            element: (
-              <PrivateRoute>
-                <UserPage />
-              </PrivateRoute>
-            ),
-          },
-        ],
-      },
+
       {
         path: '/profile',
         element: (
@@ -162,15 +147,6 @@ export const RouterConfig = [
         element: (
           <PrivateRoute>
             <SitesPage />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: '/product',
-        name: LanguageKey.product.listPageTitle,
-        element: (
-          <PrivateRoute>
-            <ProductsPage />
           </PrivateRoute>
         ),
       },

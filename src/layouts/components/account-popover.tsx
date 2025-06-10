@@ -23,7 +23,6 @@ import { PATH_SIGN_OUT } from 'src/api-core/path';
 import { LanguageKey } from 'src/constants';
 import { useNotifyStore } from 'src/store/notify';
 import { useSettingStore } from 'src/store/setting';
-import { _myAccount } from 'src/_mock';
 import { useShallow } from 'zustand/react/shallow';
 
 export type AccountPopoverProps = IconButtonProps & {
