@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2021 Minimal UI ([https://hottrending.asia/](https://hottrending.asia/))
+Copyright (c) 2024 Ck Technology
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
