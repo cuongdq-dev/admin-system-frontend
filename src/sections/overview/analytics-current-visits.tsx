@@ -28,9 +28,10 @@ type Props = CardProps & {
   baseUrl?: string;
   title?: string;
   subheader?: string;
+  workspace?: workspacesType;
 };
 
-export function AnalyticsCurrentVisits({ title, subheader, baseUrl, ...other }: Props) {
+export function AnalyticsCurrentVisits({ title, subheader, baseUrl, workspace, ...other }: Props) {
   const theme = useTheme();
   const [{ loading, chart }, setState] = useState<{ loading?: boolean; chart?: ChartProps }>({
     loading: false,
@@ -47,7 +48,7 @@ export function AnalyticsCurrentVisits({ title, subheader, baseUrl, ...other }: 
           setState({ ...res, loading: false });
         },
       });
-  }, [baseUrl]);
+  }, [baseUrl, workspace]);
 
   const chartSeries = chart?.series.map((item) => item.value);
 

@@ -1,11 +1,15 @@
 {
   "post_summary": "Bài viết mới",
   "site_summary": "Trang web mới",
+
+  "content_summary": "Tất cả nội dung",
+  "book_summary": "Truyện mới",
+
   "trending_summary": "Xu hướng mới",
   "category_summary": "Danh mục",
 
-  "category_news_summary": "Sách, Truyện",
-  "category_books_summary": "Tin tức",
+  "category_books_summary": "Sách, Truyện",
+  "category_news_summary": "Tin tức",
 
   "google_console_summary": "Đã index trên Google",
   "keyword_summary": "Từ khóa",
@@ -23,6 +27,8 @@
   "category_name_item": "Tên",
   "category_description_item": "Mô tả",
   "category_posts_item": "Bài viết",
+  "category_books_item": "Sách, Truyện",
+
   "category_sites_item": "Trang web",
   "user_nav": "Người dùng",
   "user_list_page": "Danh sách người dùng",

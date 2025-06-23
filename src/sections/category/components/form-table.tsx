@@ -16,7 +16,8 @@ type Props = {
 };
 export const CategoryForm = (props: Props) => {
   const { defaultValues, action = HttpMethod.PATCH, isSubmitting, handleCloseForm } = props;
-  const { posts, sites } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
+  const workspaces = localStorage.getItem('workspaces') as workspacesType;
+  const { posts, sites, books } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
 
   return (
     <>
@@ -32,7 +33,6 @@ export const CategoryForm = (props: Props) => {
             fullWidth
             variant="outlined"
           />
-
           <RHFTextField
             margin="dense"
             disabled
@@ -44,7 +44,6 @@ export const CategoryForm = (props: Props) => {
             defaultValue={defaultValues?.slug || ' '}
             variant="outlined"
           />
-
           <RHFTextField
             defaultValue={defaultValues?.description}
             margin="dense"
@@ -57,19 +56,32 @@ export const CategoryForm = (props: Props) => {
             fullWidth
             variant="outlined"
           />
-
-          <RHFAutocomplete
-            options={posts || []}
-            defaultValue={defaultValues?.posts?.map((post) => {
-              return { id: post?.id, title: post.title };
-            })}
-            name="posts"
-            title={t(LanguageKey.category.postsItem)}
-            renderInput={(params) => (
-              <TextField {...params} margin="normal" label={t(LanguageKey.category.postsItem)} />
-            )}
-          />
-
+          {workspaces == 'wp_news' && (
+            <RHFAutocomplete
+              options={posts || []}
+              defaultValue={defaultValues?.posts?.map((post) => {
+                return { id: post?.id, title: post.title };
+              })}
+              name="posts"
+              title={t(LanguageKey.category.postsItem)}
+              renderInput={(params) => (
+                <TextField {...params} margin="normal" label={t(LanguageKey.category.postsItem)} />
+              )}
+            />
+          )}
+          {workspaces == 'wp_books' && (
+            <RHFAutocomplete
+              options={books || []}
+              defaultValue={defaultValues?.books?.map((book) => {
+                return { id: book?.id, title: book.title };
+              })}
+              name="books"
+              title={t(LanguageKey.category.booksItem)}
+              renderInput={(params) => (
+                <TextField {...params} margin="normal" label={t(LanguageKey.category.postsItem)} />
+              )}
+            />
+          )}
           <RHFAutocomplete
             defaultValue={defaultValues?.sites?.map((site) => {
               return { id: site?.id, title: site.domain };

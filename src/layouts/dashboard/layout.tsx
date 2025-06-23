@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { t } from 'i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PATH_APP_SETTING } from 'src/api-core/path';
 import CommonBreadcrumbs from 'src/components/breadcrumbs';
 import { Iconify } from 'src/components/iconify';
@@ -19,6 +19,8 @@ import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { Main } from './main';
 import { NavDesktop, NavMobile } from './nav';
+import { _workspaces } from '../nav-config-workspace';
+import { useNavigate } from 'react-router-dom';
 
 //
 export type DashboardLayoutProps = {
@@ -31,16 +33,50 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
+  const navigate = useNavigate();
+
   const { setSetting } = useSettingStore.getState();
+  const defaultWorkspaces = localStorage.getItem('workspaces') as workspacesType;
+  const [workspaces, setWorkSpaces] = useState<workspacesType>(defaultWorkspaces);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const newWorkspaces = localStorage.getItem('workspaces') || defaultWorkspaces;
+      setWorkSpaces(newWorkspaces as workspacesType);
+      navigate('/', { replace: true });
+    };
+
+    // Lắng nghe sự kiện `storage` từ các tab khác
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [defaultWorkspaces]);
 
   useAPI({
     baseURL: PATH_APP_SETTING,
     onSuccess: (res) => setSetting(res),
+    refreshNumber: Number(defaultWorkspaces == 'wp_books'),
   });
 
   const [navOpen, setNavOpen] = useState(false);
   const layoutQuery: Breakpoint = 'lg';
   const [open, setOpen] = useState(true);
+
+  const getNavByWp = () => {
+    switch (workspaces) {
+      case 'wp_books':
+        return navData.filter((n) => n.workspace?.includes('wp_books'));
+      case 'wp_news':
+        return navData.filter((n) => n.workspace?.includes('wp_news'));
+
+      default:
+        return navData.filter((n) => n.workspace?.includes('wp_system'));
+    }
+  };
+
+  const nav = getNavByWp();
 
   return (
     <LayoutSection
@@ -65,7 +101,12 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
                   }}
                 />
                 <CommonBreadcrumbs />
-                <NavMobile data={navData} open={navOpen} onClose={() => setNavOpen(false)} />
+                <NavMobile
+                  data={nav}
+                  open={navOpen}
+                  onClose={() => setNavOpen(false)}
+                  workspaces={_workspaces}
+                />
               </>
             ),
             rightArea: (
@@ -101,7 +142,13 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
        * Sidebar
        *************************************** */
       sidebarSection={
-        <NavDesktop open={open} data={navData} layoutQuery={layoutQuery} handleOpen={setOpen} />
+        <NavDesktop
+          open={open}
+          data={nav}
+          layoutQuery={layoutQuery}
+          handleOpen={setOpen}
+          workspaces={_workspaces}
+        />
       }
       /** **************************************
        * Footer

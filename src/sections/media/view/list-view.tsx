@@ -56,8 +56,14 @@ export function ListView({ imagesPerPage = 40 }: { imagesPerPage?: number }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
+  useEffect(() => {
+    setLoadingList(storeName, true);
+  }, []);
   useAPI({
     baseURL: PATH_IMAGE_LIST + window.location.search,
+    onHandleError: () => {
+      setLoadingList(storeName, false);
+    },
     onSuccess: (res) => {
       setList(storeName, { data: res.data, isFetching: false, isLoading: false });
       setFilteredImages(res?.data || []);
@@ -99,13 +105,13 @@ export function ListView({ imagesPerPage = 40 }: { imagesPerPage?: number }) {
   const currentImage = filteredImages ? filteredImages[selectedImageIndex || 0] : undefined;
 
   useEffect(() => {
+    // setLoadingList(storeName, true);
     let result = data as { url: string; filename: string }[];
     if (searchTerm) {
       result = data?.filter((image?: { url: string; filename: string }) =>
         image?.filename?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
     setFilteredImages(result);
     setTotalPages(Math.ceil(result?.length / imagesPerPage));
     setCurrentPage(1);
@@ -139,8 +145,8 @@ export function ListView({ imagesPerPage = 40 }: { imagesPerPage?: number }) {
           }}
         />
       </Box>
-      <Tabs
-        value={new URLSearchParams(window.location.search).get('storage_type') || 'LOCAL'}
+      {/* <Tabs
+        value={new URLSearchParams(window.location.search).get('storage_type') || 'URL'}
         onChange={(_, value) => {
           const queryParams = new URLSearchParams(window.location.search);
           queryParams.set('storage_type', value?.toString());
@@ -162,7 +168,8 @@ export function ListView({ imagesPerPage = 40 }: { imagesPerPage?: number }) {
         <Tab label="LOCAL" value="LOCAL" />
         <Tab label="URL" value="URL" />
         <Tab label="BASE 64" value="BASE64" />
-      </Tabs>
+      </Tabs> */}
+
       {isLoading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
           <CircularProgress size={40} />

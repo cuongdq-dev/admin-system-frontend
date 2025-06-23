@@ -30,6 +30,7 @@ type Props = CardProps & {
   color?: ColorType;
   icon: React.ReactNode;
   baseUrl?: string;
+  workspace?: workspacesType;
 };
 
 export function AnalyticsWidgetSummary({
@@ -37,6 +38,7 @@ export function AnalyticsWidgetSummary({
   title,
   color = 'primary',
   baseUrl,
+  workspace,
   sx,
   ...other
 }: Props) {
@@ -67,7 +69,7 @@ export function AnalyticsWidgetSummary({
           setState({ ...res, loading: false });
         },
       });
-  }, [baseUrl]);
+  }, [baseUrl, workspace]);
 
   const theme = useTheme();
 

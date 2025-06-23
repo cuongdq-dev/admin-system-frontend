@@ -1,5 +1,7 @@
 export const LanguageKey = {
   home: {
+    contentSumary: 'content_summary',
+    bookSumary: 'book_summary',
     postSummary: 'post_summary',
     siteSummary: 'site_summary',
     googleConsoleSummary: 'google_console_summary',
@@ -201,6 +203,7 @@ export const LanguageKey = {
     nameItem: 'category_name_item',
     descriptionItem: 'category_description_item',
     postsItem: 'category_posts_item',
+    booksItem: 'category_books_item',
     sitesItem: 'category_sites_item',
   },
   language: {

@@ -20,10 +20,29 @@ import { LanguageKey } from 'src/constants';
 import { AnalyticsConversionRates } from '../analytics-conversion-rates';
 import { AnalyticsCurrentVisits } from '../analytics-current-visits';
 import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
 export function OverviewAnalyticsView() {
+  const defaultWorkspaces = localStorage.getItem('workspaces') as workspacesType;
+  const [workspace, setWorkspace] = useState<workspacesType>(defaultWorkspaces);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const newWorkspaces = (localStorage.getItem('workspaces') ||
+        defaultWorkspaces) as workspacesType;
+
+      setWorkspace(newWorkspaces);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [defaultWorkspaces]);
+
   return (
     <Scrollbar sx={{ maxHeight: '100%', overflowX: 'hidden' }}>
       <DashboardContent maxWidth="xl">
@@ -32,25 +51,51 @@ export function OverviewAnalyticsView() {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid xs={12} sm={6} md={3}>
-            <AnalyticsWidgetSummary
-              title={t(LanguageKey.home.postSummary)}
-              icon={<Iconify width={40} icon="fa6-solid:blog" />}
-              baseUrl={PATH_ANALYTICS_POST}
-            />
-          </Grid>
+          {workspace == 'wp_books' && (
+            <Grid xs={12} sm={4} md={4}>
+              <AnalyticsWidgetSummary
+                workspace={workspace}
+                title={t(LanguageKey.home.bookSumary)}
+                icon={<Iconify width={40} icon="fa6-solid:blog" />}
+                baseUrl={PATH_ANALYTICS_POST}
+              />
+            </Grid>
+          )}
 
-          <Grid xs={12} sm={6} md={3}>
+          {workspace == 'wp_news' && (
+            <Grid xs={12} sm={4} md={4}>
+              <AnalyticsWidgetSummary
+                workspace={workspace}
+                title={t(LanguageKey.home.postSummary)}
+                icon={<Iconify width={40} icon="fa6-solid:blog" />}
+                baseUrl={PATH_ANALYTICS_POST}
+              />
+            </Grid>
+          )}
+          {workspace == 'wp_system' && (
+            <Grid xs={12} sm={4} md={4}>
+              <AnalyticsWidgetSummary
+                workspace={workspace}
+                title={t(LanguageKey.home.contentSumary)}
+                icon={<Iconify width={40} icon="fa6-solid:blog" />}
+                baseUrl={PATH_ANALYTICS_POST}
+              />
+            </Grid>
+          )}
+
+          {/* <Grid xs={12} sm={4} md={3}>
             <AnalyticsWidgetSummary
+              workspace={workspace}
               baseUrl={PATH_ANALYTICS_TRENDING}
               title={t(LanguageKey.home.trendingSummary)}
               color="secondary"
               icon={<Iconify width={40} icon="fluent-color:arrow-trending-lines-24" />}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid xs={12} sm={6} md={3}>
+          <Grid xs={12} sm={4} md={4}>
             <AnalyticsWidgetSummary
+              workspace={workspace}
               baseUrl={PATH_ANALYTICS_SITE}
               title={t(LanguageKey.home.siteSummary)}
               color="warning"
@@ -58,8 +103,9 @@ export function OverviewAnalyticsView() {
             />
           </Grid>
 
-          <Grid xs={12} sm={6} md={3}>
+          <Grid xs={12} sm={4} md={4}>
             <AnalyticsWidgetSummary
+              workspace={workspace}
               title={t(LanguageKey.home.googleConsoleSummary)}
               baseUrl={PATH_ANALYTICS_GOOGLE_INDEXED}
               color="error"
@@ -69,29 +115,35 @@ export function OverviewAnalyticsView() {
 
           <Grid xs={12} md={6} lg={8}>
             <AnalyticsConversionRates
+              workspace={workspace}
               baseUrl={PATH_ANALYTICS_SOURCE}
               title={t(LanguageKey.home.sourceSummary)}
             />
           </Grid>
           <Grid xs={12} md={6} lg={4}>
             <AnalyticsCurrentVisits
+              workspace={workspace}
               title={t(LanguageKey.home.googleSearchStatusChart)}
               baseUrl={PATH_ANALYTICS_GOOGLE_SEARCH_STATUS}
             />
           </Grid>
 
-          <Grid xs={12} md={6} lg={6}>
-            <AnalyticsConversionRates
-              baseUrl={PATH_ANALYTICS_CATEGORY_NEWS}
-              title={t(LanguageKey.home.categoryNewsSummary)}
-            />
-          </Grid>
-          <Grid xs={12} md={6} lg={6}>
-            <AnalyticsConversionRates
-              baseUrl={PATH_ANALYTICS_CATEGORY_BOOKS}
-              title={t(LanguageKey.home.categoryBooksSummary)}
-            />
-          </Grid>
+          {(workspace == 'wp_news' || workspace == 'wp_system') && (
+            <Grid xs={12} md={12} lg={12}>
+              <AnalyticsConversionRates
+                baseUrl={PATH_ANALYTICS_CATEGORY_NEWS}
+                title={t(LanguageKey.home.categoryNewsSummary)}
+              />
+            </Grid>
+          )}
+          {(workspace == 'wp_books' || workspace == 'wp_system') && (
+            <Grid xs={12} md={12} lg={12}>
+              <AnalyticsConversionRates
+                baseUrl={PATH_ANALYTICS_CATEGORY_BOOKS}
+                title={t(LanguageKey.home.categoryBooksSummary)}
+              />
+            </Grid>
+          )}
         </Grid>
       </DashboardContent>
     </Scrollbar>

@@ -28,9 +28,16 @@ type Props = CardProps & {
   baseUrl?: string;
   title?: string;
   subheader?: string;
+  workspace?: workspacesType;
 };
 
-export function AnalyticsConversionRates({ baseUrl, title, subheader, ...other }: Props) {
+export function AnalyticsConversionRates({
+  baseUrl,
+  title,
+  subheader,
+  workspace,
+  ...other
+}: Props) {
   const theme = useTheme();
 
   const [{ loading, chart }, setState] = useState<{ loading?: boolean; chart?: ChartProps }>({
@@ -45,10 +52,11 @@ export function AnalyticsConversionRates({ baseUrl, title, subheader, ...other }
           setState({ loading: false, chart: undefined });
         },
         onSuccess: (res) => {
+          console.log(res);
           setState({ ...res, loading: false });
         },
       });
-  }, [baseUrl]);
+  }, [baseUrl, workspace]);
 
   const chartColors = chart?.colors ?? [
     theme.palette.primary.dark,
@@ -109,7 +117,8 @@ export function AnalyticsConversionRates({ baseUrl, title, subheader, ...other }
         type="bar"
         series={chart?.series}
         options={chartOptions}
-        height={430}
+        height={Number(chart?.categories?.length) * 30}
+        minHeight={430}
         sx={{ py: 2.5, pl: 1, pr: 2.5 }}
       />
     </Card>

@@ -1,3 +1,25 @@
+declare type workspacesType = 'wp_system' | 'wp_news' | 'wp_books';
+declare type NavDataItems = (
+  | {
+      title: string;
+      path: string;
+      workspace?: workspacesType[];
+      icon: JSX.Element;
+      children?: undefined;
+    }
+  | {
+      title: string;
+      icon: JSX.Element;
+      workspace?: workspacesType[];
+      path: string;
+      children: {
+        path: string;
+        icon: JSX.Element;
+        workspace?: workspacesType;
+        title: string;
+      }[];
+    }
+)[];
 // SOCKET TYPE
 declare type ISocketMessage = {
   type: 'MESSAGE';
@@ -379,6 +401,7 @@ interface IPostCategory extends TableBase {
   description?: string;
   postCount?: number;
   posts?: IPost[];
+  books?: IBook[];
   sites?: ISite[];
 }
 

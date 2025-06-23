@@ -19,7 +19,12 @@ export interface ISetting {
   notifications?: INotifications;
   breadcrumb?: IBreadcrumb;
 
-  dropdown?: { sites?: IDropdown[]; posts?: IDropdown[]; categories?: IDropdown[] };
+  dropdown?: {
+    sites?: IDropdown[];
+    posts?: IDropdown[];
+    books?: IDropdown[];
+    categories?: IDropdown[];
+  };
 }
 
 export interface IDropdown {
@@ -30,6 +35,7 @@ export interface IDropdown {
 export interface IDropdowns {
   sites?: IDropdown[];
   posts?: IDropdown[];
+  books?: IDropdown[];
   categories?: IDropdown[];
 }
 interface ISettingStore {
@@ -38,7 +44,12 @@ interface ISettingStore {
   notifyNew?: number;
   notifications?: INotifications;
   breadcrumb?: IBreadcrumb;
-  dropdown?: { sites?: IDropdown[]; posts?: IDropdown[]; categories?: IDropdown[] };
+  dropdown?: {
+    sites?: IDropdown[];
+    posts?: IDropdown[];
+    books?: IDropdown[];
+    categories?: IDropdown[];
+  };
 
   setSetting: (values: ISetting) => void;
   setDropdown: (values: IDropdowns) => void;

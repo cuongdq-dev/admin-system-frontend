@@ -7,15 +7,17 @@ const icon = (name: string) => (
   <SvgColor width="100%" height="100%" src={`/assets/icons/navbar/${name}.svg`} />
 );
 
-export const navData = [
+export const navData: NavDataItems = [
   {
     title: LanguageKey.nav.dashboard,
+    workspace: ['wp_news', 'wp_books', 'wp_system'],
     path: '/',
     icon: icon('ic-analytics'),
   },
   {
     title: LanguageKey.nav.blog,
     icon: icon('ic-blog'),
+    workspace: ['wp_news', 'wp_system'],
     path: '/blog-group',
     children: [
       {
@@ -43,6 +45,7 @@ export const navData = [
   {
     title: LanguageKey.nav.bookGroup,
     icon: icon('ic-book'),
+    workspace: ['wp_books', 'wp_system'],
     path: '/book-group',
     children: [
       {
@@ -61,6 +64,7 @@ export const navData = [
   {
     title: LanguageKey.nav.googleConsole,
     path: '/google-console',
+    workspace: ['wp_news'],
     icon: icon('ic-google-console'),
     children: [
       {
@@ -85,24 +89,28 @@ export const navData = [
   {
     title: LanguageKey.nav.image,
     path: '/image',
+    workspace: ['wp_news', 'wp_books', 'wp_system'],
     icon: icon('ic-image'),
   },
 
   {
     title: LanguageKey.nav.category,
     path: '/category',
+    workspace: ['wp_news', 'wp_books'],
     icon: icon('ic-category'),
   },
 
   {
     title: LanguageKey.nav.site,
+    workspace: ['wp_news', 'wp_books'],
     path: '/site',
     icon: icon('ic-site'),
   },
 
   {
     title: LanguageKey.nav.setting,
-    path: '/google-console',
+    path: '/setting',
+    workspace: ['wp_system'],
     icon: icon('ic-setting'),
     children: [
       {

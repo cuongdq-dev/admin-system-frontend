@@ -14,11 +14,17 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${getCookie('token')}`;
 
 axios.interceptors.request.use(function (config) {
   const token = getCookie('token');
+  const workspace = localStorage.getItem('workspaces');
   config.baseURL = `${window.location.origin}/api`;
   // config.baseURL = `http://localhost:3003/v1/`;
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
+
+  if (workspace) {
+    config.headers['workspaces'] = workspace; // 👈 thêm header workspace
+  }
+
   return config;
 });
 

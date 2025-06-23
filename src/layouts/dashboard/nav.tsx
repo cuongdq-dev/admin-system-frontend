@@ -19,6 +19,7 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { Collapse, Divider, IconButton } from '@mui/material';
 import { t } from 'i18next';
 import { Iconify } from 'src/components/iconify';
+import { WorkspacesPopover, WorkspacesPopoverProps } from '../components/workspaces-popover';
 export type NavContentProps = {
   data: {
     path: string;
@@ -27,6 +28,7 @@ export type NavContentProps = {
     info?: React.ReactNode;
     children?: { path: string; title: string; icon: React.ReactNode }[];
   }[];
+  workspaces: WorkspacesPopoverProps['data'];
   slots?: { topArea?: React.ReactNode; bottomArea?: React.ReactNode };
   sx?: SxProps<Theme>;
 };
@@ -45,7 +47,7 @@ type NavMobileProps = NavContentProps & { open: boolean; onClose: () => void };
 
 export function NavDesktop(props: NavDesktopProps) {
   const theme = useTheme();
-  const { sx, data, slots, layoutQuery, handleOpen, open = true } = props;
+  const { sx, data, slots, layoutQuery, handleOpen, open = true, workspaces } = props;
   return (
     <Box
       key={open + '-nav'}
@@ -107,7 +109,14 @@ export function NavDesktop(props: NavDesktopProps) {
           />
         </IconButton>
       </Box>
-      <NavContent mode="desktop" handleOpen={handleOpen} open={open} data={data} slots={slots} />
+      <NavContent
+        mode="desktop"
+        handleOpen={handleOpen}
+        open={open}
+        data={data}
+        slots={slots}
+        workspaces={workspaces}
+      />
     </Box>
   );
 }
@@ -116,7 +125,7 @@ export function NavDesktop(props: NavDesktopProps) {
 
 export function NavMobile(props: NavMobileProps) {
   const pathname = usePathname();
-  const { sx, data, open, slots, onClose } = props;
+  const { sx, data, open, slots, onClose, workspaces } = props;
   useEffect(() => {
     if (open) onClose();
   }, [pathname]);
@@ -136,7 +145,7 @@ export function NavMobile(props: NavMobileProps) {
         },
       }}
     >
-      <NavContent mode="mobile" data={data} slots={slots} />
+      <NavContent mode="mobile" data={data} slots={slots} workspaces={workspaces} />
     </Drawer>
   );
 }
@@ -145,15 +154,14 @@ export function NavMobile(props: NavMobileProps) {
 
 export function NavContent(props: NavContent) {
   const pathname = usePathname();
-  const { data, slots, sx, open = true, mode, handleOpen } = props;
+  const { data, slots, sx, open = true, mode, handleOpen, workspaces } = props;
   const [menuSelect, setMenuSelect] = useState<number | undefined>(undefined);
 
   return (
     <>
-      <Box sx={{ alignSelf: open ? '' : 'center' }}>
-        <Logo />
-      </Box>
       {slots?.topArea}
+      <WorkspacesPopover open={open} data={workspaces} sx={{ mb: 2 }} />
+
       <Divider variant="fullWidth" sx={{ marginTop: 1.5, marginBottom: 3 }} />
       <Scrollbar fillContent>
         <Box component="nav" display="flex" flex="1 1 auto" flexDirection="column" sx={sx}>
