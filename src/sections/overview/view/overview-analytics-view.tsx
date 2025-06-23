@@ -25,7 +25,7 @@ import { useEffect, useState } from 'react';
 // ----------------------------------------------------------------------
 
 export function OverviewAnalyticsView() {
-  const defaultWorkspaces = localStorage.getItem('workspaces') as workspacesType;
+  const defaultWorkspaces = (localStorage.getItem('workspaces') || 'wp_system') as workspacesType;
   const [workspace, setWorkspace] = useState<workspacesType>(defaultWorkspaces);
 
   useEffect(() => {

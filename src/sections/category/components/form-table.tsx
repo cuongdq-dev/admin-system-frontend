@@ -16,7 +16,7 @@ type Props = {
 };
 export const CategoryForm = (props: Props) => {
   const { defaultValues, action = HttpMethod.PATCH, isSubmitting, handleCloseForm } = props;
-  const workspaces = localStorage.getItem('workspaces') as workspacesType;
+  const workspaces = (localStorage.getItem('workspaces') || 'wp_system') as workspacesType;
   const { posts, sites, books } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
 
   return (

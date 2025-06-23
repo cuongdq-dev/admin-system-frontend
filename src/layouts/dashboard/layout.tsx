@@ -36,7 +36,7 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
   const navigate = useNavigate();
 
   const { setSetting } = useSettingStore.getState();
-  const defaultWorkspaces = localStorage.getItem('workspaces') as workspacesType;
+  const defaultWorkspaces = (localStorage.getItem('workspaces') || 'wp_system') as workspacesType;
   const [workspaces, setWorkSpaces] = useState<workspacesType>(defaultWorkspaces);
 
   useEffect(() => {

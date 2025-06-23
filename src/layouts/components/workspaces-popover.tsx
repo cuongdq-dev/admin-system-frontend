@@ -25,7 +25,7 @@ export type WorkspacesPopoverProps = ButtonBaseProps & {
 };
 
 export function WorkspacesPopover({ open, data = [], sx, ...other }: WorkspacesPopoverProps) {
-  const defaultWorkspaces = localStorage.getItem('workspaces');
+  const defaultWorkspaces = localStorage.getItem('workspaces') || 'wp_system';
   const findIndex = data.findIndex((d) => d.id == defaultWorkspaces) || 0;
   const [workspace, setWorkspace] = useState(data[findIndex]);
 
