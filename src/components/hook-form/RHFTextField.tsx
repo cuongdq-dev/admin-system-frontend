@@ -1,5 +1,3 @@
-// form
-// @mui
 import type { AutocompleteProps, TextFieldProps } from '@mui/material';
 
 import { Controller, useFormContext } from 'react-hook-form';
@@ -178,16 +176,18 @@ export const RHFAutocomplete = ({
           <Autocomplete
             {...field}
             id={name}
+            disableCloseOnSelect={multiple}
             multiple={multiple} // ✅ dùng biến
             freeSolo={multiple}
             filterSelectedOptions={multiple}
             disabled={loading || other.disabled}
             options={other.options}
             value={value ?? (multiple ? [] : null)}
-            onBlur={(event) => {
+            onBlur={() => {
               onBlur();
               clearErrors(name);
             }}
+            limitTags={3}
             onChange={(_, newValue) => {
               if (multiple) {
                 const formattedValue = newValue.map((val: any) =>

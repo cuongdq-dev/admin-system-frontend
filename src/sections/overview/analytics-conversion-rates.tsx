@@ -7,10 +7,10 @@ import { alpha as hexAlpha, useTheme } from '@mui/material/styles';
 
 import { fNumber } from 'src/utils/format-number';
 
+import { Backdrop } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { invokeRequest } from 'src/api-core';
 import { Chart, useChart } from 'src/components/chart';
-import { Backdrop } from '@mui/material';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -52,7 +52,6 @@ export function AnalyticsConversionRates({
           setState({ loading: false, chart: undefined });
         },
         onSuccess: (res) => {
-          console.log(res);
           setState({ ...res, loading: false });
         },
       });

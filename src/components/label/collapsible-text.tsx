@@ -1,6 +1,8 @@
 import { Button } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { Iconify } from '../iconify';
+import { t } from 'i18next';
+import { LanguageKey } from 'src/constants';
 
 interface CollapsibleTextProps {
   text: string;
@@ -17,7 +19,7 @@ export function CollapsibleText({ text, maxLines = 10, className = '' }: Collaps
 
   useEffect(() => {
     const element = textRef.current;
-    const container = containerRef.current;
+    const container = textRef.current;
     if (!element || !container) return;
 
     const style = window.getComputedStyle(element);
@@ -30,19 +32,19 @@ export function CollapsibleText({ text, maxLines = 10, className = '' }: Collaps
     setIsOverflowing(fullHeight > collapsed);
 
     // Set initial maxHeight
-    container.style.maxHeight = `${collapsed}px`;
+    textRef.current.style.maxHeight = `${collapsed}px`;
   }, [text, maxLines]);
 
   const toggleExpand = () => {
-    const container = containerRef.current;
+    const container = textRef.current;
     if (!container || !textRef.current) return;
 
     const fullHeight = textRef.current.scrollHeight;
 
     if (isExpanded) {
-      container.style.maxHeight = `${collapsedHeight}px`;
+      textRef.current.style.maxHeight = `${collapsedHeight}px`;
     } else {
-      container.style.maxHeight = `${fullHeight}px`;
+      textRef.current.style.maxHeight = `${fullHeight}px`;
     }
 
     setIsExpanded(!isExpanded);
@@ -51,20 +53,14 @@ export function CollapsibleText({ text, maxLines = 10, className = '' }: Collaps
   return (
     <div className={className}>
       <div
-        ref={containerRef}
+        ref={textRef}
         style={{
+          whiteSpace: 'pre-line',
           overflow: 'hidden',
           transition: 'max-height 0.4s ease',
         }}
-      >
-        <div
-          ref={textRef}
-          style={{
-            whiteSpace: 'pre-line',
-          }}
-          dangerouslySetInnerHTML={{ __html: text }}
-        />
-      </div>
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
 
       {isOverflowing && (
         <Button
@@ -84,7 +80,7 @@ export function CollapsibleText({ text, maxLines = 10, className = '' }: Collaps
                 icon="mynaui:chevron-up-solid"
                 style={{ width: '1rem', height: '1rem', marginRight: '0.25rem' }}
               />
-              Thu gọn
+              {t(LanguageKey.common.readShowless)}
             </>
           ) : (
             <>
@@ -92,7 +88,7 @@ export function CollapsibleText({ text, maxLines = 10, className = '' }: Collaps
                 icon="mynaui:chevron-down-solid"
                 style={{ width: '1rem', height: '1rem', marginRight: '0.25rem' }}
               />
-              Xem thêm
+              {t(LanguageKey.common.readMore)}
             </>
           )}
         </Button>

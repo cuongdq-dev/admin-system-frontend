@@ -36,11 +36,12 @@ class Editor extends Component<Props, State> {
       lang: en,
       callBackSave: (contents: string) => this.props.onSave(contents),
       stickyToolbar: '73px',
-      fullScreenOffset: 73,
+      fullScreenOffset: 0,
       width: '100%',
-      height: 'calc(100vh - 275px)',
+      height: 'calc(100vh - 160px)',
       value: this.props.contents,
       imageMultipleFile: true,
+      fullPage: false,
       defaultStyle:
         'color: var(--palette-text-primary); background-color: var(--palette-background-paper);',
 

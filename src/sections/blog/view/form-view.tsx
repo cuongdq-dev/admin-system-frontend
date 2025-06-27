@@ -241,221 +241,192 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
   };
 
   return (
-    <Scrollbar sx={{ maxHeight: '100%', overflowX: 'hidden' }}>
-      <DashboardContent breadcrumb={{ items: [{ href: '/blog', title: 'Create' }] }}>
-        <PageLoading isLoading={isLoading} />
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={2}>
-            <Grid xs={12} sm={12} md={4}>
-              <Card
-                sx={(theme) => {
-                  return {
-                    height: { xs: '100%', sm: 'calc(100vh - 110px)' },
-                    // boxShadow: theme.shadows['1'],
-                    border: `1px solid ${theme.palette.divider}`,
-                  };
-                }}
-              >
-                <Scrollbar sx={{ height: '100%', overflowX: 'hidden' }}>
-                  <CardHeader
-                    sx={(theme) => {
-                      return {
-                        padding: theme.spacing(3),
-                        backgroundColor: varAlpha(theme.palette.background.neutralChannel, 0.5),
-                      };
-                    }}
-                    action={
-                      <Box display="flex" gap={1} flexDirection="row" flexWrap={'nowrap'}>
-                        {slug ? (
-                          <>
-                            {data?.status === 'PUBLISHED' && (
-                              <Button
-                                onClick={() => {
-                                  updateStatus({ status: 'DRAFT' });
-                                }}
-                                variant="contained"
-                                color="warning"
-                                aria-label="draft"
-                              >
-                                {t(LanguageKey.blog.draftButton)}
-                              </Button>
-                            )}
+    <DashboardContent breadcrumb={{ items: [{ href: '/blog', title: 'Create' }] }}>
+      <PageLoading isLoading={isLoading} />
 
-                            {data?.status === 'DRAFT' && (
-                              <Button
-                                onClick={() => {
-                                  updateStatus({ status: 'PUBLISHED' });
-                                }}
-                                variant="contained"
-                                aria-label="public"
-                                color="primary"
-                              >
-                                {t(LanguageKey.blog.publicButton)}
-                              </Button>
-                            )}
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={2}>
+          <Grid xs={12} sm={12} md={4}>
+            <Card
+              sx={(theme) => {
+                return {
+                  height: { xs: '100%', sm: 'calc(100vh - 110px)' },
+                  border: `1px solid ${theme.palette.divider}`,
+                };
+              }}
+            >
+              <Scrollbar sx={{ height: '100%', overflowX: 'hidden' }}>
+                <CardHeader
+                  sx={(theme) => {
+                    return {
+                      padding: theme.spacing(3),
+                      backgroundColor: varAlpha(theme.palette.background.neutralChannel, 0.5),
+                    };
+                  }}
+                  action={
+                    <Box display="flex" gap={1} flexDirection="row" flexWrap={'nowrap'}>
+                      {slug ? (
+                        <>
+                          {data?.status === 'PUBLISHED' && (
                             <Button
-                              color="inherit"
-                              type="submit"
-                              variant="outlined"
-                              aria-label="public"
+                              onClick={() => {
+                                updateStatus({ status: 'DRAFT' });
+                              }}
+                              variant="contained"
+                              color="warning"
+                              aria-label="draft"
                             >
-                              {t(LanguageKey.button.update)}
+                              {t(LanguageKey.blog.draftButton)}
                             </Button>
-                          </>
-                        ) : (
-                          <>
-                            <Button type="submit" variant="contained" aria-label="public">
-                              {t(LanguageKey.button.save)}
+                          )}
+
+                          {data?.status === 'DRAFT' && (
+                            <Button
+                              onClick={() => {
+                                updateStatus({ status: 'PUBLISHED' });
+                              }}
+                              variant="contained"
+                              aria-label="public"
+                              color="primary"
+                            >
+                              {t(LanguageKey.blog.publicButton)}
                             </Button>
-                          </>
-                        )}
-                      </Box>
-                    }
-                    title={
-                      slug ? t(LanguageKey.blog.detailTitle) : t(LanguageKey.blog.addNewButton)
-                    }
-                  />
-
-                  <CardContent>
-                    <Grid container spacing={2} height={'100%'}>
-                      <Grid xs={12} sm={12} md={!slug ? 6 : 12}>
-                        {!slug ? (
-                          <RHFTextFieldWithSlug
-                            name="title"
+                          )}
+                          <Button
+                            color="inherit"
+                            type="submit"
                             variant="outlined"
-                            label={t(LanguageKey.blog.titleItem)}
-                          />
-                        ) : (
-                          <RHFTextField
-                            name="title"
-                            variant="outlined"
-                            label={t(LanguageKey.blog.titleItem)}
-                          />
-                        )}
-                      </Grid>
-
-                      {!slug && (
-                        <Grid xs={12} sm={12} md={6}>
-                          <RHFTextField
-                            contentEditable={false}
-                            disabled
-                            name="slug"
-                            variant="outlined"
-                            label={t(LanguageKey.blog.slugItem)}
-                          />
-                        </Grid>
+                            aria-label="public"
+                          >
+                            {t(LanguageKey.button.update)}
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button type="submit" variant="contained" aria-label="public">
+                            {t(LanguageKey.button.save)}
+                          </Button>
+                        </>
                       )}
+                    </Box>
+                  }
+                  title={slug ? t(LanguageKey.blog.detailTitle) : t(LanguageKey.blog.addNewButton)}
+                />
 
-                      <Grid xs={12} sm={12} md={12}>
-                        <RHFTextField
-                          name="meta_description"
-                          variant="outlined"
-                          multiline
-                          maxRows={5}
-                          minRows={2}
-                          label={t(LanguageKey.blog.descriptionItem)}
-                        />
-                      </Grid>
-
-                      <Grid xs={12} sm={12} md={12}>
-                        <RHFAutocomplete
-                          name="relatedQueries"
-                          freeSolo
-                          options={
-                            data?.relatedQueries?.map((query) => {
-                              return { id: query.slug, title: query.query };
-                            }) || []
-                          }
-                          title={t(LanguageKey.blog.keywordsItem)}
-                          renderInput={(params) => (
-                            <TextField {...params} label={t(LanguageKey.blog.keywordsItem)} />
-                          )}
-                        />
-                      </Grid>
-
-                      <Grid xs={12} sm={12} md={12}>
-                        <RHFAutocomplete
-                          name="categories"
-                          options={categories || []}
-                          title={t(LanguageKey.blog.categoryItem)}
-                          renderInput={(params) => (
-                            <TextField {...params} label={t(LanguageKey.blog.categoryItem)} />
-                          )}
-                        />
-                      </Grid>
-                      <Grid xs={12} sm={12} md={12}>
-                        <RHFAutocomplete
-                          options={sites || []}
-                          name="sites"
-                          title={t(LanguageKey.blog.siteItem)}
-                          renderInput={(params) => (
-                            <TextField {...params} label={t(LanguageKey.blog.siteItem)} />
-                          )}
-                        />
-                      </Grid>
-                      <Grid xs={12} sm={12} md={12} height={200}>
-                        <RHFUpload
-                          defaultValue={data?.thumbnail?.url}
-                          name="thumbnail"
-                          label="Thubmnail"
-                          control={<></>}
-                        />
-                      </Grid>
-                      {slug && (
-                        <Grid
-                          xs={12}
-                          sm={12}
-                          md={12}
-                          sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                        >
-                          <ButtonDelete
-                            withLoading
-                            variant="outlined"
-                            startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-                            title={t(LanguageKey.button.delete)}
-                            size="small"
-                            handleDelete={() => deletePost()}
-                            color="error"
-                            fullWidth
-                          />
-                        </Grid>
-                      )}
-                    </Grid>
-                  </CardContent>
-                </Scrollbar>
-              </Card>
-            </Grid>
-            <Grid xs={12} sm={12} md={8}>
-              <Card
-                sx={(theme) => {
-                  return {
-                    height: '100%',
-                    border: `1px solid ${theme.palette.divider}`,
-                  };
-                }}
-              >
-                <CardHeader title={t(LanguageKey.blog.contentItem)} />
                 <CardContent>
-                  <Grid container spacing={2} sx={{ height: '100%' }}>
-                    <Grid xs={12} sm={12} md={12}>
-                      <Card
-                        sx={(theme) => {
-                          return {
-                            borderRadius: 1.1,
-                            border: `1px solid ${theme.palette.divider}`,
-                          };
-                        }}
-                      >
-                        <RHFEditor name="content" />
-                      </Card>
+                  <Grid container spacing={2} height={'100%'}>
+                    <Grid xs={12} sm={12} md={!slug ? 6 : 12}>
+                      {!slug ? (
+                        <RHFTextFieldWithSlug
+                          name="title"
+                          variant="outlined"
+                          label={t(LanguageKey.blog.titleItem)}
+                        />
+                      ) : (
+                        <RHFTextField
+                          name="title"
+                          variant="outlined"
+                          label={t(LanguageKey.blog.titleItem)}
+                        />
+                      )}
                     </Grid>
+
+                    {!slug && (
+                      <Grid xs={12} sm={12} md={6}>
+                        <RHFTextField
+                          contentEditable={false}
+                          disabled
+                          name="slug"
+                          variant="outlined"
+                          label={t(LanguageKey.blog.slugItem)}
+                        />
+                      </Grid>
+                    )}
+
+                    <Grid xs={12} sm={12} md={12}>
+                      <RHFTextField
+                        name="meta_description"
+                        variant="outlined"
+                        multiline
+                        maxRows={5}
+                        minRows={2}
+                        label={t(LanguageKey.blog.descriptionItem)}
+                      />
+                    </Grid>
+
+                    <Grid xs={12} sm={12} md={12}>
+                      <RHFAutocomplete
+                        name="relatedQueries"
+                        freeSolo
+                        options={
+                          data?.relatedQueries?.map((query) => {
+                            return { id: query.slug, title: query.query };
+                          }) || []
+                        }
+                        title={t(LanguageKey.blog.keywordsItem)}
+                        renderInput={(params) => (
+                          <TextField {...params} label={t(LanguageKey.blog.keywordsItem)} />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid xs={12} sm={12} md={12}>
+                      <RHFAutocomplete
+                        name="categories"
+                        options={categories || []}
+                        title={t(LanguageKey.blog.categoryItem)}
+                        renderInput={(params) => (
+                          <TextField {...params} label={t(LanguageKey.blog.categoryItem)} />
+                        )}
+                      />
+                    </Grid>
+                    <Grid xs={12} sm={12} md={12}>
+                      <RHFAutocomplete
+                        options={sites || []}
+                        name="sites"
+                        title={t(LanguageKey.blog.siteItem)}
+                        renderInput={(params) => (
+                          <TextField {...params} label={t(LanguageKey.blog.siteItem)} />
+                        )}
+                      />
+                    </Grid>
+                    <Grid xs={12} sm={12} md={12} height={200}>
+                      <RHFUpload
+                        defaultValue={data?.thumbnail?.url}
+                        name="thumbnail"
+                        label="Thubmnail"
+                        control={<></>}
+                      />
+                    </Grid>
+                    {slug && (
+                      <Grid
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                      >
+                        <ButtonDelete
+                          withLoading
+                          variant="outlined"
+                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                          title={t(LanguageKey.button.delete)}
+                          size="small"
+                          handleDelete={() => deletePost()}
+                          color="error"
+                          fullWidth
+                        />
+                      </Grid>
+                    )}
                   </Grid>
                 </CardContent>
-              </Card>
-            </Grid>
+              </Scrollbar>
+            </Card>
           </Grid>
-        </FormProvider>
-      </DashboardContent>
-    </Scrollbar>
+          <Grid xs={12} sm={12} md={8}>
+            <RHFEditor name="content" />
+          </Grid>
+        </Grid>
+      </FormProvider>
+    </DashboardContent>
   );
 });

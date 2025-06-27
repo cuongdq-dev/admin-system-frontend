@@ -138,6 +138,10 @@
   "cancel_button": "Hủy",
   "accept_button": "OK",
 
+  "copy_clipboard": "Sao chép vào bộ nhớ tạm",
+  "copied": "Đã sao chép",
+  "data_not_found": "Không tìm thấy dữ liệu",
+
   "save_button": "Lưu",
   "delete_button": "Xóa",
   "update_button": "Cập nhật",
@@ -205,7 +209,9 @@
   "preset_title": "Giao diện",
   "list_title": "Danh sách",
   "detail_title": "Chi tiết",
-  "view_all": "View All",
+  "view_all": "Tất cả",
+  "read_showless": "Thu gọn",
+  "read_more": "Xem thêm",
   "docker_container_id_item": "Id",
   "docker_container_name_item": "Tên container",
   "docker_container_status_item": "Trạng thái",
@@ -312,5 +318,7 @@
   "book_voice_item": "Voice",
   "book_status_item": "Trạng Thái",
   "book_thumbnail_item": "Ảnh bìa",
-  "book_category_item": "Danh mục"
+  "book_category_item": "Danh mục",
+  "book_gemimi_generate": "AI Sẽ làm mới các tiêu đề, mô tả, từ khoá, chương và các nội dung liên quan tới SEO",
+  "book_description_item": "Mô tả"
 }

@@ -1,7 +1,6 @@
 /* Prevent zoom on mobile devices */
 .sun-editor,
 .sun-editor-editable {
-  font-size: 16px !important;
   touch-action: manipulation;
 }
 
@@ -9,7 +8,9 @@
 .se-toolbar,
 .se-toolbar-more-layer {
   border: none !important;
-  border-radius: 8px !important;
+  // border-radius: 0px !important;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
   background-color: transparent;
 }
 
@@ -21,7 +22,7 @@
 }
 
 .se-container {
-  border-radius: 8px !important;
+  border-radius: 12px !important;
   background-color: transparent;
 }
 

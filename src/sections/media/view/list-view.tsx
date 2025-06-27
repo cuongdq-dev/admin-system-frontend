@@ -4,25 +4,22 @@ import {
   Card,
   CardContent,
   CardMedia,
+  CircularProgress,
   IconButton,
   InputAdornment,
   Modal,
   Pagination as MuiPagination,
-  Paper,
   TextField,
-  Fade,
   Typography,
   useMediaQuery,
   useTheme,
-  Chip,
-  Tab,
-  Tabs,
-  CircularProgress,
 } from '@mui/material';
 import { t } from 'i18next';
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { PATH_IMAGE_LIST } from 'src/api-core/path';
+import { NotFoundDataComponent } from 'src/components/no-found-data';
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey, StoreName } from 'src/constants';
 import { useAPI } from 'src/hooks/use-api';
@@ -30,8 +27,6 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { DetailMedia } from '../components/detail';
-import { useNavigate } from 'react-router';
-import { NotFoundDataComponent } from 'src/components/no-found-data';
 
 export function ListView({ imagesPerPage = 40 }: { imagesPerPage?: number }) {
   const storeName = StoreName.MEDIA;
@@ -130,7 +125,6 @@ export function ListView({ imagesPerPage = 40 }: { imagesPerPage?: number }) {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{
-            bgcolor: '#f0f0f0',
             borderRadius: '24px',
             '& .MuiOutlinedInput-root': {
               borderRadius: '24px',

@@ -1,13 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { LoadingButton } from '@mui/lab';
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Card,
   CardContent,
@@ -137,7 +132,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
     },
   });
 
-  const { handleSubmit, reset, formState } = methods;
+  const { handleSubmit, reset } = methods;
 
   const onSubmit = async (values: {
     title?: string;
@@ -497,31 +492,8 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                           sm={12}
                           md={12}
                           gap={2}
-                          sx={{ display: 'flex', justifyContent: 'space-between' }}
+                          sx={{ display: 'flex', justifyContent: 'flex-end' }}
                         >
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            sx={{ mb: 2, gap: 1 }}
-                            onClick={() => {
-                              let dataCopy = '';
-                              for (const element of data?.chapters!) {
-                                const tmpEl =
-                                  typeof window !== 'undefined'
-                                    ? document.createElement('div')
-                                    : null;
-                                const text = tmpEl
-                                  ? ((tmpEl.innerHTML = element.voice_content!),
-                                    tmpEl.textContent || '')
-                                  : element.voice_content?.replace(/<[^>]*>/g, '');
-                                dataCopy += text + '\n'; // thêm dòng mới giữa các chapter
-                              }
-                              navigator.clipboard.writeText(dataCopy!);
-                            }}
-                          >
-                            <ContentCopyIcon sx={{ width: 15 }} />
-                            <Typography>{fNumber(data?.voice_count)}</Typography>
-                          </Button>
                           <Chip label={new URL(data.source_url).hostname} />
                         </Grid>
                       )}
@@ -532,11 +504,17 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
             </Grid>
             <Grid xs={12} sm={12} md={8}>
               {data?.description && (
-                <Card
-                  sx={(theme) => {
-                    return { border: `1px solid ${theme.palette.divider}`, mb: 2 };
-                  }}
-                >
+                <Card sx={{ mb: 2 }}>
+                  <CardHeader
+                    avatar={<Iconify icon="material-symbols:description" />}
+                    sx={(theme) => {
+                      return {
+                        padding: theme.spacing(2),
+                        backgroundColor: varAlpha(theme.palette.background.neutralChannel, 0.5),
+                      };
+                    }}
+                    title={t(LanguageKey.book.descriptionItem)}
+                  />
                   <CardContent>
                     <CollapsibleText text={data.description} maxLines={20} />
                   </CardContent>
@@ -549,14 +527,24 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                     return { border: `1px solid ${theme.palette.divider}`, mb: 2 };
                   }}
                 >
-                  <CardContent>
+                  <CardHeader
+                    sx={(theme) => {
+                      return {
+                        padding: theme.spacing(2),
+                        backgroundColor: varAlpha(theme.palette.background.neutralChannel, 0.5),
+                      };
+                    }}
+                    title={'SEO with AI'}
+                    avatar={<Iconify icon="carbon:ai-generate" />}
+                  />
+                  <CardContent sx={{ mx: 1 }}>
                     <TextField
                       variant="outlined"
                       fullWidth
                       multiline
                       disabled
                       margin="normal"
-                      label="Tiêu Đề"
+                      label={t(LanguageKey.book.titleItem)}
                       defaultValue={data?.social_description?.title_social}
                       sx={{
                         cursor: 'copy',
@@ -587,7 +575,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       multiline
                       disabled
                       margin="normal"
-                      label="Mô Tả"
+                      label={t(LanguageKey.book.descriptionItem)}
                       defaultValue={data?.social_description?.description_social}
                       sx={{
                         cursor: 'copy',
@@ -619,7 +607,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       multiline
                       disabled
                       margin="normal"
-                      label="Từ Khoá"
+                      label={t(LanguageKey.book.keywordItem)}
                       defaultValue={data?.social_description?.keywords?.join(', ')}
                       sx={{
                         cursor: 'copy',
@@ -648,61 +636,25 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                 </Card>
               )}
 
-              <Accordion defaultExpanded={true} key="voices" sx={{ mb: 2 }}>
-                <AccordionSummary
-                  expandIcon={
-                    data?.status === 'AI_GENERATE' ? (
-                      <LoadingButton loading></LoadingButton>
-                    ) : (
-                      <ExpandMoreIcon />
-                    )
-                  }
-                  aria-controls={`voices-content`}
-                  id={`voices-header`}
-                >
-                  <Typography component="span">{t(LanguageKey.book.voiceItem)}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Card
-                    sx={(theme) => {
-                      return { border: `1px solid ${theme.palette.divider}` };
-                    }}
-                  >
-                    <CardContent>
-                      <ChapterList
-                        type="voice"
-                        chapters={data?.chapters!}
-                        openChapter={setOpenChapter}
-                      />
-                    </CardContent>
-                  </Card>
-                </AccordionDetails>
-              </Accordion>
-
-              <Accordion key="chapters" defaultExpanded={true}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`chapters-content`}
-                  id={`chapters-header`}
-                >
-                  <Typography component="span">{t(LanguageKey.book.chapterItem)}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Card
-                    sx={(theme) => {
-                      return { border: `1px solid ${theme.palette.divider}` };
-                    }}
-                  >
-                    <CardContent>
-                      <ChapterList
-                        type="book"
-                        chapters={data?.chapters!}
-                        openChapter={setOpenChapter}
-                      />
-                    </CardContent>
-                  </Card>
-                </AccordionDetails>
-              </Accordion>
+              <Card
+                sx={(theme) => {
+                  return { border: `1px solid ${theme.palette.divider}`, mb: 2 };
+                }}
+              >
+                <CardHeader
+                  avatar={<Iconify icon="grommet-icons:chapter-add" />}
+                  sx={(theme) => {
+                    return {
+                      padding: theme.spacing(2),
+                      backgroundColor: varAlpha(theme.palette.background.neutralChannel, 0.5),
+                    };
+                  }}
+                  title={t(LanguageKey.book.chapterItem)}
+                />
+                <CardContent sx={{ mx: 1 }}>
+                  <ChapterList chapters={data?.chapters!} openChapter={setOpenChapter} />
+                </CardContent>
+              </Card>
 
               <Drawer
                 anchor="right"
@@ -724,19 +676,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
 
                 <Scrollbar>
                   <Stack spacing={3} sx={{ p: 2.5 }}>
-                    {chapter?.type == 'book' && (
-                      <ChapterDetail type={chapter.type} content={chapter?.content!} />
-                    )}
-
-                    {chapter?.type == 'voice' && (
-                      <ChapterDetail
-                        type={chapter.type}
-                        handleGenerateGemini={() => {
-                          handleGenerateGemini(chapter?.slug!);
-                        }}
-                        content={chapter?.voice_content!}
-                      />
-                    )}
+                    <ChapterDetail content={chapter?.content!} />
                   </Stack>
                 </Scrollbar>
               </Drawer>
@@ -749,11 +689,9 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
 });
 
 const ChapterList = ({
-  type,
   chapters,
   openChapter,
 }: {
-  type: 'book' | 'voice';
   chapters: IChapter[];
   openChapter: (chapter: IChapter) => void;
 }) => {
@@ -773,15 +711,15 @@ const ChapterList = ({
   }
 
   return (
-    <Grid container padding={1}>
+    <Grid container>
       <Grid md={6} sm={6} xs={12}>
         {chapters?.slice(0, Number(chapters.length / 2 + 1)).map((chapter: IChapter) => {
-          const word = type == 'voice' ? chapter?.voice_count : chapter?.word_count;
+          const word = chapter?.word_count;
           return (
             <Box display="flex" gap={2}>
               <Box
                 onClick={() => {
-                  openChapter({ ...chapter, type: type });
+                  openChapter(chapter);
                   setCopied(undefined);
                 }}
                 sx={{ color: !word ? 'grey' : 'unset', cursor: 'pointer' }}
@@ -791,15 +729,17 @@ const ChapterList = ({
                   {word ? ` - (${fNumber(word)})` : ''}
                 </Typography>
               </Box>
-              <Tooltip title={copied == chapter.slug ? 'Copied!' : 'Copy to clipboard'} arrow>
+              <Tooltip
+                title={
+                  copied == chapter.slug
+                    ? `${t(LanguageKey.common.copied)}!`
+                    : t(LanguageKey.common.copyClipboard)
+                }
+                arrow
+              >
                 <IconButton
                   size="small"
-                  onClick={() =>
-                    copyToClipboard(
-                      type == 'voice' ? chapter?.voice_content! : chapter?.content!,
-                      chapter.slug!
-                    )
-                  }
+                  onClick={() => copyToClipboard(chapter?.content!, chapter.slug!)}
                 >
                   <Iconify icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'} />
                 </IconButton>
@@ -812,11 +752,11 @@ const ChapterList = ({
         {chapters
           ?.slice(Number(chapters.length / 2 + 1), Number(chapters.length))
           .map((chapter: IChapter) => {
-            const word = type == 'voice' ? chapter.voice_count : chapter.word_count;
+            const word = chapter.word_count;
             return (
               <Box display="flex" gap={2}>
                 <Box
-                  onClick={() => openChapter({ ...chapter, type: type })}
+                  onClick={() => openChapter(chapter)}
                   sx={{ mb: 1, color: !word ? 'grey' : 'unset', cursor: 'pointer' }}
                 >
                   <Typography>
@@ -824,15 +764,17 @@ const ChapterList = ({
                     {word ? ` - (${fNumber(word)})` : ''}
                   </Typography>
                 </Box>
-                <Tooltip title={copied == chapter.slug ? 'Copied!' : 'Copy to clipboard'} arrow>
+                <Tooltip
+                  title={
+                    copied == chapter.slug
+                      ? `${t(LanguageKey.common.copied)}!`
+                      : t(LanguageKey.common.copyClipboard)
+                  }
+                  arrow
+                >
                   <IconButton
                     size="small"
-                    onClick={() =>
-                      copyToClipboard(
-                        type == 'voice' ? chapter?.voice_content! : chapter?.content!,
-                        chapter.slug!
-                      )
-                    }
+                    onClick={() => copyToClipboard(chapter?.content!, chapter.slug!)}
                   >
                     <Iconify icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'} />
                   </IconButton>
@@ -845,11 +787,9 @@ const ChapterList = ({
   );
 };
 const ChapterDetail = ({
-  type,
   content,
   handleGenerateGemini,
 }: {
-  type: 'voice' | 'book';
   content: string;
   handleGenerateGemini?: () => void;
 }) => {
@@ -871,7 +811,7 @@ const ChapterDetail = ({
     return (
       <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
         <Typography color="grey" variant="subtitle2">
-          Sorry, data not found!
+          {t(LanguageKey.common.dataNotFound)}
         </Typography>
 
         {handleGenerateGemini && (
@@ -889,15 +829,14 @@ const ChapterDetail = ({
 
   return (
     <Box>
-      {type == 'voice' ? (
-        <Box sx={{ whiteSpace: 'pre-line' }}>{content}</Box>
-      ) : (
-        <Box sx={{ whiteSpace: 'pre-line' }}>
-          <div dangerouslySetInnerHTML={{ __html: content }}></div>
-        </Box>
-      )}
+      <Box sx={{ whiteSpace: 'pre-line' }}>
+        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+      </Box>
 
-      <Tooltip title={copied ? 'Copied!' : 'Copy to clipboard'} arrow>
+      <Tooltip
+        title={copied ? `${t(LanguageKey.common.copied)}!` : t(LanguageKey.common.copyClipboard)}
+        arrow
+      >
         <IconButton
           size="large"
           onClick={() => copyToClipboard(content)}
@@ -925,43 +864,42 @@ const ButtonGemini = ({ onClick }: { onClick: () => void }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <>
+    <Tooltip title={t(LanguageKey.book.gemimiGenerate)}>
       <Button onClick={() => setOpen(true)} variant="contained" color="primary">
         <Iconify icon="carbon:ai-generate" />
+        <Dialog
+          PaperProps={{ sx: { borderRadius: 3 } }}
+          TransitionComponent={Transition}
+          maxWidth={'sm'}
+          open={open}
+          fullWidth
+          onClose={() => setOpen(false)}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle id="responsive-dialog-title">
+            {/* TODO UPDATE LANGUAGE */}
+            Generate Data With Gemini AI
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>Dữ liệu sẽ bị thay đổi, bạn có chắc chắn?</DialogContentText>
+          </DialogContent>
+          <DialogActions style={{ padding: 20 }}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => {
+                onClick();
+                setOpen(false);
+              }}
+            >
+              {t(LanguageKey.button.accept)}
+            </Button>
+            <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
+              {t(LanguageKey.button.cancel)}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Button>
-
-      <Dialog
-        PaperProps={{ sx: { borderRadius: 3 } }}
-        TransitionComponent={Transition}
-        maxWidth={'sm'}
-        open={open}
-        fullWidth
-        onClose={() => setOpen(false)}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title">
-          {/* TODO UPDATE LANGUAGE */}
-          Generate Data With Gemini AI
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>Dữ liệu sẽ bị thay đổi, bạn có chắc chắn?</DialogContentText>
-        </DialogContent>
-        <DialogActions style={{ padding: 20 }}>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              onClick();
-              setOpen(false);
-            }}
-          >
-            {t(LanguageKey.button.accept)}
-          </Button>
-          <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
-            {t(LanguageKey.button.cancel)}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+    </Tooltip>
   );
 };

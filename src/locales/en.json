@@ -18,6 +18,11 @@
   "dashboard_page": "Dashboard",
   "pull_button": "Pull",
   "accept_button": "OK",
+
+  "copy_clipboard": "Copy to clipboard",
+  "copied": "Copied",
+  "data_not_found": "Sorry, data not found",
+
   "clone_button": "Clone",
   "category_nav": "Category",
   "category_list_page": "Category List",
@@ -203,6 +208,8 @@
   "list_title": "List",
   "detail_title": "Detail",
   "view_all": "View All",
+  "read_showless": "Show less",
+  "read_more": "View more",
   "docker_container_id_item": "Id",
   "docker_container_name_item": "Container",
   "docker_container_status_item": "Status",
@@ -309,5 +316,7 @@
   "book_status_item": "Status",
   "book_thumbnail_item": "Thumbnail",
   "book_category_item": "Category",
-  "book_site_item": "Site"
+  "book_site_item": "Site",
+  "book_gemimi_generate": "AI will rewriter title, description, keywords, chapters and content SEO",
+  "book_description_item": "Description"
 }

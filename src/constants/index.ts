@@ -151,6 +151,7 @@ export const LanguageKey = {
   },
 
   book: {
+    gemimiGenerate: 'book_gemimi_generate',
     listPageTitle: 'book_list_page',
     detailPageTitle: 'book_detail_page',
     titleItem: 'book_title_item',
@@ -172,6 +173,7 @@ export const LanguageKey = {
     draftButton: 'draft_button',
     generateGeminiButton: 'book_generate_gemini_button',
     siteItem: 'book_site_item',
+    descriptionItem: 'book_description_item',
   },
 
   blog: {
@@ -314,9 +316,16 @@ export const LanguageKey = {
     detailTitle: 'detail_title',
     listTitle: 'list_title',
     viewAll: 'view_all',
+    readMore: 'read_more',
+    readShowless: 'read_showless',
 
     createdAtItem: 'created_at_item',
     createdByItem: 'created_by_item',
+
+    copyClipboard: 'copy_clipboard',
+    copied: 'copied',
+
+    dataNotFound: 'data_not_found',
   },
 
   repository: {
