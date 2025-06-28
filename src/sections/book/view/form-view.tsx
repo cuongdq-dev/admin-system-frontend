@@ -656,6 +656,39 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                 </CardContent>
               </Card>
 
+              <Card
+                sx={(theme) => {
+                  return { border: `1px solid ${theme.palette.divider}`, mb: 2 };
+                }}
+              >
+                <CardHeader
+                  avatar={<Iconify icon="icon-park-solid:voice-one" />}
+                  sx={(theme) => {
+                    return {
+                      padding: theme.spacing(2),
+                      backgroundColor: varAlpha(theme.palette.background.neutralChannel, 0.5),
+                    };
+                  }}
+                  title={t(LanguageKey.book.voiceItem)}
+                />
+                <CardContent sx={{ mx: 1 }}>
+                  <ChapterList
+                    chapters={data?.chapters?.map((chapter) => {
+                      return {
+                        id: chapter.id,
+                        chapter_number: chapter.chapter_number,
+                        content: chapter.voice_content,
+                        slug: chapter.slug,
+                        title: chapter.title,
+                        word_count: chapter?.voice_count,
+                        type: 'voice',
+                      };
+                    })}
+                    openChapter={setOpenChapter}
+                  />
+                </CardContent>
+              </Card>
+
               <Drawer
                 anchor="right"
                 open={!!chapter}
@@ -692,7 +725,7 @@ const ChapterList = ({
   chapters,
   openChapter,
 }: {
-  chapters: IChapter[];
+  chapters?: IChapter[];
   openChapter: (chapter: IChapter) => void;
 }) => {
   if (!chapters || Number(chapters?.length) == 0) return <></>;
@@ -729,21 +762,23 @@ const ChapterList = ({
                   {word ? ` - (${fNumber(word)})` : ''}
                 </Typography>
               </Box>
-              <Tooltip
-                title={
-                  copied == chapter.slug
-                    ? `${t(LanguageKey.common.copied)}!`
-                    : t(LanguageKey.common.copyClipboard)
-                }
-                arrow
-              >
-                <IconButton
-                  size="small"
-                  onClick={() => copyToClipboard(chapter?.content!, chapter.slug!)}
+              {Number(chapter?.content?.length) > 0 && (
+                <Tooltip
+                  title={
+                    copied == chapter.slug
+                      ? `${t(LanguageKey.common.copied)}!`
+                      : t(LanguageKey.common.copyClipboard)
+                  }
+                  arrow
                 >
-                  <Iconify icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'} />
-                </IconButton>
-              </Tooltip>
+                  <IconButton
+                    size="small"
+                    onClick={() => copyToClipboard(chapter?.content!, chapter.slug!)}
+                  >
+                    <Iconify icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'} />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
           );
         })}
@@ -764,21 +799,25 @@ const ChapterList = ({
                     {word ? ` - (${fNumber(word)})` : ''}
                   </Typography>
                 </Box>
-                <Tooltip
-                  title={
-                    copied == chapter.slug
-                      ? `${t(LanguageKey.common.copied)}!`
-                      : t(LanguageKey.common.copyClipboard)
-                  }
-                  arrow
-                >
-                  <IconButton
-                    size="small"
-                    onClick={() => copyToClipboard(chapter?.content!, chapter.slug!)}
+                {Number(chapter?.content?.length) > 0 && (
+                  <Tooltip
+                    title={
+                      copied == chapter.slug
+                        ? `${t(LanguageKey.common.copied)}!`
+                        : t(LanguageKey.common.copyClipboard)
+                    }
+                    arrow
                   >
-                    <Iconify icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'} />
-                  </IconButton>
-                </Tooltip>
+                    <IconButton
+                      size="small"
+                      onClick={() => copyToClipboard(chapter?.content!, chapter.slug!)}
+                    >
+                      <Iconify
+                        icon={copied == chapter.slug ? 'mdi:check-bold' : 'si:copy-duotone'}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                )}
               </Box>
             );
           })}

@@ -4,8 +4,6 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Icon,
-  IconButton,
   Link,
   Typography,
   useMediaQuery,

@@ -10,6 +10,7 @@ import Popover from '@mui/material/Popover';
 
 import { varAlpha } from 'src/theme/styles';
 
+import { useNavigate } from 'react-router-dom';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -25,6 +26,7 @@ export type WorkspacesPopoverProps = ButtonBaseProps & {
 };
 
 export function WorkspacesPopover({ open, data = [], sx, ...other }: WorkspacesPopoverProps) {
+  const navigate = useNavigate();
   const defaultWorkspaces = localStorage.getItem('workspaces') || 'wp_system';
   const findIndex = data.findIndex((d) => d.id == defaultWorkspaces) || 0;
   const [workspace, setWorkspace] = useState(data[findIndex]);
@@ -44,6 +46,7 @@ export function WorkspacesPopover({ open, data = [], sx, ...other }: WorkspacesP
       setWorkspace(newValue);
       localStorage.setItem('workspaces', newValue.id);
       window.dispatchEvent(new Event('storage'));
+      navigate('/', { replace: true });
       handleClosePopover();
     },
     [handleClosePopover]

@@ -17,10 +17,9 @@ import { SettingPopover } from '../components/setting-popover';
 import { navData } from '../config-nav-dashboard';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
+import { _workspaces } from '../nav-config-workspace';
 import { Main } from './main';
 import { NavDesktop, NavMobile } from './nav';
-import { _workspaces } from '../nav-config-workspace';
-import { useNavigate } from 'react-router-dom';
 
 //
 export type DashboardLayoutProps = {
@@ -33,7 +32,6 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) {
   const theme = useTheme();
-  const navigate = useNavigate();
 
   const { setSetting } = useSettingStore.getState();
   const defaultWorkspaces = (localStorage.getItem('workspaces') || 'wp_system') as workspacesType;
@@ -43,7 +41,6 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
     const handleStorageChange = () => {
       const newWorkspaces = localStorage.getItem('workspaces') || defaultWorkspaces;
       setWorkSpaces(newWorkspaces as workspacesType);
-      navigate('/', { replace: true });
     };
 
     // Lắng nghe sự kiện `storage` từ các tab khác
