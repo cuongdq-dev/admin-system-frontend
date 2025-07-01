@@ -197,7 +197,7 @@ export function DetailView() {
                   />
                 </FormProvider>
 
-                <TelegramTokenInput
+                {/* <TelegramTokenInput
                   siteId={id}
                   defaultToken={data?.teleToken!}
                   defaultValues={{
@@ -206,7 +206,7 @@ export function DetailView() {
                     botUsername: data?.teleBotName,
                     chatId: data?.teleChatId,
                   }}
-                />
+                /> */}
               </Box>
             </Card>
           </Grid>
@@ -263,104 +263,104 @@ export function DetailView() {
   );
 }
 
-const TelegramTokenInput = ({
-  defaultValues,
-  defaultToken,
-  siteId,
-}: {
-  siteId?: string;
-  defaultToken?: string;
-  defaultValues: { chatId?: string; botName?: string; botUsername?: string; botId?: string };
-}) => {
-  const [token, setToken] = useState(defaultToken);
-  const [botInfo, setBotInfo] = useState<{
-    chatId?: string;
-    botName?: string;
-    botUsername?: string;
-    botId?: string;
-  } | null>(defaultValues);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+// const TelegramTokenInput = ({
+//   defaultValues,
+//   defaultToken,
+//   siteId,
+// }: {
+//   siteId?: string;
+//   defaultToken?: string;
+//   defaultValues: { chatId?: string; botName?: string; botUsername?: string; botId?: string };
+// }) => {
+//   const [token, setToken] = useState(defaultToken);
+//   const [botInfo, setBotInfo] = useState<{
+//     chatId?: string;
+//     botName?: string;
+//     botUsername?: string;
+//     botId?: string;
+//   } | null>(defaultValues);
+//   const [error, setError] = useState<string | null>(null);
+//   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setToken(defaultToken);
-    setBotInfo(defaultValues);
-  }, [defaultToken, defaultValues]);
+//   useEffect(() => {
+//     setToken(defaultToken);
+//     setBotInfo(defaultValues);
+//   }, [defaultToken, defaultValues]);
 
-  const handleBlur = () => {
-    if (!token) return;
+//   const handleBlur = () => {
+//     if (!token) return;
 
-    setLoading(true);
-    setError(null);
-    setBotInfo(null);
+//     setLoading(true);
+//     setError(null);
+//     setBotInfo(null);
 
-    invokeRequest({
-      baseURL: PATH_SITE + '/telegram/' + siteId,
-      method: HttpMethod.POST,
-      params: { token: token },
-      onSuccess: (res) => {
-        setBotInfo(res);
-        setLoading(false);
-      },
-      onHandleError: (err) => {
-        setLoading(false);
-        setBotInfo(null);
-        setError((err as Error).message);
-      },
-    });
-  };
+//     invokeRequest({
+//       baseURL: PATH_SITE + '/telegram/' + siteId,
+//       method: HttpMethod.POST,
+//       params: { token: token },
+//       onSuccess: (res) => {
+//         setBotInfo(res);
+//         setLoading(false);
+//       },
+//       onHandleError: (err) => {
+//         setLoading(false);
+//         setBotInfo(null);
+//         setError((err as Error).message);
+//       },
+//     });
+//   };
 
-  return (
-    <Box>
-      <Box display={'flex'} gap={2}>
-        <TextField
-          label={t(LanguageKey.site.tokenItem)}
-          variant="outlined"
-          fullWidth
-          disabled={loading}
-          margin="dense"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          onBlur={handleBlur}
-          error={!!error}
-          helperText={error || 'Nhập token bot của bạn để kiểm tra và lưu lại'}
-        />
+//   return (
+//     <Box>
+//       <Box display={'flex'} gap={2}>
+//         <TextField
+//           label={t(LanguageKey.site.tokenItem)}
+//           variant="outlined"
+//           fullWidth
+//           disabled={loading}
+//           margin="dense"
+//           value={token}
+//           onChange={(e) => setToken(e.target.value)}
+//           onBlur={handleBlur}
+//           error={!!error}
+//           helperText={error || 'Nhập token bot của bạn để kiểm tra và lưu lại'}
+//         />
 
-        {loading && (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <CircularProgress size={20} />
-          </Box>
-        )}
-      </Box>
+//         {loading && (
+//           <Box sx={{ display: 'flex', alignItems: 'center' }}>
+//             <CircularProgress size={20} />
+//           </Box>
+//         )}
+//       </Box>
 
-      {botInfo?.chatId && (
-        <Box>
-          <TextField
-            label={t(LanguageKey.site.teleChatName)}
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={botInfo.botName}
-            disabled
-          />
-          <TextField
-            label={t(LanguageKey.site.teleBotName)}
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={botInfo.botUsername}
-            disabled
-          />
-          <TextField
-            label={t(LanguageKey.site.teleChatId)}
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={botInfo.chatId}
-            disabled
-          />
-        </Box>
-      )}
-    </Box>
-  );
-};
+//       {botInfo?.chatId && (
+//         <Box>
+//           <TextField
+//             label={t(LanguageKey.site.teleChatName)}
+//             variant="outlined"
+//             fullWidth
+//             margin="normal"
+//             value={botInfo.botName}
+//             disabled
+//           />
+//           <TextField
+//             label={t(LanguageKey.site.teleBotName)}
+//             variant="outlined"
+//             fullWidth
+//             margin="normal"
+//             value={botInfo.botUsername}
+//             disabled
+//           />
+//           <TextField
+//             label={t(LanguageKey.site.teleChatId)}
+//             variant="outlined"
+//             fullWidth
+//             margin="normal"
+//             value={botInfo.chatId}
+//             disabled
+//           />
+//         </Box>
+//       )}
+//     </Box>
+//   );
+// };
