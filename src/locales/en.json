@@ -318,5 +318,18 @@
   "book_category_item": "Category",
   "book_site_item": "Site",
   "book_gemimi_generate": "AI will rewriter title, description, keywords, chapters and content SEO",
-  "book_description_item": "Description"
+  "book_description_item": "Description",
+
+  "role_nav": "Role",
+  "batch_logs_nav": "Server Logs",
+
+  "batch_list_page": "Server Logs",
+  "batch_id_item": "ID",
+  "batch_job_name_item": "Batch Name",
+  "batch_job_source_item": "Batch Source",
+  "batch_scheduled_at_item": "Scheduled At",
+  "batch_started_at_item": "Started At",
+  "batch_finished_at_item": "Finished At",
+  "batch_status_item": "Status",
+  "batch_message_item": "Message"
 }

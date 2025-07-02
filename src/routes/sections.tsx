@@ -52,6 +52,10 @@ export const RegisterPage = lazy(() => import('src/pages/register'));
 export const LanguagePage = lazy(() => import('src/pages/language/list'));
 
 export const ColorPage = lazy(() => import('src/pages/color'));
+export const UserPage = lazy(() => import('src/pages/user/list'));
+export const RolePage = lazy(() => import('src/pages/role/list'));
+export const BatchLogsPage = lazy(() => import('src/pages/logs/list'));
+
 //
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
@@ -392,6 +396,35 @@ export const RouterConfig = [
         element: (
           <PrivateRoute>
             <ColorPage />
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: '/user',
+        name: 'user',
+        element: (
+          <PrivateRoute>
+            <UserPage />
+          </PrivateRoute>
+        ),
+      },
+
+      {
+        path: '/role',
+        name: 'role',
+        element: (
+          <PrivateRoute>
+            <RolePage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/logs',
+        name: 'logs',
+        element: (
+          <PrivateRoute>
+            <BatchLogsPage />
           </PrivateRoute>
         ),
       },

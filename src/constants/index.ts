@@ -19,6 +19,7 @@ export const LanguageKey = {
     image: 'image_nav',
     server: 'server_nav',
     site: 'site_nav',
+    role: 'role_nav',
     product: 'product_nav',
     blog: 'blog_nav',
     blogNew: 'blog_unused_nav',
@@ -37,6 +38,7 @@ export const LanguageKey = {
     bookGroup: 'book_group_nav',
     bookList: 'book_nav',
     bookAudio: 'book_audio_nav',
+    batchLogs: 'batch_logs_nav',
   },
 
   dashboard: {
@@ -394,6 +396,18 @@ export const LanguageKey = {
   googleConsole: {
     listPageTitle: 'google_console_list_page',
   },
+
+  batchLogs: {
+    listPageTitle: 'batch_list_page',
+    idItem: 'batch_id_item',
+    jobNameItem: 'batch_job_name_item',
+    jobSourceItem: 'batch_job_source_item',
+    scheduledAtItem: 'batch_scheduled_at_item',
+    startedAtItem: 'batch_started_at_item',
+    finishedAtItem: 'batch_finished_at_item',
+    statusItem: 'batch_status_item',
+    messageItem: 'batch_message_item',
+  },
 };
 
 export const StoreName = {
@@ -425,6 +439,8 @@ export const StoreName = {
   USER_LIST_CATEGORY: 'user_list_category_store',
   USER_LIST_POST: 'user_list_post_store',
   USER_LIST_SITE: 'user_list_site_store',
+  USER_LIST: 'user_list_store',
+  BATCH_LOGS: 'batch_logs_list_store',
 };
 
 export const Breadcrumbs = {

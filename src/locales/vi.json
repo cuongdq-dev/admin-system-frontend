@@ -320,5 +320,18 @@
   "book_thumbnail_item": "Ảnh bìa",
   "book_category_item": "Danh mục",
   "book_gemimi_generate": "AI Sẽ làm mới các tiêu đề, mô tả, từ khoá, chương và các nội dung liên quan tới SEO",
-  "book_description_item": "Mô tả"
+  "book_description_item": "Mô tả",
+
+  "role_nav": "Phân quyền",
+  "batch_logs_nav": "Server Logs",
+
+  "batch_list_page": "Server Logs",
+  "batch_id_item": "ID",
+  "batch_job_name_item": "Tên mã",
+  "batch_job_source_item": "Source",
+  "batch_scheduled_at_item": "Lịch",
+  "batch_started_at_item": "Bắt đầu",
+  "batch_finished_at_item": "Kết thúc",
+  "batch_status_item": "Trạng thái",
+  "batch_message_item": "Message"
 }

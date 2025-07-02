@@ -106,6 +106,19 @@ export const navData: NavDataItems = [
     path: '/site',
     icon: icon('ic-site'),
   },
+  {
+    title: LanguageKey.nav.user,
+    workspace: ['wp_system'],
+    path: '/user',
+    icon: icon('ic-user'),
+  },
+
+  {
+    title: LanguageKey.nav.batchLogs,
+    workspace: ['wp_system'],
+    path: '/logs',
+    icon: icon('ic-batch-logs'),
+  },
 
   {
     title: LanguageKey.nav.setting,
@@ -113,6 +126,11 @@ export const navData: NavDataItems = [
     workspace: ['wp_system'],
     icon: icon('ic-setting'),
     children: [
+      {
+        title: LanguageKey.nav.role,
+        path: '/role',
+        icon: icon('ic-role'),
+      },
       {
         title: LanguageKey.nav.color,
         path: '/color',
