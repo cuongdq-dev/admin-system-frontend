@@ -1,3 +1,5 @@
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/cuongdq-dev/admin-system-frontend)
+
 # HotTrending Admin System Frontend
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
