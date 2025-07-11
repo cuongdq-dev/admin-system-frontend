@@ -44,6 +44,7 @@ interface ISettingStore {
   notifyNew?: number;
   notifications?: INotifications;
   breadcrumb?: IBreadcrumb;
+  collectionPermission?: ICollectionPermission[];
   dropdown?: {
     sites?: IDropdown[];
     posts?: IDropdown[];
@@ -53,6 +54,7 @@ interface ISettingStore {
 
   setSetting: (values: ISetting) => void;
   setDropdown: (values: IDropdowns) => void;
+  setCollectionPermission: (values: ICollectionPermission[]) => void;
   setBreadcrumb: (breadcrumb?: IBreadcrumb) => void;
   setNotifyNew: (value: number) => void;
   setNotifications: (notifications: INotifications) => void;
@@ -69,6 +71,12 @@ export const useSettingStore = create<ISettingStore>((set) => ({
   notifyNew: 0,
   setDropdown: (dropdown: IDropdowns) =>
     set((state) => ({ ...state, dropdown: { ...state.dropdown, ...dropdown } })),
+
+  setCollectionPermission: (collectionPermission: ICollectionPermission[]) =>
+    set((state) => ({
+      ...state,
+      collectionPermission: { ...state.collectionPermission, ...collectionPermission },
+    })),
 
   setSetting: (settings: ISetting) => set((state) => ({ ...state, ...settings })),
   setBreadcrumb: (breadcrumb?: IBreadcrumb) =>

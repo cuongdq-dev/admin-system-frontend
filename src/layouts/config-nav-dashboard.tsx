@@ -128,7 +128,7 @@ export const navData: NavDataItems = [
     children: [
       {
         title: LanguageKey.nav.role,
-        path: '/role',
+        path: '/roles',
         icon: icon('ic-role'),
       },
       {

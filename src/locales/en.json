@@ -22,6 +22,7 @@
   "copy_clipboard": "Copy to clipboard",
   "copied": "Copied",
   "data_not_found": "Sorry, data not found",
+  "discard_button": "Discard",
 
   "clone_button": "Clone",
   "category_nav": "Category",
@@ -331,5 +332,25 @@
   "batch_started_at_item": "Started At",
   "batch_finished_at_item": "Finished At",
   "batch_status_item": "Status",
-  "batch_message_item": "Message"
+  "batch_message_item": "Message",
+
+  "role_new_button": "Add New Role",
+
+  "role_list_page_title": "Roles",
+  "role_create_page_title": "Create a role",
+  "role_detail_page_title": "Role",
+  "role_create_page_description": "Define the rights given to the role",
+  "role_detail_page_description": "Define the rights given to the role",
+  "role_list_page_description": "List of roles",
+  "role_id_item": "ID",
+  "role_name_item": "Name",
+  "role_description_item": "Description",
+  "role_created_at_item": "Created At",
+  "role_user_item": "User",
+  "role_collection_type": "Collection Type",
+  "role_create": "Create",
+  "role_read": "Read",
+  "role_update": "Update",
+  "role_delete": "Delete",
+  "role_publish": "Publish"
 }

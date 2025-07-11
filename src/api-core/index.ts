@@ -15,8 +15,8 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${getCookie('token')}`;
 axios.interceptors.request.use(function (config) {
   const token = getCookie('token');
   const workspace = localStorage.getItem('workspaces') || 'wp_system';
-  config.baseURL = `${window.location.origin}/api`;
-  // config.baseURL = `http://localhost:3003/v1/`;
+  // config.baseURL = `${window.location.origin}/api`;
+  config.baseURL = `http://localhost:3003/v1/`;
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }

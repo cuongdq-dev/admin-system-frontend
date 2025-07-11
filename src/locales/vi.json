@@ -20,6 +20,7 @@
   "dashboard_page": "Bảng điều khiển",
   "pull_button": "Kéo mã nguồn",
   "clone_button": "Sao chép kho",
+  "discard_button": "Huỷ",
   "category_nav": "Danh mục",
   "category_list_page": "Danh sách danh mục",
   "category_new_button": "Thêm mới",
@@ -324,6 +325,7 @@
 
   "role_nav": "Phân quyền",
   "batch_logs_nav": "Server Logs",
+  "role_new_button": "Tạo mới phân quyền",
 
   "batch_list_page": "Server Logs",
   "batch_id_item": "ID",
@@ -333,5 +335,23 @@
   "batch_started_at_item": "Bắt đầu",
   "batch_finished_at_item": "Kết thúc",
   "batch_status_item": "Trạng thái",
-  "batch_message_item": "Message"
+  "batch_message_item": "Message",
+
+  "role_list_page_title": "Phân Quyền",
+  "role_create_page_title": "Tạo mới",
+  "role_detail_page_title": "Chi tiết",
+  "role_create_page_description": "Define the rights given to the role",
+  "role_detail_page_description": "Define the rights given to the role",
+  "role_list_page_description": "Danh sách phân quyền",
+  "role_id_item": "ID",
+  "role_name_item": "Tên",
+  "role_description_item": "Mô tả",
+  "role_created_at_item": "Ngày tạo",
+  "role_user_item": "Người dùng",
+  "role_collection_type": "Collection Type",
+  "role_create": "Create",
+  "role_read": "Read",
+  "role_update": "Update",
+  "role_delete": "Delete",
+  "role_publish": "Publish"
 }

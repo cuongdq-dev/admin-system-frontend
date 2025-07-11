@@ -29,6 +29,9 @@ export const PATH_DROPDOWN = '/dropdown';
 // BOOK
 export const PATH_BOOK = '/book';
 
+// ROLE
+export const PATH_USER_ROLES = '/roles';
+
 //BLOG
 export const PATH_BLOG = '/post';
 export const PATH_BLOG_UNUSED = '/post/unused';

@@ -236,6 +236,7 @@ export const LanguageKey = {
     clone: 'clone_button',
     pull: 'pull_button',
     accept: 'accept_button',
+    discard: 'discard_button',
   },
 
   menu: {
@@ -408,6 +409,27 @@ export const LanguageKey = {
     statusItem: 'batch_status_item',
     messageItem: 'batch_message_item',
   },
+
+  role: {
+    listPagetitle: 'role_list_page_title',
+    detailPagetitle: 'role_detail_page_title',
+    createPagetitle: 'role_create_page_title',
+    listPageDescription: 'role_list_page_description',
+    detailPageDescription: 'role_detail_page_description',
+    createPageDescription: 'role_create_page_description',
+    addNewButton: 'role_new_button',
+    idItem: 'role_id_item',
+    nameItem: 'role_name_item',
+    descriptionItem: 'role_description_item',
+    createdAtItem: 'role_created_at_item',
+    userItem: 'role_user_item',
+    collectionType: 'role_collection_type',
+    createType: 'role_create',
+    readType: 'role_read',
+    updateType: 'role_update',
+    deleteType: 'role_delete',
+    publishType: 'role_publish',
+  },
 };
 
 export const StoreName = {
@@ -441,6 +463,8 @@ export const StoreName = {
   USER_LIST_SITE: 'user_list_site_store',
   USER_LIST: 'user_list_store',
   BATCH_LOGS: 'batch_logs_list_store',
+  ROLE_LIST: 'user_role_list_store',
+  ROLE_DETAIL: 'user_role_detail_store',
 };
 
 export const Breadcrumbs = {

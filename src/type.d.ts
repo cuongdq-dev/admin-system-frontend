@@ -374,6 +374,34 @@ declare type IBreadcrumb = {
   items?: { href?: string; title?: string }[];
 };
 
+// ROLE
+
+interface ICollectionPermission {
+  name?: string;
+  permissions?: {
+    id: string;
+    action?: 'read' | 'update' | 'create' | 'delete' | 'publish'; //read, update, create, delete, publish
+    properties?: Record<string, any>;
+    conditions?: Record<string, any>;
+  }[];
+}
+
+interface IPermission extends TableBase {
+  action?: 'read' | 'update' | 'create' | 'delete' | 'publish'; //read, update, create, delete, publish
+  subject?: string;
+  properties?: Record<string, any>;
+  conditions?: Record<string, any>;
+  roles?: IRole[];
+}
+interface IRole extends TableBase {
+  name?: string;
+  description?: string;
+  type?: 'system' | 'custom';
+  is_active?: boolean;
+  permissions?: IPermission[];
+  users?: IUser[];
+}
+
 // TRENDING
 
 interface IMedia extends TableBase {

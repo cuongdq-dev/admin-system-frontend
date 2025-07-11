@@ -53,7 +53,10 @@ export const LanguagePage = lazy(() => import('src/pages/language/list'));
 
 export const ColorPage = lazy(() => import('src/pages/color'));
 export const UserPage = lazy(() => import('src/pages/user/list'));
-export const RolePage = lazy(() => import('src/pages/role/list'));
+
+export const RoleListPage = lazy(() => import('src/pages/role/list'));
+export const RoleDetailPage = lazy(() => import('src/pages/role/detail'));
+
 export const BatchLogsPage = lazy(() => import('src/pages/logs/list'));
 
 //
@@ -409,16 +412,30 @@ export const RouterConfig = [
           </PrivateRoute>
         ),
       },
-
       {
-        path: '/role',
-        name: 'role',
-        element: (
-          <PrivateRoute>
-            <RolePage />
-          </PrivateRoute>
-        ),
+        path: '/roles',
+        name: LanguageKey.role.listPagetitle,
+        children: [
+          {
+            path: '/roles',
+            element: (
+              <PrivateRoute>
+                <RoleListPage />
+              </PrivateRoute>
+            ),
+          },
+
+          {
+            path: ':id',
+            element: (
+              <PrivateRoute>
+                <RoleDetailPage />
+              </PrivateRoute>
+            ),
+          },
+        ],
       },
+
       {
         path: '/logs',
         name: 'logs',
