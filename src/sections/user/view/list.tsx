@@ -1,3 +1,4 @@
+import { Chip } from '@mui/material';
 import { t } from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import { PATH_USER_LIST } from 'src/api-core/path';
@@ -41,7 +42,34 @@ export function ListView() {
       label: t(LanguageKey.user.phoneItem),
       sort: false,
       type: 'text',
-      width: '40%',
+      width: '20%',
+    },
+
+    {
+      id: 'roles',
+      label: t(LanguageKey.user.roleItem),
+      sort: false,
+      type: 'custom',
+      align: 'center',
+      width: '100%',
+      render: ({ row }) => {
+        return (
+          <>
+            {row?.roles?.map((role: IRole) => {
+              return (
+                <Chip
+                  sx={{ mx: 0.5 }}
+                  color="info"
+                  size="small"
+                  variant="filled"
+                  key={role.id}
+                  label={role.name}
+                />
+              );
+            })}
+          </>
+        );
+      },
     },
 
     {

@@ -116,7 +116,12 @@ export function DetailView() {
       baseURL: PATH_USER_LIST + '/' + id,
       onSuccess: (res) => {
         setDetail(storeName, { data: res, isFetching: false, isLoading: false });
-        reset(res);
+        reset({
+          ...res,
+          roles: res?.roles?.map((role: IRole) => {
+            return { id: role?.id, title: role?.name };
+          }),
+        });
       },
       onHandleError: (error) => {
         setLoadingDetail(storeName, false);
@@ -141,7 +146,7 @@ export function DetailView() {
         password: undefined,
         confirmPassword: undefined,
         is_active: true,
-        roles: undefined,
+        roles: [],
       });
       setDetail(storeName, { data: undefined, isFetching: false, isLoading: false });
     }
@@ -150,7 +155,6 @@ export function DetailView() {
   // Form submission
   const onSubmit = async (formData: Record<string, any>) => {
     try {
-      console.log(formData);
       const method = isCreateMode ? HttpMethod.POST : HttpMethod.PATCH;
       const url = isCreateMode ? PATH_USER_LIST + '/create' : PATH_USER_LIST + '/update/' + id;
 
@@ -176,6 +180,20 @@ export function DetailView() {
             navigate('/users/' + res.id); // Navigate to edit mode after creation
           } else {
             setDetail(storeName, { data: res, isFetching: false, isLoading: false });
+            reset({
+              name: res.name || '',
+              email: res.email || '',
+              address: res.address || '',
+              phoneNumber: res.phoneNumber || '',
+              password: undefined,
+              confirmPassword: undefined,
+              is_active: res.is_active ?? true,
+              roles:
+                res?.roles?.map((role: IRole) => {
+                  return { id: role?.id, title: role?.name };
+                }) || [],
+            });
+
             setNotify({
               title: t(LanguageKey.notify.successUpdate),
               options: { variant: 'success' },
@@ -210,7 +228,10 @@ export function DetailView() {
         is_active: data?.is_active || false,
         phoneNumber: data?.phoneNumber || '',
         email: data?.email || '',
-        roles: data?.roles || undefined,
+        roles:
+          data?.roles?.map((role) => {
+            return { id: role.id, title: role.name };
+          }) || undefined,
       });
     }
   };
@@ -219,7 +240,7 @@ export function DetailView() {
   const handleDeleteUser = () => {
     invokeRequest({
       method: HttpMethod.DELETE,
-      baseURL: PATH_USER_LIST + '/' + id,
+      baseURL: PATH_USER_LIST + '/delete/' + id,
       onSuccess: () => {
         navigate('/users');
         setNotify({
@@ -459,9 +480,10 @@ export function DetailView() {
               <Box>
                 <RHFAutocomplete
                   name="roles"
-                  multiple={true}
                   title={t(LanguageKey.user.roleItem)}
-                  defaultValue={data?.roles || undefined}
+                  defaultValue={data?.roles?.map((role) => {
+                    return { id: role.id, title: role.name };
+                  })}
                   options={
                     availableRoles?.map((role) => ({
                       id: role.id,
