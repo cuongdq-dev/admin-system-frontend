@@ -18,6 +18,7 @@
   "dashboard_page": "Dashboard",
   "pull_button": "Pull",
   "accept_button": "OK",
+  "back_button": "Back",
 
   "copy_clipboard": "Copy to clipboard",
   "copied": "Copied",
@@ -35,13 +36,25 @@
   "category_books_item": "Books",
   "category_sites_item": "Sites",
   "user_nav": "User",
-  "user_list_page": "User List",
+  "user_list_page_title": "Users",
+  "user_list_page_description": "All the users who have access to the System admin panel",
+  "user_detail_page_title": "User",
+  "user_detail_page_description": "Edit user information and permissions",
+
+  "user_create_page_title": "Create User",
+  "user_create_page_description": "Create a new user account",
+
   "user_new_button": "New User",
   "user_detail_page": "User Detail",
   "user_table_title": "Users",
   "user_detail_title": "User Detail",
   "user_profile_title": "Profile",
+  "user_role_data_title": "Role & Data",
   "user_tab_profile": "Profile",
+  "user_active_item": "active",
+
+  "user_associated_data": "Associated Data",
+
   "user_upload_avatar": "Upload Avatar",
   "user_upload_banner": "Upload Banner",
   "user_my_post_title": "Your Posts",
@@ -154,6 +167,10 @@
   "create_form_label": "Quick Add",
   "update_form_label": "Quick Update",
   "delete_form_label": "Quick Delete",
+
+  "password_label": "Password",
+  "confirm_password_label": "Confirm Pasword",
+
   "delete_form_title": "Are you sure you want to delete?",
   "search_item": "Search",
   "signin_title": "Sign in",
@@ -200,6 +217,8 @@
   "or": "OR",
   "of": "OF",
   "and": "AND",
+  "false": "FALSE",
+  "true": "TRUE",
   "setting_title": "Settings",
   "dark_mode_title": "Dark Mode",
   "light_mode_title": "Light Mode",
@@ -293,6 +312,7 @@
   "user_address_item": "Address",
   "user_phone_item": "Phone",
   "user_created_item": "Created At",
+  "user_role_item": "Role",
 
   "book_nav": "All Books",
   "book_group_nav": "Books",

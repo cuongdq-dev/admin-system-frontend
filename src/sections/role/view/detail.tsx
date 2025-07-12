@@ -426,7 +426,6 @@ export function DetailView() {
     <Scrollbar sx={{ maxHeight: '100%', overflowX: 'hidden' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Header */}
           <Box
             sx={{
               mb: 4,
@@ -447,7 +446,7 @@ export function DetailView() {
                   : t(LanguageKey.role.detailPageDescription)}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ display: 'flex', gap: 2, alignSelf: 'center' }}>
               <Button
                 variant="outlined"
                 onClick={handleDiscardChanges}

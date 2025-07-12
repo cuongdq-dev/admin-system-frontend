@@ -2,16 +2,17 @@ import { t } from 'i18next';
 import { Helmet } from 'react-helmet-async';
 import { CONFIG } from 'src/config-global';
 import { LanguageKey } from 'src/constants';
-import { ListView } from 'src/sections/role/view/list';
+import { DetailView } from 'src/sections/user/view/index';
 
 // ----------------------------------------------------------------------
 export default function Page() {
   return (
     <>
       <Helmet>
-        <title> {`${t(LanguageKey.role.listPageTitle)} - ${CONFIG.appName}`}</title>
+        <title> {`${t(LanguageKey.user.detailPageTitle)} - ${CONFIG.appName}`}</title>
       </Helmet>
-      <ListView />
+
+      <DetailView />
     </>
   );
 }

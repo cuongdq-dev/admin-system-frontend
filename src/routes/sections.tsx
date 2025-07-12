@@ -52,7 +52,9 @@ export const RegisterPage = lazy(() => import('src/pages/register'));
 export const LanguagePage = lazy(() => import('src/pages/language/list'));
 
 export const ColorPage = lazy(() => import('src/pages/color'));
-export const UserPage = lazy(() => import('src/pages/user/list'));
+
+export const UserListPage = lazy(() => import('src/pages/user/list'));
+export const UserDetailPage = lazy(() => import('src/pages/user/detail'));
 
 export const RoleListPage = lazy(() => import('src/pages/role/list'));
 export const RoleDetailPage = lazy(() => import('src/pages/role/detail'));
@@ -404,17 +406,31 @@ export const RouterConfig = [
       },
 
       {
-        path: '/user',
-        name: 'user',
-        element: (
-          <PrivateRoute>
-            <UserPage />
-          </PrivateRoute>
-        ),
+        path: '/users',
+        name: LanguageKey.user.listPageTitle,
+        children: [
+          {
+            path: '/users',
+            element: (
+              <PrivateRoute>
+                <UserListPage />
+              </PrivateRoute>
+            ),
+          },
+
+          {
+            path: ':id',
+            element: (
+              <PrivateRoute>
+                <UserDetailPage />
+              </PrivateRoute>
+            ),
+          },
+        ],
       },
       {
         path: '/roles',
-        name: LanguageKey.role.listPagetitle,
+        name: LanguageKey.role.listPageTitle,
         children: [
           {
             path: '/roles',

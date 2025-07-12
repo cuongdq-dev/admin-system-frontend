@@ -8,6 +8,7 @@ export const PATH_REGISTER = '/auth/email/register';
 
 // USER
 export const PATH_USER_LIST = '/users';
+
 export const PATH_FIND_ME = '/users/me';
 export const PATH_USER_LIST_POST = '/users/post';
 // BATCH LOGS

@@ -21,6 +21,8 @@
   "pull_button": "Kéo mã nguồn",
   "clone_button": "Sao chép kho",
   "discard_button": "Huỷ",
+  "back_button": "Trở về",
+
   "category_nav": "Danh mục",
   "category_list_page": "Danh sách danh mục",
   "category_new_button": "Thêm mới",
@@ -32,13 +34,24 @@
 
   "category_sites_item": "Trang web",
   "user_nav": "Người dùng",
-  "user_list_page": "Danh sách người dùng",
+
+  "user_list_page_title": "Danh sách user",
+  "user_list_page_description": "All the users who have access to the System admin panel",
+  "user_detail_page_title": "User",
+  "user_detail_page_description": "Edit user information and permissions",
+
+  "user_create_page_title": "Tạo mới user",
+  "user_create_page_description": "Create a new user account",
+
+  "user_role_item": "role",
+
   "user_new_button": "Người dùng mới",
-  "user_detail_page": "Chi tiết người dùng",
   "user_table_title": "Người dùng",
   "user_detail_title": "Chi tiết người dùng",
   "user_profile_title": "Hồ sơ",
   "user_tab_profile": "Hồ sơ",
+  "user_role_data_title": "Phân quyền & dữ liệu",
+
   "user_upload_avatar": "Cập nhật ảnh đại diện",
   "user_upload_banner": "Cập nhật ảnh bìa",
   "user_my_post_title": "Bài viết của bạn",
@@ -157,6 +170,10 @@
   "update_form_label": "Cập nhật nhanh",
   "delete_form_label": "Xóa nhanh",
   "delete_form_title": "Bạn có chắc muốn xóa không?",
+
+  "password_label": "Mật khẩu",
+  "confirm_password_label": "Xác nhận mật khẩu",
+
   "search_item": "Tìm kiếm",
   "signin_title": "Đăng nhập",
   "signin_item_email": "Email",
@@ -202,6 +219,8 @@
   "or": "HOẶC",
   "of": "CỦA",
   "and": "VÀ",
+  "false": "FALSE",
+  "true": "TRUE",
   "setting_title": "Cài đặt",
   "dark_mode_title": "Chế độ tối",
   "light_mode_title": "Chế độ sáng",
@@ -296,6 +315,9 @@
   "user_created_item": "Cập nhất mới nhất",
   "user_address_item": "Address",
   "user_phone_item": "Phone",
+  "user_active_item": "Active",
+
+  "user_associated_data": "Dữ liệu",
   "book_list_page": "Books",
 
   "book_nav": "Truyện",

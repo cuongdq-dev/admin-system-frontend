@@ -67,7 +67,8 @@ export function ListView() {
       breadcrumb={{ items: [{ href: '/role', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent
-        title={t(LanguageKey.role.listPagetitle)}
+        title={t(LanguageKey.role.listPageTitle)}
+        description={t(LanguageKey.role.listPageDescription)}
         buttonTitle={t(LanguageKey.role.addNewButton)}
         buttonProps={{ color: 'primary' }}
         onClickButton={() => {
@@ -80,7 +81,7 @@ export function ListView() {
         url={PATH_USER_ROLES}
         indexCol={true}
         selectCol={true}
-        actions={{ deleteBtn: true, editBtn: true, popupEdit: false }}
+        actions={{ deleteBtn: true, editBtn: true }}
         refreshData={refreshData}
         headLabel={HeadLabel}
       />

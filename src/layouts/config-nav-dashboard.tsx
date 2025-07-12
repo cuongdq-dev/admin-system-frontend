@@ -109,7 +109,7 @@ export const navData: NavDataItems = [
   {
     title: LanguageKey.nav.user,
     workspace: ['wp_system'],
-    path: '/user',
+    path: '/users',
     icon: icon('ic-user'),
   },
 

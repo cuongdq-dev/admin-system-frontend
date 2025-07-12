@@ -559,4 +559,7 @@ interface IUser extends TableBase {
   posts?: IPost[];
   sites?: ISite[];
   servers?: IServer[];
+  roles?: IRole[];
+  password?: string;
+  confirmPassword?: string;
 }

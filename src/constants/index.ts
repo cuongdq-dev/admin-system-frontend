@@ -46,12 +46,21 @@ export const LanguageKey = {
   },
 
   user: {
-    listPageTitle: 'user_list_page',
+    listPageTitle: 'user_list_page_title',
+    listPageDescription: 'user_list_page_description',
+
+    detailPageTitle: 'user_detail_page_title',
+    detailPageDescription: 'user_detail_page_description',
+
+    createPageTitle: 'user_create_page_title',
+    createPageDescription: 'user_create_page_description',
+
     addNewButton: 'user_new_button',
-    detailPageTitle: 'user_detail_page',
+
     tableTitle: 'user_table_title',
     detailTitle: 'user_detail_title',
     profileTitle: 'user_profile_title',
+    roleDataTitle: 'user_role_data_title',
     tabProfile: 'user_tab_profile',
     myPostTitle: 'user_my_post_title',
     userManagePost: 'user_manage_post',
@@ -69,6 +78,9 @@ export const LanguageKey = {
     createdItem: 'user_created_item',
     addressItem: 'user_address_item',
     phoneItem: 'user_phone_item',
+    roleItem: 'user_role_item',
+    activeItem: 'user_active_item',
+    associatedData: 'user_associated_data',
   },
   server: {
     addNewButton: 'server_new_button',
@@ -221,6 +233,7 @@ export const LanguageKey = {
   },
   button: {
     login: 'login_button',
+    back: 'back_button',
     signup: 'signup_button',
     register: 'register_button',
     logout: 'logout_button',
@@ -251,6 +264,9 @@ export const LanguageKey = {
     deleteLabel: 'delete_form_label',
     deleteTitle: 'delete_form_title',
     searchItem: 'search_item',
+
+    passwordItem: 'password_label',
+    confirmPasswordItem: 'confirm_password_label',
   },
   signin: {
     title: 'signin_title',
@@ -310,6 +326,8 @@ export const LanguageKey = {
     or: 'or',
     of: 'of',
     and: 'and',
+    true: 'true',
+    false: 'false',
     settingTitle: 'setting_title',
     darkModeTitle: 'dark_mode_title',
     lightModeTitle: 'light_mode_title',
@@ -411,7 +429,7 @@ export const LanguageKey = {
   },
 
   role: {
-    listPagetitle: 'role_list_page_title',
+    listPageTitle: 'role_list_page_title',
     detailPagetitle: 'role_detail_page_title',
     createPagetitle: 'role_create_page_title',
     listPageDescription: 'role_list_page_description',

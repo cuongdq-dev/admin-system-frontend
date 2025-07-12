@@ -9,7 +9,7 @@ export default function Page() {
   return (
     <>
       <Helmet>
-        <title> {`${t(LanguageKey.site.listPageTitle)} - ${CONFIG.appName}`}</title>
+        <title> {`${t(LanguageKey.role.detailPagetitle)} - ${CONFIG.appName}`}</title>
       </Helmet>
 
       <DetailView />

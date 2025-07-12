@@ -64,7 +64,7 @@ export function DetailView() {
 
   const DetailSchema = Yup.object().shape({
     name: Yup.string().optional(),
-    description: Yup.string().optional(),
+    email: Yup.string().email(),
   });
 
   const methods = useForm({

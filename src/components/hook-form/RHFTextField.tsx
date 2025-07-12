@@ -169,7 +169,7 @@ export const RHFAutocomplete = ({
       name={name}
       control={control}
       defaultValue={other.defaultValue ?? (multiple ? [] : null)} // ✅ xử lý defaultValue cho single select
-      render={({ field }) => {
+      render={({ field, fieldState: { error } }) => {
         const { onBlur, value } = field;
 
         return (
@@ -238,7 +238,14 @@ export const RHFAutocomplete = ({
                 </li>
               );
             }}
-            renderInput={(params) => <TextField {...params} label={other?.title} />}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                helperText={error?.message}
+                error={!!error}
+                label={other?.title}
+              />
+            )}
           />
         );
       }}
