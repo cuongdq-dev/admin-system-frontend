@@ -91,7 +91,7 @@ export function ListView() {
     <DashboardContent
       breadcrumb={{ items: [{ href: '/language', title: t(LanguageKey.common.listTitle) }] }}
     >
-      <HeadComponent title={t(LanguageKey.language.tableTitle)} />
+      <HeadComponent subject="" title={t(LanguageKey.language.tableTitle)} />
       <TabContext value={queryParams.get('lang') || ''}>
         <TabList
           sx={{ mb: 2 }}

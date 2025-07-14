@@ -18,7 +18,8 @@ import {
 import { Iconify } from 'src/components/iconify';
 import { PageLoading } from 'src/components/loading';
 import { Scrollbar } from 'src/components/scrollbar';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
+import { usePermissions } from 'src/hooks/use-permissions';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/page';
@@ -56,6 +57,11 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
   const { data, isLoading = true } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
   ) as { data?: IPost; refreshNumber?: number; isLoading?: boolean };
+
+  const { hasPermission } = usePermissions();
+
+  const canUpdate = hasPermission(SubjectConfig.POSTS, slug ? 'update' : 'create');
+  const canPublish = hasPermission(SubjectConfig.POSTS, 'publish');
 
   const fetchPost = () => {
     invokeRequest({
@@ -275,6 +281,8 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                               variant="contained"
                               color="warning"
                               aria-label="draft"
+                              disabled={!canPublish}
+                              sx={{ cursor: !canPublish ? 'no-drop' : 'unset' }}
                             >
                               {t(LanguageKey.blog.draftButton)}
                             </Button>
@@ -287,6 +295,8 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                               }}
                               variant="contained"
                               aria-label="public"
+                              disabled={!canPublish}
+                              sx={{ cursor: !canPublish ? 'no-drop' : 'unset' }}
                               color="primary"
                             >
                               {t(LanguageKey.blog.publicButton)}
@@ -297,13 +307,21 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                             type="submit"
                             variant="outlined"
                             aria-label="public"
+                            disabled={!canUpdate}
+                            sx={{ cursor: !canUpdate ? 'no-drop' : 'unset' }}
                           >
                             {t(LanguageKey.button.update)}
                           </Button>
                         </>
                       ) : (
                         <>
-                          <Button type="submit" variant="contained" aria-label="public">
+                          <Button
+                            disabled={!canUpdate}
+                            sx={{ cursor: !canUpdate ? 'no-drop' : 'unset' }}
+                            type="submit"
+                            variant="contained"
+                            aria-label="public"
+                          >
                             {t(LanguageKey.button.save)}
                           </Button>
                         </>
@@ -318,6 +336,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                     <Grid xs={12} sm={12} md={!slug ? 6 : 12}>
                       {!slug ? (
                         <RHFTextFieldWithSlug
+                          disabled={!canUpdate}
                           name="title"
                           variant="outlined"
                           label={t(LanguageKey.blog.titleItem)}
@@ -325,6 +344,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       ) : (
                         <RHFTextField
                           name="title"
+                          disabled={!canUpdate}
                           variant="outlined"
                           label={t(LanguageKey.blog.titleItem)}
                         />
@@ -345,6 +365,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
 
                     <Grid xs={12} sm={12} md={12}>
                       <RHFTextField
+                        disabled={!canUpdate}
                         name="meta_description"
                         variant="outlined"
                         multiline
@@ -357,6 +378,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                     <Grid xs={12} sm={12} md={12}>
                       <RHFAutocomplete
                         name="relatedQueries"
+                        disabled={!canUpdate}
                         freeSolo
                         options={
                           data?.relatedQueries?.map((query) => {
@@ -372,6 +394,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
 
                     <Grid xs={12} sm={12} md={12}>
                       <RHFAutocomplete
+                        disabled={!canUpdate}
                         name="categories"
                         options={categories || []}
                         title={t(LanguageKey.blog.categoryItem)}
@@ -382,6 +405,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                     </Grid>
                     <Grid xs={12} sm={12} md={12}>
                       <RHFAutocomplete
+                        disabled={!canUpdate}
                         options={sites || []}
                         name="sites"
                         title={t(LanguageKey.blog.siteItem)}
@@ -392,6 +416,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                     </Grid>
                     <Grid xs={12} sm={12} md={12} height={200}>
                       <RHFUpload
+                        disabled={!canUpdate}
                         defaultValue={data?.thumbnail?.url}
                         name="thumbnail"
                         label="Thubmnail"
@@ -406,6 +431,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                         sx={{ display: 'flex', justifyContent: 'flex-end' }}
                       >
                         <ButtonDelete
+                          subject={SubjectConfig.POSTS}
                           withLoading
                           variant="outlined"
                           startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
@@ -423,7 +449,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
             </Card>
           </Grid>
           <Grid xs={12} sm={12} md={8}>
-            <RHFEditor name="content" />
+            <RHFEditor disabled={!canUpdate} name="content" />
           </Grid>
         </Grid>
       </FormProvider>

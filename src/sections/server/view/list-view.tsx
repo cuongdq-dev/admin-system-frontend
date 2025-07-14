@@ -6,7 +6,7 @@ import { PATH_SERVER } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
-import { Breadcrumbs, LanguageKey, StoreName } from 'src/constants';
+import { Breadcrumbs, LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import * as Yup from 'yup';
@@ -79,6 +79,7 @@ export function ListView() {
   return (
     <DashboardContent breadcrumb={Breadcrumbs.SERVER_LIST}>
       <HeadComponent
+        subject={SubjectConfig.SERVERS}
         title={t(LanguageKey.server.tableTitle)}
         buttonTitle={t(LanguageKey.server.addNewButton)}
         onClickButton={() =>
@@ -91,6 +92,7 @@ export function ListView() {
       />
 
       <TableComponent
+        subject={SubjectConfig.SERVERS}
         storeName={storeName}
         component={isMobile ? 'CARD' : 'TABLE'}
         url={PATH_SERVER}

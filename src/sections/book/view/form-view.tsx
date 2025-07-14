@@ -37,7 +37,7 @@ import { Iconify } from 'src/components/iconify';
 import { CollapsibleText } from 'src/components/label/collapsible-text';
 import { PageLoading } from 'src/components/loading';
 import { Scrollbar } from 'src/components/scrollbar';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/page';
@@ -47,6 +47,7 @@ import { fNumber } from 'src/utils/format-number';
 import { GetValuesFormChange } from 'src/utils/validation/form';
 import * as Yup from 'yup';
 import { useShallow } from 'zustand/react/shallow';
+import { usePermissions } from 'src/hooks/use-permissions';
 const DetailSchema = Yup.object().shape({
   thumbnail: Yup.mixed<File | string>().optional(),
   title: Yup.string().optional(),
@@ -75,6 +76,11 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
   const { data, isLoading = true } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
   ) as { data?: IBook; refreshNumber?: number; isLoading?: boolean };
+
+  const { hasPermission } = usePermissions();
+
+  const canUpdate = hasPermission(SubjectConfig.BOOKS, slug ? 'update' : 'create');
+  const canPublish = hasPermission(SubjectConfig.BOOKS, 'publish');
 
   const fetchPost = () => {
     invokeRequest({
@@ -330,7 +336,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       <Box display="flex" gap={1} flexDirection="row" flexWrap={'nowrap'}>
                         {slug ? (
                           <>
-                            <ButtonGemini onClick={handleGenerateGemini} />
+                            <ButtonGemini disabled={!canUpdate} onClick={handleGenerateGemini} />
 
                             {data?.status === 'PUBLISHED' && (
                               <Button
@@ -340,6 +346,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                                 variant="contained"
                                 color="warning"
                                 aria-label="draft"
+                                disabled={!canPublish}
                               >
                                 {t(LanguageKey.book.draftButton)}
                               </Button>
@@ -347,6 +354,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
 
                             {data?.status === 'DRAFT' && (
                               <Button
+                                disabled={!canPublish}
                                 onClick={() => {
                                   updateStatus({ status: 'PUBLISHED' });
                                 }}
@@ -361,14 +369,20 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                               color="inherit"
                               type="submit"
                               variant="outlined"
-                              aria-label="public"
+                              disabled={!canUpdate}
+                              aria-label="update"
                             >
                               {t(LanguageKey.button.update)}
                             </Button>
                           </>
                         ) : (
                           <>
-                            <Button type="submit" variant="contained" aria-label="public">
+                            <Button
+                              disabled={!canUpdate}
+                              type="submit"
+                              variant="contained"
+                              aria-label="public"
+                            >
                               {t(LanguageKey.button.save)}
                             </Button>
                           </>
@@ -385,12 +399,14 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       <Grid xs={12} sm={12} md={!slug ? 6 : 12}>
                         {!slug ? (
                           <RHFTextFieldWithSlug
+                            disabled={!canUpdate}
                             name="title"
                             variant="outlined"
                             label={t(LanguageKey.book.titleItem)}
                           />
                         ) : (
                           <RHFTextField
+                            disabled={!canUpdate}
                             name="title"
                             variant="outlined"
                             label={t(LanguageKey.book.titleItem)}
@@ -414,6 +430,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                         <RHFTextField
                           name="meta_description"
                           variant="outlined"
+                          disabled={!canUpdate}
                           multiline
                           maxRows={5}
                           minRows={2}
@@ -424,6 +441,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       <Grid xs={12} sm={12} md={12}>
                         <RHFAutocomplete
                           name="keywords"
+                          disabled={!canUpdate}
                           freeSolo
                           options={
                             data?.keywords?.map((query) => {
@@ -450,6 +468,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       </Grid>
                       <Grid xs={12} sm={12} md={12}>
                         <RHFAutocomplete
+                          disabled={!canUpdate}
                           options={sites || []}
                           name="sites"
                           title={t(LanguageKey.book.siteItem)}
@@ -460,6 +479,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                       </Grid>
                       <Grid xs={12} sm={12} md={12} height={200}>
                         <RHFUpload
+                          disabled={!canUpdate}
                           defaultValue={data?.thumbnail?.url}
                           name="thumbnail"
                           label="Thubmnail"
@@ -475,6 +495,7 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
                         >
                           <ButtonDelete
                             withLoading
+                            subject={SubjectConfig.BOOKS}
                             variant="outlined"
                             startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
                             title={t(LanguageKey.button.delete)}
@@ -899,12 +920,12 @@ const ChapterDetail = ({
   );
 };
 
-const ButtonGemini = ({ onClick }: { onClick: () => void }) => {
+const ButtonGemini = ({ disabled, onClick }: { disabled?: boolean; onClick: () => void }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Tooltip title={t(LanguageKey.book.gemimiGenerate)}>
-      <Button onClick={() => setOpen(true)} variant="contained" color="primary">
+      <Button disabled={disabled} onClick={() => setOpen(true)} variant="contained" color="primary">
         <Iconify icon="carbon:ai-generate" />
         <Dialog
           PaperProps={{ sx: { borderRadius: 3 } }}

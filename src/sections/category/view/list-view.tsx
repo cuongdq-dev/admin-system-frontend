@@ -17,11 +17,12 @@ import { PopupFormTable } from 'src/components/form/form-table';
 import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { CategoryForm } from '../components/form-table';
+import { usePermissions } from 'src/hooks/use-permissions';
 
 type FormConfigState = {
   open: boolean;
@@ -32,6 +33,10 @@ type FormConfigState = {
 
 export function ListView() {
   const storeName = StoreName.CATEGORY;
+  const { hasPermission } = usePermissions();
+
+  const canUpdate = hasPermission(SubjectConfig.CATEGORIES, 'update');
+  const canDelete = hasPermission(SubjectConfig.CATEGORIES, 'delete');
 
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0 } = usePageStore(
@@ -89,6 +94,7 @@ export function ListView() {
       breadcrumb={{ items: [{ href: '/category', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent
+        subject={SubjectConfig.CATEGORIES}
         title={t(LanguageKey.category.listPageTitle)}
         buttonTitle={t(LanguageKey.category.addNewButton)}
         onClickButton={() =>
@@ -100,6 +106,7 @@ export function ListView() {
         }
       />
       <TableComponent
+        subject={SubjectConfig.CATEGORIES}
         component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}
         url={PATH_CATEGORY}
@@ -107,7 +114,7 @@ export function ListView() {
         selectCol={true}
         refreshData={refreshData}
         handleClickOpenForm={handleClickOpenForm}
-        actions={{ editBtn: false, deleteBtn: true, popupEdit: true }}
+        actions={{ editBtn: false, deleteBtn: canDelete, popupEdit: canUpdate }}
         headLabel={HeadLabel}
         customCard={({ values, index }: { values: IPostCategory; index: number }) => {
           return (
@@ -126,7 +133,10 @@ export function ListView() {
                     {values?.name}
                   </Typography>
                   <Box display="flex" flexDirection="row">
-                    <IconButton onClick={() => handleClickOpenForm(values, HttpMethod.PATCH)}>
+                    <IconButton
+                      disabled={!canUpdate}
+                      onClick={() => handleClickOpenForm(values, HttpMethod.PATCH)}
+                    >
                       <Iconify icon="material-symbols:edit-outline" />
                     </IconButton>
 

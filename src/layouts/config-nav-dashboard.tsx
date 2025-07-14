@@ -14,6 +14,28 @@ export const navData: NavDataItems = [
     path: '/',
     icon: icon('ic-analytics'),
   },
+
+  {
+    title: LanguageKey.nav.user,
+    workspace: ['wp_system'],
+    path: '/users',
+    icon: icon('ic-user'),
+  },
+
+  {
+    title: LanguageKey.nav.role,
+    workspace: ['wp_system'],
+    path: '/roles',
+    icon: icon('ic-role'),
+  },
+
+  {
+    title: LanguageKey.nav.image,
+    path: '/image',
+    workspace: ['wp_news', 'wp_books', 'wp_system'],
+    icon: icon('ic-image'),
+  },
+
   {
     title: LanguageKey.nav.blog,
     icon: icon('ic-blog'),
@@ -87,13 +109,6 @@ export const navData: NavDataItems = [
   },
 
   {
-    title: LanguageKey.nav.image,
-    path: '/image',
-    workspace: ['wp_news', 'wp_books', 'wp_system'],
-    icon: icon('ic-image'),
-  },
-
-  {
     title: LanguageKey.nav.category,
     path: '/category',
     workspace: ['wp_news', 'wp_books'],
@@ -106,19 +121,6 @@ export const navData: NavDataItems = [
     path: '/site',
     icon: icon('ic-site'),
   },
-  {
-    title: LanguageKey.nav.user,
-    workspace: ['wp_system'],
-    path: '/users',
-    icon: icon('ic-user'),
-  },
-
-  {
-    title: LanguageKey.nav.batchLogs,
-    workspace: ['wp_system'],
-    path: '/logs',
-    icon: icon('ic-batch-logs'),
-  },
 
   {
     title: LanguageKey.nav.setting,
@@ -127,9 +129,9 @@ export const navData: NavDataItems = [
     icon: icon('ic-setting'),
     children: [
       {
-        title: LanguageKey.nav.role,
-        path: '/roles',
-        icon: icon('ic-role'),
+        title: LanguageKey.nav.batchLogs,
+        path: '/logs',
+        icon: icon('ic-batch-logs'),
       },
       {
         title: LanguageKey.nav.color,

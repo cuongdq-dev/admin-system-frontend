@@ -68,9 +68,15 @@ interface ImageUploadProps {
   value?: File | string;
   defaultValue?: File | string;
   onChange?: (file?: File | string) => void;
+  disabled?: boolean;
 }
 
-export const ImageUpload: React.FC<ImageUploadProps> = ({ value, defaultValue, onChange }) => {
+export const ImageUpload: React.FC<ImageUploadProps> = ({
+  value,
+  defaultValue,
+  disabled,
+  onChange,
+}) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = React.useState(false);
 
@@ -98,8 +104,15 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ value, defaultValue, o
 
   return (
     <Box width="100%" height="100%">
-      <input ref={inputRef} type="file" hidden onChange={handleUpload} accept="image/*" />
-      <ImageButton onClick={handleClickUpload}>
+      <input
+        disabled={disabled}
+        ref={inputRef}
+        type="file"
+        hidden
+        onChange={handleUpload}
+        accept="image/*"
+      />
+      <ImageButton disabled={disabled} onClick={handleClickUpload}>
         <ImageSrc style={{ backgroundImage: `url(${fileUrl || '/static/placeholder.jpg'})` }} />
         <ImageBackdrop className="MuiImageBackdrop-root" />
         <Image>

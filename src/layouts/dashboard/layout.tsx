@@ -118,11 +118,11 @@ export function DashboardLayout({ sx, children, header }: DashboardLayoutProps) 
                       href: '/',
                       icon: <Iconify width={22} icon="solar:home-angle-bold-duotone" />,
                     },
-                    {
-                      label: t(LanguageKey.menu.profile),
-                      href: '/profile',
-                      icon: <Iconify width={22} icon="solar:shield-keyhole-bold-duotone" />,
-                    },
+                    // {
+                    //   label: t(LanguageKey.menu.profile),
+                    //   href: '/profile',
+                    //   icon: <Iconify width={22} icon="solar:shield-keyhole-bold-duotone" />,
+                    // },
                     {
                       label: t(LanguageKey.menu.settings),
                       href: '#',

@@ -19,7 +19,7 @@ import { PATH_GOOGLE_LOGS_LIST } from 'src/api-core/path';
 import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { fDate, formatStr, fRelativeTime } from 'src/utils/format-time';
@@ -165,7 +165,7 @@ export function GoogleLogsListView() {
     <DashboardContent
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
     >
-      <HeadComponent title={'Google Logs '} />
+      <HeadComponent subject={SubjectConfig.GOOGLE} title={'Google Logs '} />
       <LogsFilters storeName={storeName} />
 
       <TableComponent

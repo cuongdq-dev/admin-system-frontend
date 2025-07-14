@@ -33,7 +33,8 @@ import {
   RHFTextField,
 } from 'src/components/hook-form';
 import { Scrollbar } from 'src/components/scrollbar';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
+import { usePermissions } from 'src/hooks/use-permissions';
 import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/page';
 import { useSettingStore } from 'src/store/setting';
@@ -45,10 +46,13 @@ export function DetailView() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { setNotify } = useNotifyStore.getState();
-
+  const { hasPermission } = usePermissions();
   // Determine if we're in create or update mode
   const isCreateMode = !id || id === 'create';
   const isUpdateMode = !isCreateMode;
+
+  const canDelete = hasPermission(SubjectConfig.USERS, 'delete');
+  const canUpdate = hasPermission(SubjectConfig.USERS, isCreateMode ? 'create' : 'update');
 
   // Detail Store
   const { setDetail, setLoadingDetail } = usePageStore();
@@ -310,7 +314,11 @@ export function DetailView() {
               </Button>
               <Button
                 variant="contained"
-                disabled={(!isDirty && isUpdateMode) || isSubmitting}
+                sx={{
+                  cursor:
+                    !canUpdate || (!isDirty && isUpdateMode) || isSubmitting ? 'no-drop' : 'unset',
+                }}
+                disabled={!canUpdate || (!isDirty && isUpdateMode) || isSubmitting}
                 startIcon={<SaveIcon />}
                 type="submit"
               >
@@ -324,12 +332,14 @@ export function DetailView() {
               </Button>
               {isUpdateMode && (
                 <ButtonDelete
+                  subject={SubjectConfig.USERS}
                   startIcon={<DeleteIcon />}
                   variant="contained"
                   color="error"
                   withLoading
                   title={t(LanguageKey.button.delete)}
-                  disabled={isSubmitting}
+                  sx={{ cursor: !canDelete || isSubmitting ? 'no-drop' : 'unset' }}
+                  disabled={!canDelete || isSubmitting}
                   type="button"
                   handleDelete={handleDeleteUser}
                 />
@@ -376,6 +386,7 @@ export function DetailView() {
               >
                 <Box>
                   <RHFTextField
+                    disabled={!canUpdate}
                     name="name"
                     label={t(LanguageKey.user.nameItem)}
                     placeholder="Enter full name"
@@ -383,6 +394,7 @@ export function DetailView() {
                 </Box>
                 <Box>
                   <RHFTextField
+                    disabled={!canUpdate}
                     name="email"
                     type="email"
                     label={t(LanguageKey.user.emailItem)}
@@ -401,6 +413,7 @@ export function DetailView() {
               >
                 <Box>
                   <RHFTextField
+                    disabled={!canUpdate}
                     name="phoneNumber"
                     label={t(LanguageKey.user.phoneItem)}
                     placeholder="Enter phone number"
@@ -408,6 +421,7 @@ export function DetailView() {
                 </Box>
                 <Box>
                   <RHFTextField
+                    disabled={!canUpdate}
                     name="address"
                     label={t(LanguageKey.user.addressItem)}
                     placeholder="Enter address"
@@ -426,6 +440,7 @@ export function DetailView() {
               >
                 <Box>
                   <PasswordText
+                    disabled={!canUpdate}
                     name="password"
                     label={t(LanguageKey.form.passwordItem)}
                     placeholder={
@@ -436,6 +451,7 @@ export function DetailView() {
                 </Box>
                 <Box>
                   <PasswordText
+                    disabled={!canUpdate}
                     name="confirmPassword"
                     label={t(LanguageKey.form.confirmPasswordItem)}
                     placeholder="Confirm password"
@@ -450,6 +466,7 @@ export function DetailView() {
                   {t(LanguageKey.user.activeItem)}
                 </Typography>
                 <ToggleButtonGroup
+                  disabled={!canUpdate}
                   value={watch('is_active')}
                   exclusive
                   onChange={(event, newValue) => {
@@ -480,6 +497,7 @@ export function DetailView() {
               <Box>
                 <RHFAutocomplete
                   name="roles"
+                  disabled={!canUpdate}
                   title={t(LanguageKey.user.roleItem)}
                   defaultValue={data?.roles?.map((role) => {
                     return { id: role.id, title: role.name };

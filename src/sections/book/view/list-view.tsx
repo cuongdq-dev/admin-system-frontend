@@ -4,7 +4,7 @@ import { PATH_BOOK } from 'src/api-core/path';
 import { Iconify } from 'src/components/iconify';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent, timeAgo } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
@@ -156,9 +156,10 @@ export function ListView() {
     <DashboardContent
       breadcrumb={{ items: [{ href: '/book', title: t(LanguageKey.common.listTitle) }] }}
     >
-      <HeadComponent title={t(LanguageKey.book.listPageTitle)} />
+      <HeadComponent subject={SubjectConfig.BOOKS} title={t(LanguageKey.book.listPageTitle)} />
       <BookFilter storeName={storeName} />
       <TableComponent
+        subject={SubjectConfig.BOOKS}
         component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}
         url={PATH_BOOK}

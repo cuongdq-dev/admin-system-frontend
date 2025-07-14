@@ -401,8 +401,9 @@ interface RHFEditorProps {
   loading?: boolean;
   name: string;
   defaultValue?: string;
+  disabled?: boolean;
 }
-export const RHFEditor = ({ name, loading = false, defaultValue }: RHFEditorProps) => {
+export const RHFEditor = ({ name, disabled, loading = false, defaultValue }: RHFEditorProps) => {
   const editorRef = useRef<any>();
 
   const { control, setValue } = useFormContext();
@@ -410,6 +411,7 @@ export const RHFEditor = ({ name, loading = false, defaultValue }: RHFEditorProp
   return (
     <Controller
       name={name}
+      disabled={disabled}
       control={control}
       defaultValue={defaultValue}
       render={({ field: { value, onChange } }) => {
@@ -417,6 +419,7 @@ export const RHFEditor = ({ name, loading = false, defaultValue }: RHFEditorProp
           <Editor
             ref={editorRef}
             contents={value}
+            disabled={disabled}
             onSave={() => {
               const content = editorRef.current.editor.getContents();
               setValue(name, content, { shouldDirty: true });

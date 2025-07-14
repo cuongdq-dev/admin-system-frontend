@@ -1,2 +1,2 @@
-export * from './detail-view';
 export * from './list-view';
+export * from './form-view';

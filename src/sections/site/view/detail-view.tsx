@@ -19,7 +19,7 @@ import { PATH_SITE } from 'src/api-core/path';
 import { FormProvider, RHFCheckbox, RHFTextField } from 'src/components/hook-form';
 import { PageLoading } from 'src/components/loading';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { PostItem } from 'src/sections/blog/post-item';
 import { useNotifyStore } from 'src/store/notify';
@@ -237,6 +237,7 @@ export function DetailView() {
             </Box>
             <Grid container spacing={3}>
               <TableComponent
+                subject={SubjectConfig.SITES}
                 updateUrlEnabled={false}
                 storeName={StoreName.SITE_BLOG}
                 component={'CARD'}

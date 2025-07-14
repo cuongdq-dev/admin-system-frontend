@@ -8,12 +8,17 @@ interface RHFUploadProps {
   name: string;
 }
 
-export const RHFUpload = ({ name, defaultValue }: RHFUploadProps & FormControlLabelProps) => {
+export const RHFUpload = ({
+  name,
+  defaultValue,
+  disabled,
+}: RHFUploadProps & FormControlLabelProps) => {
   const { control, setValue } = useFormContext();
 
   return (
     <Controller
       name={name}
+      disabled={disabled}
       control={control}
       render={({ field: { value: file } }) => {
         const fileUrl = file instanceof File ? URL.createObjectURL(file) : file;
@@ -21,6 +26,7 @@ export const RHFUpload = ({ name, defaultValue }: RHFUploadProps & FormControlLa
         return (
           <ImageUpload
             value={fileUrl}
+            disabled={disabled}
             defaultValue={defaultValue as File | string}
             onChange={(value) => {
               setValue(name, value, { shouldDirty: true });

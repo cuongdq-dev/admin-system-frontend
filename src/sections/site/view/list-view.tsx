@@ -6,7 +6,7 @@ import { PATH_SITE } from 'src/api-core/path';
 import { PopupFormTable } from 'src/components/form/form-table';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
@@ -105,6 +105,7 @@ export function ListView() {
       breadcrumb={{ items: [{ href: '/site', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent
+        subject={SubjectConfig.SITES}
         title={t(LanguageKey.site.listPageTitle)}
         buttonTitle={t(LanguageKey.site.addNewButton)}
         onClickButton={() =>
@@ -116,6 +117,7 @@ export function ListView() {
         }
       />
       <TableComponent
+        subject={SubjectConfig.SITES}
         component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}
         url={PATH_SITE}

@@ -15,7 +15,7 @@ import { IconButtonDelete } from 'src/components/button';
 import { GuideList } from 'src/components/guide';
 import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { IndexStatus } from 'src/sections/google/components/index-status';
 import { usePageStore } from 'src/store/page';
@@ -130,6 +130,7 @@ export function ListArchivedView() {
 
       <TableComponent
         component={isMobile ? 'CARD' : 'TABLE'}
+        subject={SubjectConfig.POSTS}
         storeName={storeName}
         url={PATH_BLOG_ARCHIVED}
         indexCol={true}

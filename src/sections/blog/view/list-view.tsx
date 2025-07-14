@@ -4,7 +4,7 @@ import { PATH_BLOG } from 'src/api-core/path';
 import { HeadComponent } from 'src/components/page-head';
 import { Scrollbar } from 'src/components/scrollbar';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
@@ -29,10 +29,11 @@ export function ListView() {
       <DashboardContent
         breadcrumb={{ items: [{ href: '/blog', title: t(LanguageKey.common.listTitle) }] }}
       >
-        <HeadComponent title={t(LanguageKey.blog.tableTitle)} />
+        <HeadComponent subject={SubjectConfig.POSTS} title={t(LanguageKey.blog.tableTitle)} />
         <BlogFilter storeName={storeName} />
         <Grid container spacing={3} mb={2}>
           <TableComponent
+            subject={SubjectConfig.POSTS}
             storeName={storeName}
             component={'CARD'}
             url={PATH_BLOG}

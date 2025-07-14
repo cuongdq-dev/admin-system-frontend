@@ -19,6 +19,7 @@ import { LanguageKey } from 'src/constants';
 import { useNotifyStore } from 'src/store/notify';
 import { Transition } from '../dialog';
 import { Iconify } from '../iconify';
+import { usePermissions } from 'src/hooks/use-permissions';
 
 export const ButtonDismissNotify = (props: { textColor?: string; keyNotify: SnackbarKey }) => {
   const { textColor, keyNotify } = props;
@@ -31,6 +32,7 @@ export const ButtonDismissNotify = (props: { textColor?: string; keyNotify: Snac
 
 type IconButtonDeleteProps = {
   title?: string;
+  subject?: string;
   baseUrl: string;
   rowId?: string;
   refreshData?: () => void;
@@ -43,7 +45,7 @@ type IconButtonDeleteProps = {
 };
 
 export const IconButtonDelete = (props: IconButtonDeleteProps) => {
-  const { title = '', baseUrl, rowId, refreshData, handleLoading, handleDelete } = props;
+  const { title = '', baseUrl, rowId, subject, refreshData, handleLoading, handleDelete } = props;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { setNotify } = useNotifyStore.getState();
@@ -72,9 +74,16 @@ export const IconButtonDelete = (props: IconButtonDeleteProps) => {
     });
   };
 
+  const { hasPermission } = usePermissions();
+  const canDelete = hasPermission(props.subject!, 'delete');
+
   return (
     <>
-      <MenuItem sx={{ color: 'error.main' }} onClick={() => setOpen(true)}>
+      <MenuItem
+        sx={{ cursor: !canDelete ? 'no-drop' : 'unset', color: 'error.main' }}
+        disabled={!canDelete}
+        onClick={() => setOpen(true)}
+      >
         <Box
           sx={{
             position: 'relative',
@@ -119,19 +128,33 @@ export const IconButtonDelete = (props: IconButtonDeleteProps) => {
   );
 };
 
-type ButtonDeleteProps = { title?: string; withLoading?: boolean; handleDelete?: () => void };
+type ButtonDeleteProps = {
+  subject?: string;
+  title?: string;
+  withLoading?: boolean;
+  handleDelete?: () => void;
+};
 export const ButtonDelete = (props: ButtonDeleteProps & LoadingButtonProps) => {
-  const { title, withLoading, handleDelete, ...other } = props;
+  const { title, withLoading, handleDelete, subject, ...other } = props;
   const [open, setOpen] = useState(false);
 
+  const { hasPermission } = usePermissions();
+  const canDelete = hasPermission(subject!, 'delete');
   return (
     <>
       {withLoading ? (
-        <LoadingButton onClick={() => setOpen(true)} {...other}>
+        <LoadingButton
+          sx={{ cursor: !canDelete ? 'no-drop' : 'unset' }}
+          disabled={!canDelete}
+          onClick={() => setOpen(true)}
+          {...other}
+        >
           {title}
         </LoadingButton>
       ) : (
         <IconButton
+          sx={{ cursor: !canDelete ? 'no-drop' : 'unset' }}
+          disabled={!canDelete}
           onClick={() => {
             setOpen(true);
           }}

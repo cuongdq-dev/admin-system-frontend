@@ -281,6 +281,7 @@ declare type ActionProps = {
 
 declare type TableActionComponentProps = {
   baseUrl: string;
+  subject?: string;
   row?: Record<string, any>;
   editBtn?: boolean;
   deleteBtn?: boolean;
@@ -303,6 +304,7 @@ declare type ChildrenColumn = {
 };
 declare type TableComponentProps = {
   component?: 'CARD' | 'TABLE';
+  subject?: string;
   children?: ChildrenColumn;
   updateUrlEnabled?: boolean;
   customCard?: ({

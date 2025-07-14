@@ -14,7 +14,7 @@ import { IconButtonDelete } from 'src/components/button';
 import { GuideList } from 'src/components/guide';
 import { Iconify } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { fRelativeTime } from 'src/utils/format-time';
@@ -109,6 +109,7 @@ export function ListUnusedView() {
       <TableComponent
         component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}
+        subject={SubjectConfig.POSTS}
         url={PATH_BLOG_UNUSED}
         indexCol={true}
         refreshData={refreshData}

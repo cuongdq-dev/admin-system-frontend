@@ -24,7 +24,7 @@ import { IconButtonDelete } from 'src/components/button';
 import { GuideList } from 'src/components/guide';
 import { Iconify } from 'src/components/iconify';
 import { TableActionComponent, TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { formatStr, fRelativeTime } from 'src/utils/format-time';
@@ -97,6 +97,7 @@ export function ListTrendingView() {
         if (!totalSiteCount)
           return (
             <TableActionComponent
+              subject={SubjectConfig.POSTS}
               baseUrl={PATH_TRENDINGS_SEARCH}
               deleteBtn
               row={row}
@@ -119,6 +120,7 @@ export function ListTrendingView() {
       <TableComponent
         component={isMobile ? 'CARD' : 'TABLE'}
         storeName={storeName}
+        subject={SubjectConfig.POSTS}
         url={PATH_TRENDINGS_SEARCH}
         indexCol={true}
         refreshData={refreshData}

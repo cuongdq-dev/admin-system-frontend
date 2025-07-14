@@ -34,7 +34,8 @@ import { HttpMethod, invokeRequest } from 'src/api-core';
 import { PATH_USER_ROLES } from 'src/api-core/path';
 import { ButtonDelete } from 'src/components/button';
 import { Scrollbar } from 'src/components/scrollbar';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
+import { usePermissions } from 'src/hooks/use-permissions';
 import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/page';
 import { useSettingStore } from 'src/store/setting';
@@ -91,10 +92,14 @@ export function DetailView() {
   const navigate = useNavigate();
   const { setDetail, setLoadingDetail } = usePageStore();
   const { setNotify } = useNotifyStore.getState();
+  const { hasPermission } = usePermissions();
 
   // Determine if we're in create or update mode
   const isCreateMode = !id || id === 'create';
   const isUpdateMode = !isCreateMode;
+
+  const canDelete = hasPermission(SubjectConfig.ROLES, 'delete');
+  const canUpdate = hasPermission(SubjectConfig.ROLES, isCreateMode ? 'create' : 'update');
 
   const { data, isLoading = true } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
@@ -450,7 +455,7 @@ export function DetailView() {
               <Button
                 variant="outlined"
                 onClick={handleDiscardChanges}
-                disabled={(!isDirty && isUpdateMode) || isSubmitting}
+                disabled={!canUpdate || (!isDirty && isUpdateMode) || isSubmitting}
                 startIcon={<CloseIcon />}
                 type="button"
               >
@@ -458,7 +463,11 @@ export function DetailView() {
               </Button>
               <Button
                 variant="contained"
-                disabled={(!isDirty && isUpdateMode) || isSubmitting}
+                disabled={!canUpdate || (!isDirty && isUpdateMode) || isSubmitting}
+                sx={{
+                  cursor:
+                    !canUpdate || (!isDirty && isUpdateMode) || isSubmitting ? 'no-drop' : 'unset',
+                }}
                 startIcon={<SaveIcon />}
                 type="submit"
               >
@@ -477,7 +486,8 @@ export function DetailView() {
                   color="error"
                   withLoading
                   title={t(LanguageKey.button.delete)}
-                  disabled={isSubmitting}
+                  disabled={!canDelete || isSubmitting}
+                  sx={{ cursor: !canDelete || isSubmitting ? 'no-drop' : 'unset' }}
                   type="button"
                   handleDelete={handleDeleteRole}
                 />
@@ -501,7 +511,7 @@ export function DetailView() {
                 </Typography>
                 {isUpdateMode && (
                   <Chip
-                    label="0 users with this role"
+                    label={`${data?.users?.length} users with this role`}
                     variant="outlined"
                     size="small"
                     sx={{ color: 'text.secondary' }}
@@ -523,6 +533,7 @@ export function DetailView() {
                   </Typography>
                   <Controller
                     name="name"
+                    disabled={!canUpdate}
                     control={control}
                     rules={{ required: 'Name is required' }}
                     render={({ field, fieldState }) => (
@@ -543,6 +554,7 @@ export function DetailView() {
                     {t(LanguageKey.role.descriptionItem)}
                   </Typography>
                   <Controller
+                    disabled={!canUpdate}
                     name="description"
                     control={control}
                     render={({ field }) => (
@@ -597,6 +609,7 @@ export function DetailView() {
                               }}
                             >
                               <HeaderType
+                                disabled={!canUpdate}
                                 action={action}
                                 handleClick={() => handleColumnHeaderClick(action)}
                                 checked={checked}
@@ -628,6 +641,7 @@ export function DetailView() {
                                 }
                                 size="small"
                                 sx={{ p: 0.5 }}
+                                disabled={!canUpdate}
                                 onClick={() => handleRowHeaderClick(collection.name || '')}
                               />
                               <FolderIcon sx={{ color: '#3f51b5', fontSize: 20 }} />
@@ -646,6 +660,7 @@ export function DetailView() {
                               <TableCell key={`${collection.name}-${action}`} align="center">
                                 {hasAction(collection.name || '', action) ? (
                                   <Checkbox
+                                    disabled={!canUpdate}
                                     checked={getPermissionState(collection.name || '', cl_per?.id!)}
                                     onChange={() => {
                                       handlePermissionToggle(collection.name || '', cl_per?.id!);
@@ -674,11 +689,13 @@ export function DetailView() {
 
 const HeaderType = (props: {
   action: ActionType;
+
   handleClick: () => void;
   checked: boolean;
+  disabled: boolean;
   indeterminate?: boolean;
 }) => {
-  const { action, checked, handleClick, indeterminate } = props;
+  const { action, checked, handleClick, indeterminate, disabled } = props;
   return (
     <Box
       display="flex"
@@ -692,7 +709,6 @@ const HeaderType = (props: {
         p: 1,
         borderRadius: 1,
       }}
-      onClick={handleClick}
     >
       <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
         {t(LanguageKey.role[`${action}Type` as keyof typeof LanguageKey.role]) ||
@@ -700,6 +716,7 @@ const HeaderType = (props: {
       </Typography>
       <Box display="flex" justifyContent="center">
         <Checkbox
+          disabled={disabled}
           checked={checked}
           indeterminate={indeterminate}
           onChange={handleClick}

@@ -17,7 +17,7 @@ import { IconButtonDelete } from '../button';
 
 export const TableActionComponent = (props: TableActionComponentProps) => {
   const navigate = useNavigate();
-  const { deleteBtn, editBtn, popupEdit, row, baseUrl } = props;
+  const { deleteBtn, editBtn, popupEdit, row, baseUrl, subject } = props;
   const { handleClickOpenForm, updateRowData } = props;
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -50,6 +50,7 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
         )}
         {deleteBtn && !editBtn && (
           <IconButtonDelete
+            subject={subject}
             handleDelete={updateRowData}
             rowId={row?.id}
             baseUrl={baseUrl + '/delete/' + row?.id}
@@ -98,6 +99,7 @@ export const TableActionComponent = (props: TableActionComponentProps) => {
           )}
           {deleteBtn && (
             <IconButtonDelete
+              subject={subject}
               handleDelete={(id, updatedData, action) => {
                 updateRowData && updateRowData(id, updatedData, action);
                 handleClosePopover();

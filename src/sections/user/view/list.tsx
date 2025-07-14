@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { PATH_USER_LIST } from 'src/api-core/path';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
@@ -86,6 +86,7 @@ export function ListView() {
       breadcrumb={{ items: [{ href: '/users', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent
+        subject={SubjectConfig.USERS}
         title={t(LanguageKey.user.listPageTitle)}
         description={t(LanguageKey.user.listPageDescription)}
         buttonTitle={t(LanguageKey.user.addNewButton)}
@@ -96,6 +97,7 @@ export function ListView() {
       />
       <TableComponent
         component="TABLE"
+        subject={SubjectConfig.USERS}
         storeName={storeName}
         url={PATH_USER_LIST}
         indexCol={true}

@@ -25,7 +25,7 @@ import { IconButtonDelete } from 'src/components/button';
 import { FormProvider } from 'src/components/hook-form';
 import { Iconify, IconifyProps } from 'src/components/iconify';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
@@ -72,6 +72,7 @@ export const ImagesDockerComponent = (props: ImagesDockerProps) => {
 
           <CardContent style={{ paddingBottom: 0 }} sx={{ padding: 0, marginTop: 3 }}>
             <TableComponent
+              subject={SubjectConfig.MEDIA}
               storeName={storeName}
               component={'TABLE'}
               refreshData={refreshData}

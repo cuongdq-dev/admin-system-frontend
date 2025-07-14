@@ -199,6 +199,7 @@ export function SiteMapListView() {
       breadcrumb={{ items: [{ href: '/indexing', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent
+        subject=""
         title={'Sitemap XML'}
         buttonTitle={t(LanguageKey.button.create)}
         onClickButton={() =>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PATH_USER_ROLES } from 'src/api-core/path';
 import { HeadComponent } from 'src/components/page-head';
 import { TableComponent } from 'src/components/table';
-import { LanguageKey, StoreName } from 'src/constants';
+import { LanguageKey, StoreName, SubjectConfig } from 'src/constants';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
@@ -47,7 +47,7 @@ export function ListView() {
       render: ({ row }) => {
         return (
           <>
-            {row?.user?.length || 0} {t(LanguageKey.role.userItem)}
+            {row?.users?.length || 0} {t(LanguageKey.role.userItem)}
           </>
         );
       },
@@ -67,6 +67,7 @@ export function ListView() {
       breadcrumb={{ items: [{ href: '/role', title: t(LanguageKey.common.listTitle) }] }}
     >
       <HeadComponent
+        subject={SubjectConfig.ROLES}
         title={t(LanguageKey.role.listPageTitle)}
         description={t(LanguageKey.role.listPageDescription)}
         buttonTitle={t(LanguageKey.role.addNewButton)}
@@ -76,6 +77,7 @@ export function ListView() {
         }}
       />
       <TableComponent
+        subject={SubjectConfig.ROLES}
         component="TABLE"
         storeName={storeName}
         url={PATH_USER_ROLES}

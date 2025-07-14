@@ -513,3 +513,17 @@ export const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
+
+export const SubjectConfig = {
+  USERS: 'users',
+  GOOGLE: 'google',
+  SERVERS: 'servers',
+  ROLES: 'roles',
+  POSTS: 'posts',
+  BOOKS: 'books',
+  SITES: 'sites',
+  CATEGORIES: 'categories',
+  CHAPTERS: 'chapters',
+  MEDIA: 'media ',
+  TRENDINGS: 'trendings',
+};

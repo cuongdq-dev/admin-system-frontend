@@ -38,8 +38,10 @@ export const TableComponent = (props: TableComponentProps) => {
 
   const { headLabel, url, indexCol, selectCol, storeName, component, children } = props;
   const { refreshData, customCard, handleClickOpenForm } = props;
-  const { actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true } } =
-    props;
+  const {
+    subject,
+    actions = { deleteBtn: false, editBtn: false, popupEdit: false, refreshBtn: true },
+  } = props;
 
   const { setList, addItem, editItem, deleteItem, setLoadingList, setFetchingList } =
     usePageStore.getState();
@@ -297,6 +299,7 @@ export const TableComponent = (props: TableComponentProps) => {
                             <TableCell align="right">
                               <TableActionComponent
                                 {...actions}
+                                subject={subject}
                                 baseUrl={url}
                                 row={row}
                                 updateRowData={updateRowData}

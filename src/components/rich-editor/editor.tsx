@@ -12,6 +12,7 @@ interface Props {
   onBlur?: Function;
   onChange?: Function;
   onSave: Function;
+  disabled?: boolean;
 }
 
 interface State {
