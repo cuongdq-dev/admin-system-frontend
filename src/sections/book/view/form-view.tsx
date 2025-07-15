@@ -924,42 +924,49 @@ const ButtonGemini = ({ disabled, onClick }: { disabled?: boolean; onClick: () =
   const [open, setOpen] = useState(false);
 
   return (
-    <Tooltip title={t(LanguageKey.book.gemimiGenerate)}>
-      <Button disabled={disabled} onClick={() => setOpen(true)} variant="contained" color="primary">
-        <Iconify icon="carbon:ai-generate" />
-        <Dialog
-          PaperProps={{ sx: { borderRadius: 3 } }}
-          TransitionComponent={Transition}
-          maxWidth={'sm'}
-          open={open}
-          fullWidth
-          onClose={() => setOpen(false)}
-          aria-labelledby="responsive-dialog-title"
+    <>
+      <Tooltip title={t(LanguageKey.book.gemimiGenerate)}>
+        <Button
+          disabled={disabled}
+          onClick={() => setOpen(true)}
+          variant="contained"
+          color="primary"
         >
-          <DialogTitle id="responsive-dialog-title">
-            {/* TODO UPDATE LANGUAGE */}
-            Generate Data With Gemini AI
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>Dữ liệu sẽ bị thay đổi, bạn có chắc chắn?</DialogContentText>
-          </DialogContent>
-          <DialogActions style={{ padding: 20 }}>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => {
-                onClick();
-                setOpen(false);
-              }}
-            >
-              {t(LanguageKey.button.accept)}
-            </Button>
-            <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
-              {t(LanguageKey.button.cancel)}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Button>
-    </Tooltip>
+          <Iconify icon="carbon:ai-generate" />
+        </Button>
+      </Tooltip>
+      <Dialog
+        PaperProps={{ sx: { borderRadius: 3 } }}
+        TransitionComponent={Transition}
+        maxWidth={'sm'}
+        open={open}
+        fullWidth
+        onClose={() => setOpen(false)}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">
+          {/* TODO UPDATE LANGUAGE */}
+          Generate Data With Gemini AI
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>Dữ liệu sẽ bị thay đổi, bạn có chắc chắn?</DialogContentText>
+        </DialogContent>
+        <DialogActions style={{ padding: 20 }}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              onClick();
+              setOpen(false);
+            }}
+          >
+            {t(LanguageKey.button.accept)}
+          </Button>
+          <Button color="inherit" variant="outlined" onClick={() => setOpen(false)} autoFocus>
+            {t(LanguageKey.button.cancel)}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
