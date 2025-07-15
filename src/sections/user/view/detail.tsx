@@ -129,10 +129,6 @@ export function DetailView() {
       },
       onHandleError: (error) => {
         setLoadingDetail(storeName, false);
-        setNotify({
-          title: t(LanguageKey.notify.errorInvalidData),
-          options: { variant: 'error' },
-        });
       },
     });
   };
@@ -206,12 +202,6 @@ export function DetailView() {
         },
         onHandleError: (error) => {
           console.error('Save failed:', error);
-          setNotify({
-            title: isCreateMode
-              ? t(LanguageKey.notify.errorInvalidData)
-              : t(LanguageKey.notify.errorInvalidData),
-            options: { variant: 'error' },
-          });
         },
       });
     } catch (error) {
@@ -250,13 +240,6 @@ export function DetailView() {
         setNotify({
           title: t(LanguageKey.notify.successDelete),
           options: { variant: 'success' },
-        });
-      },
-      onHandleError: (error) => {
-        console.error('Delete failed:', error);
-        setNotify({
-          title: t(LanguageKey.notify.errorInvalidData),
-          options: { variant: 'error' },
         });
       },
     });

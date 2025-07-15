@@ -191,8 +191,8 @@ export const FormView = React.memo(({ slug }: { slug?: string }) => {
     closeSnackbar(`update_status_${data?.status}_${data?.id}`);
     setLoadingDetail(storeName, true);
     invokeRequest({
-      method: HttpMethod.POST,
-      baseURL: PATH_BLOG + '/update/' + data?.id,
+      method: HttpMethod.PATCH,
+      baseURL: PATH_BLOG + '/publish/' + data?.id,
       params: values,
       onHandleError() {
         setTimeout(() => {

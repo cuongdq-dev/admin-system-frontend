@@ -6,13 +6,18 @@ import Typography from '@mui/material/Typography';
 import { RouterLink } from 'src/routes/components';
 
 import { SimpleLayout } from 'src/layouts/simple';
+import { DashboardLayout } from 'src/layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
 export function NotFoundView() {
   return (
-    <SimpleLayout content={{ compact: true }}>
-      <Container>
+    <DashboardLayout>
+      <Container
+        component="div"
+        maxWidth="xl"
+        sx={{ py: 10, alignItems: 'center', display: 'flex', flexDirection: 'column' }}
+      >
         <Typography variant="h3" sx={{ mb: 2 }}>
           Sorry, page not found!
         </Typography>
@@ -25,13 +30,13 @@ export function NotFoundView() {
         <Box
           component="img"
           src="/assets/illustrations/illustration-404.svg"
-          sx={{ width: 320, height: 'auto', my: { xs: 5, sm: 10 } }}
+          sx={{ width: '30%', height: 'auto', my: { xs: 5, sm: 10 } }}
         />
 
         <Button component={RouterLink} href="/" size="large" variant="contained" color="inherit">
           Go to home
         </Button>
       </Container>
-    </SimpleLayout>
+    </DashboardLayout>
   );
 }

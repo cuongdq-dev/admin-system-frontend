@@ -36,15 +36,17 @@ export const ApiCore = {
   delete: axios.delete,
 };
 
-export const handleError = (err: AxiosError) => {
+export const handleRedirectError = (err: AxiosError) => {
   const statusErr = err.response?.status;
   if (statusErr === 401) {
     location.replace('/sign-in');
     removeCookie('token');
     removeCookie('refresh-token');
     removeCookie('user-info');
-  } else if (statusErr === 403 || statusErr === 404) {
-    // location.replace('/404');
+  } else if (statusErr === 404) {
+    location.replace('/404');
+  } else if (statusErr === 403) {
+    // location.replace('/access-denied');
   } else {
   }
 };
@@ -102,7 +104,7 @@ export const invokeRequest = async (options: RequestProps) => {
         },
       });
 
-    handleError(error as AxiosError);
+    handleRedirectError(error as AxiosError);
     onHandleError && onHandleError(error?.response?.data);
   }
 };

@@ -63,6 +63,7 @@ export const BatchLogsPage = lazy(() => import('src/pages/logs/list'));
 
 //
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const PageForbidden = lazy(() => import('src/pages/forbidden'));
 
 //GOOGLE PAGE
 export const GoogleLogsDetail = lazy(() => import('src/pages/google/logs/detail'));
@@ -489,6 +490,15 @@ export const RouterConfig = [
     element: (
       <PrivateRoute>
         <Page404 />
+      </PrivateRoute>
+    ),
+  },
+
+  {
+    path: '/access-denied',
+    element: (
+      <PrivateRoute>
+        <PageForbidden />
       </PrivateRoute>
     ),
   },
