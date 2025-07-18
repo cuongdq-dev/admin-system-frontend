@@ -372,8 +372,10 @@
   "role_user_item": "Người dùng",
   "role_collection_type": "Collection Type",
   "role_create": "Create",
+  "role_setting": "Setting",
   "role_read": "Read",
   "role_update": "Update",
   "role_delete": "Delete",
-  "role_publish": "Publish"
+  "role_publish": "Publish",
+  "role_can_action_when": "Có thể {action} khi"
 }

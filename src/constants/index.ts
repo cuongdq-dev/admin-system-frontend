@@ -447,6 +447,8 @@ export const LanguageKey = {
     updateType: 'role_update',
     deleteType: 'role_delete',
     publishType: 'role_publish',
+    settingType: 'role_setting',
+    canActionWhen: 'role_can_action_when',
   },
 };
 

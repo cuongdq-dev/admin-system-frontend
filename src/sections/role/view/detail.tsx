@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Close as CloseIcon,
   Delete as DeleteIcon,
@@ -40,6 +38,8 @@ import { useNotifyStore } from 'src/store/notify';
 import { usePageStore } from 'src/store/page';
 import { useSettingStore } from 'src/store/setting';
 import { useShallow } from 'zustand/react/shallow';
+import { HeaderType } from '../components/header-type';
+import { PermissionSettingsModal } from '../components/setting-modal';
 
 interface ICollectionPermission {
   name?: string;
@@ -60,7 +60,7 @@ interface RoleFormData {
     collectionName: string;
     permissionId: string;
     action?: ActionType;
-    // enabled: boolean;
+    conditions?: { ownerOnly?: boolean; asOwner?: boolean };
   }[];
 }
 
@@ -121,7 +121,6 @@ export function DetailView() {
   });
 
   const watchedValues = watch();
-
   const fetchRoleDetail = () => {
     if (isCreateMode) return;
 
@@ -138,6 +137,7 @@ export function DetailView() {
               action: rp.action,
               collectionName: rp.subject,
               permissionId: rp.id,
+              conditions: rp.conditions,
             };
           }),
         });
@@ -169,6 +169,7 @@ export function DetailView() {
     const permission = currentPermissions.find(
       (p) => p.collectionName === collectionName && p.permissionId === permissionId
     );
+
     if (!!permission) {
       setValue(
         'permissions',
@@ -584,14 +585,7 @@ export function DetailView() {
                           const checked = areAllActionPermissionsEnabled(action);
                           const indeterminate = !checked && areSomeActionPermissionsEnabled(action);
                           return (
-                            <TableCell
-                              key={action}
-                              align="center"
-                              sx={{
-                                fontWeight: 600,
-                                color: '#3f51b5',
-                              }}
-                            >
+                            <TableCell key={action} align="center" sx={{ fontWeight: 600 }}>
                               <HeaderType
                                 disabled={!canUpdate}
                                 action={action}
@@ -602,20 +596,28 @@ export function DetailView() {
                             </TableCell>
                           );
                         })}
+
+                        <TableCell
+                          key={'setting-modal'}
+                          align="center"
+                          sx={{ fontWeight: 600 }}
+                        ></TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {collectionPermission.map((collection) => (
-                        <TableRow key={collection.name} hover>
-                          <TableCell
-                            sx={{
-                              cursor: 'pointer',
-                              userSelect: 'none',
-                              '&:hover': {
-                                backgroundColor: 'rgba(63, 81, 181, 0.04)',
-                              },
-                            }}
-                          >
+                        <TableRow
+                          key={collection.name}
+                          hover
+                          sx={{
+                            '& .setting-button': {
+                              opacity: 0,
+                              transition: 'opacity 0.2s ease-in-out',
+                            },
+                            '&:hover .setting-button': { opacity: 1 },
+                          }}
+                        >
+                          <TableCell sx={{ cursor: 'pointer', userSelect: 'none' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                               <Checkbox
                                 checked={areAllCollectionPermissionsEnabled(collection.name || '')}
@@ -640,23 +642,93 @@ export function DetailView() {
                               (cp) => cp.action == action
                             );
 
+                            const permissionsValues = watch('permissions').find(
+                              (p) => p.permissionId == cl_per?.id
+                            );
+
                             return (
                               <TableCell key={`${collection.name}-${action}`} align="center">
                                 {hasAction(collection.name || '', action) ? (
-                                  <Checkbox
-                                    disabled={!canUpdate}
-                                    checked={getPermissionState(collection.name || '', cl_per?.id!)}
-                                    onChange={() => {
-                                      handlePermissionToggle(collection.name || '', cl_per?.id!);
-                                    }}
-                                    size="medium"
-                                  />
+                                  <Box
+                                    position="relative"
+                                    display="flex"
+                                    flexDirection="row"
+                                    justifyContent="center"
+                                    justifyItems="center"
+                                    justifySelf="center"
+                                  >
+                                    {Number(
+                                      Object.keys(permissionsValues?.conditions || {}).length
+                                    ) > 0 && (
+                                      <Box
+                                        sx={(theme) => {
+                                          return {
+                                            width: 7,
+                                            height: 7,
+                                            borderRadius: 10,
+                                            backgroundColor: 'red',
+                                            position: 'absolute',
+                                            left: 3,
+                                            top: 3,
+                                          };
+                                        }}
+                                      />
+                                    )}
+
+                                    <Checkbox
+                                      disabled={!canUpdate}
+                                      checked={getPermissionState(
+                                        collection.name || '',
+                                        cl_per?.id!
+                                      )}
+                                      onChange={() => {
+                                        handlePermissionToggle(collection.name || '', cl_per?.id!);
+                                      }}
+                                      size="medium"
+                                    />
+                                  </Box>
                                 ) : (
                                   <Box sx={{ width: 24, height: 24 }} />
                                 )}
                               </TableCell>
                             );
                           })}
+
+                          <TableCell
+                            key={`${collection.name}-setting`}
+                            align="center"
+                            sx={{ cursor: 'pointer', position: 'relative' }}
+                          >
+                            <Box className="setting-button">
+                              <PermissionSettingsModal
+                                onApply={(newConditions) => {
+                                  const currentPermissions = watch('permissions');
+                                  const updatedPermissions = currentPermissions.map(
+                                    (permission) => {
+                                      // Chỉ cập nhật nếu điều kiện thuộc cùng collection
+                                      if (permission.collectionName === collection.name) {
+                                        const matched = newConditions?.find(
+                                          (c) => c.permissionId === permission.permissionId
+                                        );
+                                        if (matched) {
+                                          return {
+                                            ...permission,
+                                            conditions: matched.conditions, // Cập nhật điều kiện mới
+                                          };
+                                        }
+                                      }
+                                      return permission; // Giữ nguyên nếu không có thay đổi
+                                    }
+                                  );
+                                  setValue('permissions', updatedPermissions);
+                                }}
+                                collectionName={collection.name!}
+                                currentSettings={watchedValues?.permissions?.filter(
+                                  (p) => p.collectionName == collection.name
+                                )}
+                              />
+                            </Box>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -670,43 +742,3 @@ export function DetailView() {
     </Scrollbar>
   );
 }
-
-const HeaderType = (props: {
-  action: ActionType;
-
-  handleClick: () => void;
-  checked: boolean;
-  disabled: boolean;
-  indeterminate?: boolean;
-}) => {
-  const { action, checked, handleClick, indeterminate, disabled } = props;
-  return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      sx={{
-        cursor: 'pointer',
-        userSelect: 'none',
-        '&:hover': {
-          backgroundColor: 'rgba(63, 81, 181, 0.04)',
-        },
-        p: 1,
-        borderRadius: 1,
-      }}
-    >
-      <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
-        {t(LanguageKey.role[`${action}Type` as keyof typeof LanguageKey.role]) ||
-          action.toUpperCase()}
-      </Typography>
-      <Box display="flex" justifyContent="center">
-        <Checkbox
-          disabled={disabled}
-          checked={checked}
-          indeterminate={indeterminate}
-          onChange={handleClick}
-          size="medium"
-        />
-      </Box>
-    </Box>
-  );
-};
