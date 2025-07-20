@@ -40,7 +40,7 @@ declare type ISocketStore = {
   list?: IStoreList;
 };
 
-declare type TableBase = {
+declare type IBaseEntity = {
   id: string;
   created_at?: Date;
   updated_at?: Date;
@@ -259,7 +259,7 @@ declare type HeadLabelProps = {
   render?: ({
     row,
     refreshData,
-    refreshData,
+    updateRowData,
   }: {
     row: Record<string, any>;
     refreshData?: () => void;
@@ -376,37 +376,9 @@ declare type IBreadcrumb = {
   items?: { href?: string; title?: string }[];
 };
 
-// ROLE
-
-interface ICollectionPermission {
-  name?: string;
-  permissions?: {
-    id: string;
-    action?: 'read' | 'update' | 'create' | 'delete' | 'publish'; //read, update, create, delete, publish
-    properties?: Record<string, any>;
-    conditions?: Record<string, any>;
-  }[];
-}
-
-interface IPermission extends TableBase {
-  action?: 'read' | 'update' | 'create' | 'delete' | 'publish'; //read, update, create, delete, publish
-  subject?: string;
-  properties?: Record<string, any>;
-  conditions?: Record<string, any>;
-  roles?: IRole[];
-}
-interface IRole extends TableBase {
-  name?: string;
-  description?: string;
-  type?: 'system' | 'custom';
-  is_active?: boolean;
-  permissions?: IPermission[];
-  users?: IUser[];
-}
-
 // TRENDING
 
-interface IMedia extends TableBase {
+interface IMedia extends IBaseEntity {
   id: string;
   filename?: string; //unique
   url?: string;
@@ -424,7 +396,7 @@ interface IMedia extends TableBase {
   variants?: Record<string, any>;
 }
 
-interface IPostCategory extends TableBase {
+interface IPostCategory extends IBaseEntity {
   id?: string;
   name?: string;
   slug?: string; //unique
@@ -437,7 +409,7 @@ interface IPostCategory extends TableBase {
 
 declare type IPostStatus = 'NEW' | 'DRAFT' | 'PUBLISHED' | 'DELETED';
 declare type IBookStatus = 'NEW' | 'DRAFT' | 'PUBLISHED' | 'DELETED';
-interface IPost extends TableBase {
+interface IPost extends IBaseEntity {
   id: string;
   is_published?: string;
   slug?: string;
@@ -457,7 +429,7 @@ interface IPost extends TableBase {
   article?: ITrendingArticle;
 }
 
-interface IChapter extends TableBase {
+interface IChapter extends IBaseEntity {
   id: string;
   slug?: string;
   title?: string;
@@ -471,7 +443,7 @@ interface IChapter extends TableBase {
   // only FE
   type: 'voice' | 'book';
 }
-interface IBook extends TableBase {
+interface IBook extends IBaseEntity {
   id: string;
   is_published?: string;
   slug?: string;
@@ -499,7 +471,7 @@ interface IBook extends TableBase {
   word_count?: number;
 }
 
-interface ITrendingArticle extends TableBase {
+interface ITrendingArticle extends IBaseEntity {
   id?: string;
   title?: string;
   url?: string; //unique
@@ -517,7 +489,7 @@ interface ITrendingArticle extends TableBase {
   posts?: IPost[];
 }
 
-interface ITrending extends TableBase {
+interface ITrending extends IBaseEntity {
   id: string;
   titleQuery?: string; //unique
   titleExploreLink?: string;
@@ -533,7 +505,7 @@ interface ITrending extends TableBase {
   articles?: ITrendingArticle[];
 }
 
-interface ISite extends TableBase {
+interface ISite extends IBaseEntity {
   id?: string;
   description?: string;
   domain?: string;
@@ -548,20 +520,72 @@ interface ISite extends TableBase {
   teleChatId?: string;
 }
 
-interface IUser extends TableBase {
+interface ICollectionPermission {
   name?: string;
-  email?: string;
+  permissions?: {
+    id: string;
+    action?: 'read' | 'update' | 'create' | 'delete' | 'publish'; //read, update, create, delete, publish
+    properties?: Record<string, any>;
+    conditions?: Record<string, any>;
+  }[];
+}
+
+interface IRole {
+  id: string;
+  name?: string;
+  description?: string;
+  type: RoleType;
+  is_active: boolean;
+
+  // Relations
+  user_roles?: IUserRole[];
+  role_permissions?: IRolePermission[];
+}
+
+interface IPermission extends IBaseEntity {
+  subject: string;
+  action?: 'read' | 'update' | 'create' | 'delete' | 'publish';
+  properties?: Record<string, any>;
+  conditions?: Record<string, any>;
+
+  // Relations
+  role_permissions?: IRolePermission[];
+}
+
+interface IUserRole extends IBaseEntity {
+  // Relations
+  user: IUser;
+  role: IRole;
+}
+
+interface IRolePermission extends IBaseEntity {
+  conditions?: Record<string, any>;
+  properties?: Record<string, any>;
+
+  // Relations
+  role: IRole;
+  permission: IPermission;
+}
+
+interface IUser extends IBaseEntity {
+  name: string;
+  email: string;
   address?: string;
   phoneNumber?: string;
-  is_active?: boolean;
-  avatar?: IMedia;
+  password?: string;
+  is_active: boolean;
+  type?: UserType;
+  firebase_token?: string;
   avatar_id?: string;
-  banner?: IMedia;
   banner_id?: string;
+
+  // Relations
+  user_roles?: IUserRole[];
+  avatar?: IMedia;
+  banner?: IMedia;
+  sessions?: ISession[];
   posts?: IPost[];
+  books?: IBook[];
   sites?: ISite[];
   servers?: IServer[];
-  roles?: IRole[];
-  password?: string;
-  confirmPassword?: string;
 }

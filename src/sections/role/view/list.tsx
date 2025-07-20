@@ -47,7 +47,7 @@ export function ListView() {
       render: ({ row }) => {
         return (
           <>
-            {row?.users?.length || 0} {t(LanguageKey.role.userItem)}
+            {row?.user_roles?.length || 0} {t(LanguageKey.role.userItem)}
           </>
         );
       },

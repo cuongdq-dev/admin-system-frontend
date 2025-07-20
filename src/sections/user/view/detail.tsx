@@ -62,7 +62,6 @@ export function DetailView() {
 
   // Get available roles from settings store
   const availableRoles = useSettingStore(useShallow((state) => state.roles)) as IRole[];
-
   // Form validation schema
   const DetailSchema = Yup.object().shape({
     name: Yup.string().required('User name required'),
@@ -122,8 +121,8 @@ export function DetailView() {
         setDetail(storeName, { data: res, isFetching: false, isLoading: false });
         reset({
           ...res,
-          roles: res?.roles?.map((role: IRole) => {
-            return { id: role?.id, title: role?.name };
+          roles: res?.user_roles?.map((ur: IUserRole) => {
+            return { id: ur?.role?.id, title: ur?.role?.name };
           }),
         });
       },
@@ -188,10 +187,9 @@ export function DetailView() {
               password: undefined,
               confirmPassword: undefined,
               is_active: res.is_active ?? true,
-              roles:
-                res?.roles?.map((role: IRole) => {
-                  return { id: role?.id, title: role?.name };
-                }) || [],
+              roles: res?.user_roles?.map((ur: IUserRole) => {
+                return { id: ur?.role?.id, title: ur?.role?.name };
+              }),
             });
 
             setNotify({
@@ -223,8 +221,8 @@ export function DetailView() {
         phoneNumber: data?.phoneNumber || '',
         email: data?.email || '',
         roles:
-          data?.roles?.map((role) => {
-            return { id: role.id, title: role.name };
+          data?.user_roles?.map((ur) => {
+            return { id: ur.id, title: ur.role.name };
           }) || undefined,
       });
     }
@@ -482,8 +480,8 @@ export function DetailView() {
                   name="roles"
                   disabled={!canUpdate}
                   title={t(LanguageKey.user.roleItem)}
-                  defaultValue={data?.roles?.map((role) => {
-                    return { id: role.id, title: role.name };
+                  defaultValue={data?.user_roles?.map((ur) => {
+                    return { id: ur.id, title: ur?.role?.name };
                   })}
                   options={
                     availableRoles?.map((role) => ({

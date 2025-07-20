@@ -20,7 +20,7 @@ type Role = {
 };
 
 export const usePermissions = () => {
-  const userRoles = useSettingStore(useShallow((state) => state.user?.roles)) as Role[];
+  const userRoles = useSettingStore(useShallow((state) => state.user?.user_roles)) as IUserRole[];
 
   // Check if user has specific permission
   const hasPermission = useMemo(() => {
@@ -30,8 +30,8 @@ export const usePermissions = () => {
       }
 
       return userRoles.some((role) => {
-        return role.permissions?.some((permission) => {
-          return permission.subject === subject && permission.action === action;
+        return role.role?.role_permissions?.some((rp) => {
+          return rp.permission.subject === subject && rp.permission.action === action;
         });
       });
     };
@@ -44,9 +44,9 @@ export const usePermissions = () => {
         return false;
       }
 
-      return userRoles.some((role) => {
-        return role.permissions?.some((permission) => {
-          return permission.subject === subject;
+      return userRoles.some((ur) => {
+        return ur.role?.role_permissions?.some((rp) => {
+          return rp?.permission?.subject === subject;
         });
       });
     };
@@ -60,10 +60,13 @@ export const usePermissions = () => {
       }
 
       const permissions: string[] = [];
-      userRoles.forEach((role) => {
-        role.permissions?.forEach((permission) => {
-          if (permission.subject === subject && !permissions.includes(permission.action)) {
-            permissions.push(permission.action);
+      userRoles.forEach((ur) => {
+        ur.role?.role_permissions?.forEach((rp) => {
+          if (
+            rp?.permission?.subject === subject &&
+            !permissions.includes(rp?.permission?.action!)
+          ) {
+            permissions.push(rp?.permission?.action!);
           }
         });
       });

@@ -55,15 +55,15 @@ export function ListView() {
       render: ({ row }) => {
         return (
           <>
-            {row?.roles?.map((role: IRole) => {
+            {row?.user_roles?.map((ur: IUserRole) => {
               return (
                 <Chip
                   sx={{ mx: 0.5 }}
                   color="info"
                   size="small"
                   variant="filled"
-                  key={role.id}
-                  label={role.name}
+                  key={ur.role.id}
+                  label={ur.role.name}
                 />
               );
             })}

@@ -76,7 +76,6 @@ export const IconButtonDelete = (props: IconButtonDeleteProps) => {
 
   const { hasPermission } = usePermissions();
   const canDelete = hasPermission(props.subject!, 'delete');
-
   return (
     <>
       <MenuItem

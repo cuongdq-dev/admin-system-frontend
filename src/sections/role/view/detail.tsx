@@ -41,24 +41,14 @@ import { useShallow } from 'zustand/react/shallow';
 import { HeaderType } from '../components/header-type';
 import { PermissionSettingsModal } from '../components/setting-modal';
 
-interface ICollectionPermission {
-  name?: string;
-  permissions?: {
-    id: string;
-    action?: 'read' | 'update' | 'create' | 'delete' | 'publish';
-    properties?: Record<string, any>;
-    conditions?: Record<string, any>;
-  }[];
-}
-
 type ActionType = 'read' | 'update' | 'create' | 'delete' | 'publish';
 
 interface RoleFormData {
   name: string;
   description: string;
   permissions: {
-    collectionName: string;
-    permissionId: string;
+    collectionName?: string;
+    permissionId?: string;
     action?: ActionType;
     conditions?: { ownerOnly?: boolean; asOwner?: boolean };
   }[];
@@ -127,17 +117,17 @@ export function DetailView() {
     invokeRequest({
       method: HttpMethod.GET,
       baseURL: PATH_USER_ROLES + '/' + id,
-      onSuccess: (res) => {
+      onSuccess: (res: IRole) => {
         setDetail(storeName, { data: res, isFetching: false, isLoading: false });
         reset({
           name: res.name || '',
           description: res.description || '',
-          permissions: res?.permissions?.map((rp: IPermission) => {
+          permissions: res?.role_permissions?.map((rp: IRolePermission) => {
             return {
-              action: rp.action,
-              collectionName: rp.subject,
-              permissionId: rp.id,
-              conditions: rp.conditions,
+              permissionId: rp?.permission?.id,
+              action: rp?.permission?.action,
+              collectionName: rp?.permission?.subject,
+              conditions: rp?.conditions,
             };
           }),
         });
@@ -282,7 +272,7 @@ export function DetailView() {
     return collectionsWithAction.every((collection) => {
       const permission = collection.permissions?.find((p) => p.action === action);
       return (
-        permission && watchedValues.permissions.some((cp) => cp.permissionId === permission.id)
+        permission && watchedValues?.permissions?.some((cp) => cp?.permissionId === permission?.id)
       );
     });
   };
@@ -294,9 +284,9 @@ export function DetailView() {
     );
 
     return collectionsWithAction.some((collection) => {
-      const permission = collection.permissions?.find((p) => p.action === action);
+      const permission = collection?.permissions?.find((p) => p.action === action);
       return (
-        permission && watchedValues.permissions.some((cp) => cp.permissionId === permission.id)
+        permission && watchedValues?.permissions?.some((cp) => cp?.permissionId === permission?.id)
       );
     });
   };
@@ -307,7 +297,7 @@ export function DetailView() {
     if (!collection?.permissions) return false;
 
     return collection.permissions.every((permission) =>
-      watchedValues.permissions.some((cp) => cp.permissionId === permission.id)
+      watchedValues?.permissions?.some((cp) => cp?.permissionId === permission?.id)
     );
   };
 
@@ -317,14 +307,14 @@ export function DetailView() {
     if (!collection?.permissions) return false;
 
     return collection.permissions.some((permission) =>
-      watchedValues.permissions.some((cp) => cp.permissionId === permission.id)
+      watchedValues?.permissions?.some((cp) => cp?.permissionId === permission?.id)
     );
   };
 
   // Get permission state for display
   const getPermissionState = (collectionName: string, permissionId: string): boolean => {
-    const permission = watchedValues.permissions.find(
-      (p) => p.collectionName === collectionName && p.permissionId === permissionId
+    const permission = watchedValues?.permissions?.find(
+      (p) => p?.collectionName === collectionName && p?.permissionId === permissionId
     );
 
     return !!permission || false;
@@ -346,7 +336,7 @@ export function DetailView() {
         method,
         baseURL: url,
         params: formData,
-        onSuccess: (res) => {
+        onSuccess: (res: IRole) => {
           if (isCreateMode) {
             setNotify({
               title: t(LanguageKey.notify.successUpdate),
@@ -358,11 +348,12 @@ export function DetailView() {
             reset({
               name: res.name || '',
               description: res.description || '',
-              permissions: res?.permissions?.map((rp: IPermission) => {
+              permissions: res?.role_permissions?.map((rp: IRolePermission) => {
                 return {
-                  action: rp.action,
-                  collectionName: rp.subject,
-                  permissionId: rp.id,
+                  permissionId: rp?.permission?.id,
+                  action: rp?.permission?.action,
+                  collectionName: rp?.permission?.subject,
+                  conditions: rp?.conditions,
                 };
               }),
             });
@@ -496,7 +487,7 @@ export function DetailView() {
                 </Typography>
                 {isUpdateMode && (
                   <Chip
-                    label={`${data?.users?.length} users with this role`}
+                    label={`${data?.user_roles?.length} users with this role`}
                     variant="outlined"
                     size="small"
                     sx={{ color: 'text.secondary' }}
