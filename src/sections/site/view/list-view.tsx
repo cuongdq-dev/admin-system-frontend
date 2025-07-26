@@ -12,6 +12,7 @@ import { usePageStore } from 'src/store/page';
 import { useShallow } from 'zustand/react/shallow';
 import { SiteForm } from '../components/form-table';
 import { SiteItem } from '../components/site-item';
+import { Label } from 'src/components/label';
 
 type FormConfigState = {
   open: boolean;
@@ -22,6 +23,7 @@ type FormConfigState = {
 
 export function ListView() {
   const storeName = StoreName.SITE;
+  const defaultWorkspaces = (localStorage.getItem('workspaces') || 'wp_system') as workspacesType;
 
   const { setRefreshList } = usePageStore();
   const { refreshNumber = 0 } = usePageStore(
@@ -70,13 +72,26 @@ export function ListView() {
       width: '30%',
     },
     {
+      id: 'type',
+      label: t(LanguageKey.site.typeItem),
+      type: 'custom',
+      width: '10%',
+      render: ({ row }) => {
+        const type = (row as ISite).type;
+        return <Label color={(type === 'BOOK' && 'primary') || 'success'}>{type}</Label>;
+      },
+    },
+    {
       id: 'description',
       label: t(LanguageKey.site.descriptionItem),
       sort: false,
       type: 'text',
       width: '50%',
     },
-    {
+  ];
+
+  defaultWorkspaces !== 'wp_system' &&
+    HeadLabel.push({
       id: 'indexing',
       label: t(LanguageKey.site.indexingItem),
       type: 'custom',
@@ -95,8 +110,7 @@ export function ListView() {
           </Typography>
         );
       },
-    },
-  ];
+    });
 
   const isMobile = useMediaQuery('(max-width:600px)');
 

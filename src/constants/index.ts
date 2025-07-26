@@ -154,6 +154,8 @@ export const LanguageKey = {
     postTitleItem: 'site_post_title',
     requestIndex: 'site_request_index',
     createdAtItem: 'site_created_at_item',
+    workspacesItem: 'site_workspaces_item',
+    typeItem: 'site_type_item',
   },
 
   product: {
@@ -449,6 +451,7 @@ export const LanguageKey = {
     publishType: 'role_publish',
     settingType: 'role_setting',
     canActionWhen: 'role_can_action_when',
+    conditionLabel: 'role_condition_label',
   },
 };
 

@@ -1,3 +1,5 @@
+'use client';
+
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 
@@ -12,7 +14,6 @@ import {
   PATH_ANALYTICS_POST,
   PATH_ANALYTICS_SITE,
   PATH_ANALYTICS_SOURCE,
-  PATH_ANALYTICS_TRENDING,
 } from 'src/api-core/path';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -20,13 +21,18 @@ import { LanguageKey } from 'src/constants';
 import { AnalyticsConversionRates } from '../analytics-conversion-rates';
 import { AnalyticsCurrentVisits } from '../analytics-current-visits';
 import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
+import { AnalyticsNews } from '../analytics-news';
 import { useEffect, useState } from 'react';
+import { Box, useTheme, alpha as hexAlpha } from '@mui/material';
+
+type workspacesType = 'wp_books' | 'wp_news' | 'wp_system';
 
 // ----------------------------------------------------------------------
 
 export function OverviewAnalyticsView() {
   const defaultWorkspaces = (localStorage.getItem('workspaces') || 'wp_system') as workspacesType;
   const [workspace, setWorkspace] = useState<workspacesType>(defaultWorkspaces);
+  const theme = useTheme();
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -46,9 +52,37 @@ export function OverviewAnalyticsView() {
   return (
     <Scrollbar sx={{ maxHeight: '100%', overflowX: 'hidden' }}>
       <DashboardContent maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: { xs: 3, md: 5 } }}>
-          Hi, Welcome back 👋
-        </Typography>
+        <Box
+          sx={{
+            background: `linear-gradient(135deg, ${hexAlpha(theme.palette.primary.main, 0.08)} 0%, ${hexAlpha(theme.palette.secondary.main, 0.08)} 100%)`,
+            borderRadius: 3,
+            p: 4,
+            mb: 2,
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              mb: 1,
+              fontWeight: 800,
+              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
+          >
+            Hi, Welcome back 👋
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              color: theme.palette.text.secondary,
+              fontWeight: 500,
+            }}
+          >
+            Here's what's happening with your content today
+          </Typography>
+        </Box>
 
         <Grid container spacing={3}>
           {workspace == 'wp_books' && (
@@ -120,6 +154,7 @@ export function OverviewAnalyticsView() {
               title={t(LanguageKey.home.sourceSummary)}
             />
           </Grid>
+
           <Grid xs={12} md={6} lg={4}>
             <AnalyticsCurrentVisits
               workspace={workspace}
@@ -136,6 +171,7 @@ export function OverviewAnalyticsView() {
               />
             </Grid>
           )}
+
           {(workspace == 'wp_books' || workspace == 'wp_system') && (
             <Grid xs={12} md={12} lg={12}>
               <AnalyticsConversionRates
@@ -144,6 +180,13 @@ export function OverviewAnalyticsView() {
               />
             </Grid>
           )}
+
+          <Grid xs={12} md={12} lg={12}>
+            <AnalyticsNews
+              title={t(LanguageKey.home.trendingSummary)}
+              subheader="Latest trending topics and discussions"
+            />
+          </Grid>
         </Grid>
       </DashboardContent>
     </Scrollbar>

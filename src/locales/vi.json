@@ -109,6 +109,8 @@
   "site_request_index": "Yêu cầu index",
   "site_indexing": "Đang index",
   "site_created_at_item": "Ngày tạo",
+  "site_workspaces_item": "Workspaces",
+  "site_type_item": "Type",
   "product_nav": "Sản phẩm",
   "product_list_page": "Danh sách sản phẩm",
   "product_detail_page": "Chi tiết sản phẩm",
@@ -377,5 +379,6 @@
   "role_update": "Update",
   "role_delete": "Delete",
   "role_publish": "Publish",
-  "role_can_action_when": "Có thể {action} khi"
+  "role_can_action_when": "Có thể {action} khi",
+  "role_condition_label": "Condition"
 }

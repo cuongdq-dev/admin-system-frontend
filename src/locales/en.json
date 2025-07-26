@@ -112,6 +112,9 @@
   "site_request_index": "Request Index",
   "site_indexing": "Indexing",
   "site_created_at_item": "Created At",
+  "site_workspaces_item": "Workspaces",
+  "site_type_item": "Type",
+
   "product_nav": "Product",
   "product_list_page": "Product List",
   "product_detail_page": "Product Detail",
@@ -374,5 +377,7 @@
   "role_update": "Update",
   "role_delete": "Delete",
   "role_publish": "Publish",
-  "role_can_action_when": "Can {action} when"
+  "role_can_action_when": "Can {action} when",
+
+  "role_condition_label": "Condition"
 }

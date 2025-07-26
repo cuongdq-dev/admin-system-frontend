@@ -1,6 +1,8 @@
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, DialogActions, DialogContent, TextField } from '@mui/material';
 import { t } from 'i18next';
+import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { HttpMethod } from 'src/api-core';
 import { RHFCheckbox, RHFTextField } from 'src/components/hook-form';
 import { RHFAutocomplete } from 'src/components/hook-form/RHFTextField';
@@ -17,7 +19,12 @@ type Props = {
 export const SiteForm = (props: Props) => {
   const { defaultValues, action = HttpMethod.PATCH, isSubmitting, handleCloseForm } = props;
   const { categories } = useSettingStore(useShallow((state) => ({ ...state.dropdown })));
+  const defaultWorkspaces = (localStorage.getItem('workspaces') || 'wp_system') as workspacesType;
 
+  const TypeOptions = [
+    { id: 'POST', title: 'POST' },
+    { id: 'BOOK', title: 'BOOK' },
+  ];
   return (
     <>
       <DialogContent>
@@ -29,7 +36,6 @@ export const SiteForm = (props: Props) => {
             fullWidth
             defaultValue={defaultValues?.name}
           />
-
           <RHFTextField
             name="description"
             multiline
@@ -37,14 +43,12 @@ export const SiteForm = (props: Props) => {
             label={t(LanguageKey.site.descriptionItem)}
             defaultValue={defaultValues?.description || ''}
           />
-
           <RHFCheckbox
             name="autoPost"
             control={<></>}
             label={t(LanguageKey.site.autoPostItem)}
             defaultChecked={defaultValues?.autoPost}
           />
-
           <RHFTextField
             defaultValue={defaultValues?.domain}
             id="domain"
@@ -53,7 +57,6 @@ export const SiteForm = (props: Props) => {
             type="text"
             fullWidth
           />
-
           {action != HttpMethod.POST && (
             <RHFTextField
               multiline
@@ -78,6 +81,22 @@ export const SiteForm = (props: Props) => {
               <TextField {...params} margin="normal" label={t(LanguageKey.site.categoriesItem)} />
             )}
           />
+          {defaultWorkspaces == 'wp_system' && (
+            <RHFAutocomplete
+              multiple={false}
+              options={TypeOptions}
+              defaultValue={
+                action == HttpMethod.PATCH
+                  ? TypeOptions.find((t) => t.id == defaultValues?.type)
+                  : TypeOptions[0]
+              }
+              name="type"
+              title={t(LanguageKey.site.typeItem)}
+              renderInput={(params) => (
+                <TextField {...params} margin="normal" label={t(LanguageKey.site.typeItem)} />
+              )}
+            />
+          )}
         </Box>
       </DialogContent>
       <DialogActions style={{ padding: 20 }}>

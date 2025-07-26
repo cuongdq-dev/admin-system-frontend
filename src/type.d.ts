@@ -518,6 +518,7 @@ interface ISite extends IBaseEntity {
   teleBotName?: string;
   teleChatName?: string;
   teleChatId?: string;
+  type?: 'BOOK' | 'POST';
 }
 
 interface ICollectionPermission {

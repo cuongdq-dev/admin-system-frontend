@@ -37,6 +37,13 @@ export const navData: NavDataItems = [
   },
 
   {
+    title: LanguageKey.nav.site,
+    workspace: ['wp_news', 'wp_system', 'wp_books'],
+    path: '/site',
+    icon: icon('ic-site'),
+  },
+
+  {
     title: LanguageKey.nav.blog,
     icon: icon('ic-blog'),
     workspace: ['wp_news', 'wp_system'],
@@ -113,13 +120,6 @@ export const navData: NavDataItems = [
     path: '/category',
     workspace: ['wp_news', 'wp_books'],
     icon: icon('ic-category'),
-  },
-
-  {
-    title: LanguageKey.nav.site,
-    workspace: ['wp_news', 'wp_books'],
-    path: '/site',
-    icon: icon('ic-site'),
   },
 
   {

@@ -120,10 +120,10 @@ export const PermissionSettingsModal = ({
                 sx={{ mb: 1 }}
               >
                 <Link variant="button" href="#" onClick={(e) => e.preventDefault()}>
-                  {collectionName}
+                  {collectionName.toLocaleUpperCase()}
                 </Link>
                 <Typography variant="button" color="text.primary">
-                  Conditions
+                  {t(LanguageKey.role.conditionLabel)}
                 </Typography>
               </Breadcrumbs>
             </Box>
@@ -141,7 +141,7 @@ export const PermissionSettingsModal = ({
               <Box
                 key={action}
                 sx={(theme) => ({
-                  backgroundColor: theme.palette.grey[100],
+                  backgroundColor: theme.palette.background.neutral,
                   p: 2,
                   mb: 2,
                   borderRadius: 1,
@@ -246,10 +246,10 @@ export const PermissionSettingsModal = ({
 
           <DialogActions sx={{ p: 2 }}>
             <Button onClick={handleCancel} variant="outlined" color="inherit">
-              Cancel
+              {t(LanguageKey.button.cancel)}
             </Button>
             <Button onClick={() => handleApply(watch())} variant="contained">
-              Apply
+              {t(LanguageKey.button.accept)}
             </Button>
           </DialogActions>
         </form>
