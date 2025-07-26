@@ -1,11 +1,7 @@
-'use client';
-
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
-
-import { DashboardContent } from 'src/layouts/dashboard';
-
+import { Masonry } from '@mui/lab';
+import { Box, Typography, useTheme } from '@mui/material';
 import { t } from 'i18next';
+import { useEffect, useState } from 'react';
 import {
   PATH_ANALYTICS_CATEGORY_BOOKS,
   PATH_ANALYTICS_CATEGORY_NEWS,
@@ -16,18 +12,16 @@ import {
   PATH_ANALYTICS_SOURCE,
 } from 'src/api-core/path';
 import { Iconify } from 'src/components/iconify';
+
 import { Scrollbar } from 'src/components/scrollbar';
 import { LanguageKey } from 'src/constants';
+import { DashboardContent } from 'src/layouts/dashboard';
 import { AnalyticsConversionRates } from '../analytics-conversion-rates';
 import { AnalyticsCurrentVisits } from '../analytics-current-visits';
-import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
 import { AnalyticsNews } from '../analytics-news';
-import { useEffect, useState } from 'react';
-import { Box, useTheme, alpha as hexAlpha } from '@mui/material';
+import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
 
 type workspacesType = 'wp_books' | 'wp_news' | 'wp_system';
-
-// ----------------------------------------------------------------------
 
 export function OverviewAnalyticsView() {
   const defaultWorkspaces = (localStorage.getItem('workspaces') || 'wp_system') as workspacesType;
@@ -38,26 +32,23 @@ export function OverviewAnalyticsView() {
     const handleStorageChange = () => {
       const newWorkspaces = (localStorage.getItem('workspaces') ||
         defaultWorkspaces) as workspacesType;
-
       setWorkspace(newWorkspaces);
     };
 
     window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [defaultWorkspaces]);
 
   return (
     <Scrollbar sx={{ maxHeight: '100%', overflowX: 'hidden' }}>
       <DashboardContent maxWidth="xl">
+        {/* Header */}
         <Box
           sx={{
-            background: `linear-gradient(135deg, ${hexAlpha(theme.palette.primary.main, 0.08)} 0%, ${hexAlpha(theme.palette.secondary.main, 0.08)} 100%)`,
+            background: `linear-gradient(135deg, ${theme.palette.primary.light}20 0%, ${theme.palette.secondary.light}20 100%)`,
             borderRadius: 3,
             p: 4,
-            mb: 2,
+            m: 1,
           }}
         >
           <Typography
@@ -71,123 +62,87 @@ export function OverviewAnalyticsView() {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Hi, Welcome back 👋
+            {t(LanguageKey.home.title)}
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: theme.palette.text.secondary,
-              fontWeight: 500,
-            }}
-          >
-            Here's what's happening with your content today
+          <Typography variant="body1" sx={{ color: theme.palette.text.secondary, fontWeight: 500 }}>
+            {t(LanguageKey.home.description)}
           </Typography>
         </Box>
 
-        <Grid container spacing={3}>
-          {workspace == 'wp_books' && (
-            <Grid xs={12} sm={4} md={4}>
-              <AnalyticsWidgetSummary
-                workspace={workspace}
-                title={t(LanguageKey.home.bookSumary)}
-                icon={<Iconify width={40} icon="fa6-solid:blog" />}
-                baseUrl={PATH_ANALYTICS_POST}
-              />
-            </Grid>
-          )}
-
-          {workspace == 'wp_news' && (
-            <Grid xs={12} sm={4} md={4}>
-              <AnalyticsWidgetSummary
-                workspace={workspace}
-                title={t(LanguageKey.home.postSummary)}
-                icon={<Iconify width={40} icon="fa6-solid:blog" />}
-                baseUrl={PATH_ANALYTICS_POST}
-              />
-            </Grid>
-          )}
-          {workspace == 'wp_system' && (
-            <Grid xs={12} sm={4} md={4}>
-              <AnalyticsWidgetSummary
-                workspace={workspace}
-                title={t(LanguageKey.home.contentSumary)}
-                icon={<Iconify width={40} icon="fa6-solid:blog" />}
-                baseUrl={PATH_ANALYTICS_POST}
-              />
-            </Grid>
-          )}
-
-          {/* <Grid xs={12} sm={4} md={3}>
+        <Box display="flex" m={1} gap={3} flexDirection={{ xs: 'column', sm: 'row', md: 'row' }}>
+          {workspace === 'wp_books' && (
             <AnalyticsWidgetSummary
               workspace={workspace}
-              baseUrl={PATH_ANALYTICS_TRENDING}
-              title={t(LanguageKey.home.trendingSummary)}
-              color="secondary"
-              icon={<Iconify width={40} icon="fluent-color:arrow-trending-lines-24" />}
+              title={t(LanguageKey.home.bookSumary)}
+              icon={<Iconify width={40} icon="fa6-solid:blog" />}
+              baseUrl={PATH_ANALYTICS_POST}
             />
-          </Grid> */}
-
-          <Grid xs={12} sm={4} md={4}>
+          )}
+          {workspace === 'wp_news' && (
             <AnalyticsWidgetSummary
               workspace={workspace}
-              baseUrl={PATH_ANALYTICS_SITE}
-              title={t(LanguageKey.home.siteSummary)}
-              color="warning"
-              icon={<Iconify width={40} icon="ooui:references-ltr" />}
+              title={t(LanguageKey.home.postSummary)}
+              icon={<Iconify width={40} icon="fa6-solid:blog" />}
+              baseUrl={PATH_ANALYTICS_POST}
             />
-          </Grid>
-
-          <Grid xs={12} sm={4} md={4}>
+          )}
+          {workspace === 'wp_system' && (
             <AnalyticsWidgetSummary
               workspace={workspace}
-              title={t(LanguageKey.home.googleConsoleSummary)}
-              baseUrl={PATH_ANALYTICS_GOOGLE_INDEXED}
-              color="error"
-              icon={<Iconify width={40} icon="logos:google-play-console-icon" />}
+              title={t(LanguageKey.home.contentSumary)}
+              icon={<Iconify width={40} icon="fa6-solid:blog" />}
+              baseUrl={PATH_ANALYTICS_POST}
             />
-          </Grid>
+          )}
 
-          <Grid xs={12} md={6} lg={8}>
+          <AnalyticsWidgetSummary
+            workspace={workspace}
+            baseUrl={PATH_ANALYTICS_SITE}
+            title={t(LanguageKey.home.siteSummary)}
+            color="warning"
+            icon={<Iconify width={40} icon="ooui:references-ltr" />}
+          />
+
+          <AnalyticsWidgetSummary
+            workspace={workspace}
+            title={t(LanguageKey.home.googleConsoleSummary)}
+            baseUrl={PATH_ANALYTICS_GOOGLE_INDEXED}
+            color="error"
+            icon={<Iconify width={40} icon="logos:google-play-console-icon" />}
+          />
+        </Box>
+
+        <Box display="flex" mt={1} flexDirection="column" alignItems="center">
+          <Masonry columns={{ xs: 1, sm: 1, md: 2 }} spacing={3}>
             <AnalyticsConversionRates
               workspace={workspace}
               baseUrl={PATH_ANALYTICS_SOURCE}
-              title={t(LanguageKey.home.sourceSummary)}
+              title={t(LanguageKey.home.sourceSummaryTitle)}
+              description={t(LanguageKey.home.sourceSummaryDescription)}
             />
-          </Grid>
-
-          <Grid xs={12} md={6} lg={4}>
             <AnalyticsCurrentVisits
               workspace={workspace}
               title={t(LanguageKey.home.googleSearchStatusChart)}
               baseUrl={PATH_ANALYTICS_GOOGLE_SEARCH_STATUS}
             />
-          </Grid>
-
-          {(workspace == 'wp_news' || workspace == 'wp_system') && (
-            <Grid xs={12} md={12} lg={12}>
-              <AnalyticsConversionRates
-                baseUrl={PATH_ANALYTICS_CATEGORY_NEWS}
-                title={t(LanguageKey.home.categoryNewsSummary)}
-              />
-            </Grid>
-          )}
-
-          {(workspace == 'wp_books' || workspace == 'wp_system') && (
-            <Grid xs={12} md={12} lg={12}>
-              <AnalyticsConversionRates
-                baseUrl={PATH_ANALYTICS_CATEGORY_BOOKS}
-                title={t(LanguageKey.home.categoryBooksSummary)}
-              />
-            </Grid>
-          )}
-
-          <Grid xs={12} md={12} lg={12}>
             <AnalyticsNews
               title={t(LanguageKey.home.trendingSummary)}
               subheader="Latest trending topics and discussions"
             />
-          </Grid>
-        </Grid>
+            {(workspace === 'wp_news' || workspace === 'wp_system') && (
+              <AnalyticsConversionRates
+                baseUrl={PATH_ANALYTICS_CATEGORY_NEWS}
+                title={t(LanguageKey.home.categoryNewsSummary)}
+              />
+            )}
+            {(workspace === 'wp_books' || workspace === 'wp_system') && (
+              <AnalyticsConversionRates
+                baseUrl={PATH_ANALYTICS_CATEGORY_BOOKS}
+                title={t(LanguageKey.home.categoryBooksSummary)}
+              />
+            )}
+          </Masonry>
+        </Box>
       </DashboardContent>
     </Scrollbar>
   );
