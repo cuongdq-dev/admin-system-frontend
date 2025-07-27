@@ -129,13 +129,7 @@ const MuiButton: Components<Theme>['MuiButton'] = {
 };
 
 const MuiCard: Components<Theme>['MuiCard'] = {
-  styleOverrides: {
-    root: ({ theme }) => ({
-      zIndex: 0,
-      position: 'relative',
-      borderRadius: theme.shape.borderRadius * 2,
-    }),
-  },
+  styleOverrides: { root: ({ theme }) => ({ zIndex: 0, position: 'relative' }) },
 };
 
 const MuiCardHeader: Components<Theme>['MuiCardHeader'] = {

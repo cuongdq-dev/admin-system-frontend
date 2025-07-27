@@ -18,11 +18,11 @@ export const LanguageData: Record<
       en: 'Range: {min} - {max}',
       vi: 'Khoảng giá trị: {min} - {max}',
     },
-    totalTitle: {
-      key: 'chart_show_title',
-      en: 'Total: {number}',
-      vi: 'Tổng số: {number}',
-    },
+    totalTitle: { key: 'chart_show_title', en: 'Total: {number}', vi: 'Tổng số: {number}' },
+    exportCsv: { key: 'chart_export_csv', en: 'Export CSV', vi: 'Tải CSV' },
+    showLabel: { key: 'chart_show_label', en: 'Show data label', vi: 'Hiện nhãn dữ liệu' },
+    hideLabel: { key: 'chart_hide_label', en: 'Hide data label', vi: 'Ẩn nhãn dữ liệu' },
+    resetButton: { key: 'chart_reset_button', en: 'Reset Chart', vi: 'Làm mới biểu đồ' },
   },
   batchLogs: {
     finishedAtItem: {

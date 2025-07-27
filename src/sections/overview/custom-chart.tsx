@@ -8,8 +8,10 @@ import {
 } from '@mui/icons-material';
 import { Box, IconButton, Stack, Tooltip, Typography, useTheme } from '@mui/material';
 import type { ApexOptions } from 'apexcharts';
+import { t } from 'i18next';
 import { useState } from 'react';
 import { Chart } from 'src/components/chart';
+import { LanguageKey } from 'src/constants';
 
 // Dynamically import ApexCharts to avoid SSR issues
 
@@ -208,20 +210,24 @@ export default function CustomChart({
           }}
         >
           <Stack direction="row" spacing={1}>
-            <Tooltip title="Xuất CSV">
+            <Tooltip title={t(LanguageKey.chart.exportCsv)}>
               <IconButton size="small" onClick={exportToCSV} color="primary">
                 <Download />
               </IconButton>
             </Tooltip>
 
-            <Tooltip title={showDataLabels ? 'Ẩn nhãn dữ liệu' : 'Hiện nhãn dữ liệu'}>
+            <Tooltip
+              title={
+                showDataLabels ? t(LanguageKey.chart.hideLabel) : t(LanguageKey.chart.showLabel)
+              }
+            >
               <IconButton size="small" onClick={toggleDataLabels} color="primary">
                 {showDataLabels ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </Tooltip>
 
             {onRefresh && (
-              <Tooltip title="Làm mới biểu đồ">
+              <Tooltip title={t(LanguageKey.chart.resetButton)}>
                 <IconButton size="small" onClick={handleRefreshChart} color="primary">
                   <Refresh />
                 </IconButton>

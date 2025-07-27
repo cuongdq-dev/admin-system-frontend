@@ -1,7 +1,6 @@
 import type { CardProps } from '@mui/material/Card';
 import type { ChartOptions } from 'src/components/chart';
 
-import Card from '@mui/material/Card';
 import { alpha as hexAlpha, useTheme } from '@mui/material/styles';
 
 import { Clear, ExpandMore, FilterList } from '@mui/icons-material';
@@ -11,6 +10,7 @@ import {
   AccordionSummary,
   Backdrop,
   Box,
+  Card,
   CardContent,
   Chip,
   FormControl,
@@ -25,12 +25,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { t } from 'i18next';
 import { useEffect, useMemo, useState } from 'react';
 import { invokeRequest } from 'src/api-core';
 import { Iconify } from 'src/components/iconify';
-import CustomChart from './custom-chart';
-import { t } from 'i18next';
 import { LanguageKey } from 'src/constants';
+import CustomChart from './custom-chart';
 
 // ----------------------------------------------------------------------
 
@@ -199,7 +199,7 @@ export function AnalyticsConversionRates({
 
   return (
     <Card elevation={3} sx={{ maxWidth: '100%', margin: 'auto' }}>
-      <CardContent>
+      <CardContent sx={{ ':root': { border: 'unset' } }}>
         <Box sx={{ my: 1 }}>
           <Typography variant="h5" component="h2" gutterBottom color="primary">
             {title}
@@ -354,13 +354,13 @@ export function AnalyticsConversionRates({
         <CustomChart
           categories={filteredData.categories}
           series={filteredData.series}
-          title="Thống Kê Thể Loại Truyện/Sách"
+          title={title}
           onRefresh={resetFilters}
           showToolbar={true}
           chartType="bar"
           horizontal={true}
           dataLabelFormatter={(value: number) => value.toString()}
-          tooltipFormatter={(value: number) => `${value} truyện/sách`}
+          tooltipFormatter={(value: number) => `${value}`}
         />
 
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

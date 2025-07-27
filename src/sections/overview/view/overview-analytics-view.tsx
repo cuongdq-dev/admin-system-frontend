@@ -113,7 +113,11 @@ export function OverviewAnalyticsView() {
         </Box>
 
         <Box display="flex" mt={1} flexDirection="column" alignItems="center">
-          <Masonry columns={{ xs: 1, sm: 1, md: 2 }} spacing={3}>
+          <Masonry
+            columns={{ xs: 1, sm: 1, md: 2 }}
+            spacing={3}
+            sx={{ boxShadow: 'none', border: 'none' }}
+          >
             <AnalyticsConversionRates
               workspace={workspace}
               baseUrl={PATH_ANALYTICS_SOURCE}
