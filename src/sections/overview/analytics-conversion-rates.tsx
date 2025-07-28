@@ -198,8 +198,8 @@ export function AnalyticsConversionRates({
   };
 
   return (
-    <Card elevation={3} sx={{ maxWidth: '100%', margin: 'auto' }}>
-      <CardContent sx={{ ':root': { border: 'unset' } }}>
+    <Card elevation={3} sx={{ maxWidth: '100%' }}>
+      <CardContent>
         <Box sx={{ my: 1 }}>
           <Typography variant="h5" component="h2" gutterBottom>
             {title}
