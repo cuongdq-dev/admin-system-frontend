@@ -8,10 +8,10 @@ import { useTheme } from '@mui/material/styles';
 
 import { fNumber } from 'src/utils/format-number';
 
-import { useEffect, useState } from 'react';
-import { Chart, ChartLegends, useChart } from 'src/components/chart';
-import { invokeRequest } from 'src/api-core';
 import { Backdrop } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { invokeRequest } from 'src/api-core';
+import { Chart, ChartLegends, useChart } from 'src/components/chart';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
@@ -27,11 +27,18 @@ type ChartProps = {
 type Props = CardProps & {
   baseUrl?: string;
   title?: string;
+  description?: string;
   subheader?: string;
   workspace?: workspacesType;
 };
 
-export function AnalyticsCurrentVisits({ title, subheader, baseUrl, workspace, ...other }: Props) {
+export function AnalyticsCurrentVisits({
+  title,
+  description,
+  baseUrl,
+  workspace,
+  ...other
+}: Props) {
   const theme = useTheme();
   const [{ loading, chart }, setState] = useState<{ loading?: boolean; chart?: ChartProps }>({
     loading: false,
@@ -92,7 +99,7 @@ export function AnalyticsCurrentVisits({ title, subheader, baseUrl, workspace, .
     );
   return (
     <Card {...other}>
-      <CardHeader title={title} subheader={subheader} />
+      <CardHeader title={title} subheader={description} />
 
       <Chart
         type="pie"

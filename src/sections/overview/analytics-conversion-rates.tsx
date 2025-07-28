@@ -201,7 +201,7 @@ export function AnalyticsConversionRates({
     <Card elevation={3} sx={{ maxWidth: '100%', margin: 'auto' }}>
       <CardContent sx={{ ':root': { border: 'unset' } }}>
         <Box sx={{ my: 1 }}>
-          <Typography variant="h5" component="h2" gutterBottom color="primary">
+          <Typography variant="h5" component="h2" gutterBottom>
             {title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -363,7 +363,15 @@ export function AnalyticsConversionRates({
           tooltipFormatter={(value: number) => `${value}`}
         />
 
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box
+          sx={{
+            mt: 3,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            opacity: 0.5,
+          }}
+        >
           <Typography variant="caption" color="text.secondary">
             {t(LanguageKey.chart.totalTitle).replace(
               '{number}',

@@ -31,9 +31,9 @@ import { timeAgo } from 'src/components/table/utils';
 
 // ----------------------------------------------------------------------
 
-type Props = CardProps & { title?: string; subheader?: string };
+type Props = CardProps & { title?: string; description?: string };
 
-export function AnalyticsNews({ title, subheader, ...other }: Props) {
+export function AnalyticsNews({ title, description, ...other }: Props) {
   const [trendings, setTrendings] = useState<ITrending[]>([]);
 
   const getProfile = () => {
@@ -68,7 +68,7 @@ export function AnalyticsNews({ title, subheader, ...other }: Props) {
     .flat();
   return (
     <Card {...other}>
-      <CardHeader title={title} subheader={subheader} sx={{ mb: 1 }} />
+      <CardHeader title={title} subheader={description} sx={{ mb: 1 }} />
 
       <Scrollbar sx={{ height: 600 }}>
         <Box

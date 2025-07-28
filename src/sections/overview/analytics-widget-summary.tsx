@@ -27,6 +27,7 @@ type ChartProps = {
 
 type Props = CardProps & {
   title: string;
+  description?: string;
   color?: ColorType;
   icon: React.ReactNode;
   baseUrl?: string;
@@ -36,6 +37,7 @@ type Props = CardProps & {
 export function AnalyticsWidgetSummary({
   icon,
   title,
+  description,
   color = 'primary',
   baseUrl,
   workspace,
@@ -169,7 +171,10 @@ export function AnalyticsWidgetSummary({
         }}
       >
         <Box sx={{ flexGrow: 1, minWidth: 112 }}>
-          <Box sx={{ mb: 1, typography: 'subtitle2' }}>{title}</Box>
+          <Box mb={1} lineHeight={0}>
+            <Typography variant="subtitle1">{title}</Typography>
+            <Typography variant="caption">{description}</Typography>
+          </Box>
           <Box sx={{ typography: 'h4', display: 'flex' }}>
             {fShortenNumber(total)}
             {!!recentCount && (

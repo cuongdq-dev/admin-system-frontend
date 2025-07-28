@@ -650,80 +650,148 @@ export const LanguageData: Record<
     },
   },
   home: {
-    bookSumary: {
-      key: 'book_summary',
-      en: 'New Books',
-      vi: 'Truyện mới',
-    },
-    categoryBooksSummary: {
-      key: 'category_books_summary',
-      en: 'Books',
-      vi: 'Sách, Truyện',
-    },
-    categoryNewsSummary: {
-      key: 'category_news_summary',
-      en: 'News',
-      vi: 'Tin tức',
-    },
-    categorySummary: {
-      key: 'category_summary',
-      en: 'Categories',
-      vi: 'Danh mục',
-    },
-    contentSumary: {
-      key: 'content_summary',
-      en: 'All Content',
-      vi: 'Tất cả nội dung',
-    },
-    description: {
-      key: 'home_description',
-      en: "Here's what's happening with your content today",
-      vi: "Here's what's happening with your content today",
-    },
-    googleConsoleSummary: {
-      key: 'google_console_summary',
-      en: 'Google Indexed',
-      vi: 'Đã index trên Google',
-    },
-    googleSearchStatusChart: {
-      key: 'google_Search_status_chart',
-      en: 'Google Search',
-      vi: 'Google Indexing',
-    },
-    keywordSummary: {
-      key: 'keyword_summary',
-      en: 'Keywords',
-      vi: 'Từ khóa',
-    },
-    postSummary: {
-      key: 'post_summary',
-      en: 'New Posts',
-      vi: 'Bài viết mới',
-    },
-    siteSummary: {
-      key: 'site_summary',
-      en: 'New Sites',
-      vi: 'Trang web mới',
-    },
-    sourceSummaryDescription: {
-      key: 'source_summary_description',
-      en: 'Chart show count book by type',
-      vi: 'Biểu đồ thể hiện số lượng truyện/sách theo từng thể loại',
-    },
-    sourceSummaryTitle: {
-      key: 'source_summary_title',
-      en: 'Source',
-      vi: 'Thể loại',
-    },
     title: {
       key: 'home_title',
       en: 'Hi, Welcome back 👋',
       vi: 'Hi, Welcome back 👋',
     },
-    trendingSummary: {
-      key: 'trending_summary',
-      en: 'New Trendings',
-      vi: 'Xu hướng mới',
+
+    description: {
+      key: 'home_description',
+      en: "Here's what's happening with your content today",
+      vi: "Here's what's happening with your content today",
+    },
+
+    bookSummaryTitle: {
+      key: 'book_summary_title',
+      en: 'New Books',
+      vi: 'Truyện/Sách mới',
+    },
+
+    bookSummaryDescription: {
+      key: 'book_summary_description',
+      en: 'Statistics of newly updated books by category',
+      vi: 'Thống kê các truyện/sách mới được cập nhật theo thể loại',
+    },
+
+    categoryBooksSummaryTitle: {
+      key: 'category_books_summary_title',
+      en: 'Books by Category',
+      vi: 'Truyện/Sách theo thể loại',
+    },
+
+    categoryBooksSummaryDescription: {
+      key: 'category_books_summary_description',
+      en: 'Distribution of books by category',
+      vi: 'Phân bố truyện/sách theo từng thể loại',
+    },
+
+    categoryNewsSummaryTitle: {
+      key: 'category_news_summary_title',
+      en: 'News by Category',
+      vi: 'Tin tức theo danh mục',
+    },
+
+    categoryNewsSummaryDescription: {
+      key: 'category_news_summary_description',
+      en: 'Classification of news articles by category',
+      vi: 'Phân loại tin tức theo danh mục',
+    },
+
+    categorySummaryTitle: {
+      key: 'category_summary_title',
+      en: 'Content Categories',
+      vi: 'Danh mục nội dung',
+    },
+
+    categorySummaryDescription: {
+      key: 'category_summary_description',
+      en: 'Overview of content grouped by category',
+      vi: 'Tổng quan nội dung được phân theo danh mục',
+    },
+
+    contentSumaryTitle: {
+      key: 'content_summary_title',
+      en: 'All Content Overview',
+      vi: 'Tổng quan nội dung',
+    },
+
+    contentSumaryDescription: {
+      key: 'content_summary_description',
+      en: 'Summary of all available content',
+      vi: 'Tổng hợp tất cả nội dung hiện có',
+    },
+
+    googleConsoleSummaryTitle: {
+      key: 'google_console_summary_title',
+      en: 'Google Indexed',
+      vi: 'Đã index trên Google',
+    },
+
+    googleConsoleSummaryDescription: {
+      key: 'google_console_summary_description',
+      en: 'Number of pages indexed by Google',
+      vi: 'Số trang đã được Google index',
+    },
+
+    googleSearchStatusChartTitle: {
+      key: 'google_Search_status_chart_title',
+      en: 'Google Search Visibility',
+      vi: 'Khả năng hiển thị trên Google',
+    },
+
+    googleSearchStatusChartDescription: {
+      key: 'google_Search_status_chart_description',
+      en: 'Overview of how content appears in Google Search results',
+      vi: 'Tổng quan về mức độ hiển thị nội dung trên kết quả tìm kiếm Google',
+    },
+
+    postSummaryTitle: {
+      key: 'post_summary_title',
+      en: 'New Posts',
+      vi: 'Bài viết mới',
+    },
+
+    postSummaryDescription: {
+      key: 'post_summary_description',
+      en: 'Statistics of newly added posts',
+      vi: 'Thống kê các bài viết mới được thêm',
+    },
+
+    siteSummaryTitle: {
+      key: 'site_summary_title',
+      en: 'New Sites',
+      vi: 'Website mới',
+    },
+
+    siteSummaryDescription: {
+      key: 'site_summary_description',
+      en: 'Number of newly added websites',
+      vi: 'Số lượng website mới được thêm',
+    },
+
+    sourceSummaryTitle: {
+      key: 'source_summary_title',
+      en: 'Content Source',
+      vi: 'Nguồn nội dung',
+    },
+
+    sourceSummaryDescription: {
+      key: 'source_summary_description',
+      en: 'Chart showing content distribution by source/type',
+      vi: 'Biểu đồ thể hiện phân bố nội dung theo nguồn/loại',
+    },
+
+    trendingSummaryTitle: {
+      key: 'trending_summary_title',
+      en: 'Trending Topics',
+      vi: 'Xu hướng nổi bật',
+    },
+
+    trendingSummaryDescription: {
+      key: 'trending_summary_description',
+      en: 'Latest trending topics and popular discussions',
+      vi: 'Chủ đề xu hướng và thảo luận nổi bật gần đây',
     },
   },
   language: {

@@ -73,7 +73,8 @@ export function OverviewAnalyticsView() {
           {workspace === 'wp_books' && (
             <AnalyticsWidgetSummary
               workspace={workspace}
-              title={t(LanguageKey.home.bookSumary)}
+              title={t(LanguageKey.home.bookSummaryTitle)}
+              description={t(LanguageKey.home.bookSummaryDescription)}
               icon={<Iconify width={40} icon="fa6-solid:blog" />}
               baseUrl={PATH_ANALYTICS_POST}
             />
@@ -81,7 +82,8 @@ export function OverviewAnalyticsView() {
           {workspace === 'wp_news' && (
             <AnalyticsWidgetSummary
               workspace={workspace}
-              title={t(LanguageKey.home.postSummary)}
+              title={t(LanguageKey.home.postSummaryTitle)}
+              description={t(LanguageKey.home.postSummaryDescription)}
               icon={<Iconify width={40} icon="fa6-solid:blog" />}
               baseUrl={PATH_ANALYTICS_POST}
             />
@@ -89,7 +91,8 @@ export function OverviewAnalyticsView() {
           {workspace === 'wp_system' && (
             <AnalyticsWidgetSummary
               workspace={workspace}
-              title={t(LanguageKey.home.contentSumary)}
+              title={t(LanguageKey.home.contentSumaryTitle)}
+              description={t(LanguageKey.home.contentSumaryDescription)}
               icon={<Iconify width={40} icon="fa6-solid:blog" />}
               baseUrl={PATH_ANALYTICS_POST}
             />
@@ -98,14 +101,16 @@ export function OverviewAnalyticsView() {
           <AnalyticsWidgetSummary
             workspace={workspace}
             baseUrl={PATH_ANALYTICS_SITE}
-            title={t(LanguageKey.home.siteSummary)}
+            title={t(LanguageKey.home.siteSummaryTitle)}
+            description={t(LanguageKey.home.siteSummaryDescription)}
             color="warning"
             icon={<Iconify width={40} icon="ooui:references-ltr" />}
           />
 
           <AnalyticsWidgetSummary
             workspace={workspace}
-            title={t(LanguageKey.home.googleConsoleSummary)}
+            title={t(LanguageKey.home.googleConsoleSummaryTitle)}
+            description={t(LanguageKey.home.googleConsoleSummaryDescription)}
             baseUrl={PATH_ANALYTICS_GOOGLE_INDEXED}
             color="error"
             icon={<Iconify width={40} icon="logos:google-play-console-icon" />}
@@ -126,23 +131,26 @@ export function OverviewAnalyticsView() {
             />
             <AnalyticsCurrentVisits
               workspace={workspace}
-              title={t(LanguageKey.home.googleSearchStatusChart)}
+              title={t(LanguageKey.home.googleSearchStatusChartTitle)}
+              description={t(LanguageKey.home.googleSearchStatusChartDescription)}
               baseUrl={PATH_ANALYTICS_GOOGLE_SEARCH_STATUS}
             />
             <AnalyticsNews
-              title={t(LanguageKey.home.trendingSummary)}
-              subheader="Latest trending topics and discussions"
+              title={t(LanguageKey.home.trendingSummaryTitle)}
+              description={t(LanguageKey.home.trendingSummaryDescription)}
             />
             {(workspace === 'wp_news' || workspace === 'wp_system') && (
               <AnalyticsConversionRates
                 baseUrl={PATH_ANALYTICS_CATEGORY_NEWS}
-                title={t(LanguageKey.home.categoryNewsSummary)}
+                title={t(LanguageKey.home.categoryNewsSummaryTitle)}
+                description={t(LanguageKey.home.categoryNewsSummaryDescription)}
               />
             )}
             {(workspace === 'wp_books' || workspace === 'wp_system') && (
               <AnalyticsConversionRates
                 baseUrl={PATH_ANALYTICS_CATEGORY_BOOKS}
-                title={t(LanguageKey.home.categoryBooksSummary)}
+                title={t(LanguageKey.home.categoryBooksSummaryTitle)}
+                description={t(LanguageKey.home.categoryBooksSummaryDescription)}
               />
             )}
           </Masonry>

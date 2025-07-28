@@ -1,3 +1,4 @@
+import { LanguageKeyType } from 'src/locales/key';
 import { LanguageData } from './language-data';
 
 function reverseTransform(
@@ -15,7 +16,8 @@ function reverseTransform(
 
   return result;
 }
-export const LanguageKey = reverseTransform(LanguageData);
+
+export const LanguageKey = reverseTransform(LanguageData) as LanguageKeyType;
 
 export const StoreName = {
   SERVER: 'server_store',
