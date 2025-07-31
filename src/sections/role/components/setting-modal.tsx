@@ -33,6 +33,7 @@ interface PermissionSettingsData {
 
 interface PermissionSettingsModalProps {
   onApply: (settings: PermissionSettingsData[]) => void;
+  canUpdate?: boolean;
   collectionName: string;
   currentSettings?: PermissionSettingsData[];
 }
@@ -46,6 +47,7 @@ const conditionOptions = [
 export const PermissionSettingsModal = ({
   onApply,
   collectionName,
+  canUpdate,
   currentSettings,
 }: PermissionSettingsModalProps) => {
   const [open, setOpen] = useState(false);
@@ -204,6 +206,7 @@ export const PermissionSettingsModal = ({
                       <Select
                         {...field}
                         multiple
+                        disabled={!canUpdate}
                         fullWidth
                         size="small"
                         value={Array.isArray(field.value) ? field.value : []}
@@ -248,7 +251,7 @@ export const PermissionSettingsModal = ({
             <Button onClick={handleCancel} variant="outlined" color="inherit">
               {t(LanguageKey.button.cancel)}
             </Button>
-            <Button onClick={() => handleApply(watch())} variant="contained">
+            <Button disabled={!canUpdate} onClick={() => handleApply(watch())} variant="contained">
               {t(LanguageKey.button.accept)}
             </Button>
           </DialogActions>

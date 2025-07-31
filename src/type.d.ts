@@ -539,6 +539,7 @@ interface IRole {
   is_active: boolean;
 
   // Relations
+  code?: 'api-super-admin' | 'api-editor' | 'api-author';
   user_roles?: IUserRole[];
   role_permissions?: IRolePermission[];
 }

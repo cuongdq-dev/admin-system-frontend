@@ -88,12 +88,14 @@ export function DetailView() {
   const isCreateMode = !id || id === 'create';
   const isUpdateMode = !isCreateMode;
 
-  const canDelete = hasPermission(SubjectConfig.ROLES, 'delete');
-  const canUpdate = hasPermission(SubjectConfig.ROLES, isCreateMode ? 'create' : 'update');
-
   const { data, isLoading = true } = usePageStore(
     useShallow((state) => ({ ...state.dataStore![storeName]?.detail }))
   ) as { data?: IRole; refreshNumber?: number; isLoading?: boolean };
+
+  const canDelete = data?.code != 'api-super-admin' && hasPermission(SubjectConfig.ROLES, 'delete');
+  const canUpdate =
+    data?.code != 'api-super-admin' &&
+    hasPermission(SubjectConfig.ROLES, isCreateMode ? 'create' : 'update');
 
   const collectionPermission = useSettingStore(
     useShallow((state) => state.collectionPermission)
@@ -692,23 +694,20 @@ export function DetailView() {
                           >
                             <Box className="setting-button">
                               <PermissionSettingsModal
+                                canUpdate={canUpdate}
                                 onApply={(newConditions) => {
                                   const currentPermissions = watch('permissions');
                                   const updatedPermissions = currentPermissions.map(
                                     (permission) => {
-                                      // Chỉ cập nhật nếu điều kiện thuộc cùng collection
                                       if (permission.collectionName === collection.name) {
                                         const matched = newConditions?.find(
                                           (c) => c.permissionId === permission.permissionId
                                         );
                                         if (matched) {
-                                          return {
-                                            ...permission,
-                                            conditions: matched.conditions, // Cập nhật điều kiện mới
-                                          };
+                                          return { ...permission, conditions: matched.conditions };
                                         }
                                       }
-                                      return permission; // Giữ nguyên nếu không có thay đổi
+                                      return permission;
                                     }
                                   );
                                   setValue('permissions', updatedPermissions);
